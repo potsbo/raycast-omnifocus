@@ -8,9 +8,9 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "index",
-      "title": "Show List and Detail",
-      "description": "Template for showing a static list and a detail view",
+      "name": "perspectives",
+      "title": "Show Perspectives",
+      "description": "Show OmniFocus Perspectives",
       "mode": "view"
     }
   ],
