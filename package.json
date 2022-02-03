@@ -15,6 +15,7 @@
     }
   ],
   "dependencies": {
+    "@jacobx1/of-sdk": "^0.2.7",
     "@raycast/api": "^1.27.1"
   },
   "devDependencies": {
