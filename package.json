@@ -12,6 +12,12 @@
       "title": "Show Perspectives",
       "description": "Show OmniFocus Perspectives",
       "mode": "view"
+    },
+    {
+      "name": "inbox",
+      "title": "Show Inbox",
+      "description": "Show OmniFocus Inbox",
+      "mode": "view"
     }
   ],
   "dependencies": {

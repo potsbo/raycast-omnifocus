@@ -1,49 +1,20 @@
-import { ActionPanel, Icon, List } from "@raycast/api";
-import { useEffect, useState } from "react";
-import { completeTaskById, Task } from "@jacobx1/of-sdk";
+import { Icon, List } from "@raycast/api";
+import { useLoad } from "../utils";
 
-interface TaskListProps {
-  tasks: Promise<Task[]>;
+interface Props {
+  getter: () => Promise<{ name: string; id: string; completed: boolean }[] | undefined>;
 }
 
-export const TaskList = (props: TaskListProps) => {
-  const { tasks } = props;
-  const [loadedTasks, setTasks] = useState<Task[]>();
-  useEffect(() => {
-    const resolve = async () => {
-      const resolved = await tasks;
-      setTasks(resolved);
-    };
-    resolve();
-  });
+export const TaskList = ({ getter }: Props) => {
+  const items = useLoad(getter);
+  if (items) {
+    console.log(JSON.stringify(items[0]))
+  }
+
   return (
-    <List isLoading={loadedTasks === undefined}>
-      {loadedTasks?.map((t) => (
-        <List.Item
-          title={t.name}
-          key={t.id}
-          icon={t.completed ? Icon.Checkmark : Icon.Circle}
-          accessoryIcon={Icon.ArrowClockwise}
-          actions={
-            <ActionPanel>
-              <ActionPanel.Item
-                title="Mark as Completed"
-                onAction={() => {
-                  setTasks((prev) => {
-                    if (prev === undefined) {
-                      return;
-                    }
-                    const updated = [...prev];
-                    const idx = updated.findIndex((p) => t.id === p.id);
-                    updated[idx].completed = !updated[idx].completed;
-                    return updated;
-                  });
-                  completeTaskById(t.id);
-                }}
-              />
-            </ActionPanel>
-          }
-        />
+    <List isLoading={items === undefined}>
+      {items?.map((t) => (
+        <List.Item title={t.name} key={t.id} icon={t.completed ? Icon.Checkmark : Icon.Circle} />
       ))}
     </List>
   );
