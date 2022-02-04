@@ -1,26 +1,8 @@
-import { execFile } from "child_process";
+import { run } from "@jxa/run";
 
 const wrap = <T>(fn: () => T) => {
-  return () => {
-    return new Promise<T>((resolve, reject) => {
-      const child = execFile("/usr/bin/osascript", ["-l", "JavaScript"], (err, stdout, stderr) => {
-        if (err) {
-          return reject(err);
-        }
-
-        if (stderr) {
-          console.error(stderr);
-        }
-
-        try {
-          resolve(JSON.parse(stdout));
-        } catch (e) {
-          reject(e);
-        }
-      });
-      child.stdin?.write(`JSON.stringify((${fn.toString()})())`);
-      child.stdin?.end();
-    });
+  return async () => {
+    return await run(fn);
   };
 };
 
