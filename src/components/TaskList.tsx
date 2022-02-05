@@ -11,7 +11,6 @@ interface Props {
   getter: () => Promise<TaskViewModel[]>;
 }
 
-
 export const TaskList = ({ getter }: Props) => {
   const { value: items, isLoading } = useLoad(onlyAvailable(getter));
 

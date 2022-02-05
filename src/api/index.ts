@@ -12,7 +12,16 @@ interface OmniFocus {
   document: {
     perspectiveNames: () => [string[]];
     inboxTasks: () => [Task[]];
-    projects: () => [Project[]];
+    projects: {
+      (): [Project[]];
+      byId: (id: string) => Project[];
+    };
+  };
+  defaultDocument: {
+    projects: {
+      (): [Project[]];
+      byId: (id: string) => Project | undefined;
+    };
   };
 }
 
@@ -67,7 +76,9 @@ type AppleScriptClass<Type> = {
   [Property in keyof Type]: () => Type[Property];
 } & Functionalized<Type>;
 
-type Project = AppleScriptClass<ProjectProperties>;
+type Project = AppleScriptClass<ProjectProperties> & {
+  rootTask: () => Task;
+};
 
 interface TaskProperties {
   nextDeferDate: unknown;
@@ -106,7 +117,7 @@ interface TaskProperties {
   effectivelyCompleted: boolean;
 }
 
-type Task = AppleScriptClass<TaskProperties>;
+type Task = AppleScriptClass<TaskProperties> & { tasks: () => Task[] };
 
 export const getPerspectivesNames = wrap(() => {
   const app = Application("OmniFocus");
@@ -119,6 +130,21 @@ export const getInboxTasks = wrap(() => {
     return { id: t.id(), name: t.name(), completed: t.completed() };
   });
 });
+
+export const getTasksInProject = (projectId: string) => {
+  return () => {
+    return run<TaskProperties[]>((pid: string) => {
+      const project = Application("OmniFocus").defaultDocument.projects.byId(pid);
+      if (project === undefined) {
+        return [];
+      }
+      return project
+        .rootTask()
+        .tasks()
+        .map((t) => t.properties());
+    }, projectId);
+  };
+};
 
 export const getProjects = wrap(() => {
   const app = Application("OmniFocus");
