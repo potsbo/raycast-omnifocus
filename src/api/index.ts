@@ -10,7 +10,10 @@ declare const Application: (_: "OmniFocus") => OmniFocus;
 
 interface DefaultDocument {
   perspectiveNames: () => string[];
-  inboxTasks: () => Task[];
+  inboxTasks: {
+    (): Task[];
+    push: (_: Task) => number;
+  };
   projects: {
     (): Project[];
     byId: (id: string) => Project | undefined;
@@ -51,6 +54,7 @@ type Folder = AppleScriptClass<FolderProperties> & {
 
 interface OmniFocus {
   defaultDocument: DefaultDocument;
+  Task: (_: Partial<TaskProperties>) => Task;
 }
 
 type Status = "active status" | "on hold status" | "done status" | "dropped status";
@@ -246,3 +250,14 @@ export const getNestedProjects = wrap(() => {
       };
     });
 });
+
+export const createNewTask = (task: { name: string }) => {
+  const fn = (param: { name: string }) => {
+    const app = Application("OmniFocus");
+    const doc = app.defaultDocument;
+    const taskObject = app.Task(param);
+    doc.inboxTasks.push(taskObject);
+    return;
+  };
+  return run<ReturnType<typeof fn>>(fn, task);
+};

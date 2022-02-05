@@ -1,6 +1,6 @@
-import { ActionPanel, Form, SubmitFormAction, Icon } from "@raycast/api";
+import { ActionPanel, Form, SubmitFormAction, Icon, showHUD, showToast, ToastStyle } from "@raycast/api";
 import { useMemo } from "react";
-import { getNestedProjects, getNestedTags } from "../api";
+import { createNewTask, getNestedProjects, getNestedTags } from "../api";
 import { useLoad } from "../utils";
 
 const getProjectsAndTags = async () => {
@@ -12,6 +12,13 @@ const getProjectsAndTags = async () => {
 interface Props {
   defaultProject: string;
   defaultTags: string[];
+}
+
+interface FormFields {
+  name: string;
+  note: string;
+  tags: string[];
+  project: string;
 }
 
 export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
@@ -46,13 +53,18 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
     return opts;
   }, [projects]);
 
-  console.log(projectsOptions.length);
-
   return (
     <Form
       actions={
         <ActionPanel>
-          <SubmitFormAction title="Submit Description" onSubmit={(values) => console.log(values)} />
+          <SubmitFormAction
+            title="Submit Description"
+            onSubmit={async (values: FormFields) => {
+              showToast(ToastStyle.Animated, "Creating");
+              await createNewTask(values);
+              showToast(ToastStyle.Success, "Created");
+            }}
+          />
         </ActionPanel>
       }
     >
