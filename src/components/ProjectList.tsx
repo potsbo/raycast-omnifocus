@@ -1,9 +1,9 @@
 import { Icon, List } from "@raycast/api";
 import { getProjects } from "../api";
-import { useLoad } from "../utils";
+import { useLoad, onlyAvailable } from "../utils";
 
 export const ProjectList = () => {
-  const { value: projects, isLoading } = useLoad(getProjects);
+  const { value: projects, isLoading } = useLoad(onlyAvailable(getProjects));
 
   return (
     <List isLoading={isLoading}>

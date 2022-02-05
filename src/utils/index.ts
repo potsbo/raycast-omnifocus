@@ -33,3 +33,7 @@ export function useLoad<T>(loader: () => Promise<T>) {
   }, []);
   return value;
 }
+
+export const onlyAvailable = <T extends { completed: boolean }>(t: () => Promise<T[]>) => {
+  return () => t().then((t) => t.filter((t) => !t.completed));
+};

@@ -1,5 +1,5 @@
 import { Icon, List } from "@raycast/api";
-import { useLoad } from "../utils";
+import { useLoad, onlyAvailable } from "../utils";
 
 interface TaskViewModel {
   name: string;
@@ -11,9 +11,6 @@ interface Props {
   getter: () => Promise<TaskViewModel[]>;
 }
 
-const onlyAvailable = (t: () => Promise<TaskViewModel[]>) => {
-  return () => t().then((t) => t.filter((t) => !t.completed));
-};
 
 export const TaskList = ({ getter }: Props) => {
   const { value: items, isLoading } = useLoad(onlyAvailable(getter));
