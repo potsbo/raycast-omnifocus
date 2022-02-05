@@ -28,7 +28,7 @@ export const ProjectList = () => {
                 title={p.name}
                 subtitle={`${p.availableTaskCount} available`}
                 key={p.id}
-                icon={p.completed ? Icon.Checkmark : Icon.Circle}
+                icon={Icon.List}
                 actions={
                   <ActionPanel>
                     <ActionPanel.Item

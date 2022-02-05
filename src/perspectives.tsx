@@ -10,7 +10,7 @@ const getIconForPerspective = (name: string) => {
       return Icon.Envelope;
     }
     case "Projects": {
-      return Icon.Desktop;
+      return Icon.List;
     }
     case "Tags": {
       return Icon.Pin;
@@ -41,7 +41,6 @@ const getPerspectives = async () => {
 
 export default function Command() {
   const { push } = useNavigation();
-
   const { value: perspectives, isLoading } = useLoad(getPerspectives, "PerspectiveListView");
 
   return (
