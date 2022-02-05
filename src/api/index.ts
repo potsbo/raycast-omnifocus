@@ -116,7 +116,7 @@ interface TaskProperties {
   numberOfAvailableTasks: 0;
   primaryTag: unknown;
   name: string;
-  containingProject: unknown;
+  containingProject: Project;
   effectiveDueDate: unknown;
   parentTask: unknown;
   completedByChildren: boolean;
@@ -143,17 +143,25 @@ export const getInboxTasks = wrap(() => {
 });
 
 export const getTasksInProject = (projectId: string) => {
+  const fn = (pid: string) => {
+    const project = Application("OmniFocus").defaultDocument.projects.byId(pid);
+    if (project === undefined) {
+      return [];
+    }
+    return project
+      .rootTask()
+      .tasks()
+      .map((t) => {
+        return {
+          id: t.id(),
+          name: t.name(),
+          completed: t.completed(),
+          containingProjectId: t.containingProject()?.id(),
+        };
+      });
+  };
   return () => {
-    return run<TaskProperties[]>((pid: string) => {
-      const project = Application("OmniFocus").defaultDocument.projects.byId(pid);
-      if (project === undefined) {
-        return [];
-      }
-      return project
-        .rootTask()
-        .tasks()
-        .map((t) => t.properties());
-    }, projectId);
+    return run<ReturnType<typeof fn>>(fn, projectId);
   };
 };
 

@@ -34,7 +34,13 @@ export const ProjectList = () => {
                     <ActionPanel.Item
                       title="Show Detail"
                       onAction={() =>
-                        push(<TaskList getter={getTasksInProject(p.id)} cacheKey={`TaskInProject:${p.id}`} />)
+                        push(
+                          <TaskList
+                            getter={getTasksInProject(p.id)}
+                            cacheKey={`TaskInProject:${p.id}`}
+                            disableShowInProjects={true}
+                          />
+                        )
                       }
                     />
                   </ActionPanel>
