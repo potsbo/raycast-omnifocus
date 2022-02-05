@@ -108,7 +108,7 @@ interface TaskProperties {
 
 type Task = AppleScriptClass<TaskProperties>;
 
-export const getPerspectives = wrap(() => {
+export const getPerspectivesNames = wrap(() => {
   const app = Application("OmniFocus");
   return app.document.perspectiveNames()[0];
 });

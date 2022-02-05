@@ -1,18 +1,34 @@
 import { useEffect, useState } from "react";
+import { getLocalStorageItem, setLocalStorageItem } from "@raycast/api";
 
-export function useLoad<T>(loader: () => Promise<T>): T | undefined;
-export function useLoad<T, S>(loader: () => Promise<T>, map: (_: T) => S): S | undefined;
+export function useLoad<T>(loader: () => Promise<T>) {
+  const [value, setValue] = useState<{ value: T | undefined; isLoading: true } | { value: T; isLoading: false }>({
+    value: undefined,
+    isLoading: true,
+  });
+  const cacheKey = loader.toString();
 
-export function useLoad<T>(loader: () => Promise<T>, map?: (_: T) => T) {
-  const [value, setValue] = useState<T>();
   useEffect(() => {
     (async () => {
-      const raw = await loader();
-      if (map) {
-        setValue(map(raw));
+      const str = await getLocalStorageItem<string>(cacheKey);
+      if (str === undefined) {
         return;
       }
-      setValue(raw);
+      // TODO: type check
+      const obj = JSON.parse(str);
+      setValue((current) => {
+        if (!current.isLoading) {
+          return current;
+        }
+        return { value: obj, isLoading: current.isLoading };
+      });
+    })();
+
+    (async () => {
+      await getLocalStorageItem<string>(cacheKey);
+      const raw = await loader();
+      setValue({ value: raw, isLoading: false });
+      setLocalStorageItem(cacheKey, JSON.stringify(raw));
     })();
   }, []);
   return value;

@@ -1,6 +1,6 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
 import { ProjectList } from "./components/ProjectList";
-import { getInboxTasks, getPerspectives } from "./api";
+import { getInboxTasks, getPerspectivesNames } from "./api";
 import { useLoad } from "./utils";
 import { TaskList } from "./components/TaskList";
 
@@ -30,19 +30,22 @@ const getIconForPerspective = (name: string) => {
   }
 };
 
+const getPerspectives = async () => {
+  const names = await getPerspectivesNames();
+  return names
+    .filter((n) => n)
+    .map((n) => {
+      return { title: n };
+    });
+};
+
 export default function Command() {
   const { push } = useNavigation();
 
-  const perspectives = useLoad(getPerspectives, (names) =>
-    names
-      .filter((n) => n)
-      .map((n) => {
-        return { title: n };
-      })
-  );
+  const { value: perspectives, isLoading } = useLoad(getPerspectives);
 
   return (
-    <List isLoading={perspectives === undefined}>
+    <List isLoading={isLoading}>
       {perspectives?.map((p) => (
         <List.Item
           title={p.title}
