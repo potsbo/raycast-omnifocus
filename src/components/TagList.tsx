@@ -16,7 +16,7 @@ export const TagList = () => {
               <List.Item
                 title={p.name}
                 key={p.id}
-                icon={Icon.List}
+                icon={Icon.Pin}
                 actions={
                   <ActionPanel>
                     <ActionPanel.Item
