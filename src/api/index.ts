@@ -25,6 +25,9 @@ interface DefaultDocument {
     (): Tag[];
     byId: (id: string) => Tag | undefined;
   };
+  flattenedTasks: {
+    (): Task[];
+  };
 }
 
 interface TagProperties {
@@ -66,14 +69,14 @@ interface ProjectProperties {
   id: string;
   nextReviewDate: string;
   shouldUseFloatingTimeZone: boolean;
-  effectiveDeferDate: unknown;
+  effectiveDeferDate: string | null;
   repetition: unknown;
   blocked: boolean;
   defaultSingletonActionHolder: boolean;
   primaryTag: unknown;
   modificationDate: string;
   numberOfCompletedTasks: 0;
-  effectiveDueDate: unknown;
+  effectiveDueDate: string | null;
   effectivelyDropped: boolean;
   repetitionRule: unknown;
   effectivelyCompleted: boolean;
@@ -138,7 +141,7 @@ interface TaskProperties {
   primaryTag: unknown;
   name: string;
   containingProject: Project;
-  effectiveDueDate: unknown;
+  effectiveDueDate: string | null;
   parentTask: unknown;
   completedByChildren: boolean;
   effectiveDeferDate: unknown;
@@ -261,3 +264,22 @@ export const createNewTask = (task: { name: string }) => {
   };
   return run<ReturnType<typeof fn>>(fn, task);
 };
+
+export const getForecast = wrap(() => {
+  const app = Application("OmniFocus");
+  const doc = app.defaultDocument;
+
+  return doc
+    .flattenedTasks()
+    .filter((t) => !t.completed() && t.effectiveDueDate() !== null)
+    .map((t) => {
+      return {
+        id: t.id(),
+        name: t.name(),
+        effectiveDueDate: t.effectiveDueDate(),
+        completed: t.completed(),
+        effectivelyCompleted: t.effectivelyCompleted(),
+        containingProjectId: t.containingProject()?.id(),
+      };
+    });
+});

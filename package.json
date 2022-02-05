@@ -30,6 +30,12 @@
       "title": "Create Task",
       "description": "Create a New Task",
       "mode": "view"
+    },
+    {
+      "name": "forecast",
+      "title": "Show Forecast",
+      "description": "Show OmniFocus Forecast",
+      "mode": "view"
     }
   ],
   "dependencies": {
