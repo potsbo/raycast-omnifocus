@@ -162,7 +162,7 @@ export const getPerspectivesNames = wrap(() => {
 export const getInboxTasks = wrap(() => {
   const app = Application("OmniFocus");
   return app.defaultDocument.inboxTasks().map((t) => {
-    return { id: t.id(), name: t.name(), completed: t.completed() };
+    return { id: t.id(), name: t.name(), completed: t.completed(), containingProjectId: t.containingProject()?.id() };
   });
 });
 

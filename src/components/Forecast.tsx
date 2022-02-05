@@ -2,20 +2,13 @@ import { Icon, List, useNavigation } from "@raycast/api";
 import { useMemo } from "react";
 import { getForecast, getNestedProjects } from "../api";
 import { useLoad } from "../utils";
-
-interface TaskViewModel {
-  name: string;
-  id: string;
-  completed: boolean;
-  effectivelyCompleted: boolean;
-  containingProjectId: string | undefined;
-}
+import { TaskView, TaskViewModel } from "./TaskView";
 
 type ForecastableTask = TaskViewModel & { effectiveDueDate: string | null };
 
 export const Forecast = () => {
   const tasks = useLoad(getForecast, "ForecastView");
-  const dates: { date: string; tasks: { id: string; name: string }[] }[] = useMemo(() => {
+  const dates: { date: string; tasks: TaskViewModel[] }[] = useMemo(() => {
     if (tasks.value === undefined) {
       return [];
     }
@@ -47,7 +40,7 @@ export const Forecast = () => {
       {dates.map((f) => (
         <List.Section title={f.date} key={f.date}>
           {f.tasks.map((t) => {
-            return <List.Item title={t.name} key={t.id} icon={Icon.List} />;
+            return <TaskView task={t} />;
           })}
         </List.Section>
       ))}
