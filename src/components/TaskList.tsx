@@ -1,15 +1,22 @@
 import { Icon, List } from "@raycast/api";
 import { useLoad } from "../utils";
 
-interface Props {
-  getter: () => Promise<{ name: string; id: string; completed: boolean }[] | undefined>;
+interface TaskViewModel {
+  name: string;
+  id: string;
+  completed: boolean;
 }
 
+interface Props {
+  getter: () => Promise<TaskViewModel[]>;
+}
+
+const onlyAvailable = (t: () => Promise<TaskViewModel[]>) => {
+  return () => t().then((t) => t.filter((t) => !t.completed));
+};
+
 export const TaskList = ({ getter }: Props) => {
-  const items = useLoad(getter);
-  if (items) {
-    console.log(JSON.stringify(items[0]))
-  }
+  const items = useLoad(onlyAvailable(getter));
 
   return (
     <List isLoading={items === undefined}>
