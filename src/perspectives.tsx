@@ -42,7 +42,7 @@ const getPerspectives = async () => {
 export default function Command() {
   const { push } = useNavigation();
 
-  const { value: perspectives, isLoading } = useLoad(getPerspectives);
+  const { value: perspectives, isLoading } = useLoad(getPerspectives, "PerspectiveListView");
 
   return (
     <List isLoading={isLoading}>
@@ -60,7 +60,7 @@ export default function Command() {
                     p.title === "Projects" ? (
                       <ProjectList />
                     ) : p.title === "Inbox" ? (
-                      <TaskList getter={getInboxTasks} />
+                      <TaskList getter={getInboxTasks} cacheKey={"InboxView"} />
                     ) : (
                       <ProjectList />
                     )

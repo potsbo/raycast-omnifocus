@@ -9,10 +9,11 @@ interface TaskViewModel {
 
 interface Props {
   getter: () => Promise<TaskViewModel[]>;
+  cacheKey: string;
 }
 
-export const TaskList = ({ getter }: Props) => {
-  const { value: items, isLoading } = useLoad(onlyAvailable(getter));
+export const TaskList = ({ getter, cacheKey }: Props) => {
+  const { value: items, isLoading } = useLoad(onlyAvailable(getter), cacheKey);
 
   return (
     <List isLoading={isLoading}>

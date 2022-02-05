@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { getLocalStorageItem, setLocalStorageItem } from "@raycast/api";
 
-export function useLoad<T>(loader: () => Promise<T>) {
+export function useLoad<T>(loader: () => Promise<T>, cacheKey: string) {
   const [value, setValue] = useState<{ value: T | undefined; isLoading: true } | { value: T; isLoading: false }>({
     value: undefined,
     isLoading: true,
   });
-  const cacheKey = loader.toString();
 
   useEffect(() => {
     (async () => {

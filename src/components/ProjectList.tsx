@@ -4,7 +4,7 @@ import { useLoad, onlyAvailable } from "../utils";
 import { TaskList } from "./TaskList";
 
 export const ProjectList = () => {
-  const { value: projects, isLoading } = useLoad(onlyAvailable(getProjects));
+  const { value: projects, isLoading } = useLoad(onlyAvailable(getProjects), "ProjectListView");
   const { push } = useNavigation();
 
   return (
@@ -16,7 +16,10 @@ export const ProjectList = () => {
           icon={p.completed ? Icon.Checkmark : Icon.Circle}
           actions={
             <ActionPanel>
-              <ActionPanel.Item title="Push" onAction={() => push(<TaskList getter={getTasksInProject(p.id)} />)} />
+              <ActionPanel.Item
+                title="Push"
+                onAction={() => push(<TaskList getter={getTasksInProject(p.id)} cacheKey={`TaskInProject:${p.id}`} />)}
+              />
             </ActionPanel>
           }
         />
