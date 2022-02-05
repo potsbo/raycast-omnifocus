@@ -8,21 +8,32 @@ const wrap = <T>(fn: () => T) => {
 
 declare const Application: (_: "OmniFocus") => OmniFocus;
 
+interface Document {
+  perspectiveNames: () => [string[]];
+  inboxTasks: () => [Task[]];
+  projects: {
+    (): [Project[]];
+    byId: (id: string) => Project;
+  };
+  folders: {
+    (): [Folder[]];
+  };
+}
+
+interface FolderProperties {
+  name: string;
+}
+
+type Folder = AppleScriptClass<FolderProperties> & {
+  projects: {
+    (): Project[];
+    byId: (id: string) => Project;
+  };
+};
+
 interface OmniFocus {
-  document: {
-    perspectiveNames: () => [string[]];
-    inboxTasks: () => [Task[]];
-    projects: {
-      (): [Project[]];
-      byId: (id: string) => Project[];
-    };
-  };
-  defaultDocument: {
-    projects: {
-      (): [Project[]];
-      byId: (id: string) => Project | undefined;
-    };
-  };
+  document: Document;
+  defaultDocument: Document;
 }
 
 type Status = "active status" | "on hold status" | "done status" | "dropped status";
@@ -153,4 +164,17 @@ export const getProjects = wrap(() => {
     return { id: t.id(), name: t.name(), completed: t.completed() };
   });
   return ret;
+});
+
+export const getNestedProjects = wrap(() => {
+  return Application("OmniFocus")
+    .document.folders()[0]
+    .map((f) => {
+      return {
+        folderName: f.name(),
+        projects: f.projects().map((p) => {
+          return { name: p.name(), completed: p.completed(), id: p.id() };
+        }),
+      };
+    });
 });
