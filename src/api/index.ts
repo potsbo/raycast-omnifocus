@@ -13,13 +13,14 @@ interface DefaultDocument {
   inboxTasks: () => Task[];
   projects: {
     (): Project[];
-    byId: (id: string) => Project;
+    byId: (id: string) => Project | undefined;
   };
   folders: {
     (): Folder[];
   };
   tags: {
     (): Tag[];
+    byId: (id: string) => Tag | undefined;
   };
 }
 
@@ -33,6 +34,7 @@ type Tag = AppleScriptClass<TagProperties> & {
   tags: {
     (): Tag[];
   };
+  tasks: () => Task[];
 };
 
 interface FolderProperties {
@@ -177,6 +179,26 @@ export const getTasksInProject = (projectId: string) => {
   };
   return () => {
     return run<ReturnType<typeof fn>>(fn, projectId);
+  };
+};
+
+export const getTasksWithTag = (tagId: string) => {
+  const fn = (pid: string) => {
+    const tag = Application("OmniFocus").defaultDocument.tags.byId(pid);
+    if (tag === undefined) {
+      return [];
+    }
+    return tag.tasks().map((t) => {
+      return {
+        id: t.id(),
+        name: t.name(),
+        completed: t.completed(),
+        containingProjectId: t.containingProject()?.id(),
+      };
+    });
+  };
+  return () => {
+    return run<ReturnType<typeof fn>>(fn, tagId);
   };
 };
 
