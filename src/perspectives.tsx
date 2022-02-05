@@ -4,6 +4,7 @@ import { getInboxTasks, getPerspectivesNames } from "./api";
 import { useLoad } from "./utils";
 import { TaskList } from "./components/TaskList";
 import { TagList } from "./components/TagList";
+import { Forecast } from "./components/Forecast";
 
 const getIconForPerspective = (name: string) => {
   switch (name) {
@@ -63,6 +64,8 @@ export default function Command() {
                       <TaskList getter={getInboxTasks} cacheKey={"InboxView"} />
                     ) : p.title === "Tags" ? (
                       <TagList />
+                    ) : p.title === "Forecast" ? (
+                      <Forecast />
                     ) : (
                       <ProjectList />
                     )
