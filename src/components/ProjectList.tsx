@@ -1,15 +1,26 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
-import { getNestedProjects, getTasksInProject } from "../api";
+import { getNestedProjects, getProjects, getTasksInProject } from "../api";
 import { useLoad } from "../utils";
 import { TaskList } from "./TaskList";
 
+const getAllProjects = async () => {
+  const folders = await getNestedProjects();
+  const projects = await getProjects();
+  const fs = folders.concat({ folderName: "Top Level Projects", projects });
+  return fs
+    .map((f) => {
+      return { ...f, projects: f.projects.filter((p) => !p.completed) };
+    })
+    .filter((f) => f.projects.length > 0);
+};
+
 export const ProjectList = () => {
-  const { value: folders, isLoading } = useLoad(getNestedProjects, "ProjectListView");
+  const folders = useLoad(getAllProjects, "ProjectListView:All");
   const { push } = useNavigation();
 
   return (
-    <List isLoading={isLoading}>
-      {folders?.map((f) => (
+    <List isLoading={folders.isLoading}>
+      {folders.value?.map((f) => (
         <List.Section title={f.folderName}>
           {f.projects?.map((p) => {
             return (

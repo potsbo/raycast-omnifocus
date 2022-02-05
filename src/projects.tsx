@@ -1,5 +1,5 @@
-import { ProjectList } from "./components/ProjectList"
+import { ProjectList } from "./components/ProjectList";
 
 export default function Command() {
-	return <ProjectList />
+  return <ProjectList />;
 }
