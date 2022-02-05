@@ -161,7 +161,7 @@ export const getProjects = wrap(() => {
   const app = Application("OmniFocus");
   const ps = app.document.projects()[0];
   const ret = ps.map((t) => {
-    return { id: t.id(), name: t.name(), completed: t.completed() };
+    return { id: t.id(), name: t.name(), completed: t.completed(), availableTaskCount: t.numberOfAvailableTasks() };
   });
   return ret;
 });
@@ -173,7 +173,12 @@ export const getNestedProjects = wrap(() => {
       return {
         folderName: f.name(),
         projects: f.projects().map((p) => {
-          return { name: p.name(), completed: p.completed(), id: p.id() };
+          return {
+            name: p.name(),
+            completed: p.completed(),
+            id: p.id(),
+            availableTaskCount: p.numberOfAvailableTasks(),
+          };
         }),
       };
     });

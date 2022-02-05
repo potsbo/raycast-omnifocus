@@ -26,12 +26,13 @@ export const ProjectList = () => {
             return (
               <List.Item
                 title={p.name}
+                subtitle={`${p.availableTaskCount} available`}
                 key={p.id}
                 icon={p.completed ? Icon.Checkmark : Icon.Circle}
                 actions={
                   <ActionPanel>
                     <ActionPanel.Item
-                      title="Push"
+                      title="Show Detail"
                       onAction={() =>
                         push(<TaskList getter={getTasksInProject(p.id)} cacheKey={`TaskInProject:${p.id}`} />)
                       }

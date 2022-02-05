@@ -54,7 +54,7 @@ export default function Command() {
           actions={
             <ActionPanel>
               <ActionPanel.Item
-                title="Push"
+                title="Show Detail"
                 onAction={() =>
                   push(
                     p.title === "Projects" ? (
