@@ -18,6 +18,12 @@
       "title": "Show Inbox",
       "description": "Show OmniFocus Inbox",
       "mode": "view"
+    },
+    {
+      "name": "projects",
+      "title": "Show Projects",
+      "description": "Show OmniFocus Projects",
+      "mode": "view"
     }
   ],
   "dependencies": {
