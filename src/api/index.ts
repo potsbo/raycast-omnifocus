@@ -8,20 +8,36 @@ const wrap = <T>(fn: () => T) => {
 
 declare const Application: (_: "OmniFocus") => OmniFocus;
 
-interface Document {
-  perspectiveNames: () => [string[]];
-  inboxTasks: () => [Task[]];
+interface DefaultDocument {
+  perspectiveNames: () => string[];
+  inboxTasks: () => Task[];
   projects: {
-    (): [Project[]];
+    (): Project[];
     byId: (id: string) => Project;
   };
   folders: {
-    (): [Folder[]];
+    (): Folder[];
+  };
+  tags: {
+    (): Tag[];
   };
 }
 
+interface TagProperties {
+  id: string;
+  name: string;
+  note: string;
+}
+
+type Tag = AppleScriptClass<TagProperties> & {
+  tags: {
+    (): Tag[];
+  };
+};
+
 interface FolderProperties {
   name: string;
+  id: string;
 }
 
 type Folder = AppleScriptClass<FolderProperties> & {
@@ -32,8 +48,7 @@ type Folder = AppleScriptClass<FolderProperties> & {
 };
 
 interface OmniFocus {
-  document: Document;
-  defaultDocument: Document;
+  defaultDocument: DefaultDocument;
 }
 
 type Status = "active status" | "on hold status" | "done status" | "dropped status";
@@ -132,12 +147,12 @@ type Task = AppleScriptClass<TaskProperties> & { tasks: () => Task[] };
 
 export const getPerspectivesNames = wrap(() => {
   const app = Application("OmniFocus");
-  return app.document.perspectiveNames()[0];
+  return app.defaultDocument.perspectiveNames();
 });
 
 export const getInboxTasks = wrap(() => {
   const app = Application("OmniFocus");
-  return app.document.inboxTasks()[0].map((t) => {
+  return app.defaultDocument.inboxTasks().map((t) => {
     return { id: t.id(), name: t.name(), completed: t.completed() };
   });
 });
@@ -167,19 +182,37 @@ export const getTasksInProject = (projectId: string) => {
 
 export const getProjects = wrap(() => {
   const app = Application("OmniFocus");
-  const ps = app.document.projects()[0];
+  const ps = app.defaultDocument.projects();
   const ret = ps.map((t) => {
     return { id: t.id(), name: t.name(), completed: t.completed(), availableTaskCount: t.numberOfAvailableTasks() };
   });
   return ret;
 });
 
+export const getNestedTags = wrap(() => {
+  return Application("OmniFocus")
+    .defaultDocument.tags()
+    .map((f) => {
+      return {
+        tagName: f.name(),
+        id: f.id(),
+        tags: f.tags().map((t) => {
+          return {
+            name: t.name(),
+            id: t.id(),
+          };
+        }),
+      };
+    });
+});
+
 export const getNestedProjects = wrap(() => {
   return Application("OmniFocus")
-    .document.folders()[0]
+    .defaultDocument.folders()
     .map((f) => {
       return {
         folderName: f.name(),
+        folderId: f.id(),
         projects: f.projects().map((p) => {
           return {
             name: p.name(),

@@ -6,7 +6,7 @@ import { TaskList } from "./TaskList";
 const getAllProjects = async () => {
   const folders = await getNestedProjects();
   const projects = await getProjects();
-  const fs = folders.concat({ folderName: "Top Level Projects", projects });
+  const fs = folders.concat({ folderName: "Top Level Projects", projects, folderId: "Manual" });
   return fs
     .map((f) => {
       return { ...f, projects: f.projects.filter((p) => !p.completed) };
@@ -21,7 +21,7 @@ export const ProjectList = () => {
   return (
     <List isLoading={folders.isLoading}>
       {folders.value?.map((f) => (
-        <List.Section title={f.folderName}>
+        <List.Section title={f.folderName} key={f.folderId}>
           {f.projects?.map((p) => {
             return (
               <List.Item
