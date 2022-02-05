@@ -24,6 +24,12 @@
       "title": "Show Projects",
       "description": "Show OmniFocus Projects",
       "mode": "view"
+    },
+    {
+      "name": "create",
+      "title": "Create Task",
+      "description": "Create a New Task",
+      "mode": "view"
     }
   ],
   "dependencies": {
