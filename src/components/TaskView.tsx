@@ -7,12 +7,12 @@ export interface TaskViewModel {
   name: string;
   id: string;
   completed: boolean;
-  containingProject:
+  containingProject?:
     | {
         id: string;
         name: string;
       }
-    | undefined;
+    | null;
   flagged: boolean;
 }
 
@@ -29,7 +29,7 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
       return null;
     }
     const p = task.containingProject;
-    if (typeof p === "undefined") {
+    if (typeof p === "undefined" || p === null) {
       return null;
     }
     return (

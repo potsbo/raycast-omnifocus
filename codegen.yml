@@ -2,12 +2,12 @@ overwrite: true
 schema: "./src/api/schema.graphql"
 documents: "src/**/*.graphql"
 generates:
-  src/api/generated/graphql.tsx:
+  src/api/generated/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-resolvers"
-      - "typescript-react-query"
+      - "typescript-graphql-request"
     config:
       fetcher:
         func: "../fetch#fetch"

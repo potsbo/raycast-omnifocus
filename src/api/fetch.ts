@@ -23,15 +23,19 @@ type Task {
   }
 `);
 
-export function fetch<TData, TVariables>(
-  _endpoint: string,
-  _requestInit: unknown,
+export const fetch = async <TData, TVariables extends { readonly [variable: string]: unknown }>(
   query: string,
-  _variables?: TVariables
-) {
-  return async (): Promise<TData> => {
-    const json = (await graphql({ schema, source: query, rootValue })) as any as ExecutionResult<TData>;
-
-    return json.data!;
-  };
-}
+  variableValues?: TVariables
+) => {
+  console.log("running...");
+  const { data, errors } = (await graphql({
+    schema,
+    source: query,
+    rootValue,
+    variableValues,
+  })) as any as ExecutionResult<TData>;
+  if (data === null || data === undefined) {
+    throw errors;
+  }
+  return data;
+};

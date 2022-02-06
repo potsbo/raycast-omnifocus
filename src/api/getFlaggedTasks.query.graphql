@@ -1,5 +1,5 @@
-query GetFlaggedTasks {
-  flattenedTasks(flagged: true) {
+query GetFlaggedTasks($flagged: Boolean, $available: Boolean) {
+  flattenedTasks(flagged: $flagged, available: $available) {
     name
     id
     effectiveDueDate
