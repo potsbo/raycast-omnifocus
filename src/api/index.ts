@@ -8,7 +8,7 @@ const wrap = <T>(fn: () => T) => {
 };
 
 // Construct a schema, using GraphQL schema language
-const schema = buildSchema(`
+export const schema = buildSchema(`
 type Project {
   name: String!
   id: String!
@@ -30,7 +30,7 @@ type Task {
 `);
 
 // The rootValue provides a resolver function for each API endpoint
-const rootValue = {
+export const rootValue = {
   flattenedTasks: (args: { onlyAvailable?: boolean; flagged?: boolean; limit?: number }) => {
     const fn = (arg: { onlyAvailable?: boolean; flagged?: boolean; limit?: number }) => {
       const app = Application("OmniFocus");

@@ -1,30 +1,12 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { GraphQLResolveInfo } from "graphql";
+import { RequestInit } from "graphql-request/dist/types.dom";
+import { useQuery, UseQueryOptions } from "react-query";
+import { fetch } from "../fetch";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-
-function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
-  return async (): Promise<TData> => {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      ...requestInit,
-      body: JSON.stringify({ query, variables }),
-    });
-
-    const json = await res.json();
-
-    if (json.errors) {
-      const { message } = json.errors[0];
-
-      throw new Error(message);
-    }
-
-    return json.data;
-  }
-}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -35,48 +17,57 @@ export type Scalars = {
 };
 
 export type Project = {
-  __typename?: 'Project';
-  id: Scalars['String'];
-  name: Scalars['String'];
+  __typename?: "Project";
+  id: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type Query = {
-  __typename?: 'Query';
+  __typename?: "Query";
   flattenedTasks: Array<Maybe<Task>>;
 };
 
-
 export type QueryFlattenedTasksArgs = {
-  available?: InputMaybe<Scalars['Boolean']>;
-  flagged?: InputMaybe<Scalars['Boolean']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  available?: InputMaybe<Scalars["Boolean"]>;
+  flagged?: InputMaybe<Scalars["Boolean"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
 };
 
 export type Task = {
-  __typename?: 'Task';
-  completed: Scalars['Boolean'];
+  __typename?: "Task";
+  completed: Scalars["Boolean"];
   containingProject?: Maybe<Project>;
-  effectiveDueDate?: Maybe<Scalars['String']>;
-  effectivelyCompleted: Scalars['Boolean'];
-  flagged: Scalars['Boolean'];
-  id: Scalars['String'];
-  name: Scalars['String'];
+  effectiveDueDate?: Maybe<Scalars["String"]>;
+  effectivelyCompleted: Scalars["Boolean"];
+  flagged: Scalars["Boolean"];
+  id: Scalars["String"];
+  name: Scalars["String"];
 };
 
-export type GetFlaggedTasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetFlaggedTasksQueryVariables = Exact<{ [key: string]: never }>;
 
-
-export type GetFlaggedTasksQuery = { __typename?: 'Query', flattenedTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | null> };
-
-
+export type GetFlaggedTasksQuery = {
+  __typename?: "Query";
+  flattenedTasks: Array<{
+    __typename?: "Task";
+    name: string;
+    id: string;
+    effectiveDueDate?: string | null;
+    completed: boolean;
+    effectivelyCompleted: boolean;
+    flagged: boolean;
+    containingProject?: { __typename?: "Project"; id: string; name: string } | null;
+  } | null>;
+};
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
-
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -123,7 +114,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+  obj: T,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -137,42 +132,56 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Project: ResolverTypeWrapper<Project>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  String: ResolverTypeWrapper<Scalars["String"]>;
   Task: ResolverTypeWrapper<Task>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Boolean: Scalars['Boolean'];
-  Int: Scalars['Int'];
+  Boolean: Scalars["Boolean"];
+  Int: Scalars["Int"];
   Project: Project;
   Query: {};
-  String: Scalars['String'];
+  String: Scalars["String"];
   Task: Task;
 };
 
-export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type ProjectResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Project"] = ResolversParentTypes["Project"]
+> = {
+  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  flattenedTasks?: Resolver<Array<Maybe<ResolversTypes['Task']>>, ParentType, ContextType, Partial<QueryFlattenedTasksArgs>>;
+export type QueryResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
+> = {
+  flattenedTasks?: Resolver<
+    Array<Maybe<ResolversTypes["Task"]>>,
+    ParentType,
+    ContextType,
+    Partial<QueryFlattenedTasksArgs>
+  >;
 };
 
-export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
-  completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  containingProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
-  effectiveDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  effectivelyCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type TaskResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Task"] = ResolversParentTypes["Task"]
+> = {
+  completed?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  containingProject?: Resolver<Maybe<ResolversTypes["Project"]>, ParentType, ContextType>;
+  effectiveDueDate?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  effectivelyCompleted?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  flagged?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -181,8 +190,6 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
 };
-
-
 
 export const GetFlaggedTasksDocument = `
     query GetFlaggedTasks {
@@ -200,16 +207,12 @@ export const GetFlaggedTasksDocument = `
   }
 }
     `;
-export const useGetFlaggedTasksQuery = <
-      TData = GetFlaggedTasksQuery,
-      TError = unknown
-    >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
-      variables?: GetFlaggedTasksQueryVariables,
-      options?: UseQueryOptions<GetFlaggedTasksQuery, TError, TData>
-    ) =>
-    useQuery<GetFlaggedTasksQuery, TError, TData>(
-      variables === undefined ? ['GetFlaggedTasks'] : ['GetFlaggedTasks', variables],
-      fetcher<GetFlaggedTasksQuery, GetFlaggedTasksQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetFlaggedTasksDocument, variables),
-      options
-    );
+export const useGetFlaggedTasksQuery = <TData = GetFlaggedTasksQuery, TError = unknown>(
+  variables?: GetFlaggedTasksQueryVariables,
+  options?: UseQueryOptions<GetFlaggedTasksQuery, TError, TData>
+) =>
+  useQuery<GetFlaggedTasksQuery, TError, TData>(
+    variables === undefined ? ["GetFlaggedTasks"] : ["GetFlaggedTasks", variables],
+    fetch<GetFlaggedTasksQuery, GetFlaggedTasksQueryVariables>(GetFlaggedTasksDocument, variables),
+    options
+  );
