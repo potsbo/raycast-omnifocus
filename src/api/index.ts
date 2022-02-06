@@ -1,9 +1,94 @@
 import { run } from "@jxa/run";
+import { graphql, buildSchema } from "graphql";
 
 const wrap = <T>(fn: () => T) => {
   return async () => {
     return await run<T>(fn);
   };
+};
+
+// Construct a schema, using GraphQL schema language
+const schema = buildSchema(`
+type Project {
+  name: String!
+  id: String!
+}
+
+type Task {
+  name: String!
+  id: String!
+  effectiveDueDate: String
+  completed: Boolean!
+  effectivelyCompleted: Boolean!
+  containingProject: Project
+  flagged: Boolean!
+}
+
+  type Query {
+    flattenedTasks(available: Boolean, flagged: Boolean, limit: Int): [Task]!
+  }
+`);
+
+// The rootValue provides a resolver function for each API endpoint
+const rootValue = {
+  flattenedTasks: (args: { onlyAvailable?: boolean; flagged?: boolean; limit?: number }) => {
+    const fn = (arg: { onlyAvailable?: boolean; flagged?: boolean; limit?: number }) => {
+      const app = Application("OmniFocus");
+      const doc = app.defaultDocument;
+
+      return doc
+        .flattenedTasks()
+        .slice(0, arg.limit !== undefined ? arg.limit : -1)
+        .filter((t) => {
+          if (arg.onlyAvailable !== undefined && arg.onlyAvailable !== t.completed()) {
+            return false;
+          }
+          if (arg.flagged !== undefined && arg.flagged !== t.flagged()) {
+            return false;
+          }
+          return true;
+        })
+        .map((t) => {
+          return {
+            id: t.id(),
+            name: t.name(),
+            effectiveDueDate: t.effectiveDueDate(),
+            completed: t.completed(),
+            effectivelyCompleted: t.effectivelyCompleted(),
+            containingProject: t.containingProject()
+              ? {
+                  name: t.containingProject()?.name(),
+                  id: t.containingProject()?.id(),
+                }
+              : undefined,
+            flagged: t.flagged(),
+          };
+        });
+    };
+
+    return run(fn, args);
+  },
+};
+
+export const getFlagged = (): Promise<
+  {
+    id: string;
+    name: string;
+    effectiveDueDate: string | null;
+    completed: boolean;
+    effectivelyCompleted: boolean;
+    containingProject:
+      | {
+          name: string;
+          id: string;
+        }
+      | undefined;
+    flagged: boolean;
+  }[]
+> => {
+  const source =
+    "{ flattenedTasks(flagged: true) { name, id, effectiveDueDate, completed, effectivelyCompleted, containingProject { id, name }, flagged} }";
+  return (graphql({ schema, source, rootValue }) as any).then((result) => result.data!.flattenedTasks);
 };
 
 declare const Application: (_: "OmniFocus") => OmniFocus;
@@ -319,28 +404,6 @@ export const getAllTasks = wrap(() => {
   const doc = app.defaultDocument;
 
   return doc.flattenedTasks().map((t) => {
-    return {
-      id: t.id(),
-      name: t.name(),
-      effectiveDueDate: t.effectiveDueDate(),
-      completed: t.completed(),
-      effectivelyCompleted: t.effectivelyCompleted(),
-      containingProject: t.containingProject()
-        ? {
-            name: t.containingProject()?.name(),
-            id: t.containingProject()?.id(),
-          }
-        : undefined,
-      flagged: t.flagged(),
-    };
-  });
-});
-
-export const getFlagged = wrap(() => {
-  const app = Application("OmniFocus");
-  const doc = app.defaultDocument;
-
-  return doc.flattenedTasks().filter((t) => t.flagged()).map((t) => {
     return {
       id: t.id(),
       name: t.name(),
