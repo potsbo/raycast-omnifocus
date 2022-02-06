@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { getLocalStorageItem, setLocalStorageItem } from "@raycast/api";
 
-export function useLoad<T>(loader: () => Promise<T>, cacheKey: string) {
+const cachePrefix = "v1";
+
+export function useLoad<T>(loader: () => Promise<T>, key: string) {
+  const cacheKey = `${cachePrefix}:${key}`;
   const [value, setValue] = useState<{ value: T | undefined; isLoading: true } | { value: T; isLoading: false }>({
     value: undefined,
     isLoading: true,

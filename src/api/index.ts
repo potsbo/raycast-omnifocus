@@ -283,3 +283,23 @@ export const getForecast = wrap(() => {
       };
     });
 });
+
+// TODO: merge with getForecast
+export const getAllTasks = wrap(() => {
+  const app = Application("OmniFocus");
+  const doc = app.defaultDocument;
+
+  return doc
+    .flattenedTasks()
+    .map((t) => {
+      return {
+        id: t.id(),
+        name: t.name(),
+        effectiveDueDate: t.effectiveDueDate(),
+        completed: t.completed(),
+        effectivelyCompleted: t.effectivelyCompleted(),
+        containingProjectId: t.containingProject()?.id(),
+      };
+    });
+});
+

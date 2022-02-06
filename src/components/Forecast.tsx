@@ -1,6 +1,6 @@
-import { Icon, List, useNavigation } from "@raycast/api";
+import { List } from "@raycast/api";
 import { useMemo } from "react";
-import { getForecast, getNestedProjects } from "../api";
+import { getForecast } from "../api";
 import { useLoad } from "../utils";
 import { TaskView, TaskViewModel } from "./TaskView";
 
@@ -18,7 +18,7 @@ export const Forecast = () => {
       if (t.effectiveDueDate === null || t.effectivelyCompleted) {
         return;
       }
-      const d = new Date(t.effectiveDueDate!);
+      const d = new Date(t.effectiveDueDate);
       d.setHours(0, 0, 0, 0);
       const key = d.toDateString();
 
@@ -40,7 +40,7 @@ export const Forecast = () => {
       {dates.map((f) => (
         <List.Section title={f.date} key={f.date}>
           {f.tasks.map((t) => {
-            return <TaskView task={t} />;
+            return <TaskView task={t} key={t.id}/>;
           })}
         </List.Section>
       ))}
