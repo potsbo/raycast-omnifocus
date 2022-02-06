@@ -7,4 +7,4 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-resolvers"
-      - "typescript-react-apollo"
+      - "typescript-react-query"
