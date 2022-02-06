@@ -14,6 +14,12 @@
       "mode": "view"
     },
     {
+      "name": "create",
+      "title": "Create Task",
+      "description": "Create a New Task",
+      "mode": "view"
+    },
+    {
       "name": "inbox",
       "title": "Show Inbox",
       "description": "Show OmniFocus Inbox",
@@ -26,15 +32,27 @@
       "mode": "view"
     },
     {
-      "name": "create",
-      "title": "Create Task",
-      "description": "Create a New Task",
+      "name": "tags",
+      "title": "Tags",
+      "description": "Show OmniFocus Tags",
       "mode": "view"
     },
     {
       "name": "forecast",
-      "title": "Show Forecast",
+      "title": "Forecast",
       "description": "Show OmniFocus Forecast",
+      "mode": "view"
+    },
+    {
+      "name": "flagged",
+      "title": "Flagged",
+      "description": "Show OmniFocus Flagged",
+      "mode": "view"
+    },
+    {
+      "name": "review",
+      "title": "Review",
+      "description": "Show OmniFocus Review",
       "mode": "view"
     }
   ],
