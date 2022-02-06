@@ -38,7 +38,7 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
         onAction={() =>
           push(
             <TaskList
-              title={"Tasks in Project"} // TODO: show project name
+              title={p.name}
               getter={getTasksInProject(p.id)}
               cacheKey={`ProjectTaskList:${p.id}`}
               disableShowInProjects={true}
