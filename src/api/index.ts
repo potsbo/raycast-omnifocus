@@ -162,7 +162,13 @@ export const getPerspectivesNames = wrap(() => {
 export const getInboxTasks = wrap(() => {
   const app = Application("OmniFocus");
   return app.defaultDocument.inboxTasks().map((t) => {
-    return { id: t.id(), name: t.name(), completed: t.completed(), containingProjectId: t.containingProject()?.id() };
+    return {
+      id: t.id(),
+      name: t.name(),
+      completed: t.completed(),
+      containingProjectId: t.containingProject()?.id(),
+      flagged: t.flagged(),
+    };
   });
 });
 
@@ -181,6 +187,7 @@ export const getTasksInProject = (projectId: string) => {
           name: t.name(),
           completed: t.completed(),
           containingProjectId: t.containingProject()?.id(),
+          flagged: t.flagged(),
         };
       });
   };
@@ -201,6 +208,7 @@ export const getTasksWithTag = (tagId: string) => {
         name: t.name(),
         completed: t.completed(),
         containingProjectId: t.containingProject()?.id(),
+        flagged: t.flagged(),
       };
     });
   };
@@ -280,6 +288,7 @@ export const getForecast = wrap(() => {
         completed: t.completed(),
         effectivelyCompleted: t.effectivelyCompleted(),
         containingProjectId: t.containingProject()?.id(),
+        flagged: t.flagged(),
       };
     });
 });
@@ -289,17 +298,15 @@ export const getAllTasks = wrap(() => {
   const app = Application("OmniFocus");
   const doc = app.defaultDocument;
 
-  return doc
-    .flattenedTasks()
-    .map((t) => {
-      return {
-        id: t.id(),
-        name: t.name(),
-        effectiveDueDate: t.effectiveDueDate(),
-        completed: t.completed(),
-        effectivelyCompleted: t.effectivelyCompleted(),
-        containingProjectId: t.containingProject()?.id(),
-      };
-    });
+  return doc.flattenedTasks().map((t) => {
+    return {
+      id: t.id(),
+      name: t.name(),
+      effectiveDueDate: t.effectiveDueDate(),
+      completed: t.completed(),
+      effectivelyCompleted: t.effectivelyCompleted(),
+      containingProjectId: t.containingProject()?.id(),
+      flagged: t.flagged(),
+    };
+  });
 });
-

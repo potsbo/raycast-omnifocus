@@ -40,7 +40,7 @@ export const Forecast = () => {
       {dates.map((f) => (
         <List.Section title={f.date} key={f.date}>
           {f.tasks.map((t) => {
-            return <TaskView task={t} key={t.id}/>;
+            return <TaskView task={t} key={t.id} />;
           })}
         </List.Section>
       ))}

@@ -7,6 +7,7 @@ export interface TaskViewModel {
   id: string;
   completed: boolean;
   containingProjectId: string | undefined;
+  flagged: boolean;
 }
 
 type Props = {
@@ -22,6 +23,8 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
       title={task.name}
       key={task.id}
       icon={task.completed ? Icon.Checkmark : Icon.Circle}
+      accessoryTitle={task.flagged ? "Flagged" : undefined}
+      accessoryIcon={task.flagged ? Icon.Star : undefined}
       actions={
         <ActionPanel>
           {!disableShowInProjects && task.containingProjectId !== undefined && (
