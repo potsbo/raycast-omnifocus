@@ -22,7 +22,13 @@ export const TagList = () => {
                     <ActionPanel.Item
                       title="Show Detail"
                       onAction={() =>
-                        push(<TaskList getter={getTasksWithTag(p.id)} cacheKey={`TasksWithTag:${p.id}`} />)
+                        push(
+                          <TaskList
+                            getter={getTasksWithTag(p.id)}
+                            cacheKey={`TasksWithTag:${p.id}`}
+                            title={`Tasks tagged "${p.name}"`}
+                          />
+                        )
                       }
                     />
                   </ActionPanel>

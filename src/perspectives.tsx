@@ -61,7 +61,7 @@ export default function Command() {
                     p.title === "Projects" ? (
                       <ProjectList />
                     ) : p.title === "Inbox" ? (
-                      <TaskList getter={getInboxTasks} cacheKey={"InboxView"} />
+                      <TaskList getter={getInboxTasks} cacheKey={"InboxView"} title={"Inbox"} />
                     ) : p.title === "Tags" ? (
                       <TagList />
                     ) : p.title === "Forecast" ? (

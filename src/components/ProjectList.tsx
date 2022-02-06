@@ -36,6 +36,7 @@ export const ProjectList = () => {
                       onAction={() =>
                         push(
                           <TaskList
+                            title={"Tasks in Project"}
                             getter={getTasksInProject(p.id)}
                             cacheKey={`TaskInProject:${p.id}`}
                             disableShowInProjects={true}
