@@ -39,3 +39,6 @@ export function useLoad<T>(loader: () => Promise<T>, key: string) {
 export const onlyAvailable = <T extends { completed: boolean }>(t: () => Promise<T[]>) => {
   return () => t().then((t) => t.filter((t) => !t.completed));
 };
+export const onlyFlagged = <T extends { flagged: boolean }>(t: () => Promise<T[]>) => {
+  return () => t().then((t) => t.filter((t) => t.flagged));
+};

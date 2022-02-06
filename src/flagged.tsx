@@ -1,10 +1,10 @@
 import { List } from "@raycast/api";
 import { getAllTasks } from "./api";
 import { TaskView } from "./components/TaskView";
-import { useLoad } from "./utils";
+import { onlyAvailable, onlyFlagged, useLoad } from "./utils";
 
 export default function Command() {
-  const tasks = useLoad(getAllTasks, "AllTasks");
+  const tasks = useLoad(onlyFlagged(onlyAvailable(getAllTasks)), "AllTasks");
 
   return (
     <List isLoading={tasks.isLoading}>
