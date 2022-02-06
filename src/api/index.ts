@@ -17,24 +17,28 @@ export const rootValue: QueryResolvers = {
 
       const applyAvailableFilter = (t: Task) => {
         const a = arg.available;
-        if (a === null) {
+        if (a === null || a === undefined) {
           return true;
         }
-        if (a === undefined) {
-          return true;
-        }
+
         return !t.completed() === a;
       };
 
       const applyFlaggedFilter = (t: Task) => {
         const a = arg.flagged;
-        if (a === null) {
+        if (a === null || a === undefined) {
           return true;
         }
-        if (a === undefined) {
-          return true;
-        }
+
         return t.flagged() === a;
+      };
+      const applyWithEffectiveDueDate = (t: Task) => {
+        const a = arg.withEffectiveDueDate;
+        if (a === null || a === undefined) {
+          return true;
+        }
+
+        return (t.effectiveDueDate() !== null) === a;
       };
 
       return doc
@@ -42,6 +46,7 @@ export const rootValue: QueryResolvers = {
         .slice(0, arg.limit !== null && arg.limit !== undefined ? arg.limit : -1)
         .filter(applyAvailableFilter)
         .filter(applyFlaggedFilter)
+        .filter(applyWithEffectiveDueDate)
         .map((t) => {
           return {
             id: t.id(),
@@ -345,51 +350,3 @@ export const createNewTask = (task: { name: string }) => {
   };
   return run<ReturnType<typeof fn>>(fn, task);
 };
-
-export const getForecast = wrap(() => {
-  const app = Application("OmniFocus");
-  const doc = app.defaultDocument;
-
-  return doc
-    .flattenedTasks()
-    .filter((t) => !t.completed() && t.effectiveDueDate() !== null)
-    .map((t) => {
-      return {
-        id: t.id(),
-        name: t.name(),
-        effectiveDueDate: t.effectiveDueDate(),
-        completed: t.completed(),
-        effectivelyCompleted: t.effectivelyCompleted(),
-        containingProject: t.containingProject()
-          ? {
-              name: t.containingProject()?.name(),
-              id: t.containingProject()?.id(),
-            }
-          : undefined,
-        flagged: t.flagged(),
-      };
-    });
-});
-
-// TODO: merge with getForecast
-export const getAllTasks = wrap(() => {
-  const app = Application("OmniFocus");
-  const doc = app.defaultDocument;
-
-  return doc.flattenedTasks().map((t) => {
-    return {
-      id: t.id(),
-      name: t.name(),
-      effectiveDueDate: t.effectiveDueDate(),
-      completed: t.completed(),
-      effectivelyCompleted: t.effectivelyCompleted(),
-      containingProject: t.containingProject()
-        ? {
-            name: t.containingProject()?.name(),
-            id: t.containingProject()?.id(),
-          }
-        : undefined,
-      flagged: t.flagged(),
-    };
-  });
-});

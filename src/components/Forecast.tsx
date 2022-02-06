@@ -1,21 +1,20 @@
 import { List } from "@raycast/api";
 import { useMemo } from "react";
-import { getForecast } from "../api";
-import { useLoad } from "../utils";
+import { useQuery } from "../api/fetch";
 import { TaskView, TaskViewModel } from "./TaskView";
 
-type ForecastableTask = TaskViewModel & { effectiveDueDate: string | null };
+type ForecastableTask = TaskViewModel & { effectiveDueDate?: string | null };
 
 export const Forecast = () => {
-  const tasks = useLoad(getForecast, "ForecastView");
+  const tasks = useQuery("GetTasks", { withEffectiveDueDate: true, available: true });
   const dates: { date: string; tasks: TaskViewModel[] }[] = useMemo(() => {
     if (tasks.value === undefined) {
       return [];
     }
 
     const groups: Record<string, ForecastableTask[]> = {};
-    tasks.value.forEach((t) => {
-      if (t.effectiveDueDate === null || t.effectivelyCompleted) {
+    tasks.value.flattenedTasks.forEach((t) => {
+      if (t.effectiveDueDate === null || t.effectiveDueDate === undefined || t.effectivelyCompleted) {
         return;
       }
       const d = new Date(t.effectiveDueDate);
