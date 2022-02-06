@@ -32,6 +32,7 @@ export type QueryFlattenedTasksArgs = {
   available?: InputMaybe<Scalars['Boolean']>;
   flagged?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['Int']>;
+  withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Task = {
@@ -45,13 +46,14 @@ export type Task = {
   name: Scalars['String'];
 };
 
-export type GetFlaggedTasksQueryVariables = Exact<{
+export type GetTasksQueryVariables = Exact<{
   flagged?: InputMaybe<Scalars['Boolean']>;
   available?: InputMaybe<Scalars['Boolean']>;
+  withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type GetFlaggedTasksQuery = { __typename?: 'Query', flattenedTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
+export type GetTasksQuery = { __typename?: 'Query', flattenedTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
 
 
 
@@ -169,9 +171,13 @@ export type Resolvers<ContextType = any> = {
 
 
 
-export const GetFlaggedTasksDocument = gql`
-    query GetFlaggedTasks($flagged: Boolean, $available: Boolean) {
-  flattenedTasks(flagged: $flagged, available: $available) {
+export const GetTasksDocument = gql`
+    query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
+  flattenedTasks(
+    flagged: $flagged
+    available: $available
+    withEffectiveDueDate: $withEffectiveDueDate
+  ) {
     name
     id
     effectiveDueDate
@@ -193,8 +199,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetFlaggedTasks(variables?: GetFlaggedTasksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetFlaggedTasksQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetFlaggedTasksQuery>(GetFlaggedTasksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetFlaggedTasks');
+    GetTasks(variables?: GetTasksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTasksQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTasksQuery>(GetTasksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTasks');
     }
   };
 }
