@@ -1,0 +1,18 @@
+type Project {
+  name: String!
+  id: String!
+}
+
+type Task {
+  name: String!
+  id: String!
+  effectiveDueDate: String
+  completed: Boolean!
+  effectivelyCompleted: Boolean!
+  containingProject: Project
+  flagged: Boolean!
+}
+
+type Query {
+  flattenedTasks(available: Boolean, flagged: Boolean, limit: Int): [Task]!
+}
