@@ -166,7 +166,12 @@ export const getInboxTasks = wrap(() => {
       id: t.id(),
       name: t.name(),
       completed: t.completed(),
-      containingProjectId: t.containingProject()?.id(),
+      containingProject: t.containingProject()
+        ? {
+            name: t.containingProject().name(),
+            id: t.containingProject().id(),
+          }
+        : undefined,
       flagged: t.flagged(),
     };
   });
@@ -186,7 +191,12 @@ export const getTasksInProject = (projectId: string) => {
           id: t.id(),
           name: t.name(),
           completed: t.completed(),
-          containingProjectId: t.containingProject()?.id(),
+          containingProject: t.containingProject()
+            ? {
+                name: t.containingProject()?.name(),
+                id: t.containingProject()?.id(),
+              }
+            : undefined,
           flagged: t.flagged(),
         };
       });
@@ -207,7 +217,12 @@ export const getTasksWithTag = (tagId: string) => {
         id: t.id(),
         name: t.name(),
         completed: t.completed(),
-        containingProjectId: t.containingProject()?.id(),
+        containingProject: t.containingProject()
+          ? {
+              name: t.containingProject()?.name(),
+              id: t.containingProject()?.id(),
+            }
+          : undefined,
         flagged: t.flagged(),
       };
     });
@@ -287,7 +302,12 @@ export const getForecast = wrap(() => {
         effectiveDueDate: t.effectiveDueDate(),
         completed: t.completed(),
         effectivelyCompleted: t.effectivelyCompleted(),
-        containingProjectId: t.containingProject()?.id(),
+        containingProject: t.containingProject()
+          ? {
+              name: t.containingProject()?.name(),
+              id: t.containingProject()?.id(),
+            }
+          : undefined,
         flagged: t.flagged(),
       };
     });
@@ -305,7 +325,12 @@ export const getAllTasks = wrap(() => {
       effectiveDueDate: t.effectiveDueDate(),
       completed: t.completed(),
       effectivelyCompleted: t.effectivelyCompleted(),
-      containingProjectId: t.containingProject()?.id(),
+      containingProject: t.containingProject()
+        ? {
+            name: t.containingProject()?.name(),
+            id: t.containingProject()?.id(),
+          }
+        : undefined,
       flagged: t.flagged(),
     };
   });
