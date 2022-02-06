@@ -1,0 +1,14 @@
+query GetFlaggedTasks {
+  flattenedTasks(flagged: true) {
+    name
+    id
+    effectiveDueDate
+    completed
+    effectivelyCompleted
+    containingProject {
+      id
+      name
+    }
+    flagged
+  }
+}
