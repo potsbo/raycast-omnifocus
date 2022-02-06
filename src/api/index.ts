@@ -335,3 +335,25 @@ export const getAllTasks = wrap(() => {
     };
   });
 });
+
+export const getFlagged = wrap(() => {
+  const app = Application("OmniFocus");
+  const doc = app.defaultDocument;
+
+  return doc.flattenedTasks().filter((t) => t.flagged()).map((t) => {
+    return {
+      id: t.id(),
+      name: t.name(),
+      effectiveDueDate: t.effectiveDueDate(),
+      completed: t.completed(),
+      effectivelyCompleted: t.effectivelyCompleted(),
+      containingProject: t.containingProject()
+        ? {
+            name: t.containingProject()?.name(),
+            id: t.containingProject()?.id(),
+          }
+        : undefined,
+      flagged: t.flagged(),
+    };
+  });
+});
