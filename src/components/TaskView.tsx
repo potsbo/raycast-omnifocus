@@ -7,12 +7,10 @@ export interface TaskViewModel {
   name: string;
   id: string;
   completed: boolean;
-  containingProject?:
-    | {
-        id: string;
-        name: string;
-      }
-    | null;
+  containingProject?: {
+    id: string;
+    name: string;
+  } | null;
   flagged: boolean;
 }
 
