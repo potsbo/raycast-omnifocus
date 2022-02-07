@@ -1,4 +1,4 @@
-import { graphql, buildSchema, ExecutionResult } from "graphql";
+import { graphql, ExecutionResult } from "graphql";
 import { GraphQLClient, Variables, RequestDocument } from "graphql-request";
 import { print } from "graphql/language/printer";
 import { resolver } from ".";
@@ -8,7 +8,6 @@ import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
 
-// TODO load from files
 const schema = loadSchemaSync(join(__dirname, "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
 });
