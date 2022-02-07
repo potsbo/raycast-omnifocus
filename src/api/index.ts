@@ -1,5 +1,5 @@
 import { run } from "@jxa/run";
-import { QueryFlattenedTasksArgs, QueryResolvers } from "./generated/graphql";
+import { QueryFlattenedTasksArgs, QueryResolvers, Resolvers } from "./generated/graphql";
 
 const wrap = <T>(fn: () => T) => {
   return async () => {
@@ -8,9 +8,8 @@ const wrap = <T>(fn: () => T) => {
 };
 
 // The rootValue provides a resolver function for each API endpoint
-export const rootValue: QueryResolvers = {
+const rootValue: QueryResolvers = {
   flattenedTasks: (args: QueryFlattenedTasksArgs) => {
-    console.log("started resolving");
     const fn = (arg: QueryFlattenedTasksArgs) => {
       const app = Application("OmniFocus");
       const doc = app.defaultDocument;
@@ -67,6 +66,10 @@ export const rootValue: QueryResolvers = {
 
     return run(fn, args);
   },
+};
+
+export const resolver: Resolvers = {
+  Query: rootValue,
 };
 
 declare const Application: (_: "OmniFocus") => OmniFocus;
