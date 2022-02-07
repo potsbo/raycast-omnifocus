@@ -8,6 +8,3 @@ generates:
       - "typescript-operations"
       - "typescript-resolvers"
       - "typescript-graphql-request"
-    config:
-      fetcher:
-        func: "../fetch#fetch"
