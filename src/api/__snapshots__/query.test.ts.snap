@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`query for GetTasksDocument 1`] = `
+"(parent ? {
+  name: parent.name(),
+  id: parent.id(),
+  effectiveDueDate: parent.effectiveDueDate(),
+  completed: parent.completed(),
+  effectivelyCompleted: parent.effectivelyCompleted(),
+  containingProject: parent.containingProject() ? {
+    id: parent.containingProject().id(),
+    name: parent.containingProject().name(),
+  } : undefined,
+  flagged: parent.flagged(),
+} : undefined)"
+`;

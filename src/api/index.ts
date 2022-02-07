@@ -1,5 +1,7 @@
 import { run } from "@jxa/run";
+import { GraphQLResolveInfo } from "graphql";
 import { QueryFlattenedTasksArgs, QueryResolvers, Resolvers } from "./generated/graphql";
+import { genQuery } from "./query";
 
 const wrap = <T>(fn: () => T) => {
   return async () => {
@@ -9,8 +11,10 @@ const wrap = <T>(fn: () => T) => {
 
 // The rootValue provides a resolver function for each API endpoint
 const rootValue: QueryResolvers = {
-  flattenedTasks: (args: QueryFlattenedTasksArgs) => {
-    const fn = (arg: QueryFlattenedTasksArgs) => {
+  flattenedTasks: (args: QueryFlattenedTasksArgs, _: unknown, info: GraphQLResolveInfo) => {
+    const q = genQuery("t", info);
+
+    const fn = (arg: QueryFlattenedTasksArgs & { q: string }) => {
       const app = Application("OmniFocus");
       const doc = app.defaultDocument;
 
@@ -46,25 +50,12 @@ const rootValue: QueryResolvers = {
         .filter(applyAvailableFilter)
         .filter(applyFlaggedFilter)
         .filter(applyWithEffectiveDueDate)
-        .map((t) => {
-          return {
-            id: t.id(),
-            name: t.name(),
-            effectiveDueDate: t.effectiveDueDate(),
-            completed: t.completed(),
-            effectivelyCompleted: t.effectivelyCompleted(),
-            containingProject: t.containingProject()
-              ? {
-                  name: t.containingProject()?.name(),
-                  id: t.containingProject()?.id(),
-                }
-              : undefined,
-            flagged: t.flagged(),
-          };
+        .map((t: any) => {
+          return eval(arg.q);
         });
     };
 
-    return run(fn, args);
+    return run(fn, { ...args, q });
   },
 };
 
