@@ -23,6 +23,7 @@ export const fetch = async <TData, TVariables extends { readonly [variable: stri
     variableValues,
   })) as any as ExecutionResult<TData>;
   if (data === null || data === undefined) {
+    console.error(errors);
     throw errors;
   }
   return data;
