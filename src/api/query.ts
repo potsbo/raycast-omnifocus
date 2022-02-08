@@ -11,24 +11,28 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
   }
   const name = f.name.value;
   if (f.kind === Kind.FRAGMENT_SPREAD) {
-    const fs = fragments[f.name.value];
-    return convertFields({ rootName, fragments }, fs.selectionSet.selections)
+    const fs = fragments[name];
+    return convertFields({ rootName, fragments }, fs.selectionSet.selections, true);
   }
   if (f.selectionSet) {
     const child = `${rootName}.${name}()`;
-    return `${name}: ${child} ? { ${convertFields({ rootName: child, fragments }, f.selectionSet.selections)}} : undefined,`;
+    return `${name}: ${convertFields({ rootName: child, fragments }, f.selectionSet.selections)},`;
   }
   return `${name}: ${rootName}.${name}(),`;
 };
 
-const convertFields = ({ rootName, fragments }: CurrentContext, fs: readonly SelectionNode[]) => {
+const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], fieldsOnly = false) => {
   const converted = fs
     .map((f) => {
-      return convertField({ rootName, fragments }, f);
+      return convertField(ctx, f);
     })
     .join("");
 
-  return `${converted}`;
+  if (fieldsOnly) {
+    return converted;
+  }
+
+  return `${ctx.rootName} ? { ${converted} } : undefined`;
 };
 
 export const genQuery = (rootName: string, info: Pick<GraphQLResolveInfo, "operation" | "fragments">) => {
@@ -38,5 +42,5 @@ export const genQuery = (rootName: string, info: Pick<GraphQLResolveInfo, "opera
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
   const fs = field.selectionSet.selections;
-  return `(${rootName} ? {${convertFields({ rootName, fragments }, fs)}} : undefined)`;
+  return `(${convertFields({ rootName, fragments }, fs)})`;
 };

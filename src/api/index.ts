@@ -50,7 +50,8 @@ const rootValue: QueryResolvers = {
         .filter(applyAvailableFilter)
         .filter(applyFlaggedFilter)
         .filter(applyWithEffectiveDueDate)
-        .map((t: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map((t) => {
           return eval(arg.q);
         });
     };
@@ -66,7 +67,8 @@ const rootValue: QueryResolvers = {
 
       return doc
         .inboxTasks()
-        .map((t: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map((t) => {
           return eval(arg.q);
         });
     };
