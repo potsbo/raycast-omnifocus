@@ -53,6 +53,8 @@ export type Task = {
   name: Scalars['String'];
 };
 
+export type TaskViewModelFragment = { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
+
 export type GetTasksQueryVariables = Exact<{
   flagged?: InputMaybe<Scalars['Boolean']>;
   available?: InputMaybe<Scalars['Boolean']>;
@@ -186,7 +188,20 @@ export type Resolvers<ContextType = any> = {
 };
 
 
-
+export const TaskViewModelFragmentDoc = gql`
+    fragment TaskViewModel on Task {
+  name
+  id
+  effectiveDueDate
+  completed
+  effectivelyCompleted
+  containingProject {
+    id
+    name
+  }
+  flagged
+}
+    `;
 export const GetTasksDocument = gql`
     query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
   flattenedTasks(
@@ -194,35 +209,17 @@ export const GetTasksDocument = gql`
     available: $available
     withEffectiveDueDate: $withEffectiveDueDate
   ) {
-    name
-    id
-    effectiveDueDate
-    completed
-    effectivelyCompleted
-    containingProject {
-      id
-      name
-    }
-    flagged
+    ...TaskViewModel
   }
 }
-    `;
+    ${TaskViewModelFragmentDoc}`;
 export const GetInboxTasksDocument = gql`
     query GetInboxTasks($flagged: Boolean, $available: Boolean) {
   inboxTasks(flagged: $flagged, available: $available) {
-    name
-    id
-    effectiveDueDate
-    completed
-    effectivelyCompleted
-    containingProject {
-      id
-      name
-    }
-    flagged
+    ...TaskViewModel
   }
 }
-    `;
+    ${TaskViewModelFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 

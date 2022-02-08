@@ -1,30 +1,24 @@
-query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
-  # some comment
-  flattenedTasks(flagged: $flagged, available: $available, withEffectiveDueDate: $withEffectiveDueDate) {
-    name
+fragment TaskViewModel on Task {
+  name
+  id
+  effectiveDueDate
+  completed
+  effectivelyCompleted
+  containingProject {
     id
-    effectiveDueDate
-    completed
-    effectivelyCompleted
-    containingProject {
-      id
-      name
-    }
-    flagged
+    name
+  }
+  flagged
+}
+
+query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
+  flattenedTasks(flagged: $flagged, available: $available, withEffectiveDueDate: $withEffectiveDueDate) {
+    ...TaskViewModel
   }
 }
 
 query GetInboxTasks($flagged: Boolean, $available: Boolean) {
   inboxTasks(flagged: $flagged, available: $available) {
-    name
-    id
-    effectiveDueDate
-    completed
-    effectivelyCompleted
-    containingProject {
-      id
-      name
-    }
-    flagged
+    ...TaskViewModel
   }
 }
