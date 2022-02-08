@@ -57,6 +57,22 @@ const rootValue: QueryResolvers = {
 
     return run(fn, { ...args, q });
   },
+  inboxTasks: (_1: unknown, _2: unknown, info: GraphQLResolveInfo) => {
+    const q = genQuery("t", info);
+
+    const fn = (arg: { q: string }) => {
+      const app = Application("OmniFocus");
+      const doc = app.defaultDocument;
+
+      return doc
+        .inboxTasks()
+        .map((t: any) => {
+          return eval(arg.q);
+        });
+    };
+
+    return run(fn, { q });
+  },
 };
 
 export const resolver: Resolvers = {
@@ -214,24 +230,6 @@ type Task = AppleScriptClass<TaskProperties> & { tasks: () => Task[] };
 export const getPerspectivesNames = wrap(() => {
   const app = Application("OmniFocus");
   return app.defaultDocument.perspectiveNames();
-});
-
-export const getInboxTasks = wrap(() => {
-  const app = Application("OmniFocus");
-  return app.defaultDocument.inboxTasks().map((t) => {
-    return {
-      id: t.id(),
-      name: t.name(),
-      completed: t.completed(),
-      containingProject: t.containingProject()
-        ? {
-            name: t.containingProject().name(),
-            id: t.containingProject().id(),
-          }
-        : undefined,
-      flagged: t.flagged(),
-    };
-  });
 });
 
 export const getTasksInProject = (projectId: string) => {

@@ -1,10 +1,11 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
 import { ProjectList } from "./components/ProjectList";
-import { getInboxTasks, getPerspectivesNames } from "./api";
+import { getPerspectivesNames } from "./api";
 import { useLoad } from "./utils";
 import { TaskList } from "./components/TaskList";
 import { TagList } from "./components/TagList";
 import { Forecast } from "./components/Forecast";
+import { Inbox } from "./inbox";
 
 const getIconForPerspective = (name: string) => {
   switch (name) {
@@ -61,7 +62,7 @@ export default function Command() {
                     p.title === "Projects" ? (
                       <ProjectList />
                     ) : p.title === "Inbox" ? (
-                      <TaskList getter={getInboxTasks} cacheKey={"InboxView"} title={"Inbox"} />
+                      <Inbox />
                     ) : p.title === "Tags" ? (
                       <TagList />
                     ) : p.title === "Forecast" ? (

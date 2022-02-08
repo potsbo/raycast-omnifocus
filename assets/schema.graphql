@@ -15,4 +15,5 @@ type Task {
 
 type Query {
   flattenedTasks(available: Boolean, flagged: Boolean, limit: Int, withEffectiveDueDate: Boolean): [Task!]!
+  inboxTasks(flagged: Boolean, available: Boolean): [Task!]!
 }

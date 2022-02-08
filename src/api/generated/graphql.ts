@@ -25,6 +25,7 @@ export type Project = {
 export type Query = {
   __typename?: 'Query';
   flattenedTasks: Array<Task>;
+  inboxTasks: Array<Task>;
 };
 
 
@@ -33,6 +34,12 @@ export type QueryFlattenedTasksArgs = {
   flagged?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['Int']>;
   withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryInboxTasksArgs = {
+  available?: InputMaybe<Scalars['Boolean']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Task = {
@@ -54,6 +61,14 @@ export type GetTasksQueryVariables = Exact<{
 
 
 export type GetTasksQuery = { __typename?: 'Query', flattenedTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
+
+export type GetInboxTasksQueryVariables = Exact<{
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  available?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type GetInboxTasksQuery = { __typename?: 'Query', inboxTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
 
 
 
@@ -150,6 +165,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   flattenedTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryFlattenedTasksArgs>>;
+  inboxTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryInboxTasksArgs>>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -191,6 +207,22 @@ export const GetTasksDocument = gql`
   }
 }
     `;
+export const GetInboxTasksDocument = gql`
+    query GetInboxTasks($flagged: Boolean, $available: Boolean) {
+  inboxTasks(flagged: $flagged, available: $available) {
+    name
+    id
+    effectiveDueDate
+    completed
+    effectivelyCompleted
+    containingProject {
+      id
+      name
+    }
+    flagged
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -201,6 +233,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     GetTasks(variables?: GetTasksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTasksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTasksQuery>(GetTasksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTasks');
+    },
+    GetInboxTasks(variables?: GetInboxTasksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetInboxTasksQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetInboxTasksQuery>(GetInboxTasksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetInboxTasks');
     }
   };
 }

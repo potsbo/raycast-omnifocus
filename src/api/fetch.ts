@@ -46,8 +46,12 @@ const client = new MyClient("");
 
 export const useQuery = <Q extends keyof ReturnType<typeof getSdk>>(
   queryName: Q,
-  variables?: Parameters<ReturnType<typeof getSdk>[Q]>[0]
+  args: Parameters<ReturnType<typeof getSdk>[Q]>[0] = {}
 ) => {
-  const getter = () => getSdk(client)[queryName](variables);
-  return useLoad(getter, `${queryName}:${JSON.stringify(variables)}`);
+  type Result = ReturnType<ReturnType<typeof getSdk>[Q]>;
+  const fn = getSdk(client)[queryName];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getter: () => any = () => fn(args);
+  return useLoad<Awaited<Result>>(getter, `${queryName}:${JSON.stringify(args)}`);
 };
+

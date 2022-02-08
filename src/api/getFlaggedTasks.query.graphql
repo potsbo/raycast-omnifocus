@@ -1,5 +1,21 @@
 query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
+  # some comment
   flattenedTasks(flagged: $flagged, available: $available, withEffectiveDueDate: $withEffectiveDueDate) {
+    name
+    id
+    effectiveDueDate
+    completed
+    effectivelyCompleted
+    containingProject {
+      id
+      name
+    }
+    flagged
+  }
+}
+
+query GetInboxTasks($flagged: Boolean, $available: Boolean) {
+  inboxTasks(flagged: $flagged, available: $available) {
     name
     id
     effectiveDueDate
