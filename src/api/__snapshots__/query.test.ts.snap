@@ -39,3 +39,44 @@ exports[`query for GetTasksDocument 1`] = `
   : undefined;
 "
 `;
+
+exports[`query for GetTasksInProjectDocument 1`] = `
+"parent
+  ? {
+      rootTask: parent.rootTask()
+        ? {
+            tasks: parent.rootTask().tasks()
+              ? {
+                  name: parent.rootTask().tasks().name(),
+                  id: parent.rootTask().tasks().id(),
+                  effectiveDueDate: parent
+                    .rootTask()
+                    .tasks()
+                    .effectiveDueDate(),
+                  completed: parent.rootTask().tasks().completed(),
+                  effectivelyCompleted: parent
+                    .rootTask()
+                    .tasks()
+                    .effectivelyCompleted(),
+                  containingProject: parent
+                    .rootTask()
+                    .tasks()
+                    .containingProject()
+                    ? {
+                        id: parent.rootTask().tasks().containingProject().id(),
+                        name: parent
+                          .rootTask()
+                          .tasks()
+                          .containingProject()
+                          .name(),
+                      }
+                    : undefined,
+                  flagged: parent.rootTask().tasks().flagged(),
+                }
+              : undefined,
+          }
+        : undefined,
+    }
+  : undefined;
+"
+`;
