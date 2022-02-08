@@ -12,7 +12,7 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
   const name = f.name.value;
   if (f.kind === Kind.FRAGMENT_SPREAD) {
     const fs = fragments[f.name.value];
-    return "{" + convertFields({ rootName, fragments }, fs.selectionSet.selections) + "}";
+    return convertFields({ rootName, fragments }, fs.selectionSet.selections)
   }
   if (f.selectionSet) {
     const child = `${rootName}.${name}()`;
@@ -38,5 +38,5 @@ export const genQuery = (rootName: string, info: Pick<GraphQLResolveInfo, "opera
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
   const fs = field.selectionSet.selections;
-  return `(${rootName} ? ${convertFields({ rootName, fragments }, fs)} : undefined)`;
+  return `(${rootName} ? {${convertFields({ rootName, fragments }, fs)}} : undefined)`;
 };
