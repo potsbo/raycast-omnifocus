@@ -1,6 +1,7 @@
 type Project {
   name: String!
   id: String!
+  rootTask: Task!
 }
 
 type Task {
@@ -11,9 +12,11 @@ type Task {
   effectivelyCompleted: Boolean!
   containingProject: Project
   flagged: Boolean!
+  tasks: [Task!]
 }
 
 type Query {
   flattenedTasks(available: Boolean, flagged: Boolean, limit: Int, withEffectiveDueDate: Boolean): [Task!]!
   inboxTasks(flagged: Boolean, available: Boolean): [Task!]!
+  project(id: String!): Project
 }
