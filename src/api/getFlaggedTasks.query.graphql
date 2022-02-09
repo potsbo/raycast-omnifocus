@@ -24,10 +24,12 @@ query GetInboxTasks($flagged: Boolean, $available: Boolean) {
 }
 
 query GetTasksInProject($projectId: String!) {
-  project(id: $projectId) {
-    rootTask {
-      tasks {
-        ...TaskViewModel
+  projects {
+    byId(id: $projectId) {
+      rootTask {
+        tasks {
+          ...TaskViewModel
+        }
       }
     }
   }

@@ -95,127 +95,369 @@ exports[`query for GetTasksInProjectDocument 1`] = `
   ? Array.isArray(parent)
     ? parent.map((elm) => {
         return {
-          rootTask: elm.rootTask()
-            ? Array.isArray(elm.rootTask())
-              ? elm.rootTask().map((elm) => {
+          byId: elm.byId()
+            ? Array.isArray(elm.byId())
+              ? elm.byId().map((elm) => {
                   return {
-                    tasks: elm.tasks()
-                      ? Array.isArray(elm.tasks())
-                        ? elm.tasks().map((elm) => {
+                    rootTask: elm.rootTask()
+                      ? Array.isArray(elm.rootTask())
+                        ? elm.rootTask().map((elm) => {
                             return {
-                              name: elm.name(),
-                              id: elm.id(),
-                              effectiveDueDate: elm.effectiveDueDate(),
-                              completed: elm.completed(),
-                              effectivelyCompleted: elm.effectivelyCompleted(),
-                              containingProject: elm.containingProject()
-                                ? Array.isArray(elm.containingProject())
-                                  ? elm.containingProject().map((elm) => {
-                                      return { id: elm.id(), name: elm.name() };
+                              tasks: elm.tasks()
+                                ? Array.isArray(elm.tasks())
+                                  ? elm.tasks().map((elm) => {
+                                      return {
+                                        name: elm.name(),
+                                        id: elm.id(),
+                                        effectiveDueDate:
+                                          elm.effectiveDueDate(),
+                                        completed: elm.completed(),
+                                        effectivelyCompleted:
+                                          elm.effectivelyCompleted(),
+                                        containingProject:
+                                          elm.containingProject()
+                                            ? Array.isArray(
+                                                elm.containingProject()
+                                              )
+                                              ? elm
+                                                  .containingProject()
+                                                  .map((elm) => {
+                                                    return {
+                                                      id: elm.id(),
+                                                      name: elm.name(),
+                                                    };
+                                                  })
+                                              : {
+                                                  id: elm
+                                                    .containingProject()
+                                                    .id(),
+                                                  name: elm
+                                                    .containingProject()
+                                                    .name(),
+                                                }
+                                            : undefined,
+                                        flagged: elm.flagged(),
+                                      };
                                     })
                                   : {
-                                      id: elm.containingProject().id(),
-                                      name: elm.containingProject().name(),
+                                      name: elm.tasks().name(),
+                                      id: elm.tasks().id(),
+                                      effectiveDueDate: elm
+                                        .tasks()
+                                        .effectiveDueDate(),
+                                      completed: elm.tasks().completed(),
+                                      effectivelyCompleted: elm
+                                        .tasks()
+                                        .effectivelyCompleted(),
+                                      containingProject: elm
+                                        .tasks()
+                                        .containingProject()
+                                        ? Array.isArray(
+                                            elm.tasks().containingProject()
+                                          )
+                                          ? elm
+                                              .tasks()
+                                              .containingProject()
+                                              .map((elm) => {
+                                                return {
+                                                  id: elm.id(),
+                                                  name: elm.name(),
+                                                };
+                                              })
+                                          : {
+                                              id: elm
+                                                .tasks()
+                                                .containingProject()
+                                                .id(),
+                                              name: elm
+                                                .tasks()
+                                                .containingProject()
+                                                .name(),
+                                            }
+                                        : undefined,
+                                      flagged: elm.tasks().flagged(),
                                     }
                                 : undefined,
-                              flagged: elm.flagged(),
                             };
                           })
                         : {
-                            name: elm.tasks().name(),
-                            id: elm.tasks().id(),
-                            effectiveDueDate: elm.tasks().effectiveDueDate(),
-                            completed: elm.tasks().completed(),
-                            effectivelyCompleted: elm
-                              .tasks()
-                              .effectivelyCompleted(),
-                            containingProject: elm.tasks().containingProject()
-                              ? Array.isArray(elm.tasks().containingProject())
+                            tasks: elm.rootTask().tasks()
+                              ? Array.isArray(elm.rootTask().tasks())
                                 ? elm
+                                    .rootTask()
                                     .tasks()
-                                    .containingProject()
                                     .map((elm) => {
-                                      return { id: elm.id(), name: elm.name() };
+                                      return {
+                                        name: elm.name(),
+                                        id: elm.id(),
+                                        effectiveDueDate:
+                                          elm.effectiveDueDate(),
+                                        completed: elm.completed(),
+                                        effectivelyCompleted:
+                                          elm.effectivelyCompleted(),
+                                        containingProject:
+                                          elm.containingProject()
+                                            ? Array.isArray(
+                                                elm.containingProject()
+                                              )
+                                              ? elm
+                                                  .containingProject()
+                                                  .map((elm) => {
+                                                    return {
+                                                      id: elm.id(),
+                                                      name: elm.name(),
+                                                    };
+                                                  })
+                                              : {
+                                                  id: elm
+                                                    .containingProject()
+                                                    .id(),
+                                                  name: elm
+                                                    .containingProject()
+                                                    .name(),
+                                                }
+                                            : undefined,
+                                        flagged: elm.flagged(),
+                                      };
                                     })
                                 : {
-                                    id: elm.tasks().containingProject().id(),
-                                    name: elm
+                                    name: elm.rootTask().tasks().name(),
+                                    id: elm.rootTask().tasks().id(),
+                                    effectiveDueDate: elm
+                                      .rootTask()
+                                      .tasks()
+                                      .effectiveDueDate(),
+                                    completed: elm
+                                      .rootTask()
+                                      .tasks()
+                                      .completed(),
+                                    effectivelyCompleted: elm
+                                      .rootTask()
+                                      .tasks()
+                                      .effectivelyCompleted(),
+                                    containingProject: elm
+                                      .rootTask()
                                       .tasks()
                                       .containingProject()
-                                      .name(),
+                                      ? Array.isArray(
+                                          elm
+                                            .rootTask()
+                                            .tasks()
+                                            .containingProject()
+                                        )
+                                        ? elm
+                                            .rootTask()
+                                            .tasks()
+                                            .containingProject()
+                                            .map((elm) => {
+                                              return {
+                                                id: elm.id(),
+                                                name: elm.name(),
+                                              };
+                                            })
+                                        : {
+                                            id: elm
+                                              .rootTask()
+                                              .tasks()
+                                              .containingProject()
+                                              .id(),
+                                            name: elm
+                                              .rootTask()
+                                              .tasks()
+                                              .containingProject()
+                                              .name(),
+                                          }
+                                      : undefined,
+                                    flagged: elm.rootTask().tasks().flagged(),
                                   }
                               : undefined,
-                            flagged: elm.tasks().flagged(),
                           }
                       : undefined,
                   };
                 })
               : {
-                  tasks: elm.rootTask().tasks()
-                    ? Array.isArray(elm.rootTask().tasks())
+                  rootTask: elm.byId().rootTask()
+                    ? Array.isArray(elm.byId().rootTask())
                       ? elm
+                          .byId()
                           .rootTask()
-                          .tasks()
                           .map((elm) => {
                             return {
-                              name: elm.name(),
-                              id: elm.id(),
-                              effectiveDueDate: elm.effectiveDueDate(),
-                              completed: elm.completed(),
-                              effectivelyCompleted: elm.effectivelyCompleted(),
-                              containingProject: elm.containingProject()
-                                ? Array.isArray(elm.containingProject())
-                                  ? elm.containingProject().map((elm) => {
-                                      return { id: elm.id(), name: elm.name() };
+                              tasks: elm.tasks()
+                                ? Array.isArray(elm.tasks())
+                                  ? elm.tasks().map((elm) => {
+                                      return {
+                                        name: elm.name(),
+                                        id: elm.id(),
+                                        effectiveDueDate:
+                                          elm.effectiveDueDate(),
+                                        completed: elm.completed(),
+                                        effectivelyCompleted:
+                                          elm.effectivelyCompleted(),
+                                        containingProject:
+                                          elm.containingProject()
+                                            ? Array.isArray(
+                                                elm.containingProject()
+                                              )
+                                              ? elm
+                                                  .containingProject()
+                                                  .map((elm) => {
+                                                    return {
+                                                      id: elm.id(),
+                                                      name: elm.name(),
+                                                    };
+                                                  })
+                                              : {
+                                                  id: elm
+                                                    .containingProject()
+                                                    .id(),
+                                                  name: elm
+                                                    .containingProject()
+                                                    .name(),
+                                                }
+                                            : undefined,
+                                        flagged: elm.flagged(),
+                                      };
                                     })
                                   : {
-                                      id: elm.containingProject().id(),
-                                      name: elm.containingProject().name(),
+                                      name: elm.tasks().name(),
+                                      id: elm.tasks().id(),
+                                      effectiveDueDate: elm
+                                        .tasks()
+                                        .effectiveDueDate(),
+                                      completed: elm.tasks().completed(),
+                                      effectivelyCompleted: elm
+                                        .tasks()
+                                        .effectivelyCompleted(),
+                                      containingProject: elm
+                                        .tasks()
+                                        .containingProject()
+                                        ? Array.isArray(
+                                            elm.tasks().containingProject()
+                                          )
+                                          ? elm
+                                              .tasks()
+                                              .containingProject()
+                                              .map((elm) => {
+                                                return {
+                                                  id: elm.id(),
+                                                  name: elm.name(),
+                                                };
+                                              })
+                                          : {
+                                              id: elm
+                                                .tasks()
+                                                .containingProject()
+                                                .id(),
+                                              name: elm
+                                                .tasks()
+                                                .containingProject()
+                                                .name(),
+                                            }
+                                        : undefined,
+                                      flagged: elm.tasks().flagged(),
                                     }
                                 : undefined,
-                              flagged: elm.flagged(),
                             };
                           })
                       : {
-                          name: elm.rootTask().tasks().name(),
-                          id: elm.rootTask().tasks().id(),
-                          effectiveDueDate: elm
-                            .rootTask()
-                            .tasks()
-                            .effectiveDueDate(),
-                          completed: elm.rootTask().tasks().completed(),
-                          effectivelyCompleted: elm
-                            .rootTask()
-                            .tasks()
-                            .effectivelyCompleted(),
-                          containingProject: elm
-                            .rootTask()
-                            .tasks()
-                            .containingProject()
-                            ? Array.isArray(
-                                elm.rootTask().tasks().containingProject()
-                              )
+                          tasks: elm.byId().rootTask().tasks()
+                            ? Array.isArray(elm.byId().rootTask().tasks())
                               ? elm
+                                  .byId()
                                   .rootTask()
                                   .tasks()
-                                  .containingProject()
                                   .map((elm) => {
-                                    return { id: elm.id(), name: elm.name() };
+                                    return {
+                                      name: elm.name(),
+                                      id: elm.id(),
+                                      effectiveDueDate: elm.effectiveDueDate(),
+                                      completed: elm.completed(),
+                                      effectivelyCompleted:
+                                        elm.effectivelyCompleted(),
+                                      containingProject: elm.containingProject()
+                                        ? Array.isArray(elm.containingProject())
+                                          ? elm
+                                              .containingProject()
+                                              .map((elm) => {
+                                                return {
+                                                  id: elm.id(),
+                                                  name: elm.name(),
+                                                };
+                                              })
+                                          : {
+                                              id: elm.containingProject().id(),
+                                              name: elm
+                                                .containingProject()
+                                                .name(),
+                                            }
+                                        : undefined,
+                                      flagged: elm.flagged(),
+                                    };
                                   })
                               : {
-                                  id: elm
+                                  name: elm.byId().rootTask().tasks().name(),
+                                  id: elm.byId().rootTask().tasks().id(),
+                                  effectiveDueDate: elm
+                                    .byId()
+                                    .rootTask()
+                                    .tasks()
+                                    .effectiveDueDate(),
+                                  completed: elm
+                                    .byId()
+                                    .rootTask()
+                                    .tasks()
+                                    .completed(),
+                                  effectivelyCompleted: elm
+                                    .byId()
+                                    .rootTask()
+                                    .tasks()
+                                    .effectivelyCompleted(),
+                                  containingProject: elm
+                                    .byId()
                                     .rootTask()
                                     .tasks()
                                     .containingProject()
-                                    .id(),
-                                  name: elm
+                                    ? Array.isArray(
+                                        elm
+                                          .byId()
+                                          .rootTask()
+                                          .tasks()
+                                          .containingProject()
+                                      )
+                                      ? elm
+                                          .byId()
+                                          .rootTask()
+                                          .tasks()
+                                          .containingProject()
+                                          .map((elm) => {
+                                            return {
+                                              id: elm.id(),
+                                              name: elm.name(),
+                                            };
+                                          })
+                                      : {
+                                          id: elm
+                                            .byId()
+                                            .rootTask()
+                                            .tasks()
+                                            .containingProject()
+                                            .id(),
+                                          name: elm
+                                            .byId()
+                                            .rootTask()
+                                            .tasks()
+                                            .containingProject()
+                                            .name(),
+                                        }
+                                    : undefined,
+                                  flagged: elm
+                                    .byId()
                                     .rootTask()
                                     .tasks()
-                                    .containingProject()
-                                    .name(),
+                                    .flagged(),
                                 }
                             : undefined,
-                          flagged: elm.rootTask().tasks().flagged(),
                         }
                     : undefined,
                 }
@@ -223,124 +465,346 @@ exports[`query for GetTasksInProjectDocument 1`] = `
         };
       })
     : {
-        rootTask: parent.rootTask()
-          ? Array.isArray(parent.rootTask())
-            ? parent.rootTask().map((elm) => {
+        byId: parent.byId()
+          ? Array.isArray(parent.byId())
+            ? parent.byId().map((elm) => {
                 return {
-                  tasks: elm.tasks()
-                    ? Array.isArray(elm.tasks())
-                      ? elm.tasks().map((elm) => {
+                  rootTask: elm.rootTask()
+                    ? Array.isArray(elm.rootTask())
+                      ? elm.rootTask().map((elm) => {
                           return {
-                            name: elm.name(),
-                            id: elm.id(),
-                            effectiveDueDate: elm.effectiveDueDate(),
-                            completed: elm.completed(),
-                            effectivelyCompleted: elm.effectivelyCompleted(),
-                            containingProject: elm.containingProject()
-                              ? Array.isArray(elm.containingProject())
-                                ? elm.containingProject().map((elm) => {
-                                    return { id: elm.id(), name: elm.name() };
+                            tasks: elm.tasks()
+                              ? Array.isArray(elm.tasks())
+                                ? elm.tasks().map((elm) => {
+                                    return {
+                                      name: elm.name(),
+                                      id: elm.id(),
+                                      effectiveDueDate: elm.effectiveDueDate(),
+                                      completed: elm.completed(),
+                                      effectivelyCompleted:
+                                        elm.effectivelyCompleted(),
+                                      containingProject: elm.containingProject()
+                                        ? Array.isArray(elm.containingProject())
+                                          ? elm
+                                              .containingProject()
+                                              .map((elm) => {
+                                                return {
+                                                  id: elm.id(),
+                                                  name: elm.name(),
+                                                };
+                                              })
+                                          : {
+                                              id: elm.containingProject().id(),
+                                              name: elm
+                                                .containingProject()
+                                                .name(),
+                                            }
+                                        : undefined,
+                                      flagged: elm.flagged(),
+                                    };
                                   })
                                 : {
-                                    id: elm.containingProject().id(),
-                                    name: elm.containingProject().name(),
+                                    name: elm.tasks().name(),
+                                    id: elm.tasks().id(),
+                                    effectiveDueDate: elm
+                                      .tasks()
+                                      .effectiveDueDate(),
+                                    completed: elm.tasks().completed(),
+                                    effectivelyCompleted: elm
+                                      .tasks()
+                                      .effectivelyCompleted(),
+                                    containingProject: elm
+                                      .tasks()
+                                      .containingProject()
+                                      ? Array.isArray(
+                                          elm.tasks().containingProject()
+                                        )
+                                        ? elm
+                                            .tasks()
+                                            .containingProject()
+                                            .map((elm) => {
+                                              return {
+                                                id: elm.id(),
+                                                name: elm.name(),
+                                              };
+                                            })
+                                        : {
+                                            id: elm
+                                              .tasks()
+                                              .containingProject()
+                                              .id(),
+                                            name: elm
+                                              .tasks()
+                                              .containingProject()
+                                              .name(),
+                                          }
+                                      : undefined,
+                                    flagged: elm.tasks().flagged(),
                                   }
                               : undefined,
-                            flagged: elm.flagged(),
                           };
                         })
                       : {
-                          name: elm.tasks().name(),
-                          id: elm.tasks().id(),
-                          effectiveDueDate: elm.tasks().effectiveDueDate(),
-                          completed: elm.tasks().completed(),
-                          effectivelyCompleted: elm
-                            .tasks()
-                            .effectivelyCompleted(),
-                          containingProject: elm.tasks().containingProject()
-                            ? Array.isArray(elm.tasks().containingProject())
+                          tasks: elm.rootTask().tasks()
+                            ? Array.isArray(elm.rootTask().tasks())
                               ? elm
+                                  .rootTask()
                                   .tasks()
-                                  .containingProject()
                                   .map((elm) => {
-                                    return { id: elm.id(), name: elm.name() };
+                                    return {
+                                      name: elm.name(),
+                                      id: elm.id(),
+                                      effectiveDueDate: elm.effectiveDueDate(),
+                                      completed: elm.completed(),
+                                      effectivelyCompleted:
+                                        elm.effectivelyCompleted(),
+                                      containingProject: elm.containingProject()
+                                        ? Array.isArray(elm.containingProject())
+                                          ? elm
+                                              .containingProject()
+                                              .map((elm) => {
+                                                return {
+                                                  id: elm.id(),
+                                                  name: elm.name(),
+                                                };
+                                              })
+                                          : {
+                                              id: elm.containingProject().id(),
+                                              name: elm
+                                                .containingProject()
+                                                .name(),
+                                            }
+                                        : undefined,
+                                      flagged: elm.flagged(),
+                                    };
                                   })
                               : {
-                                  id: elm.tasks().containingProject().id(),
-                                  name: elm.tasks().containingProject().name(),
+                                  name: elm.rootTask().tasks().name(),
+                                  id: elm.rootTask().tasks().id(),
+                                  effectiveDueDate: elm
+                                    .rootTask()
+                                    .tasks()
+                                    .effectiveDueDate(),
+                                  completed: elm.rootTask().tasks().completed(),
+                                  effectivelyCompleted: elm
+                                    .rootTask()
+                                    .tasks()
+                                    .effectivelyCompleted(),
+                                  containingProject: elm
+                                    .rootTask()
+                                    .tasks()
+                                    .containingProject()
+                                    ? Array.isArray(
+                                        elm
+                                          .rootTask()
+                                          .tasks()
+                                          .containingProject()
+                                      )
+                                      ? elm
+                                          .rootTask()
+                                          .tasks()
+                                          .containingProject()
+                                          .map((elm) => {
+                                            return {
+                                              id: elm.id(),
+                                              name: elm.name(),
+                                            };
+                                          })
+                                      : {
+                                          id: elm
+                                            .rootTask()
+                                            .tasks()
+                                            .containingProject()
+                                            .id(),
+                                          name: elm
+                                            .rootTask()
+                                            .tasks()
+                                            .containingProject()
+                                            .name(),
+                                        }
+                                    : undefined,
+                                  flagged: elm.rootTask().tasks().flagged(),
                                 }
                             : undefined,
-                          flagged: elm.tasks().flagged(),
                         }
                     : undefined,
                 };
               })
             : {
-                tasks: parent.rootTask().tasks()
-                  ? Array.isArray(parent.rootTask().tasks())
+                rootTask: parent.byId().rootTask()
+                  ? Array.isArray(parent.byId().rootTask())
                     ? parent
+                        .byId()
                         .rootTask()
-                        .tasks()
                         .map((elm) => {
                           return {
-                            name: elm.name(),
-                            id: elm.id(),
-                            effectiveDueDate: elm.effectiveDueDate(),
-                            completed: elm.completed(),
-                            effectivelyCompleted: elm.effectivelyCompleted(),
-                            containingProject: elm.containingProject()
-                              ? Array.isArray(elm.containingProject())
-                                ? elm.containingProject().map((elm) => {
-                                    return { id: elm.id(), name: elm.name() };
+                            tasks: elm.tasks()
+                              ? Array.isArray(elm.tasks())
+                                ? elm.tasks().map((elm) => {
+                                    return {
+                                      name: elm.name(),
+                                      id: elm.id(),
+                                      effectiveDueDate: elm.effectiveDueDate(),
+                                      completed: elm.completed(),
+                                      effectivelyCompleted:
+                                        elm.effectivelyCompleted(),
+                                      containingProject: elm.containingProject()
+                                        ? Array.isArray(elm.containingProject())
+                                          ? elm
+                                              .containingProject()
+                                              .map((elm) => {
+                                                return {
+                                                  id: elm.id(),
+                                                  name: elm.name(),
+                                                };
+                                              })
+                                          : {
+                                              id: elm.containingProject().id(),
+                                              name: elm
+                                                .containingProject()
+                                                .name(),
+                                            }
+                                        : undefined,
+                                      flagged: elm.flagged(),
+                                    };
                                   })
                                 : {
-                                    id: elm.containingProject().id(),
-                                    name: elm.containingProject().name(),
+                                    name: elm.tasks().name(),
+                                    id: elm.tasks().id(),
+                                    effectiveDueDate: elm
+                                      .tasks()
+                                      .effectiveDueDate(),
+                                    completed: elm.tasks().completed(),
+                                    effectivelyCompleted: elm
+                                      .tasks()
+                                      .effectivelyCompleted(),
+                                    containingProject: elm
+                                      .tasks()
+                                      .containingProject()
+                                      ? Array.isArray(
+                                          elm.tasks().containingProject()
+                                        )
+                                        ? elm
+                                            .tasks()
+                                            .containingProject()
+                                            .map((elm) => {
+                                              return {
+                                                id: elm.id(),
+                                                name: elm.name(),
+                                              };
+                                            })
+                                        : {
+                                            id: elm
+                                              .tasks()
+                                              .containingProject()
+                                              .id(),
+                                            name: elm
+                                              .tasks()
+                                              .containingProject()
+                                              .name(),
+                                          }
+                                      : undefined,
+                                    flagged: elm.tasks().flagged(),
                                   }
                               : undefined,
-                            flagged: elm.flagged(),
                           };
                         })
                     : {
-                        name: parent.rootTask().tasks().name(),
-                        id: parent.rootTask().tasks().id(),
-                        effectiveDueDate: parent
-                          .rootTask()
-                          .tasks()
-                          .effectiveDueDate(),
-                        completed: parent.rootTask().tasks().completed(),
-                        effectivelyCompleted: parent
-                          .rootTask()
-                          .tasks()
-                          .effectivelyCompleted(),
-                        containingProject: parent
-                          .rootTask()
-                          .tasks()
-                          .containingProject()
-                          ? Array.isArray(
-                              parent.rootTask().tasks().containingProject()
-                            )
+                        tasks: parent.byId().rootTask().tasks()
+                          ? Array.isArray(parent.byId().rootTask().tasks())
                             ? parent
+                                .byId()
                                 .rootTask()
                                 .tasks()
-                                .containingProject()
                                 .map((elm) => {
-                                  return { id: elm.id(), name: elm.name() };
+                                  return {
+                                    name: elm.name(),
+                                    id: elm.id(),
+                                    effectiveDueDate: elm.effectiveDueDate(),
+                                    completed: elm.completed(),
+                                    effectivelyCompleted:
+                                      elm.effectivelyCompleted(),
+                                    containingProject: elm.containingProject()
+                                      ? Array.isArray(elm.containingProject())
+                                        ? elm.containingProject().map((elm) => {
+                                            return {
+                                              id: elm.id(),
+                                              name: elm.name(),
+                                            };
+                                          })
+                                        : {
+                                            id: elm.containingProject().id(),
+                                            name: elm
+                                              .containingProject()
+                                              .name(),
+                                          }
+                                      : undefined,
+                                    flagged: elm.flagged(),
+                                  };
                                 })
                             : {
-                                id: parent
+                                name: parent.byId().rootTask().tasks().name(),
+                                id: parent.byId().rootTask().tasks().id(),
+                                effectiveDueDate: parent
+                                  .byId()
+                                  .rootTask()
+                                  .tasks()
+                                  .effectiveDueDate(),
+                                completed: parent
+                                  .byId()
+                                  .rootTask()
+                                  .tasks()
+                                  .completed(),
+                                effectivelyCompleted: parent
+                                  .byId()
+                                  .rootTask()
+                                  .tasks()
+                                  .effectivelyCompleted(),
+                                containingProject: parent
+                                  .byId()
                                   .rootTask()
                                   .tasks()
                                   .containingProject()
-                                  .id(),
-                                name: parent
+                                  ? Array.isArray(
+                                      parent
+                                        .byId()
+                                        .rootTask()
+                                        .tasks()
+                                        .containingProject()
+                                    )
+                                    ? parent
+                                        .byId()
+                                        .rootTask()
+                                        .tasks()
+                                        .containingProject()
+                                        .map((elm) => {
+                                          return {
+                                            id: elm.id(),
+                                            name: elm.name(),
+                                          };
+                                        })
+                                    : {
+                                        id: parent
+                                          .byId()
+                                          .rootTask()
+                                          .tasks()
+                                          .containingProject()
+                                          .id(),
+                                        name: parent
+                                          .byId()
+                                          .rootTask()
+                                          .tasks()
+                                          .containingProject()
+                                          .name(),
+                                      }
+                                  : undefined,
+                                flagged: parent
+                                  .byId()
                                   .rootTask()
                                   .tasks()
-                                  .containingProject()
-                                  .name(),
+                                  .flagged(),
                               }
                           : undefined,
-                        flagged: parent.rootTask().tasks().flagged(),
                       }
                   : undefined,
               }

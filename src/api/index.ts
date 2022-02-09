@@ -79,11 +79,11 @@ const rootValue: QueryResolvers = {
 
     return run(fn, { q });
   },
-  project: (args: QueryProjectArgs, _2: unknown, info: GraphQLResolveInfo) => {
+  projects: (args: QueryProjectArgs, _2: unknown, info: GraphQLResolveInfo) => {
     const q = genQuery("t", info);
 
     const fn = (arg: { q: string } & QueryProjectArgs) => {
-      const t = Application("OmniFocus").defaultDocument.projects.byId(arg.id);
+      const t = Application("OmniFocus").defaultDocument.projects()
 
       return eval(arg.q);
     };

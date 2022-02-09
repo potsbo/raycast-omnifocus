@@ -24,11 +24,21 @@ export type Project = {
   rootTask: Task;
 };
 
+export type Projects = {
+  __typename?: 'Projects';
+  byId?: Maybe<Project>;
+};
+
+
+export type ProjectsByIdArgs = {
+  id: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   flattenedTasks: Array<Task>;
   inboxTasks: Array<Task>;
-  project?: Maybe<Project>;
+  projects: Projects;
 };
 
 
@@ -43,11 +53,6 @@ export type QueryFlattenedTasksArgs = {
 export type QueryInboxTasksArgs = {
   available?: InputMaybe<Scalars['Boolean']>;
   flagged?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type QueryProjectArgs = {
-  id: Scalars['String'];
 };
 
 export type Task = {
@@ -86,7 +91,7 @@ export type GetTasksInProjectQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksInProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null };
+export type GetTasksInProjectQuery = { __typename?: 'Query', projects: { __typename?: 'Projects', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } };
 
 
 
@@ -160,6 +165,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Project: ResolverTypeWrapper<Project>;
+  Projects: ResolverTypeWrapper<Projects>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
@@ -170,6 +176,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Int: Scalars['Int'];
   Project: Project;
+  Projects: Projects;
   Query: {};
   String: Scalars['String'];
   Task: Task;
@@ -182,10 +189,15 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ProjectsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Projects'] = ResolversParentTypes['Projects']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<ProjectsByIdArgs, 'id'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   flattenedTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryFlattenedTasksArgs>>;
   inboxTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryInboxTasksArgs>>;
-  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>;
+  projects?: Resolver<ResolversTypes['Projects'], ParentType, ContextType>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -202,6 +214,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Project?: ProjectResolvers<ContextType>;
+  Projects?: ProjectsResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
 };
@@ -241,10 +254,12 @@ export const GetInboxTasksDocument = gql`
     ${TaskViewModelFragmentDoc}`;
 export const GetTasksInProjectDocument = gql`
     query GetTasksInProject($projectId: String!) {
-  project(id: $projectId) {
-    rootTask {
-      tasks {
-        ...TaskViewModel
+  projects {
+    byId(id: $projectId) {
+      rootTask {
+        tasks {
+          ...TaskViewModel
+        }
       }
     }
   }

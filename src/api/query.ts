@@ -50,7 +50,10 @@ const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], fields
   return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray)}: undefined`;
 };
 
-export const genQuery = (rootName: string, info: Pick<GraphQLResolveInfo, "operation" | "fragments">) => {
+export const genQuery = (
+  rootName: string,
+  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues">
+) => {
   const field = info.operation.selectionSet.selections[0];
   const { fragments } = info;
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {

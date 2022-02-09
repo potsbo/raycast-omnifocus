@@ -22,7 +22,7 @@ test("query for GetTasksDocument", () => {
     document: document,
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", exeContext))).toMatchSnapshot();
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetInboxTasksDocument", () => {
@@ -32,7 +32,7 @@ test("query for GetInboxTasksDocument", () => {
     document: document,
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", exeContext))).toMatchSnapshot();
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTasksInProjectDocument", () => {
@@ -46,5 +46,19 @@ test("query for GetTasksInProjectDocument", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", exeContext))).toMatchSnapshot();
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
+
+test("run for GetTasksInProjectDocument", () => {
+  const document = GetTasksInProjectDocument;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+    variableValues: { projectId: "foobar" },
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();
 });
