@@ -28,3 +28,7 @@ type Query {
   inboxTasks(flagged: Boolean, available: Boolean): [Task!]!
   defaultDocument: DefaultDocument!
 }
+
+directive @noFunc on FIELD
+directive @only(field: String!) on FIELD
+directive @except(field: String!) on FIELD

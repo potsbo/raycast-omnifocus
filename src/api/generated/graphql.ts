@@ -189,6 +189,22 @@ export type ResolversParentTypes = {
   Task: Task;
 };
 
+export type ExceptDirectiveArgs = {
+  field: Scalars['String'];
+};
+
+export type ExceptDirectiveResolver<Result, Parent, ContextType = any, Args = ExceptDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type NoFuncDirectiveArgs = { };
+
+export type NoFuncDirectiveResolver<Result, Parent, ContextType = any, Args = NoFuncDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type OnlyDirectiveArgs = {
+  field: Scalars['String'];
+};
+
+export type OnlyDirectiveResolver<Result, Parent, ContextType = any, Args = OnlyDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
   projects?: Resolver<ResolversTypes['Projects'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -232,6 +248,11 @@ export type Resolvers<ContextType = any> = {
   Task?: TaskResolvers<ContextType>;
 };
 
+export type DirectiveResolvers<ContextType = any> = {
+  except?: ExceptDirectiveResolver<any, any, ContextType>;
+  noFunc?: NoFuncDirectiveResolver<any, any, ContextType>;
+  only?: OnlyDirectiveResolver<any, any, ContextType>;
+};
 
 export const TaskViewModelFragmentDoc = gql`
     fragment TaskViewModel on Task {
@@ -268,7 +289,7 @@ export const GetInboxTasksDocument = gql`
 export const GetTasksInProjectDocument = gql`
     query GetTasksInProject($projectId: String!) {
   defaultDocument {
-    projects {
+    projects @noFunc {
       byId(id: $projectId) {
         rootTask {
           tasks {

@@ -25,7 +25,7 @@ query GetInboxTasks($flagged: Boolean, $available: Boolean) {
 
 query GetTasksInProject($projectId: String!) {
   defaultDocument {
-    projects {
+    projects @noFunc {
       byId(id: $projectId) {
         rootTask {
           tasks {

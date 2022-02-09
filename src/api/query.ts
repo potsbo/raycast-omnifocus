@@ -14,6 +14,8 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
     const fs = fragments[name];
     return convertFields({ rootName, fragments }, fs.selectionSet.selections, true);
   }
+  const noFunc = (f.directives ?? []).some((d) => d.name.value === "noFunc");
+
   if (f.selectionSet) {
     const args: string[] = [];
     f.arguments?.forEach((a) => {
@@ -23,7 +25,9 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
       args.push(a.value.name.value);
     });
 
-    const child = `${rootName}.${name}(${args.join(",")})`;
+    const suffix = noFunc ? "" : `(${args.join(",")})`;
+
+    const child = `${rootName}.${name}${suffix}`;
     return `${name}: ${convertFields({ rootName: child, fragments }, f.selectionSet.selections)},`;
   }
   return `${name}: ${rootName}.${name}(),`;
