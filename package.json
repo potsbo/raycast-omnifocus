@@ -77,6 +77,7 @@
     "@types/react": "^17.0.28",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "^7.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.5.0",
@@ -87,7 +88,7 @@
   },
   "scripts": {
     "build": "ray build -e dist",
-    "dev": "ray develop",
+    "dev": "concurrently \"ray develop\" \"yarn generate --watch\"",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
     "generate": "graphql-codegen --config codegen.yml"
