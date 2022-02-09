@@ -813,3 +813,26 @@ exports[`query for GetTasksInProjectDocument 1`] = `
   : undefined;
 "
 `;
+
+exports[`run for GetTasksInProjectDocument 1`] = `
+Object {
+  "byId": Object {
+    "rootTask": Object {
+      "tasks": Array [
+        Object {
+          "completed": false,
+          "containingProject": Object {
+            "id": "projectId",
+            "name": "projectName",
+          },
+          "effectiveDueDate": null,
+          "effectivelyCompleted": null,
+          "flagged": false,
+          "id": "bar",
+          "name": "foo",
+        },
+      ],
+    },
+  },
+}
+`;

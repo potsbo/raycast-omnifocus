@@ -60,5 +60,32 @@ test("run for GetTasksInProjectDocument", () => {
     fail();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const parent = {
+    byId: () => {
+      return {
+        rootTask: () => {
+          return {
+            tasks: () => [
+              {
+                name: () => "foo",
+                id: () => "bar",
+                effectiveDueDate: () => null,
+                completed: () => false,
+                effectivelyCompleted: () => null,
+                containingProject: () => {
+                  return {
+                    id: () => "projectId",
+                    name: () => "projectName"
+                  }
+                },
+                flagged: () => false,
+              },
+            ],
+          };
+        },
+      };
+    },
+  };
   expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();
 });
