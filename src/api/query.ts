@@ -21,6 +21,15 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
   return `${name}: ${rootName}.${name}(),`;
 };
 
+const arrayCare = (ctx: CurrentContext, body: string, arrayBody: string) => {
+  return `
+  Array.isArray(${ctx.rootName}) ?
+  ${ctx.rootName}.map((elm) => {
+   return { ${arrayBody} };
+  }) : { ${body} }
+  `;
+};
+
 const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], fieldsOnly = false) => {
   const converted = fs
     .map((f) => {
@@ -32,7 +41,13 @@ const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], fields
     return converted;
   }
 
-  return `${ctx.rootName} ? { ${converted} } : undefined`;
+  const convertedForArray = fs
+    .map((f) => {
+      return convertField({ ...ctx, rootName: "elm" }, f);
+    })
+    .join("");
+
+  return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray)}: undefined`;
 };
 
 export const genQuery = (rootName: string, info: Pick<GraphQLResolveInfo, "operation" | "fragments">) => {

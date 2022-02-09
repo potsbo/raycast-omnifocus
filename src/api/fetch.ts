@@ -21,8 +21,9 @@ export const fetch = async <TData, TVariables extends { readonly [variable: stri
     source: query,
     rootValue: resolver.Query,
     variableValues,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   })) as any as ExecutionResult<TData>;
-  if (data === null || data === undefined) {
+  if (data === null || data === undefined || errors !== undefined) {
     console.error(errors);
     throw errors;
   }
@@ -44,14 +45,21 @@ class MyClient extends GraphQLClient {
 
 const client = new MyClient("");
 
+export const get = <Q extends keyof ReturnType<typeof getSdk>, Result = ReturnType<ReturnType<typeof getSdk>[Q]>>(
+  queryName: Q,
+  args: Parameters<ReturnType<typeof getSdk>[Q]>[0]
+): Result => {
+  const fn = getSdk(client)[queryName];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return fn(args as any) as any;
+};
+
 export const useQuery = <Q extends keyof ReturnType<typeof getSdk>>(
   queryName: Q,
   args: Parameters<ReturnType<typeof getSdk>[Q]>[0] = {}
 ) => {
   type Result = ReturnType<ReturnType<typeof getSdk>[Q]>;
-  const fn = getSdk(client)[queryName];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getter: () => any = () => fn(args);
+  const getter: () => any = () => get(queryName, args);
   return useLoad<Awaited<Result>>(getter, `${queryName}:${JSON.stringify(args)}`);
 };
-

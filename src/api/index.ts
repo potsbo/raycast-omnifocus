@@ -1,6 +1,6 @@
 import { run } from "@jxa/run";
 import { GraphQLResolveInfo } from "graphql";
-import { QueryFlattenedTasksArgs, QueryResolvers, Resolvers } from "./generated/graphql";
+import { QueryFlattenedTasksArgs, QueryProjectArgs, QueryResolvers, Resolvers } from "./generated/graphql";
 import { genQuery } from "./query";
 
 const wrap = <T>(fn: () => T) => {
@@ -44,16 +44,18 @@ const rootValue: QueryResolvers = {
         return (t.effectiveDueDate() !== null) === a;
       };
 
-      return doc
-        .flattenedTasks()
-        .slice(0, arg.limit !== null && arg.limit !== undefined ? arg.limit : -1)
-        .filter(applyAvailableFilter)
-        .filter(applyFlaggedFilter)
-        .filter(applyWithEffectiveDueDate)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .map((t) => {
-          return eval(arg.q);
-        });
+      return (
+        doc
+          .flattenedTasks()
+          .slice(0, arg.limit !== null && arg.limit !== undefined ? arg.limit : -1)
+          .filter(applyAvailableFilter)
+          .filter(applyFlaggedFilter)
+          .filter(applyWithEffectiveDueDate)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map((t) => {
+            return eval(arg.q);
+          })
+      );
     };
 
     return run(fn, { ...args, q });
@@ -65,15 +67,28 @@ const rootValue: QueryResolvers = {
       const app = Application("OmniFocus");
       const doc = app.defaultDocument;
 
-      return doc
-        .inboxTasks()
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .map((t) => {
-          return eval(arg.q);
-        });
+      return (
+        doc
+          .inboxTasks()
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map((t) => {
+            return eval(arg.q);
+          })
+      );
     };
 
     return run(fn, { q });
+  },
+  project: (args: QueryProjectArgs, _2: unknown, info: GraphQLResolveInfo) => {
+    const q = genQuery("t", info);
+
+    const fn = (arg: { q: string } & QueryProjectArgs) => {
+      const t = Application("OmniFocus").defaultDocument.projects.byId(arg.id);
+
+      return eval(arg.q);
+    };
+
+    return run(fn, { ...args, q });
   },
 };
 

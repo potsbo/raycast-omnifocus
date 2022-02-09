@@ -1,5 +1,6 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
-import { getNestedProjects, getProjects, getTasksInProject } from "../api";
+import { getNestedProjects, getProjects } from "../api";
+import { get } from "../api/fetch";
 import { useLoad } from "../utils";
 import { TaskList } from "./TaskList";
 
@@ -37,7 +38,9 @@ export const ProjectList = () => {
                         push(
                           <TaskList
                             title={"Tasks in Project"}
-                            getter={getTasksInProject(p.id)}
+                            getter={() =>
+                              get("GetTasksInProject", { projectId: p.id }).then((t) => t!.project!.rootTask!.tasks!)
+                            }
                             cacheKey={`TaskInProject:${p.id}`}
                             disableShowInProjects={true}
                           />
