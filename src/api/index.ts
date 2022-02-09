@@ -1,6 +1,6 @@
 import { run } from "@jxa/run";
 import { GraphQLResolveInfo } from "graphql";
-import { QueryFlattenedTasksArgs, QueryProjectArgs, QueryResolvers, Resolvers } from "./generated/graphql";
+import { QueryFlattenedTasksArgs, QueryResolvers, Resolvers } from "./generated/graphql";
 import { genQuery } from "./query";
 
 const wrap = <T>(fn: () => T) => {
@@ -79,16 +79,16 @@ const rootValue: QueryResolvers = {
 
     return run(fn, { q });
   },
-  projects: (args: QueryProjectArgs, _2: unknown, info: GraphQLResolveInfo) => {
+  projects: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
     const q = genQuery("t", info);
 
-    const fn = (arg: { q: string } & QueryProjectArgs) => {
-      const t = Application("OmniFocus").defaultDocument.projects()
+    const fn = (arg: { q: string }) => {
+      const t = Application("OmniFocus").defaultDocument.projects;
 
       return eval(arg.q);
     };
 
-    return run(fn, { ...args, q });
+    return run(fn, { q });
   },
 };
 

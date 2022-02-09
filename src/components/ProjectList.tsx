@@ -39,7 +39,10 @@ export const ProjectList = () => {
                           <TaskList
                             title={"Tasks in Project"}
                             getter={() =>
-                              get("GetTasksInProject", { projectId: p.id }).then((t) => t!.project!.rootTask!.tasks!)
+                              get("GetTasksInProject", { projectId: p.id }).then(
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                (t) => t.projects.byId!.rootTask.tasks!
+                              )
                             }
                             cacheKey={`TaskInProject:${p.id}`}
                             disableShowInProjects={true}
