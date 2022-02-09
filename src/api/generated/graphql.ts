@@ -19,11 +19,21 @@ export type Scalars = {
 
 export type DefaultDocument = {
   __typename?: 'DefaultDocument';
+  folders: Array<Folder>;
   projects: Projects;
+};
+
+export type Folder = {
+  __typename?: 'Folder';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  projects: Array<Project>;
 };
 
 export type Project = {
   __typename?: 'Project';
+  availableTaskCount: Scalars['Int'];
+  completed: Scalars['Boolean'];
   id: Scalars['String'];
   name: Scalars['String'];
   rootTask: Task;
@@ -98,6 +108,11 @@ export type GetTasksInProjectQueryVariables = Exact<{
 
 export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'Projects', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } } };
 
+export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetNestedProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: Array<{ __typename?: 'Folder', name: string, id: string, projects: Array<{ __typename?: 'Project', name: string, completed: boolean, id: string, availableTaskCount: number }> }> } };
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -169,6 +184,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   DefaultDocument: ResolverTypeWrapper<DefaultDocument>;
+  Folder: ResolverTypeWrapper<Folder>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Project: ResolverTypeWrapper<Project>;
   Projects: ResolverTypeWrapper<Projects>;
@@ -181,6 +197,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   DefaultDocument: DefaultDocument;
+  Folder: Folder;
   Int: Scalars['Int'];
   Project: Project;
   Projects: Projects;
@@ -202,11 +219,21 @@ export type OnlyDirectiveArgs = {
 export type OnlyDirectiveResolver<Result, Parent, ContextType = any, Args = OnlyDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
+  folders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['Projects'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
+  availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
@@ -238,6 +265,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   DefaultDocument?: DefaultDocumentResolvers<ContextType>;
+  Folder?: FolderResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Projects?: ProjectsResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
@@ -296,6 +324,22 @@ export const GetTasksInProjectDocument = gql`
   }
 }
     ${TaskViewModelFragmentDoc}`;
+export const GetNestedProjectsDocument = gql`
+    query GetNestedProjects {
+  defaultDocument {
+    folders {
+      name
+      id
+      projects {
+        name
+        completed
+        id
+        availableTaskCount
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -312,6 +356,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetTasksInProject(variables: GetTasksInProjectQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTasksInProjectQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTasksInProjectQuery>(GetTasksInProjectDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTasksInProject');
+    },
+    GetNestedProjects(variables?: GetNestedProjectsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNestedProjectsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetNestedProjectsQuery>(GetNestedProjectsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNestedProjects');
     }
   };
 }

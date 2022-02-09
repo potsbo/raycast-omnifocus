@@ -36,3 +36,18 @@ query GetTasksInProject($projectId: String!) {
     }
   }
 }
+
+query GetNestedProjects {
+  defaultDocument {
+    folders {
+      name
+      id
+      projects {
+        name
+        completed
+        id
+        availableTaskCount
+      }
+    }
+  }
+}

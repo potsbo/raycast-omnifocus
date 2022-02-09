@@ -2,6 +2,8 @@ type Project {
   name: String!
   id: String!
   rootTask: Task!
+  availableTaskCount: Int!
+  completed: Boolean!
 }
 
 type Task {
@@ -19,8 +21,15 @@ type Projects {
   byId(id: String!): Project
 }
 
+type Folder {
+  name: String!
+  id: String!
+  projects: [Project!]!
+}
+
 type DefaultDocument {
   projects: Projects!
+  folders: [Folder!]!
 }
 
 type Query {
