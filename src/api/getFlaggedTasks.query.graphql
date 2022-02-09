@@ -28,7 +28,7 @@ query GetTasksInProject($projectId: String!) {
     projects @noFunc {
       byId(id: $projectId) {
         rootTask {
-          tasks {
+          tasks @only(field: "effectiveDeferDate", op: "<", value: "new Date()") {
             ...TaskViewModel
           }
         }

@@ -189,18 +189,14 @@ export type ResolversParentTypes = {
   Task: Task;
 };
 
-export type ExceptDirectiveArgs = {
-  field: Scalars['String'];
-};
-
-export type ExceptDirectiveResolver<Result, Parent, ContextType = any, Args = ExceptDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type NoFuncDirectiveArgs = { };
 
 export type NoFuncDirectiveResolver<Result, Parent, ContextType = any, Args = NoFuncDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type OnlyDirectiveArgs = {
   field: Scalars['String'];
+  op?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
 };
 
 export type OnlyDirectiveResolver<Result, Parent, ContextType = any, Args = OnlyDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
@@ -249,7 +245,6 @@ export type Resolvers<ContextType = any> = {
 };
 
 export type DirectiveResolvers<ContextType = any> = {
-  except?: ExceptDirectiveResolver<any, any, ContextType>;
   noFunc?: NoFuncDirectiveResolver<any, any, ContextType>;
   only?: OnlyDirectiveResolver<any, any, ContextType>;
 };
@@ -292,7 +287,7 @@ export const GetTasksInProjectDocument = gql`
     projects @noFunc {
       byId(id: $projectId) {
         rootTask {
-          tasks {
+          tasks @only(field: "effectiveDeferDate", op: "<", value: "new Date()") {
             ...TaskViewModel
           }
         }

@@ -30,5 +30,4 @@ type Query {
 }
 
 directive @noFunc on FIELD
-directive @only(field: String!) on FIELD
-directive @except(field: String!) on FIELD
+directive @only(field: String!, op: String, value: String) on FIELD

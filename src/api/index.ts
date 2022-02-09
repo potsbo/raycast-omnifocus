@@ -84,7 +84,7 @@ const rootValue: QueryResolvers = {
 
     const fn = (arg: { q: string }) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const t = Application("OmniFocus").defaultDocument
+      const t = Application("OmniFocus").defaultDocument;
 
       return eval(arg.q);
     };

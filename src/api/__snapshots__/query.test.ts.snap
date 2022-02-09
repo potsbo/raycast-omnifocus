@@ -110,40 +110,47 @@ parent
                                       return {
                                         tasks: elm.tasks()
                                           ? Array.isArray(elm.tasks())
-                                            ? elm.tasks().map((elm) => {
-                                                return {
-                                                  name: elm.name(),
-                                                  id: elm.id(),
-                                                  effectiveDueDate:
-                                                    elm.effectiveDueDate(),
-                                                  completed: elm.completed(),
-                                                  effectivelyCompleted:
-                                                    elm.effectivelyCompleted(),
-                                                  containingProject:
-                                                    elm.containingProject()
-                                                      ? Array.isArray(
-                                                          elm.containingProject()
-                                                        )
-                                                        ? elm
-                                                            .containingProject()
-                                                            .map((elm) => {
-                                                              return {
-                                                                id: elm.id(),
-                                                                name: elm.name(),
-                                                              };
-                                                            })
-                                                        : {
-                                                            id: elm
+                                            ? elm
+                                                .tasks()
+                                                .filter(
+                                                  (e) =>
+                                                    e.effectiveDeferDate() <
+                                                    new Date()
+                                                )
+                                                .map((elm) => {
+                                                  return {
+                                                    name: elm.name(),
+                                                    id: elm.id(),
+                                                    effectiveDueDate:
+                                                      elm.effectiveDueDate(),
+                                                    completed: elm.completed(),
+                                                    effectivelyCompleted:
+                                                      elm.effectivelyCompleted(),
+                                                    containingProject:
+                                                      elm.containingProject()
+                                                        ? Array.isArray(
+                                                            elm.containingProject()
+                                                          )
+                                                          ? elm
                                                               .containingProject()
-                                                              .id(),
-                                                            name: elm
-                                                              .containingProject()
-                                                              .name(),
-                                                          }
-                                                      : undefined,
-                                                  flagged: elm.flagged(),
-                                                };
-                                              })
+                                                              .map((elm) => {
+                                                                return {
+                                                                  id: elm.id(),
+                                                                  name: elm.name(),
+                                                                };
+                                                              })
+                                                          : {
+                                                              id: elm
+                                                                .containingProject()
+                                                                .id(),
+                                                              name: elm
+                                                                .containingProject()
+                                                                .name(),
+                                                            }
+                                                        : undefined,
+                                                    flagged: elm.flagged(),
+                                                  };
+                                                })
                                             : {
                                                 name: elm.tasks().name(),
                                                 id: elm.tasks().id(),
@@ -195,6 +202,11 @@ parent
                                           ? elm
                                               .rootTask()
                                               .tasks()
+                                              .filter(
+                                                (e) =>
+                                                  e.effectiveDeferDate() <
+                                                  new Date()
+                                              )
                                               .map((elm) => {
                                                 return {
                                                   name: elm.name(),
@@ -300,40 +312,47 @@ parent
                                       return {
                                         tasks: elm.tasks()
                                           ? Array.isArray(elm.tasks())
-                                            ? elm.tasks().map((elm) => {
-                                                return {
-                                                  name: elm.name(),
-                                                  id: elm.id(),
-                                                  effectiveDueDate:
-                                                    elm.effectiveDueDate(),
-                                                  completed: elm.completed(),
-                                                  effectivelyCompleted:
-                                                    elm.effectivelyCompleted(),
-                                                  containingProject:
-                                                    elm.containingProject()
-                                                      ? Array.isArray(
-                                                          elm.containingProject()
-                                                        )
-                                                        ? elm
-                                                            .containingProject()
-                                                            .map((elm) => {
-                                                              return {
-                                                                id: elm.id(),
-                                                                name: elm.name(),
-                                                              };
-                                                            })
-                                                        : {
-                                                            id: elm
+                                            ? elm
+                                                .tasks()
+                                                .filter(
+                                                  (e) =>
+                                                    e.effectiveDeferDate() <
+                                                    new Date()
+                                                )
+                                                .map((elm) => {
+                                                  return {
+                                                    name: elm.name(),
+                                                    id: elm.id(),
+                                                    effectiveDueDate:
+                                                      elm.effectiveDueDate(),
+                                                    completed: elm.completed(),
+                                                    effectivelyCompleted:
+                                                      elm.effectivelyCompleted(),
+                                                    containingProject:
+                                                      elm.containingProject()
+                                                        ? Array.isArray(
+                                                            elm.containingProject()
+                                                          )
+                                                          ? elm
                                                               .containingProject()
-                                                              .id(),
-                                                            name: elm
-                                                              .containingProject()
-                                                              .name(),
-                                                          }
-                                                      : undefined,
-                                                  flagged: elm.flagged(),
-                                                };
-                                              })
+                                                              .map((elm) => {
+                                                                return {
+                                                                  id: elm.id(),
+                                                                  name: elm.name(),
+                                                                };
+                                                              })
+                                                          : {
+                                                              id: elm
+                                                                .containingProject()
+                                                                .id(),
+                                                              name: elm
+                                                                .containingProject()
+                                                                .name(),
+                                                            }
+                                                        : undefined,
+                                                    flagged: elm.flagged(),
+                                                  };
+                                                })
                                             : {
                                                 name: elm.tasks().name(),
                                                 id: elm.tasks().id(),
@@ -391,6 +410,11 @@ parent
                                             .byId(projectId)
                                             .rootTask()
                                             .tasks()
+                                            .filter(
+                                              (e) =>
+                                                e.effectiveDeferDate() <
+                                                new Date()
+                                            )
                                             .map((elm) => {
                                               return {
                                                 name: elm.name(),
@@ -513,40 +537,47 @@ parent
                                     return {
                                       tasks: elm.tasks()
                                         ? Array.isArray(elm.tasks())
-                                          ? elm.tasks().map((elm) => {
-                                              return {
-                                                name: elm.name(),
-                                                id: elm.id(),
-                                                effectiveDueDate:
-                                                  elm.effectiveDueDate(),
-                                                completed: elm.completed(),
-                                                effectivelyCompleted:
-                                                  elm.effectivelyCompleted(),
-                                                containingProject:
-                                                  elm.containingProject()
-                                                    ? Array.isArray(
-                                                        elm.containingProject()
-                                                      )
-                                                      ? elm
-                                                          .containingProject()
-                                                          .map((elm) => {
-                                                            return {
-                                                              id: elm.id(),
-                                                              name: elm.name(),
-                                                            };
-                                                          })
-                                                      : {
-                                                          id: elm
+                                          ? elm
+                                              .tasks()
+                                              .filter(
+                                                (e) =>
+                                                  e.effectiveDeferDate() <
+                                                  new Date()
+                                              )
+                                              .map((elm) => {
+                                                return {
+                                                  name: elm.name(),
+                                                  id: elm.id(),
+                                                  effectiveDueDate:
+                                                    elm.effectiveDueDate(),
+                                                  completed: elm.completed(),
+                                                  effectivelyCompleted:
+                                                    elm.effectivelyCompleted(),
+                                                  containingProject:
+                                                    elm.containingProject()
+                                                      ? Array.isArray(
+                                                          elm.containingProject()
+                                                        )
+                                                        ? elm
                                                             .containingProject()
-                                                            .id(),
-                                                          name: elm
-                                                            .containingProject()
-                                                            .name(),
-                                                        }
-                                                    : undefined,
-                                                flagged: elm.flagged(),
-                                              };
-                                            })
+                                                            .map((elm) => {
+                                                              return {
+                                                                id: elm.id(),
+                                                                name: elm.name(),
+                                                              };
+                                                            })
+                                                        : {
+                                                            id: elm
+                                                              .containingProject()
+                                                              .id(),
+                                                            name: elm
+                                                              .containingProject()
+                                                              .name(),
+                                                          }
+                                                      : undefined,
+                                                  flagged: elm.flagged(),
+                                                };
+                                              })
                                           : {
                                               name: elm.tasks().name(),
                                               id: elm.tasks().id(),
@@ -598,6 +629,11 @@ parent
                                         ? elm
                                             .rootTask()
                                             .tasks()
+                                            .filter(
+                                              (e) =>
+                                                e.effectiveDeferDate() <
+                                                new Date()
+                                            )
                                             .map((elm) => {
                                               return {
                                                 name: elm.name(),
@@ -702,40 +738,47 @@ parent
                                     return {
                                       tasks: elm.tasks()
                                         ? Array.isArray(elm.tasks())
-                                          ? elm.tasks().map((elm) => {
-                                              return {
-                                                name: elm.name(),
-                                                id: elm.id(),
-                                                effectiveDueDate:
-                                                  elm.effectiveDueDate(),
-                                                completed: elm.completed(),
-                                                effectivelyCompleted:
-                                                  elm.effectivelyCompleted(),
-                                                containingProject:
-                                                  elm.containingProject()
-                                                    ? Array.isArray(
-                                                        elm.containingProject()
-                                                      )
-                                                      ? elm
-                                                          .containingProject()
-                                                          .map((elm) => {
-                                                            return {
-                                                              id: elm.id(),
-                                                              name: elm.name(),
-                                                            };
-                                                          })
-                                                      : {
-                                                          id: elm
+                                          ? elm
+                                              .tasks()
+                                              .filter(
+                                                (e) =>
+                                                  e.effectiveDeferDate() <
+                                                  new Date()
+                                              )
+                                              .map((elm) => {
+                                                return {
+                                                  name: elm.name(),
+                                                  id: elm.id(),
+                                                  effectiveDueDate:
+                                                    elm.effectiveDueDate(),
+                                                  completed: elm.completed(),
+                                                  effectivelyCompleted:
+                                                    elm.effectivelyCompleted(),
+                                                  containingProject:
+                                                    elm.containingProject()
+                                                      ? Array.isArray(
+                                                          elm.containingProject()
+                                                        )
+                                                        ? elm
                                                             .containingProject()
-                                                            .id(),
-                                                          name: elm
-                                                            .containingProject()
-                                                            .name(),
-                                                        }
-                                                    : undefined,
-                                                flagged: elm.flagged(),
-                                              };
-                                            })
+                                                            .map((elm) => {
+                                                              return {
+                                                                id: elm.id(),
+                                                                name: elm.name(),
+                                                              };
+                                                            })
+                                                        : {
+                                                            id: elm
+                                                              .containingProject()
+                                                              .id(),
+                                                            name: elm
+                                                              .containingProject()
+                                                              .name(),
+                                                          }
+                                                      : undefined,
+                                                  flagged: elm.flagged(),
+                                                };
+                                              })
                                           : {
                                               name: elm.tasks().name(),
                                               id: elm.tasks().id(),
@@ -796,6 +839,11 @@ parent
                                           .byId(projectId)
                                           .rootTask()
                                           .tasks()
+                                          .filter(
+                                            (e) =>
+                                              e.effectiveDeferDate() <
+                                              new Date()
+                                          )
                                           .map((elm) => {
                                             return {
                                               name: elm.name(),
@@ -924,40 +972,47 @@ parent
                                     return {
                                       tasks: elm.tasks()
                                         ? Array.isArray(elm.tasks())
-                                          ? elm.tasks().map((elm) => {
-                                              return {
-                                                name: elm.name(),
-                                                id: elm.id(),
-                                                effectiveDueDate:
-                                                  elm.effectiveDueDate(),
-                                                completed: elm.completed(),
-                                                effectivelyCompleted:
-                                                  elm.effectivelyCompleted(),
-                                                containingProject:
-                                                  elm.containingProject()
-                                                    ? Array.isArray(
-                                                        elm.containingProject()
-                                                      )
-                                                      ? elm
-                                                          .containingProject()
-                                                          .map((elm) => {
-                                                            return {
-                                                              id: elm.id(),
-                                                              name: elm.name(),
-                                                            };
-                                                          })
-                                                      : {
-                                                          id: elm
+                                          ? elm
+                                              .tasks()
+                                              .filter(
+                                                (e) =>
+                                                  e.effectiveDeferDate() <
+                                                  new Date()
+                                              )
+                                              .map((elm) => {
+                                                return {
+                                                  name: elm.name(),
+                                                  id: elm.id(),
+                                                  effectiveDueDate:
+                                                    elm.effectiveDueDate(),
+                                                  completed: elm.completed(),
+                                                  effectivelyCompleted:
+                                                    elm.effectivelyCompleted(),
+                                                  containingProject:
+                                                    elm.containingProject()
+                                                      ? Array.isArray(
+                                                          elm.containingProject()
+                                                        )
+                                                        ? elm
                                                             .containingProject()
-                                                            .id(),
-                                                          name: elm
-                                                            .containingProject()
-                                                            .name(),
-                                                        }
-                                                    : undefined,
-                                                flagged: elm.flagged(),
-                                              };
-                                            })
+                                                            .map((elm) => {
+                                                              return {
+                                                                id: elm.id(),
+                                                                name: elm.name(),
+                                                              };
+                                                            })
+                                                        : {
+                                                            id: elm
+                                                              .containingProject()
+                                                              .id(),
+                                                            name: elm
+                                                              .containingProject()
+                                                              .name(),
+                                                          }
+                                                      : undefined,
+                                                  flagged: elm.flagged(),
+                                                };
+                                              })
                                           : {
                                               name: elm.tasks().name(),
                                               id: elm.tasks().id(),
@@ -1009,6 +1064,11 @@ parent
                                         ? elm
                                             .rootTask()
                                             .tasks()
+                                            .filter(
+                                              (e) =>
+                                                e.effectiveDeferDate() <
+                                                new Date()
+                                            )
                                             .map((elm) => {
                                               return {
                                                 name: elm.name(),
@@ -1111,40 +1171,47 @@ parent
                                     return {
                                       tasks: elm.tasks()
                                         ? Array.isArray(elm.tasks())
-                                          ? elm.tasks().map((elm) => {
-                                              return {
-                                                name: elm.name(),
-                                                id: elm.id(),
-                                                effectiveDueDate:
-                                                  elm.effectiveDueDate(),
-                                                completed: elm.completed(),
-                                                effectivelyCompleted:
-                                                  elm.effectivelyCompleted(),
-                                                containingProject:
-                                                  elm.containingProject()
-                                                    ? Array.isArray(
-                                                        elm.containingProject()
-                                                      )
-                                                      ? elm
-                                                          .containingProject()
-                                                          .map((elm) => {
-                                                            return {
-                                                              id: elm.id(),
-                                                              name: elm.name(),
-                                                            };
-                                                          })
-                                                      : {
-                                                          id: elm
+                                          ? elm
+                                              .tasks()
+                                              .filter(
+                                                (e) =>
+                                                  e.effectiveDeferDate() <
+                                                  new Date()
+                                              )
+                                              .map((elm) => {
+                                                return {
+                                                  name: elm.name(),
+                                                  id: elm.id(),
+                                                  effectiveDueDate:
+                                                    elm.effectiveDueDate(),
+                                                  completed: elm.completed(),
+                                                  effectivelyCompleted:
+                                                    elm.effectivelyCompleted(),
+                                                  containingProject:
+                                                    elm.containingProject()
+                                                      ? Array.isArray(
+                                                          elm.containingProject()
+                                                        )
+                                                        ? elm
                                                             .containingProject()
-                                                            .id(),
-                                                          name: elm
-                                                            .containingProject()
-                                                            .name(),
-                                                        }
-                                                    : undefined,
-                                                flagged: elm.flagged(),
-                                              };
-                                            })
+                                                            .map((elm) => {
+                                                              return {
+                                                                id: elm.id(),
+                                                                name: elm.name(),
+                                                              };
+                                                            })
+                                                        : {
+                                                            id: elm
+                                                              .containingProject()
+                                                              .id(),
+                                                            name: elm
+                                                              .containingProject()
+                                                              .name(),
+                                                          }
+                                                      : undefined,
+                                                  flagged: elm.flagged(),
+                                                };
+                                              })
                                           : {
                                               name: elm.tasks().name(),
                                               id: elm.tasks().id(),
@@ -1199,6 +1266,11 @@ parent
                                           .byId(projectId)
                                           .rootTask()
                                           .tasks()
+                                          .filter(
+                                            (e) =>
+                                              e.effectiveDeferDate() <
+                                              new Date()
+                                          )
                                           .map((elm) => {
                                             return {
                                               name: elm.name(),
@@ -1321,40 +1393,47 @@ parent
                                   return {
                                     tasks: elm.tasks()
                                       ? Array.isArray(elm.tasks())
-                                        ? elm.tasks().map((elm) => {
-                                            return {
-                                              name: elm.name(),
-                                              id: elm.id(),
-                                              effectiveDueDate:
-                                                elm.effectiveDueDate(),
-                                              completed: elm.completed(),
-                                              effectivelyCompleted:
-                                                elm.effectivelyCompleted(),
-                                              containingProject:
-                                                elm.containingProject()
-                                                  ? Array.isArray(
-                                                      elm.containingProject()
-                                                    )
-                                                    ? elm
-                                                        .containingProject()
-                                                        .map((elm) => {
-                                                          return {
-                                                            id: elm.id(),
-                                                            name: elm.name(),
-                                                          };
-                                                        })
-                                                    : {
-                                                        id: elm
+                                        ? elm
+                                            .tasks()
+                                            .filter(
+                                              (e) =>
+                                                e.effectiveDeferDate() <
+                                                new Date()
+                                            )
+                                            .map((elm) => {
+                                              return {
+                                                name: elm.name(),
+                                                id: elm.id(),
+                                                effectiveDueDate:
+                                                  elm.effectiveDueDate(),
+                                                completed: elm.completed(),
+                                                effectivelyCompleted:
+                                                  elm.effectivelyCompleted(),
+                                                containingProject:
+                                                  elm.containingProject()
+                                                    ? Array.isArray(
+                                                        elm.containingProject()
+                                                      )
+                                                      ? elm
                                                           .containingProject()
-                                                          .id(),
-                                                        name: elm
-                                                          .containingProject()
-                                                          .name(),
-                                                      }
-                                                  : undefined,
-                                              flagged: elm.flagged(),
-                                            };
-                                          })
+                                                          .map((elm) => {
+                                                            return {
+                                                              id: elm.id(),
+                                                              name: elm.name(),
+                                                            };
+                                                          })
+                                                      : {
+                                                          id: elm
+                                                            .containingProject()
+                                                            .id(),
+                                                          name: elm
+                                                            .containingProject()
+                                                            .name(),
+                                                        }
+                                                    : undefined,
+                                                flagged: elm.flagged(),
+                                              };
+                                            })
                                         : {
                                             name: elm.tasks().name(),
                                             id: elm.tasks().id(),
@@ -1404,6 +1483,11 @@ parent
                                       ? elm
                                           .rootTask()
                                           .tasks()
+                                          .filter(
+                                            (e) =>
+                                              e.effectiveDeferDate() <
+                                              new Date()
+                                          )
                                           .map((elm) => {
                                             return {
                                               name: elm.name(),
@@ -1508,40 +1592,47 @@ parent
                                   return {
                                     tasks: elm.tasks()
                                       ? Array.isArray(elm.tasks())
-                                        ? elm.tasks().map((elm) => {
-                                            return {
-                                              name: elm.name(),
-                                              id: elm.id(),
-                                              effectiveDueDate:
-                                                elm.effectiveDueDate(),
-                                              completed: elm.completed(),
-                                              effectivelyCompleted:
-                                                elm.effectivelyCompleted(),
-                                              containingProject:
-                                                elm.containingProject()
-                                                  ? Array.isArray(
-                                                      elm.containingProject()
-                                                    )
-                                                    ? elm
-                                                        .containingProject()
-                                                        .map((elm) => {
-                                                          return {
-                                                            id: elm.id(),
-                                                            name: elm.name(),
-                                                          };
-                                                        })
-                                                    : {
-                                                        id: elm
+                                        ? elm
+                                            .tasks()
+                                            .filter(
+                                              (e) =>
+                                                e.effectiveDeferDate() <
+                                                new Date()
+                                            )
+                                            .map((elm) => {
+                                              return {
+                                                name: elm.name(),
+                                                id: elm.id(),
+                                                effectiveDueDate:
+                                                  elm.effectiveDueDate(),
+                                                completed: elm.completed(),
+                                                effectivelyCompleted:
+                                                  elm.effectivelyCompleted(),
+                                                containingProject:
+                                                  elm.containingProject()
+                                                    ? Array.isArray(
+                                                        elm.containingProject()
+                                                      )
+                                                      ? elm
                                                           .containingProject()
-                                                          .id(),
-                                                        name: elm
-                                                          .containingProject()
-                                                          .name(),
-                                                      }
-                                                  : undefined,
-                                              flagged: elm.flagged(),
-                                            };
-                                          })
+                                                          .map((elm) => {
+                                                            return {
+                                                              id: elm.id(),
+                                                              name: elm.name(),
+                                                            };
+                                                          })
+                                                      : {
+                                                          id: elm
+                                                            .containingProject()
+                                                            .id(),
+                                                          name: elm
+                                                            .containingProject()
+                                                            .name(),
+                                                        }
+                                                    : undefined,
+                                                flagged: elm.flagged(),
+                                              };
+                                            })
                                         : {
                                             name: elm.tasks().name(),
                                             id: elm.tasks().id(),
@@ -1600,6 +1691,10 @@ parent
                                         .byId(projectId)
                                         .rootTask()
                                         .tasks()
+                                        .filter(
+                                          (e) =>
+                                            e.effectiveDeferDate() < new Date()
+                                        )
                                         .map((elm) => {
                                           return {
                                             name: elm.name(),
