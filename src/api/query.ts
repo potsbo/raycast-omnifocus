@@ -15,7 +15,15 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
     return convertFields({ rootName, fragments }, fs.selectionSet.selections, true);
   }
   if (f.selectionSet) {
-    const child = `${rootName}.${name}()`;
+    const args: string[] = [];
+    f.arguments?.forEach((a) => {
+      if (a.value.kind !== Kind.VARIABLE) {
+        throw "Non variable argument found";
+      }
+      args.push(a.value.name.value);
+    });
+
+    const child = `${rootName}.${name}(${args.join(",")})`;
     return `${name}: ${convertFields({ rootName: child, fragments }, f.selectionSet.selections)},`;
   }
   return `${name}: ${rootName}.${name}(),`;
