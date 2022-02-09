@@ -81,6 +81,7 @@ test("run for GetTasksInProjectDocument", () => {
                     };
                   },
                   flagged: () => false,
+                  effectiveDeferDate: () => null,
                 },
               ],
             };
