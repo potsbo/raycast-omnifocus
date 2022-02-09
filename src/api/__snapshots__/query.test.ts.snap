@@ -91,7 +91,8 @@ exports[`query for GetTasksDocument 1`] = `
 `;
 
 exports[`query for GetTasksInProjectDocument 1`] = `
-"parent
+"const projectId = \\"foobar\\";
+parent
   ? Array.isArray(parent)
     ? parent.map((elm) => {
         return {
@@ -822,7 +823,7 @@ Object {
         Object {
           "completed": false,
           "containingProject": Object {
-            "id": "projectId",
+            "id": undefined,
             "name": "projectName",
           },
           "effectiveDueDate": null,

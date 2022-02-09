@@ -64,7 +64,7 @@ test("run for GetTasksInProjectDocument", () => {
   const parent = {
     byId: () => {
       return {
-        rootTask: () => {
+        rootTask: (pid: string) => {
           return {
             tasks: () => [
               {
@@ -75,7 +75,7 @@ test("run for GetTasksInProjectDocument", () => {
                 effectivelyCompleted: () => null,
                 containingProject: () => {
                   return {
-                    id: () => "projectId",
+                    id: () => pid,
                     name: () => "projectName"
                   }
                 },

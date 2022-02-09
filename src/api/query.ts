@@ -54,11 +54,14 @@ export const genQuery = (
   rootName: string,
   info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues">
 ) => {
+  const vars = Object.entries(info.variableValues)
+    .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
+    .join("\n");
   const field = info.operation.selectionSet.selections[0];
   const { fragments } = info;
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
   const fs = field.selectionSet.selections;
-  return `(${convertFields({ rootName, fragments }, fs)})`;
+  return `${vars}(${convertFields({ rootName, fragments }, fs)})`;
 };
