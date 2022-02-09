@@ -17,6 +17,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type DefaultDocument = {
+  __typename?: 'DefaultDocument';
+  projects: Projects;
+};
+
 export type Project = {
   __typename?: 'Project';
   id: Scalars['String'];
@@ -36,9 +41,9 @@ export type ProjectsByIdArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  defaultDocument: DefaultDocument;
   flattenedTasks: Array<Task>;
   inboxTasks: Array<Task>;
-  projects: Projects;
 };
 
 
@@ -91,7 +96,7 @@ export type GetTasksInProjectQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksInProjectQuery = { __typename?: 'Query', projects: { __typename?: 'Projects', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } };
+export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'Projects', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } } };
 
 
 
@@ -163,6 +168,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  DefaultDocument: ResolverTypeWrapper<DefaultDocument>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Project: ResolverTypeWrapper<Project>;
   Projects: ResolverTypeWrapper<Projects>;
@@ -174,12 +180,18 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  DefaultDocument: DefaultDocument;
   Int: Scalars['Int'];
   Project: Project;
   Projects: Projects;
   Query: {};
   String: Scalars['String'];
   Task: Task;
+};
+
+export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
+  projects?: Resolver<ResolversTypes['Projects'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
@@ -195,9 +207,9 @@ export type ProjectsResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  defaultDocument?: Resolver<ResolversTypes['DefaultDocument'], ParentType, ContextType>;
   flattenedTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryFlattenedTasksArgs>>;
   inboxTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryInboxTasksArgs>>;
-  projects?: Resolver<ResolversTypes['Projects'], ParentType, ContextType>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -213,6 +225,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  DefaultDocument?: DefaultDocumentResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Projects?: ProjectsResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
@@ -254,11 +267,13 @@ export const GetInboxTasksDocument = gql`
     ${TaskViewModelFragmentDoc}`;
 export const GetTasksInProjectDocument = gql`
     query GetTasksInProject($projectId: String!) {
-  projects {
-    byId(id: $projectId) {
-      rootTask {
-        tasks {
-          ...TaskViewModel
+  defaultDocument {
+    projects {
+      byId(id: $projectId) {
+        rootTask {
+          tasks {
+            ...TaskViewModel
+          }
         }
       }
     }

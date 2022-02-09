@@ -19,8 +19,12 @@ type Projects {
   byId(id: String!): Project
 }
 
+type DefaultDocument {
+  projects: Projects!
+}
+
 type Query {
   flattenedTasks(available: Boolean, flagged: Boolean, limit: Int, withEffectiveDueDate: Boolean): [Task!]!
   inboxTasks(flagged: Boolean, available: Boolean): [Task!]!
-  projects: Projects!
+  defaultDocument: DefaultDocument!
 }

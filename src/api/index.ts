@@ -79,11 +79,12 @@ const rootValue: QueryResolvers = {
 
     return run(fn, { q });
   },
-  projects: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
+  defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
     const q = genQuery("t", info);
 
     const fn = (arg: { q: string }) => {
-      const t = Application("OmniFocus").defaultDocument.projects;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const t = Application("OmniFocus").defaultDocument
 
       return eval(arg.q);
     };
