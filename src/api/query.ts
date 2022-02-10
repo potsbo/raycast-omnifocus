@@ -86,7 +86,7 @@ const convertField = (
     const suffix = noFunc ? "" : `(${args.join(",")})`;
 
     const child = `${rootName}.${name}${suffix}`;
-    return `${name}: ${convertFields({ rootName: child, fragments, schema }, f.selectionSet.selections, typeNode, {
+    return `${name}: ${convertObject({ rootName: child, fragments, schema }, f.selectionSet.selections, typeNode, {
       arrayTap,
     })},`;
   }
@@ -100,7 +100,7 @@ const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
   return unwrapType(typeNode.type);
 };
 
-const convertFields = (
+const convertObject = (
   ctx: CurrentContext,
   fs: readonly SelectionNode[],
   typeNode: TypeNode,
@@ -193,5 +193,5 @@ export const genQuery = (
   if (fdef === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
-  return `${vars}(${convertFields({ rootName, fragments, schema: info.schema }, fs, fdef)})`;
+  return `${vars}(${convertObject({ rootName, fragments, schema: info.schema }, fs, fdef)})`;
 };
