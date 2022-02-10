@@ -139,7 +139,7 @@ const convertFields = (
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
   if (typeNode.kind === Kind.NON_NULL_TYPE) {
-    return convertNonNullFields(ctx, fs, typeNode, opts);
+    return convertNonNullFields(ctx, fs, typeNode.type, opts);
   }
   const typeName = unwrapType(typeNode).name.value;
   const typeDef = ctx.schema.getType(typeName)?.astNode;
@@ -184,7 +184,7 @@ const convertFields = (
 const convertNonNullFields = (
   ctx: CurrentContext,
   fs: readonly SelectionNode[],
-  typeNode: NonNullTypeNode,
+  typeNode: NonNullTypeNode["type"],
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
   const typeName = unwrapType(typeNode).name.value;
@@ -194,6 +194,25 @@ const convertNonNullFields = (
   }
   if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
     throw new Error("unsupported type definition kind");
+  }
+
+  if (typeNode.kind === Kind.LIST_TYPE) {
+    const arrayBody = fs
+      .map((f) => {
+        if (f.kind === Kind.INLINE_FRAGMENT) {
+          throw new Error(`unsupported node type: ${f.kind}"`);
+        }
+        const name = f.name.value;
+        if (f.kind === Kind.FRAGMENT_SPREAD) {
+          return convertFragSpread({ ...ctx, rootName: "elm" }, f);
+        }
+        const found = typeDef.fields?.find((def) => def.name.value === name);
+        return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
+      })
+      .join("");
+    return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
+        return { ${arrayBody} };
+       })`;
   }
 
   const converted = fs
@@ -209,22 +228,7 @@ const convertNonNullFields = (
       return convertField(ctx, f, found!.type);
     })
     .join("");
-
-  const convertedForArray = fs
-    .map((f) => {
-      if (f.kind === Kind.INLINE_FRAGMENT) {
-        throw new Error(`unsupported node type: ${f.kind}"`);
-      }
-      const name = f.name.value;
-      if (f.kind === Kind.FRAGMENT_SPREAD) {
-        return convertFragSpread({ ...ctx, rootName: "elm" }, f);
-      }
-      const found = typeDef.fields?.find((def) => def.name.value === name);
-      return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
-    })
-    .join("");
-
-  return `${arrayCare(ctx, converted, convertedForArray, opts.arrayTap ?? "")}`;
+  return `{ ${converted} }`;
 };
 
 export const genQuery = (

@@ -43,19 +43,14 @@ const rootValue: QueryResolvers = {
 
         return (t.effectiveDueDate() !== null) === a;
       };
+      const t = doc
+        .flattenedTasks()
+        .slice(0, arg.limit !== null && arg.limit !== undefined ? arg.limit : -1)
+        .filter(applyAvailableFilter)
+        .filter(applyFlaggedFilter)
+        .filter(applyWithEffectiveDueDate);
 
-      return (
-        doc
-          .flattenedTasks()
-          .slice(0, arg.limit !== null && arg.limit !== undefined ? arg.limit : -1)
-          .filter(applyAvailableFilter)
-          .filter(applyFlaggedFilter)
-          .filter(applyWithEffectiveDueDate)
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .map((t) => {
-            return eval(arg.q);
-          })
-      );
+      return eval(arg.q);
     };
 
     return run(fn, { ...args, q });
@@ -66,15 +61,10 @@ const rootValue: QueryResolvers = {
     const fn = (arg: { q: string }) => {
       const app = Application("OmniFocus");
       const doc = app.defaultDocument;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const t = doc.inboxTasks();
 
-      return (
-        doc
-          .inboxTasks()
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .map((t) => {
-            return eval(arg.q);
-          })
-      );
+      return eval(arg.q);
     };
 
     return run(fn, { q });
