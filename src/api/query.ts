@@ -1,6 +1,5 @@
 import {
   FragmentSpreadNode,
-  GraphQLField,
   GraphQLResolveInfo,
   Kind,
   NamedTypeNode,
@@ -15,7 +14,6 @@ interface CurrentContext {
   rootName: string;
   fragments: GraphQLResolveInfo["fragments"];
   schema: GraphQLResolveInfo["schema"];
-  graphField: GraphQLField<unknown, unknown, unknown>;
 }
 
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
@@ -23,7 +21,7 @@ const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => 
 };
 
 const convertFragSpread = (
-  { rootName, fragments, graphField, schema }: CurrentContext,
+  { rootName, fragments, schema }: CurrentContext,
   f: FragmentSpreadNode
 ): string => {
   const name = f.name.value;
@@ -57,10 +55,10 @@ const convertFragSpread = (
       }
       const name = f.name.value;
       if (f.kind === Kind.FRAGMENT_SPREAD) {
-        return convertFragSpread({ rootName, fragments, graphField, schema }, f);
+        return convertFragSpread({ rootName, fragments, schema }, f);
       }
       const found = typeDef.fields?.find((def) => def.name.value === name);
-      return convertField({ rootName, fragments, graphField, schema }, f, found!.type);
+      return convertField({ rootName, fragments, schema }, f, found!.type);
     })
     .join("");
 
@@ -68,7 +66,7 @@ const convertFragSpread = (
 };
 
 const convertField = (
-  { rootName, fragments, graphField, schema }: CurrentContext,
+  { rootName, fragments, schema }: CurrentContext,
   f: SelectionNode,
   typeNode: TypeNode
 ): string => {
@@ -77,7 +75,7 @@ const convertField = (
   }
   const name = f.name.value;
   if (f.kind === Kind.FRAGMENT_SPREAD) {
-    return convertFragSpread({ rootName, fragments, graphField, schema }, f);
+    return convertFragSpread({ rootName, fragments, schema }, f);
   }
   const noFunc = (f.directives ?? []).some((d) => d.name.value === "noFunc");
 
@@ -105,7 +103,7 @@ const convertField = (
 
     const child = `${rootName}.${name}${suffix}`;
     return `${name}: ${convertFields(
-      { rootName: child, fragments, graphField, schema },
+      { rootName: child, fragments, schema },
       f.selectionSet.selections,
       typeNode,
       {
@@ -205,12 +203,6 @@ export const genQuery = (
   if (field.kind !== Kind.FIELD) {
     throw new Error(`unsupported node type: ${field.kind}"`);
   }
-  const queryName = field.name.value;
-  const graphField = info.schema.getQueryType()?.getFields()[queryName];
-  if (graphField === undefined) {
-    throw new Error(`graph field undefiend`);
-  }
-
   const { fragments } = info;
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
@@ -222,5 +214,5 @@ export const genQuery = (
   if (fdef === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
-  return `${vars}(${convertFields({ rootName, fragments, graphField, schema: info.schema }, fs, fdef)})`;
+  return `${vars}(${convertFields({ rootName, fragments, schema: info.schema }, fs, fdef)})`;
 };
