@@ -20,10 +20,7 @@ const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => 
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
 
-const convertFragSpread = (
-  { rootName, fragments, schema }: CurrentContext,
-  f: FragmentSpreadNode
-): string => {
+const convertFragSpread = ({ rootName, fragments, schema }: CurrentContext, f: FragmentSpreadNode): string => {
   const name = f.name.value;
   const fs = fragments[name];
   const astNode = schema.getType(fs.typeCondition.name.value)?.astNode;
@@ -102,14 +99,9 @@ const convertField = (
     const suffix = noFunc ? "" : `(${args.join(",")})`;
 
     const child = `${rootName}.${name}${suffix}`;
-    return `${name}: ${convertFields(
-      { rootName: child, fragments, schema },
-      f.selectionSet.selections,
-      typeNode,
-      {
-        arrayTap,
-      }
-    )},`;
+    return `${name}: ${convertFields({ rootName: child, fragments, schema }, f.selectionSet.selections, typeNode, {
+      arrayTap,
+    })},`;
   }
   return `${name}: ${rootName}.${name}(),`;
 };
