@@ -1,11 +1,12 @@
 import {
+  FieldNode,
   FragmentSpreadNode,
   GraphQLNamedType,
   GraphQLResolveInfo,
   Kind,
-  ListTypeNode,
   NamedTypeNode,
   NonNullTypeNode,
+  ObjectTypeDefinitionNode,
   SelectionNode,
   StringValueNode,
   TypeNode,
@@ -30,18 +31,8 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
   return convertFields(ctx, fs.selectionSet.selections, astNode);
 };
 
-const convertField = (
-  { rootName, fragments, schema }: CurrentContext,
-  f: SelectionNode,
-  typeNode: TypeNode
-): string => {
-  if (f.kind === Kind.INLINE_FRAGMENT) {
-    throw new Error(`unsupported node type: ${f.kind}"`);
-  }
+const convertField = ({ rootName, fragments, schema }: CurrentContext, f: FieldNode, typeNode: TypeNode): string => {
   const name = f.name.value;
-  if (f.kind === Kind.FRAGMENT_SPREAD) {
-    return convertFragSpread({ rootName, fragments, schema }, f);
-  }
   const noFunc = (f.directives ?? []).some((d) => d.name.value === "noFunc");
 
   const onlyDirectives = (f.directives ?? [])
@@ -81,6 +72,18 @@ const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
   return unwrapType(typeNode.type);
 };
 
+const mustFindTypeDefinition = (ctx: CurrentContext, typeNode: TypeNode): ObjectTypeDefinitionNode => {
+  const typeName = unwrapType(typeNode).name.value;
+  const typeDef = ctx.schema.getType(typeName)?.astNode;
+  if (!typeDef) {
+    throw new Error("type def undefined");
+  }
+  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+    throw new Error("unsupported type definition kind");
+  }
+  return typeDef;
+};
+
 const convertObject = (
   ctx: CurrentContext,
   fs: readonly SelectionNode[],
@@ -94,45 +97,18 @@ const convertObject = (
   return `${ctx.rootName} ? ${convertNonNullFields(ctx, fs, typeNode, opts)}: undefined`;
 };
 
-const convertNonNullList = (
-  ctx: CurrentContext,
-  fs: readonly SelectionNode[],
-  typeNode: ListTypeNode,
-  opts: Partial<{ arrayTap: string }> = {}
-) => {
-  const typeName = unwrapType(typeNode).name.value;
-  const typeDef = ctx.schema.getType(typeName)?.astNode;
-  if (!typeDef) {
-    throw new Error("type def undefined");
-  }
-  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
-  }
-
-  const arrayBody = convertFields({ ...ctx, rootName: "elm" }, fs, typeDef);
-
-  return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
-    return { ${arrayBody} };
-   })`;
-};
-
 const convertNonNullFields = (
   ctx: CurrentContext,
   fs: readonly SelectionNode[],
   typeNode: NonNullTypeNode["type"],
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
-  const typeName = unwrapType(typeNode).name.value;
-  const typeDef = ctx.schema.getType(typeName)?.astNode;
-  if (!typeDef) {
-    throw new Error("type def undefined");
-  }
-  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
-  }
+  const typeDef = mustFindTypeDefinition(ctx, typeNode);
 
   if (typeNode.kind === Kind.LIST_TYPE) {
-    return convertNonNullList({ ...ctx }, fs, typeNode, opts);
+    return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
+      return { ${convertFields({ ...ctx, rootName: "elm" }, fs, typeDef)} };
+     })`;
   }
 
   return `{ ${convertFields(ctx, fs, typeDef)} }`;
