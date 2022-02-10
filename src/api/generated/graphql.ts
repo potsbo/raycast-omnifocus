@@ -20,7 +20,7 @@ export type Scalars = {
 export type DefaultDocument = {
   __typename?: 'DefaultDocument';
   folders: Array<Folder>;
-  projects: Projects;
+  projects: ProjectConnection;
 };
 
 export type Folder = {
@@ -39,13 +39,14 @@ export type Project = {
   rootTask: Task;
 };
 
-export type Projects = {
-  __typename?: 'Projects';
+export type ProjectConnection = {
+  __typename?: 'ProjectConnection';
+  all: Array<Project>;
   byId?: Maybe<Project>;
 };
 
 
-export type ProjectsByIdArgs = {
+export type ProjectConnectionByIdArgs = {
   id: Scalars['String'];
 };
 
@@ -106,7 +107,7 @@ export type GetTasksInProjectQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'Projects', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } } };
+export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } } };
 
 export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -187,7 +188,7 @@ export type ResolversTypes = {
   Folder: ResolverTypeWrapper<Folder>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Project: ResolverTypeWrapper<Project>;
-  Projects: ResolverTypeWrapper<Projects>;
+  ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
@@ -200,11 +201,19 @@ export type ResolversParentTypes = {
   Folder: Folder;
   Int: Scalars['Int'];
   Project: Project;
-  Projects: Projects;
+  ProjectConnection: ProjectConnection;
   Query: {};
   String: Scalars['String'];
   Task: Task;
 };
+
+export type CallDirectiveArgs = { };
+
+export type CallDirectiveResolver<Result, Parent, ContextType = any, Args = CallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type NoCallDirectiveArgs = { };
+
+export type NoCallDirectiveResolver<Result, Parent, ContextType = any, Args = NoCallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type NoFuncDirectiveArgs = { };
 
@@ -220,7 +229,7 @@ export type OnlyDirectiveResolver<Result, Parent, ContextType = any, Args = Only
 
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
   folders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
-  projects?: Resolver<ResolversTypes['Projects'], ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -240,8 +249,9 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ProjectsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Projects'] = ResolversParentTypes['Projects']> = {
-  byId?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<ProjectsByIdArgs, 'id'>>;
+export type ProjectConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProjectConnection'] = ResolversParentTypes['ProjectConnection']> = {
+  all?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  byId?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<ProjectConnectionByIdArgs, 'id'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -267,12 +277,14 @@ export type Resolvers<ContextType = any> = {
   DefaultDocument?: DefaultDocumentResolvers<ContextType>;
   Folder?: FolderResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
-  Projects?: ProjectsResolvers<ContextType>;
+  ProjectConnection?: ProjectConnectionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {
+  call?: CallDirectiveResolver<any, any, ContextType>;
+  noCall?: NoCallDirectiveResolver<any, any, ContextType>;
   noFunc?: NoFuncDirectiveResolver<any, any, ContextType>;
   only?: OnlyDirectiveResolver<any, any, ContextType>;
 };

@@ -17,8 +17,9 @@ type Task {
   tasks: [Task!]
 }
 
-type Projects {
+type ProjectConnection {
   byId(id: String!): Project
+  all: [Project!]! @call
 }
 
 type Folder {
@@ -28,7 +29,7 @@ type Folder {
 }
 
 type DefaultDocument {
-  projects: Projects!
+  projects: ProjectConnection! @noCall
   folders: [Folder!]!
 }
 
@@ -38,5 +39,7 @@ type Query {
   defaultDocument: DefaultDocument!
 }
 
+directive @call on FIELD_DEFINITION
+directive @noCall on FIELD_DEFINITION
 directive @noFunc on FIELD
 directive @only(field: String!, op: String, value: String) on FIELD
