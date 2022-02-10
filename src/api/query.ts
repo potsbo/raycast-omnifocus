@@ -31,19 +31,6 @@ const convertFragSpread = ({ rootName, fragments, schema }: CurrentContext, f: F
   if (astNode.kind !== Kind.OBJECT_TYPE_DEFINITION) {
     throw new Error("Unsupporetd type def");
   }
-  // TODO: pass to convertField
-  const _ = astNode.fields?.map((f) => {
-    return { name: f.name.value, type: f.type };
-  });
-
-  const baseTypeName = fs.typeCondition.name.value;
-  const typeDef = schema.getType(baseTypeName)?.astNode;
-  if (!typeDef) {
-    throw new Error("type def undefined");
-  }
-  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
-  }
 
   const converted = fs.selectionSet.selections
     .map((f) => {
@@ -54,7 +41,7 @@ const convertFragSpread = ({ rootName, fragments, schema }: CurrentContext, f: F
       if (f.kind === Kind.FRAGMENT_SPREAD) {
         return convertFragSpread({ rootName, fragments, schema }, f);
       }
-      const found = typeDef.fields?.find((def) => def.name.value === name);
+      const found = astNode.fields?.find((def) => def.name.value === name);
       return convertField({ rootName, fragments, schema }, f, found!.type);
     })
     .join("");
