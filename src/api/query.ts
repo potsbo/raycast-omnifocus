@@ -31,11 +31,7 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
   return convertFields(ctx, fs.selectionSet.selections, astNode);
 };
 
-const convertField = (
-  { rootName, fragments, schema }: CurrentContext,
-  f: FieldNode,
-  fieldDefinition: FieldDefinitionNode
-): string => {
+const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldDefinitionNode): string => {
   const typeNode = fieldDefinition.type;
   const name = f.name.value;
 
@@ -60,12 +56,12 @@ const convertField = (
       );
     const arrayTap = onlyDirectives.map(genFilter).join("");
     const suffix = noCall ? "" : `(${args.join(",")})`;
-    const child = `${rootName}.${name}${suffix}`;
-    return `${name}: ${convertObject({ rootName: child, fragments, schema }, f.selectionSet.selections, typeNode, {
+    const child = `${ctx.rootName}.${name}${suffix}`;
+    return `${name}: ${convertObject({ ...ctx, rootName: child }, f.selectionSet.selections, typeNode, {
       arrayTap,
     })},`;
   }
-  return `${name}: ${rootName}.${name}(),`;
+  return `${name}: ${ctx.rootName}.${name}(),`;
 };
 
 const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
