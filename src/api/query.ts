@@ -1,4 +1,4 @@
-import { GraphQLField, GraphQLResolveInfo, Kind, SelectionNode, StringValueNode } from "graphql";
+import { FragmentSpreadNode, GraphQLField, GraphQLResolveInfo, Kind, SelectionNode, StringValueNode } from "graphql";
 import { OnlyDirectiveArgs } from "./generated/graphql";
 
 interface CurrentContext {
@@ -11,14 +11,19 @@ const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => 
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
 
+const convertFragSpread = ({ rootName, fragments, graphField }: CurrentContext, f: FragmentSpreadNode): string => {
+  const name = f.name.value;
+  const fs = fragments[name];
+  return convertFields({ rootName, fragments, graphField }, fs.selectionSet.selections, { fieldsOnly: true });
+};
+
 const convertField = ({ rootName, fragments, graphField }: CurrentContext, f: SelectionNode): string => {
   if (f.kind === Kind.INLINE_FRAGMENT) {
     throw new Error(`unsupported node type: ${f.kind}"`);
   }
   const name = f.name.value;
   if (f.kind === Kind.FRAGMENT_SPREAD) {
-    const fs = fragments[name];
-    return convertFields({ rootName, fragments, graphField }, fs.selectionSet.selections, { fieldsOnly: true });
+    return convertFragSpread({ rootName, fragments, graphField }, f);
   }
   const noFunc = (f.directives ?? []).some((d) => d.name.value === "noFunc");
 
