@@ -137,50 +137,44 @@ const convertFields = (
   typeNode: TypeNode,
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
-  if (typeNode) {
-    // TODO: pass to convertField
-    // const fieldDefs = (typeNode as any).fields?.map((f: any) => {
-    //   return { name: f.name.value, type: f.type };
-    // });
-    const typeName = unwrapType(typeNode).name.value;
-    const typeDef = ctx.schema.getType(typeName)?.astNode;
-    if (!typeDef) {
-      throw new Error("type def undefined");
-    }
-    if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-      throw new Error("unsupported type definition kind");
-    }
-
-    const converted = fs
-      .map((f) => {
-        if (f.kind === Kind.INLINE_FRAGMENT) {
-          throw new Error(`unsupported node type: ${f.kind}"`);
-        }
-        const name = f.name.value;
-        if (f.kind === Kind.FRAGMENT_SPREAD) {
-          return convertFragSpread(ctx, f);
-        }
-        const found = typeDef.fields?.find((def) => def.name.value === name);
-        return convertField(ctx, f, found!.type);
-      })
-      .join("");
-
-    const convertedForArray = fs
-      .map((f) => {
-        if (f.kind === Kind.INLINE_FRAGMENT) {
-          throw new Error(`unsupported node type: ${f.kind}"`);
-        }
-        const name = f.name.value;
-        if (f.kind === Kind.FRAGMENT_SPREAD) {
-          return convertFragSpread({ ...ctx, rootName: "elm" }, f);
-        }
-        const found = typeDef.fields?.find((def) => def.name.value === name);
-        return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
-      })
-      .join("");
-
-    return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray, opts.arrayTap ?? "")}: undefined`;
+  const typeName = unwrapType(typeNode).name.value;
+  const typeDef = ctx.schema.getType(typeName)?.astNode;
+  if (!typeDef) {
+    throw new Error("type def undefined");
   }
+  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+    throw new Error("unsupported type definition kind");
+  }
+
+  const converted = fs
+    .map((f) => {
+      if (f.kind === Kind.INLINE_FRAGMENT) {
+        throw new Error(`unsupported node type: ${f.kind}"`);
+      }
+      const name = f.name.value;
+      if (f.kind === Kind.FRAGMENT_SPREAD) {
+        return convertFragSpread(ctx, f);
+      }
+      const found = typeDef.fields?.find((def) => def.name.value === name);
+      return convertField(ctx, f, found!.type);
+    })
+    .join("");
+
+  const convertedForArray = fs
+    .map((f) => {
+      if (f.kind === Kind.INLINE_FRAGMENT) {
+        throw new Error(`unsupported node type: ${f.kind}"`);
+      }
+      const name = f.name.value;
+      if (f.kind === Kind.FRAGMENT_SPREAD) {
+        return convertFragSpread({ ...ctx, rootName: "elm" }, f);
+      }
+      const found = typeDef.fields?.find((def) => def.name.value === name);
+      return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
+    })
+    .join("");
+
+  return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray, opts.arrayTap ?? "")}: undefined`;
 };
 
 export const genQuery = (
