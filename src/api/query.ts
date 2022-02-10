@@ -1,7 +1,9 @@
 import {
   FragmentSpreadNode,
+  GraphQLNamedType,
   GraphQLResolveInfo,
   Kind,
+  ListTypeNode,
   NamedTypeNode,
   NonNullTypeNode,
   SelectionNode,
@@ -20,33 +22,12 @@ const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => 
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
 
-const convertFragSpread = ({ rootName, fragments, schema }: CurrentContext, f: FragmentSpreadNode): string => {
+const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string => {
   const name = f.name.value;
-  const fs = fragments[name];
-  const astNode = schema.getType(fs.typeCondition.name.value)?.astNode;
-  if (astNode === undefined || astNode === null) {
-    throw new Error("Type Definition not found");
-  }
+  const fs = ctx.fragments[name];
+  const astNode = ctx.schema.getType(fs.typeCondition.name.value)?.astNode;
 
-  if (astNode.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("Unsupporetd type def");
-  }
-
-  const converted = fs.selectionSet.selections
-    .map((f) => {
-      if (f.kind === Kind.INLINE_FRAGMENT) {
-        throw new Error(`unsupported node type: ${f.kind}"`);
-      }
-      const name = f.name.value;
-      if (f.kind === Kind.FRAGMENT_SPREAD) {
-        return convertFragSpread({ rootName, fragments, schema }, f);
-      }
-      const found = astNode.fields?.find((def) => def.name.value === name);
-      return convertField({ rootName, fragments, schema }, f, found!.type);
-    })
-    .join("");
-
-  return converted;
+  return convertFields(ctx, fs.selectionSet.selections, astNode);
 };
 
 const convertField = (
@@ -113,6 +94,28 @@ const convertObject = (
   return `${ctx.rootName} ? ${convertNonNullFields(ctx, fs, typeNode, opts)}: undefined`;
 };
 
+const convertNonNullList = (
+  ctx: CurrentContext,
+  fs: readonly SelectionNode[],
+  typeNode: ListTypeNode,
+  opts: Partial<{ arrayTap: string }> = {}
+) => {
+  const typeName = unwrapType(typeNode).name.value;
+  const typeDef = ctx.schema.getType(typeName)?.astNode;
+  if (!typeDef) {
+    throw new Error("type def undefined");
+  }
+  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+    throw new Error("unsupported type definition kind");
+  }
+
+  const arrayBody = convertFields({ ...ctx, rootName: "elm" }, fs, typeDef);
+
+  return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
+    return { ${arrayBody} };
+   })`;
+};
+
 const convertNonNullFields = (
   ctx: CurrentContext,
   fs: readonly SelectionNode[],
@@ -129,38 +132,33 @@ const convertNonNullFields = (
   }
 
   if (typeNode.kind === Kind.LIST_TYPE) {
-    const arrayBody = fs
-      .map((f) => {
-        if (f.kind === Kind.INLINE_FRAGMENT) {
-          throw new Error(`unsupported node type: ${f.kind}"`);
-        }
-        const name = f.name.value;
-        if (f.kind === Kind.FRAGMENT_SPREAD) {
-          return convertFragSpread({ ...ctx, rootName: "elm" }, f);
-        }
-        const found = typeDef.fields?.find((def) => def.name.value === name);
-        return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
-      })
-      .join("");
-    return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
-        return { ${arrayBody} };
-       })`;
+    return convertNonNullList({ ...ctx }, fs, typeNode, opts);
   }
 
-  const converted = fs
+  return `{ ${convertFields(ctx, fs, typeDef)} }`;
+};
+
+const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], typeDef: GraphQLNamedType["astNode"]) => {
+  if (!typeDef) {
+    throw new Error("type def undefined");
+  }
+  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+    throw new Error("unsupported type definition kind");
+  }
+
+  return fs
     .map((f) => {
       if (f.kind === Kind.INLINE_FRAGMENT) {
         throw new Error(`unsupported node type: ${f.kind}"`);
       }
-      const name = f.name.value;
       if (f.kind === Kind.FRAGMENT_SPREAD) {
         return convertFragSpread(ctx, f);
       }
+      const name = f.name.value;
       const found = typeDef.fields?.find((def) => def.name.value === name);
       return convertField(ctx, f, found!.type);
     })
     .join("");
-  return `{ ${converted} }`;
 };
 
 export const genQuery = (
