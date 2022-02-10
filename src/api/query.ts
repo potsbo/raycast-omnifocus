@@ -1,8 +1,6 @@
 import {
   FragmentSpreadNode,
   GraphQLField,
-  GraphQLNamedType,
-  GraphQLObjectType,
   GraphQLResolveInfo,
   Kind,
   NamedTypeNode,
@@ -42,9 +40,26 @@ const convertFragSpread = (
     return { name: f.name.value, type: f.type };
   });
 
+  const baseTypeName = fs.typeCondition.name.value;
+  const typeDef = schema.getType(baseTypeName)?.astNode;
+  if (!typeDef) {
+    throw new Error("type def undefined");
+  }
+  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+    throw new Error("unsupported type definition kind");
+  }
+
   const converted = fs.selectionSet.selections
     .map((f) => {
-      return convertField({ rootName, fragments, graphField, schema }, f);
+      if (f.kind === Kind.INLINE_FRAGMENT) {
+        throw new Error(`unsupported node type: ${f.kind}"`);
+      }
+      const name = f.name.value;
+      if (f.kind === Kind.FRAGMENT_SPREAD) {
+        return convertFragSpread({ rootName, fragments, graphField, schema }, f);
+      }
+      const found = typeDef.fields?.find((def) => def.name.value === name);
+      return convertField({ rootName, fragments, graphField, schema }, f, found!.type);
     })
     .join("");
 
@@ -54,7 +69,7 @@ const convertFragSpread = (
 const convertField = (
   { rootName, fragments, graphField, schema }: CurrentContext,
   f: SelectionNode,
-  typeNode?: TypeNode
+  typeNode: TypeNode
 ): string => {
   if (f.kind === Kind.INLINE_FRAGMENT) {
     throw new Error(`unsupported node type: ${f.kind}"`);
@@ -88,9 +103,6 @@ const convertField = (
     const suffix = noFunc ? "" : `(${args.join(",")})`;
 
     const child = `${rootName}.${name}${suffix}`;
-    if (!typeNode) {
-      console.log(f);
-    }
     return `${name}: ${convertFields(
       { rootName: child, fragments, graphField, schema },
       f.selectionSet.selections,
@@ -122,7 +134,7 @@ const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
 const convertFields = (
   ctx: CurrentContext,
   fs: readonly SelectionNode[],
-  typeNode?: TypeNode,
+  typeNode: TypeNode,
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
   if (typeNode) {
@@ -149,31 +161,26 @@ const convertFields = (
           return convertFragSpread(ctx, f);
         }
         const found = typeDef.fields?.find((def) => def.name.value === name);
-        return convertField(ctx, f, found?.type);
+        return convertField(ctx, f, found!.type);
       })
       .join("");
 
     const convertedForArray = fs
       .map((f) => {
-        return convertField({ ...ctx, rootName: "elm" }, f);
+        if (f.kind === Kind.INLINE_FRAGMENT) {
+          throw new Error(`unsupported node type: ${f.kind}"`);
+        }
+        const name = f.name.value;
+        if (f.kind === Kind.FRAGMENT_SPREAD) {
+          return convertFragSpread({ ...ctx, rootName: "elm" }, f);
+        }
+        const found = typeDef.fields?.find((def) => def.name.value === name);
+        return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
       })
       .join("");
 
     return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray, opts.arrayTap ?? "")}: undefined`;
   }
-  const converted = fs
-    .map((f) => {
-      return convertField(ctx, f);
-    })
-    .join("");
-
-  const convertedForArray = fs
-    .map((f) => {
-      return convertField({ ...ctx, rootName: "elm" }, f);
-    })
-    .join("");
-
-  return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray, opts.arrayTap ?? "")}: undefined`;
 };
 
 export const genQuery = (
