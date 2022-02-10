@@ -59,10 +59,6 @@ const convertField = (
           ) as OnlyDirectiveArgs
       );
     const arrayTap = onlyDirectives.map(genFilter).join("");
-    if (name === "projects") {
-      console.log(fieldDefinition.directives);
-    }
-
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${rootName}.${name}${suffix}`;
     return `${name}: ${convertObject({ rootName: child, fragments, schema }, f.selectionSet.selections, typeNode, {
@@ -139,9 +135,6 @@ const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], typeDe
       }
       const name = f.name.value;
       const found = typeDef.fields?.find((def) => def.name.value === name);
-      if (name === "projects") {
-        console.log({ typeDef, found });
-      }
       return convertField(ctx, f, found!);
     })
     .join("");
