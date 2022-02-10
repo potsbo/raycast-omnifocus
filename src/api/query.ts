@@ -109,14 +109,6 @@ const convertObject = (
   if (typeNode.kind === Kind.NON_NULL_TYPE) {
     return convertNonNullFields(ctx, fs, typeNode.type, opts);
   }
-  const typeName = unwrapType(typeNode).name.value;
-  const typeDef = ctx.schema.getType(typeName)?.astNode;
-  if (!typeDef) {
-    throw new Error("type def undefined");
-  }
-  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
-  }
 
   return `${ctx.rootName} ? ${convertNonNullFields(ctx, fs, typeNode, opts)}: undefined`;
 };
