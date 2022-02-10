@@ -9,14 +9,10 @@ exports[`query for GetInboxTasksDocument 1`] = `
     completed: elm.completed(),
     effectivelyCompleted: elm.effectivelyCompleted(),
     containingProject: elm.containingProject()
-      ? Array.isArray(elm.containingProject())
-        ? elm.containingProject().map((elm) => {
-            return { id: elm.id(), name: elm.name() };
-          })
-        : {
-            id: elm.containingProject().id(),
-            name: elm.containingProject().name(),
-          }
+      ? {
+          id: elm.containingProject().id(),
+          name: elm.containingProject().name(),
+        }
       : undefined,
     flagged: elm.flagged(),
   };
@@ -33,14 +29,10 @@ exports[`query for GetTasksDocument 1`] = `
     completed: elm.completed(),
     effectivelyCompleted: elm.effectivelyCompleted(),
     containingProject: elm.containingProject()
-      ? Array.isArray(elm.containingProject())
-        ? elm.containingProject().map((elm) => {
-            return { id: elm.id(), name: elm.name() };
-          })
-        : {
-            id: elm.containingProject().id(),
-            name: elm.containingProject().name(),
-          }
+      ? {
+          id: elm.containingProject().id(),
+          name: elm.containingProject().name(),
+        }
       : undefined,
     flagged: elm.flagged(),
   };
@@ -53,182 +45,33 @@ exports[`query for GetTasksInProjectDocument 1`] = `
 ({
   projects: {
     byId: parent.projects.byId(projectId)
-      ? Array.isArray(parent.projects.byId(projectId))
-        ? parent.projects.byId(projectId).map((elm) => {
-            return {
-              rootTask: {
-                tasks: elm.rootTask().tasks()
-                  ? Array.isArray(elm.rootTask().tasks())
-                    ? elm
-                        .rootTask()
-                        .tasks()
-                        .filter((e) => e.effectiveDeferDate() < new Date())
-                        .map((elm) => {
-                          return {
-                            name: elm.name(),
-                            id: elm.id(),
-                            effectiveDueDate: elm.effectiveDueDate(),
-                            completed: elm.completed(),
-                            effectivelyCompleted: elm.effectivelyCompleted(),
-                            containingProject: elm.containingProject()
-                              ? Array.isArray(elm.containingProject())
-                                ? elm.containingProject().map((elm) => {
-                                    return { id: elm.id(), name: elm.name() };
-                                  })
-                                : {
-                                    id: elm.containingProject().id(),
-                                    name: elm.containingProject().name(),
-                                  }
-                              : undefined,
-                            flagged: elm.flagged(),
-                          };
-                        })
-                    : {
-                        name: elm.rootTask().tasks().name(),
-                        id: elm.rootTask().tasks().id(),
-                        effectiveDueDate: elm
-                          .rootTask()
-                          .tasks()
-                          .effectiveDueDate(),
-                        completed: elm.rootTask().tasks().completed(),
-                        effectivelyCompleted: elm
-                          .rootTask()
-                          .tasks()
-                          .effectivelyCompleted(),
-                        containingProject: elm
-                          .rootTask()
-                          .tasks()
-                          .containingProject()
-                          ? Array.isArray(
-                              elm.rootTask().tasks().containingProject()
-                            )
-                            ? elm
-                                .rootTask()
-                                .tasks()
-                                .containingProject()
-                                .map((elm) => {
-                                  return { id: elm.id(), name: elm.name() };
-                                })
-                            : {
-                                id: elm
-                                  .rootTask()
-                                  .tasks()
-                                  .containingProject()
-                                  .id(),
-                                name: elm
-                                  .rootTask()
-                                  .tasks()
-                                  .containingProject()
-                                  .name(),
-                              }
-                          : undefined,
-                        flagged: elm.rootTask().tasks().flagged(),
-                      }
-                  : undefined,
-              },
-            };
-          })
-        : {
-            rootTask: {
-              tasks: parent.projects.byId(projectId).rootTask().tasks()
-                ? Array.isArray(
-                    parent.projects.byId(projectId).rootTask().tasks()
-                  )
-                  ? parent.projects
-                      .byId(projectId)
-                      .rootTask()
-                      .tasks()
-                      .filter((e) => e.effectiveDeferDate() < new Date())
-                      .map((elm) => {
-                        return {
-                          name: elm.name(),
-                          id: elm.id(),
-                          effectiveDueDate: elm.effectiveDueDate(),
-                          completed: elm.completed(),
-                          effectivelyCompleted: elm.effectivelyCompleted(),
-                          containingProject: elm.containingProject()
-                            ? Array.isArray(elm.containingProject())
-                              ? elm.containingProject().map((elm) => {
-                                  return { id: elm.id(), name: elm.name() };
-                                })
-                              : {
-                                  id: elm.containingProject().id(),
-                                  name: elm.containingProject().name(),
-                                }
-                            : undefined,
-                          flagged: elm.flagged(),
-                        };
-                      })
-                  : {
-                      name: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .name(),
-                      id: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .id(),
-                      effectiveDueDate: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .effectiveDueDate(),
-                      completed: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .completed(),
-                      effectivelyCompleted: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .effectivelyCompleted(),
-                      containingProject: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .containingProject()
-                        ? Array.isArray(
-                            parent.projects
-                              .byId(projectId)
-                              .rootTask()
-                              .tasks()
-                              .containingProject()
-                          )
-                          ? parent.projects
-                              .byId(projectId)
-                              .rootTask()
-                              .tasks()
-                              .containingProject()
-                              .map((elm) => {
-                                return { id: elm.id(), name: elm.name() };
-                              })
-                          : {
-                              id: parent.projects
-                                .byId(projectId)
-                                .rootTask()
-                                .tasks()
-                                .containingProject()
-                                .id(),
-                              name: parent.projects
-                                .byId(projectId)
-                                .rootTask()
-                                .tasks()
-                                .containingProject()
-                                .name(),
-                            }
+      ? {
+          rootTask: {
+            tasks: parent.projects.byId(projectId).rootTask().tasks()
+              ? parent.projects
+                  .byId(projectId)
+                  .rootTask()
+                  .tasks()
+                  .filter((e) => e.effectiveDeferDate() < new Date())
+                  .map((elm) => {
+                    return {
+                      name: elm.name(),
+                      id: elm.id(),
+                      effectiveDueDate: elm.effectiveDueDate(),
+                      completed: elm.completed(),
+                      effectivelyCompleted: elm.effectivelyCompleted(),
+                      containingProject: elm.containingProject()
+                        ? {
+                            id: elm.containingProject().id(),
+                            name: elm.containingProject().name(),
+                          }
                         : undefined,
-                      flagged: parent.projects
-                        .byId(projectId)
-                        .rootTask()
-                        .tasks()
-                        .flagged(),
-                    }
-                : undefined,
-            },
-          }
+                      flagged: elm.flagged(),
+                    };
+                  })
+              : undefined,
+          },
+        }
       : undefined,
   },
 });

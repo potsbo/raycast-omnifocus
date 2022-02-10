@@ -116,15 +116,6 @@ const convertField = (
   return `${name}: ${rootName}.${name}(),`;
 };
 
-const arrayCare = (ctx: CurrentContext, body: string, arrayBody: string, arrayTap: string) => {
-  return `
-  Array.isArray(${ctx.rootName}) ?
-  ${ctx.rootName}${arrayTap}.map((elm) => {
-   return { ${arrayBody} };
-  }) : { ${body} }
-  `;
-};
-
 const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
   if (typeNode.kind === Kind.NAMED_TYPE) {
     return typeNode;
@@ -150,35 +141,7 @@ const convertFields = (
     throw new Error("unsupported type definition kind");
   }
 
-  const converted = fs
-    .map((f) => {
-      if (f.kind === Kind.INLINE_FRAGMENT) {
-        throw new Error(`unsupported node type: ${f.kind}"`);
-      }
-      const name = f.name.value;
-      if (f.kind === Kind.FRAGMENT_SPREAD) {
-        return convertFragSpread(ctx, f);
-      }
-      const found = typeDef.fields?.find((def) => def.name.value === name);
-      return convertField(ctx, f, found!.type);
-    })
-    .join("");
-
-  const convertedForArray = fs
-    .map((f) => {
-      if (f.kind === Kind.INLINE_FRAGMENT) {
-        throw new Error(`unsupported node type: ${f.kind}"`);
-      }
-      const name = f.name.value;
-      if (f.kind === Kind.FRAGMENT_SPREAD) {
-        return convertFragSpread({ ...ctx, rootName: "elm" }, f);
-      }
-      const found = typeDef.fields?.find((def) => def.name.value === name);
-      return convertField({ ...ctx, rootName: "elm" }, f, found!.type);
-    })
-    .join("");
-
-  return `${ctx.rootName} ? ${arrayCare(ctx, converted, convertedForArray, opts.arrayTap ?? "")}: undefined`;
+  return `${ctx.rootName} ? ${convertNonNullFields(ctx, fs, typeNode, opts)}: undefined`;
 };
 
 const convertNonNullFields = (
