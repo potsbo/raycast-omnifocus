@@ -179,11 +179,11 @@ export const genQuery = (
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
 
-  const def = info.schema.getQueryType()?.getFields()[field.name.value];
-  const fs = field.selectionSet.selections;
-  const fdef = def?.astNode?.type;
+  const fdef = info.schema.getQueryType()?.getFields()[field.name.value].astNode?.type;
   if (fdef === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
+
+  const fs = field.selectionSet.selections;
   return `${vars}(${convertObject({ rootName, fragments, schema: info.schema }, fs, fdef)})`;
 };
