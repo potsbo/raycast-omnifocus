@@ -170,11 +170,8 @@ export const genQuery = (
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
     .join("\n");
+
   const field = info.operation.selectionSet.selections[0];
-  if (field.kind !== Kind.FIELD) {
-    throw new Error(`unsupported node type: ${field.kind}"`);
-  }
-  const { fragments } = info;
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
@@ -185,5 +182,5 @@ export const genQuery = (
   }
 
   const fs = field.selectionSet.selections;
-  return `${vars}(${convertObject({ rootName, fragments, schema: info.schema }, fs, fdef)})`;
+  return `${vars}(${convertObject({ ...info, rootName }, fs, fdef)})`;
 };
