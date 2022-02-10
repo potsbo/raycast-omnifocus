@@ -1,23 +1,24 @@
-import { GraphQLResolveInfo, Kind, SelectionNode, StringValueNode } from "graphql";
+import { GraphQLField, GraphQLResolveInfo, Kind, SelectionNode, StringValueNode } from "graphql";
 import { OnlyDirectiveArgs } from "./generated/graphql";
 
 interface CurrentContext {
   rootName: string;
   fragments: GraphQLResolveInfo["fragments"];
+  graphField: GraphQLField<unknown, unknown, unknown>;
 }
 
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
 
-const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode): string => {
+const convertField = ({ rootName, fragments, graphField }: CurrentContext, f: SelectionNode): string => {
   if (f.kind === Kind.INLINE_FRAGMENT) {
     throw new Error(`unsupported node type: ${f.kind}"`);
   }
   const name = f.name.value;
   if (f.kind === Kind.FRAGMENT_SPREAD) {
     const fs = fragments[name];
-    return convertFields({ rootName, fragments }, fs.selectionSet.selections, { fieldsOnly: true });
+    return convertFields({ rootName, fragments, graphField }, fs.selectionSet.selections, { fieldsOnly: true });
   }
   const noFunc = (f.directives ?? []).some((d) => d.name.value === "noFunc");
 
@@ -44,7 +45,9 @@ const convertField = ({ rootName, fragments }: CurrentContext, f: SelectionNode)
     const suffix = noFunc ? "" : `(${args.join(",")})`;
 
     const child = `${rootName}.${name}${suffix}`;
-    return `${name}: ${convertFields({ rootName: child, fragments }, f.selectionSet.selections, { arrayTap })},`;
+    return `${name}: ${convertFields({ rootName: child, fragments, graphField }, f.selectionSet.selections, {
+      arrayTap,
+    })},`;
   }
   return `${name}: ${rootName}.${name}(),`;
 };
@@ -84,16 +87,25 @@ const convertFields = (
 
 export const genQuery = (
   rootName: string,
-  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues">
+  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">
 ) => {
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
     .join("\n");
   const field = info.operation.selectionSet.selections[0];
+  if (field.kind !== Kind.FIELD) {
+    throw new Error(`unsupported node type: ${field.kind}"`);
+  }
+  const queryName = field.name.value;
+  const graphField = info.schema.getQueryType()?.getFields()[queryName];
+  if (graphField === undefined) {
+    throw new Error(`graph field undefiend`);
+  }
+
   const { fragments } = info;
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
   const fs = field.selectionSet.selections;
-  return `${vars}(${convertFields({ rootName, fragments }, fs)})`;
+  return `${vars}(${convertFields({ rootName, fragments, graphField }, fs)})`;
 };
