@@ -324,7 +324,7 @@ export const GetInboxTasksDocument = gql`
 export const GetTasksInProjectDocument = gql`
     query GetTasksInProject($projectId: String!) {
   defaultDocument {
-    projects @noFunc {
+    projects {
       byId(id: $projectId) {
         rootTask {
           tasks @only(field: "effectiveDeferDate", op: "<", value: "new Date()") {

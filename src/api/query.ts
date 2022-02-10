@@ -8,8 +8,9 @@ import {
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   SelectionNode,
-  StringValueNode,
   TypeNode,
+  FieldDefinitionNode,
+  StringValueNode,
 } from "graphql";
 import { OnlyDirectiveArgs } from "./generated/graphql";
 
@@ -22,7 +23,6 @@ interface CurrentContext {
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
-
 const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string => {
   const name = f.name.value;
   const fs = ctx.fragments[name];
@@ -31,20 +31,13 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
   return convertFields(ctx, fs.selectionSet.selections, astNode);
 };
 
-const convertField = ({ rootName, fragments, schema }: CurrentContext, f: FieldNode, typeNode: TypeNode): string => {
+const convertField = (
+  { rootName, fragments, schema }: CurrentContext,
+  f: FieldNode,
+  fieldDefinition: FieldDefinitionNode
+): string => {
+  const typeNode = fieldDefinition.type;
   const name = f.name.value;
-  const noFunc = (f.directives ?? []).some((d) => d.name.value === "noFunc");
-
-  const onlyDirectives = (f.directives ?? [])
-    .filter((t) => t.name.value == "only")
-    .map(
-      (t) =>
-        Object.fromEntries(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          t.arguments!.map((a) => [a.name.value, (a.value as StringValueNode).value])
-        ) as OnlyDirectiveArgs
-    );
-  const arrayTap = onlyDirectives.map(genFilter).join("");
 
   if (f.selectionSet) {
     const args: string[] = [];
@@ -55,8 +48,22 @@ const convertField = ({ rootName, fragments, schema }: CurrentContext, f: FieldN
       args.push(a.value.name.value);
     });
 
-    const suffix = noFunc ? "" : `(${args.join(",")})`;
+    const noCall = fieldDefinition.directives?.some((d) => d.name.value === "noCall");
+    const onlyDirectives = (f.directives ?? [])
+      .filter((t) => t.name.value == "only")
+      .map(
+        (t) =>
+          Object.fromEntries(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            t.arguments!.map((a) => [a.name.value, (a.value as StringValueNode).value])
+          ) as OnlyDirectiveArgs
+      );
+    const arrayTap = onlyDirectives.map(genFilter).join("");
+    if (name === "projects") {
+      console.log(fieldDefinition.directives);
+    }
 
+    const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${rootName}.${name}${suffix}`;
     return `${name}: ${convertObject({ rootName: child, fragments, schema }, f.selectionSet.selections, typeNode, {
       arrayTap,
@@ -132,7 +139,10 @@ const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], typeDe
       }
       const name = f.name.value;
       const found = typeDef.fields?.find((def) => def.name.value === name);
-      return convertField(ctx, f, found!.type);
+      if (name === "projects") {
+        console.log({ typeDef, found });
+      }
+      return convertField(ctx, f, found!);
     })
     .join("");
 };
