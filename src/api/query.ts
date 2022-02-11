@@ -40,7 +40,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
   if (f.field.name.value === "edges") {
     return "";
   }
-  const typeNode = f.definition.type;
+
   const name = f.field.name.value;
 
   if (f.field.selectionSet) {
@@ -67,7 +67,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${renderObject(
       { ...ctx, rootName: child },
-      { selectedFields: f.field.selectionSet.selections, typeNode },
+      { selectedFields: f.field.selectionSet.selections, typeNode: f.definition.type },
       {
         arrayTap,
       }
@@ -116,15 +116,6 @@ const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: strin
   return dig(ctx, { selectedFields, typeNode }, ...fieldNames.slice(1));
 };
 
-const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: FieldNode): FieldDefinitionNode => {
-  const name = field.name.value;
-  const found = typeNode.fields?.find((def) => def.name.value === name);
-  if (!found) {
-    throw new Error(`Field definition for "${name}" not found`);
-  }
-  return found;
-};
-
 const renderObject = (
   ctx: CurrentContext,
   object: RenderableObject,
@@ -148,7 +139,7 @@ const convertNonNullFields = (
 ) => {
   if (object.typeNode.kind === Kind.LIST_TYPE) {
     return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
-      return { ${convertFields({ ...ctx, rootName: "elm" }, object)} };
+      return { ${renderFields({ ...ctx, rootName: "elm" }, object)} };
      })`;
   }
 
@@ -182,27 +173,32 @@ const convertNonNullFields = (
             ${renderNodeField()}
           }
         }),
-        ${convertFields(ctx, object)}
+        ${renderFields(ctx, object)}
       }
     })()
     `;
   }
 
-  return `{ ${convertFields(ctx, object)} }`;
+  return `{ ${renderFields(ctx, object)} }`;
 };
 
-const convertFields = (ctx: CurrentContext, object: RenderableObject): string => {
-  const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
+const renderFields = (ctx: CurrentContext, object: RenderableObject): string => {
   return object.selectedFields
-    .map((f) => {
-      if (f.kind === Kind.INLINE_FRAGMENT) {
-        throw new Error(`unsupported node type: ${f.kind}"`);
+    .map((field) => {
+      if (field.kind === Kind.INLINE_FRAGMENT) {
+        throw new Error(`unsupported node type: ${field.kind}"`);
       }
-      if (f.kind === Kind.FRAGMENT_SPREAD) {
-        const fs = ctx.fragments[f.name.value];
-        return convertFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
+      if (field.kind === Kind.FRAGMENT_SPREAD) {
+        const fs = ctx.fragments[field.name.value];
+        return renderFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
       }
-      return renderField(ctx, { field: f, definition: mustFindFieldDefinition(typeDef, f) });
+      const definition = mustFindTypeDefinition(ctx, object.typeNode).fields?.find(
+        (def) => def.name.value === field.name.value
+      );
+      if (!definition) {
+        throw new Error(`Field definition for "${field.name.value}" not found`);
+      }
+      return renderField(ctx, { field, definition });
     })
     .join("");
 };
