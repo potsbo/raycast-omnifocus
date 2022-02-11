@@ -201,6 +201,13 @@ export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetNestedProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, availableTaskCount: number } }> } } }> } } };
 
+export type GetTasksWithTagQueryVariables = Exact<{
+  tagId: Scalars['String'];
+}>;
+
+
+export type GetTasksWithTagQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'Tag', tasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | null } } };
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -565,6 +572,23 @@ export const GetNestedProjectsDocument = gql`
   }
 }
     `;
+export const GetTasksWithTagDocument = gql`
+    query GetTasksWithTag($tagId: String!) {
+  defaultDocument {
+    tags {
+      byId(id: $tagId) {
+        tasks {
+          edges {
+            node {
+              ...TaskViewModel
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${TaskViewModelFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -584,6 +608,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetNestedProjects(variables?: GetNestedProjectsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNestedProjectsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNestedProjectsQuery>(GetNestedProjectsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNestedProjects');
+    },
+    GetTasksWithTag(variables: GetTasksWithTagQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTasksWithTagQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTasksWithTagQuery>(GetTasksWithTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTasksWithTag');
     }
   };
 }

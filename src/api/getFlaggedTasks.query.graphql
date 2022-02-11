@@ -75,3 +75,19 @@ query GetNestedProjects {
     }
   }
 }
+
+query GetTasksWithTag($tagId: String!) {
+  defaultDocument {
+    tags {
+      byId(id: $tagId) {
+        tasks {
+          edges {
+            node {
+              ...TaskViewModel
+            }
+          }
+        }
+      }
+    }
+  }
+}
