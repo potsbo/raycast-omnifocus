@@ -124,3 +124,52 @@ query GetTopLevelProjects {
     }
   }
 }
+
+query GetTaskCreationSupportInfo {
+  defaultDocument {
+    folders {
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                numberOfAvailableTasks
+              }
+            }
+          }
+        }
+      }
+    }
+    projects {
+      edges {
+        node {
+          id
+          name
+          completed
+          numberOfAvailableTasks
+        }
+      }
+    }
+    tags {
+      edges {
+        node {
+          name
+          id
+          tags {
+            edges {
+              node {
+                name
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

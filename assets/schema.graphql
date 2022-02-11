@@ -97,6 +97,7 @@ type Tag implements Node {
   name: String!
   id: String!
   tasks: TaskConection! @noCall
+  tags: TagConnection! @noCall
 }
 
 type DefaultDocument {
