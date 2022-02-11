@@ -1,11 +1,9 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
 import { ProjectList } from "./components/ProjectList";
-import { getPerspectivesNames } from "./api";
-import { useLoad } from "./utils";
-import { TaskList } from "./components/TaskList";
 import { TagList } from "./components/TagList";
 import { Forecast } from "./components/Forecast";
 import { Inbox } from "./inbox";
+import { useQuery } from "./api/fetch";
 
 const getIconForPerspective = (name: string) => {
   switch (name) {
@@ -33,39 +31,30 @@ const getIconForPerspective = (name: string) => {
   }
 };
 
-const getPerspectives = async () => {
-  const names = await getPerspectivesNames();
-  return names
-    .filter((n) => n)
-    .map((n) => {
-      return { title: n };
-    });
-};
-
 export default function Command() {
   const { push } = useNavigation();
-  const { value: perspectives, isLoading } = useLoad(getPerspectives, "PerspectiveListView");
+  const { value, isLoading } = useQuery("GetPerspectiveNames");
 
   return (
     <List isLoading={isLoading}>
-      {perspectives?.map((p) => (
+      {value?.defaultDocument.perspectiveNames.map((p) => (
         <List.Item
-          title={p.title}
-          key={p.title}
-          icon={getIconForPerspective(p.title)}
+          title={p}
+          key={p}
+          icon={getIconForPerspective(p)}
           actions={
             <ActionPanel>
               <ActionPanel.Item
                 title="Show Detail"
                 onAction={() =>
                   push(
-                    p.title === "Projects" ? (
+                    p === "Projects" ? (
                       <ProjectList />
-                    ) : p.title === "Inbox" ? (
+                    ) : p === "Inbox" ? (
                       <Inbox />
-                    ) : p.title === "Tags" ? (
+                    ) : p === "Tags" ? (
                       <TagList />
-                    ) : p.title === "Forecast" ? (
+                    ) : p === "Forecast" ? (
                       <Forecast />
                     ) : (
                       <ProjectList />

@@ -194,3 +194,9 @@ query GetNestedTags {
     }
   }
 }
+
+query GetPerspectiveNames {
+  defaultDocument {
+    perspectiveNames
+  }
+}

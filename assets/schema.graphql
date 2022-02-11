@@ -106,6 +106,7 @@ type DefaultDocument {
   inboxTasks: TaskConection! @noCall
   flattenedTasks: TaskConection! @noCall
   tags: TagConnection! @noCall
+  perspectiveNames: [String!]!
 }
 
 type Query {

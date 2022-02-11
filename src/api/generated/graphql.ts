@@ -40,6 +40,7 @@ export type DefaultDocument = {
   flattenedTasks: TaskConection;
   folders: FolderConnection;
   inboxTasks: TaskConection;
+  perspectiveNames: Array<Scalars['String']>;
   projects: ProjectConnection;
   tags: TagConnection;
 };
@@ -224,6 +225,11 @@ export type GetNestedTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetNestedTagsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string } }> } } }> } } };
 
+export type GetPerspectiveNamesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPerspectiveNamesQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', perspectiveNames: Array<string> } };
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -364,6 +370,7 @@ export type DefaultDocumentResolvers<ContextType = any, ParentType extends Resol
   flattenedTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   inboxTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
+  perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -712,6 +719,13 @@ export const GetNestedTagsDocument = gql`
   }
 }
     `;
+export const GetPerspectiveNamesDocument = gql`
+    query GetPerspectiveNames {
+  defaultDocument {
+    perspectiveNames
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -743,6 +757,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetNestedTags(variables?: GetNestedTagsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNestedTagsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNestedTagsQuery>(GetNestedTagsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNestedTags');
+    },
+    GetPerspectiveNames(variables?: GetPerspectiveNamesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetPerspectiveNamesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPerspectiveNamesQuery>(GetPerspectiveNamesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetPerspectiveNames');
     }
   };
 }
