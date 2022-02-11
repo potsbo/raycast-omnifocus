@@ -88,10 +88,10 @@ export type PageInfo = {
 
 export type Project = Node & {
   __typename?: 'Project';
-  availableTaskCount: Scalars['Int'];
   completed: Scalars['Boolean'];
   id: Scalars['String'];
   name: Scalars['String'];
+  numberOfAvailableTasks: Scalars['Int'];
   rootTask: Task;
 };
 
@@ -199,7 +199,7 @@ export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { 
 export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNestedProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, availableTaskCount: number } }> } } }> } } };
+export type GetNestedProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } } };
 
 export type GetTasksWithTagQueryVariables = Exact<{
   tagId: Scalars['String'];
@@ -207,6 +207,11 @@ export type GetTasksWithTagQueryVariables = Exact<{
 
 
 export type GetTasksWithTagQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'Tag', tasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | null } } };
+
+export type GetTopLevelProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTopLevelProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', id: string, name: string, completed: boolean, numberOfAvailableTasks: number } }> } } };
 
 
 
@@ -393,10 +398,10 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
-  availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -562,7 +567,7 @@ export const GetNestedProjectsDocument = gql`
                 name
                 completed
                 id
-                availableTaskCount
+                numberOfAvailableTasks
               }
             }
           }
@@ -589,6 +594,40 @@ export const GetTasksWithTagDocument = gql`
   }
 }
     ${TaskViewModelFragmentDoc}`;
+export const GetTopLevelProjectsDocument = gql`
+    query GetTopLevelProjects {
+  defaultDocument {
+    folders {
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                numberOfAvailableTasks
+              }
+            }
+          }
+        }
+      }
+    }
+    projects {
+      edges {
+        node {
+          id
+          name
+          completed
+          numberOfAvailableTasks
+        }
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -611,6 +650,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetTasksWithTag(variables: GetTasksWithTagQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTasksWithTagQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTasksWithTagQuery>(GetTasksWithTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTasksWithTag');
+    },
+    GetTopLevelProjects(variables?: GetTopLevelProjectsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTopLevelProjectsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTopLevelProjectsQuery>(GetTopLevelProjectsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTopLevelProjects');
     }
   };
 }

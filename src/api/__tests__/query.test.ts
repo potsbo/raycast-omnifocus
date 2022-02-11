@@ -1,5 +1,5 @@
 import { buildExecutionContext, ExecutionContext } from "graphql/execution/execute";
-import { GetInboxTasksDocument, GetTasksDocument, GetTasksInProjectDocument } from "../generated/graphql";
+import { GetInboxTasksDocument, GetTasksDocument, GetTasksInProjectDocument, GetTopLevelProjectsDocument } from "../generated/graphql";
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
@@ -49,6 +49,22 @@ test("query for GetTasksInProjectDocument", () => {
 
   expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
+
+test("query for GetTopLevelProjects", () => {
+  const document = GetTopLevelProjectsDocument;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+    variableValues: { projectId: "foobar" },
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
+
+
 
 test("query for Connection", () => {
   const document = gql`

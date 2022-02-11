@@ -1,16 +1,15 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
-import { getNestedProjects, getProjects } from "../api";
 import { get } from "../api/fetch";
 import { useLoad } from "../utils";
 import { TaskList } from "./TaskList";
 
 const getAllProjects = async () => {
-  const folders = await getNestedProjects();
-  const projects = await getProjects();
-  const fs = folders.concat({ folderName: "Top Level Projects", projects, folderId: "Manual" });
+  const { folders, projects } = await get("GetTopLevelProjects", {}).then((r) => r.defaultDocument);
+
+  const fs = folders.edges.map((e) => e.node).concat({ name: "Top Level Projects", projects, id: "Manual" });
   return fs
     .map((f) => {
-      return { ...f, projects: f.projects.filter((p) => !p.completed) };
+      return { ...f, projects: f.projects.edges.map((e) => e.node).filter((p) => !p.completed) };
     })
     .filter((f) => f.projects.length > 0);
 };
@@ -22,12 +21,12 @@ export const ProjectList = () => {
   return (
     <List isLoading={folders.isLoading}>
       {folders.value?.map((f) => (
-        <List.Section title={f.folderName} key={f.folderId}>
+        <List.Section title={f.name} key={f.id}>
           {f.projects?.map((p) => {
             return (
               <List.Item
                 title={p.name}
-                subtitle={`${p.availableTaskCount} available`}
+                subtitle={`${p.numberOfAvailableTasks} available`}
                 key={p.id}
                 icon={Icon.List}
                 actions={
@@ -40,7 +39,7 @@ export const ProjectList = () => {
                             title={"Tasks in Project"}
                             getter={() =>
                               get("GetTasksInProject", { projectId: p.id }).then(
-                                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 (t) => t.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
                               )
                             }

@@ -1,11 +1,12 @@
-import { ActionPanel, Form, SubmitFormAction, Icon, showHUD, showToast, ToastStyle } from "@raycast/api";
+import { ActionPanel, Form, SubmitFormAction, Icon, showToast, ToastStyle } from "@raycast/api";
 import { useMemo } from "react";
-import { createNewTask, getNestedProjects, getNestedTags } from "../api";
+import { createNewTask, getNestedTags } from "../api";
+import { get } from "../api/fetch";
 import { useLoad } from "../utils";
 
 const getProjectsAndTags = async () => {
   const tags = await getNestedTags();
-  const projects = await getNestedProjects();
+  const projects = await get("GetNestedProjects", {}).then((r) => r.defaultDocument.folders.edges.map((e) => e.node));
   return { tags, projects };
 };
 
@@ -46,9 +47,13 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
       return opts;
     }
     projects.forEach((f) => {
-      f.projects.forEach((t) => {
-        opts.push(<Form.Dropdown.Item key={t.id} value={t.id} title={`${f.folderName}: ${t.name}`} icon={Icon.List} />);
-      });
+      f.projects.edges
+        .map((e) => e.node)
+        .forEach((t) => {
+          opts.push(
+            <Form.Dropdown.Item key={t.id} value={t.id} title={`${f.name}: ${t.name}`} icon={Icon.List} />
+          );
+        });
     });
     return opts;
   }, [projects]);

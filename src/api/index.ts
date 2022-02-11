@@ -208,24 +208,6 @@ export const getNestedTags = wrap(() => {
     });
 });
 
-export const getNestedProjects = wrap(() => {
-  return Application("OmniFocus")
-    .defaultDocument.folders()
-    .map((f) => {
-      return {
-        folderName: f.name(),
-        folderId: f.id(),
-        projects: f.projects().map((p) => {
-          return {
-            name: p.name(),
-            completed: p.completed(),
-            id: p.id(),
-            availableTaskCount: p.numberOfAvailableTasks(),
-          };
-        }),
-      };
-    });
-});
 
 export const createNewTask = (task: { name: string }) => {
   const fn = (param: { name: string }) => {

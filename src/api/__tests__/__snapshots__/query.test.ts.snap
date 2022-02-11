@@ -158,3 +158,73 @@ exports[`query for GetTasksInProjectDocument 1`] = `
 });
 "
 `;
+
+exports[`query for GetTopLevelProjects 1`] = `
+"({
+  folders: (() => {
+    const nodes = parent.folders();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            projects: (() => {
+              const nodes = elm.projects();
+              return {
+                pageInfo: {
+                  hasPreviousPage: false,
+                  hasNextPage: false,
+                  startCursor: \\"\\",
+                  endCursor: \\"\\",
+                },
+                edges: nodes.map((elm) => {
+                  return {
+                    cursor: elm.id(),
+                    node: {
+                      name: elm.name(),
+                      completed: elm.completed(),
+                      id: elm.id(),
+                      numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+                    },
+                  };
+                }),
+              };
+            })(),
+          },
+        };
+      }),
+    };
+  })(),
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            id: elm.id(),
+            name: elm.name(),
+            completed: elm.completed(),
+            numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+          },
+        };
+      }),
+    };
+  })(),
+});
+"
+`;

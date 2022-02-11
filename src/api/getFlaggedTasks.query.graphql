@@ -66,7 +66,7 @@ query GetNestedProjects {
                 name
                 completed
                 id
-                availableTaskCount
+                numberOfAvailableTasks
               }
             }
           }
@@ -86,6 +86,39 @@ query GetTasksWithTag($tagId: String!) {
               ...TaskViewModel
             }
           }
+        }
+      }
+    }
+  }
+}
+
+query GetTopLevelProjects {
+  defaultDocument {
+    folders {
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                numberOfAvailableTasks
+              }
+            }
+          }
+        }
+      }
+    }
+    projects {
+      edges {
+        node {
+          id
+          name
+          completed
+          numberOfAvailableTasks
         }
       }
     }

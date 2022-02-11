@@ -28,7 +28,7 @@ type Project implements Node {
   name: String!
   id: String!
   rootTask: Task!
-  availableTaskCount: Int!
+  numberOfAvailableTasks: Int!
   completed: Boolean!
 }
 
