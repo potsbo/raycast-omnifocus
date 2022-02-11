@@ -89,6 +89,14 @@ const mustFindTypeDefinition = (ctx: CurrentContext, typeNode: TypeNode): Object
   }
   return typeDef;
 };
+const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: FieldNode): FieldDefinitionNode => {
+  const name = field.name.value;
+  const found = typeNode.fields?.find((def) => def.name.value === name);
+  if (!found) {
+    throw new Error(`Field definition for "${name}" not found`);
+  }
+  return found;
+};
 
 const convertObject = (
   ctx: CurrentContext,
@@ -138,7 +146,6 @@ const convertNonNullFields = (
       }
 
       const typeDef = mustFindTypeDefinition(ctx, typeNode);
-
       const edgesDef = typeDef.fields?.find((f) => f.name.value === "edges");
       if (!edgesDef) {
         throw new Error("edges definition not found");
@@ -179,15 +186,19 @@ const convertNonNullFields = (
   return `{ ${convertFields(ctx, fs, typeDef)} }`;
 };
 
-const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], typeDef: GraphQLNamedType["astNode"]) => {
-  if (!typeDef) {
+const convertFields = (
+  ctx: CurrentContext,
+  selectedFields: readonly SelectionNode[],
+  parentTypeDefinition: GraphQLNamedType["astNode"]
+) => {
+  if (!parentTypeDefinition) {
     throw new Error("type def undefined");
   }
-  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+  if (parentTypeDefinition.kind !== Kind.OBJECT_TYPE_DEFINITION) {
     throw new Error("unsupported type definition kind");
   }
 
-  return fs
+  return selectedFields
     .map((f) => {
       if (f.kind === Kind.INLINE_FRAGMENT) {
         throw new Error(`unsupported node type: ${f.kind}"`);
@@ -195,9 +206,7 @@ const convertFields = (ctx: CurrentContext, fs: readonly SelectionNode[], typeDe
       if (f.kind === Kind.FRAGMENT_SPREAD) {
         return convertFragSpread(ctx, f);
       }
-      const name = f.name.value;
-      const found = typeDef.fields?.find((def) => def.name.value === name);
-      return convertField(ctx, f, found!);
+      return convertField(ctx, f, mustFindFieldDefinition(parentTypeDefinition, f));
     })
     .join("");
 };
