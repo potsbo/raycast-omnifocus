@@ -90,7 +90,6 @@ export type Query = {
   __typename?: 'Query';
   defaultDocument: DefaultDocument;
   flattenedTasks: Array<Task>;
-  inboxTasks: Array<Task>;
 };
 
 
@@ -99,12 +98,6 @@ export type QueryFlattenedTasksArgs = {
   flagged?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['Int']>;
   withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type QueryInboxTasksArgs = {
-  available?: InputMaybe<Scalars['Boolean']>;
-  flagged?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Task = Node & {
@@ -357,7 +350,6 @@ export type ProjectEdgeResolvers<ContextType = any, ParentType extends Resolvers
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   defaultDocument?: Resolver<ResolversTypes['DefaultDocument'], ParentType, ContextType>;
   flattenedTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryFlattenedTasksArgs>>;
-  inboxTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryInboxTasksArgs>>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {

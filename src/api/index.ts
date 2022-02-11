@@ -55,20 +55,6 @@ const rootValue: QueryResolvers = {
 
     return run(fn, { ...args, q });
   },
-  inboxTasks: (_1: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-    const q = genQuery("t", info);
-
-    const fn = (arg: { q: string }) => {
-      const app = Application("OmniFocus");
-      const doc = app.defaultDocument;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const t = doc.inboxTasks();
-
-      return eval(arg.q);
-    };
-
-    return run(fn, { q });
-  },
   defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
     const q = genQuery("t", info);
 

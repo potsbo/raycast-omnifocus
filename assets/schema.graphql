@@ -83,8 +83,6 @@ type DefaultDocument {
 type Query {
   # TODO: Remove this to implement in defaultDocument
   flattenedTasks(available: Boolean, flagged: Boolean, limit: Int, withEffectiveDueDate: Boolean): [Task!]!
-  # TODO: Remove this to implement in defaultDocument
-  inboxTasks(flagged: Boolean, available: Boolean): [Task!]!
   defaultDocument: DefaultDocument!
 }
 
