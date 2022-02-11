@@ -77,6 +77,7 @@ type DefaultDocument {
   projects: ProjectConnection! @noCall
   # TODO: use FolderConnection
   folders: [Folder!]!
+  inboxTasks: TaskConection! @noCall
 }
 
 type Query {
@@ -90,4 +91,4 @@ type Query {
 directive @call on FIELD_DEFINITION
 directive @noCall on FIELD_DEFINITION
 directive @noFunc on FIELD
-directive @only(field: String!, op: String, value: String) on FIELD
+directive @whose(field: String!, op: String, value: String) on FIELD

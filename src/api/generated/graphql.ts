@@ -31,6 +31,7 @@ export type ConnectionByIdArgs = {
 export type DefaultDocument = {
   __typename?: 'DefaultDocument';
   folders: Array<Folder>;
+  inboxTasks: TaskConection;
   projects: ProjectConnection;
 };
 
@@ -153,7 +154,7 @@ export type GetInboxTasksQueryVariables = Exact<{
 }>;
 
 
-export type GetInboxTasksQuery = { __typename?: 'Query', inboxTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
+export type GetInboxTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', inboxTasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
 
 export type GetTasksInProjectQueryVariables = Exact<{
   projectId: Scalars['String'];
@@ -286,13 +287,13 @@ export type NoFuncDirectiveArgs = { };
 
 export type NoFuncDirectiveResolver<Result, Parent, ContextType = any, Args = NoFuncDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type OnlyDirectiveArgs = {
+export type WhoseDirectiveArgs = {
   field: Scalars['String'];
   op?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
 };
 
-export type OnlyDirectiveResolver<Result, Parent, ContextType = any, Args = OnlyDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
   __resolveType: TypeResolveFn<'ProjectConnection' | 'TaskConection', ParentType, ContextType>;
@@ -303,6 +304,7 @@ export type ConnectionResolvers<ContextType = any, ParentType extends ResolversP
 
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
   folders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
+  inboxTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -406,7 +408,7 @@ export type DirectiveResolvers<ContextType = any> = {
   call?: CallDirectiveResolver<any, any, ContextType>;
   noCall?: NoCallDirectiveResolver<any, any, ContextType>;
   noFunc?: NoFuncDirectiveResolver<any, any, ContextType>;
-  only?: OnlyDirectiveResolver<any, any, ContextType>;
+  whose?: WhoseDirectiveResolver<any, any, ContextType>;
 };
 
 export const TaskViewModelFragmentDoc = gql`
@@ -436,8 +438,14 @@ export const GetTasksDocument = gql`
     ${TaskViewModelFragmentDoc}`;
 export const GetInboxTasksDocument = gql`
     query GetInboxTasks($flagged: Boolean, $available: Boolean) {
-  inboxTasks(flagged: $flagged, available: $available) {
-    ...TaskViewModel
+  defaultDocument {
+    inboxTasks @only(field: "effectivelyCompleted", op: "=", value: "false") {
+      edges {
+        node {
+          ...TaskViewModel
+        }
+      }
+    }
   }
 }
     ${TaskViewModelFragmentDoc}`;
@@ -447,7 +455,7 @@ export const GetTasksInProjectDocument = gql`
     projects {
       byId(id: $projectId) {
         rootTask {
-          tasks @only(field: "effectiveDeferDate", op: "<", value: "new Date()") {
+          tasks {
             ...TaskViewModel
           }
         }

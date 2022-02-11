@@ -10,7 +10,7 @@ import {
   FieldDefinitionNode,
   StringValueNode,
 } from "graphql";
-import { OnlyDirectiveArgs } from "./generated/graphql";
+import { WhoseDirectiveArgs } from "./generated/graphql";
 
 interface CurrentContext {
   rootName: string;
@@ -28,7 +28,67 @@ type RenderableField = {
   definition: FieldDefinitionNode;
 };
 
-const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
+const WhoseOperators = [
+  "_equals",
+  "_contains",
+  "_beginsWith",
+  "_endsWith",
+  "_greaterThan",
+  "_greaterThanEquals",
+  "_lessThan",
+  "_lessThanEquals",
+  "_match",
+] as const;
+
+type WhoseParam = {
+  fieldName: string;
+  operator: typeof WhoseOperators[number];
+  value: string;
+};
+
+const mustGetWhoseOperator = (op: string): WhoseParam["operator"] => {
+  if (WhoseOperators.indexOf(op as WhoseParam["operator"]) > -1) {
+    return op as WhoseParam["operator"];
+  }
+  if (WhoseOperators.indexOf(`_${op}` as WhoseParam["operator"]) > -1) {
+    return `_${op}` as WhoseParam["operator"];
+  }
+  switch (op) {
+    case "=":
+      return "_equals";
+    case ">":
+      return "_greaterThan";
+    case ">=":
+      return "_greaterThanEquals";
+    case "<":
+      return "_lessThan";
+    case "<=":
+      return "_lessThanEquals";
+  }
+  throw new Error(`Unknown operator ${op}`);
+};
+
+const mustCompileWhoseDirectiveArgs = ({ field, op, value }: WhoseDirectiveArgs): WhoseParam => {
+  return { fieldName: field, operator: mustGetWhoseOperator(op ?? "="), value: value ?? "true" };
+};
+
+const compileWhoseParams = (whoses: WhoseParam[]): string => {
+  if (whoses.length === 0) {
+    return "";
+  }
+  if (whoses.length === 1) {
+    return `.whose(${compileWhoseParam(whoses[0])})`;
+  }
+  return `.whose({ _and: [
+    ${whoses.map(compileWhoseParam).join(",")}
+  ]})`;
+};
+
+const compileWhoseParam = (whose: WhoseParam): string => {
+  return `{ ${whose.fieldName}: { ${whose.operator}: ${JSON.stringify(whose.value)}}}`;
+};
+
+const genFilter = ({ field, op = "===", value = "true" }: WhoseDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
 
@@ -53,23 +113,24 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     });
 
     const noCall = f.definition.directives?.some((d) => d.name.value === "noCall");
-    const onlyDirectives = (f.field.directives ?? [])
+    const whoseParams = (f.field.directives ?? [])
       .filter((t) => t.name.value == "only")
       .map(
         (t) =>
           Object.fromEntries(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             t.arguments!.map((a) => [a.name.value, (a.value as StringValueNode).value])
-          ) as OnlyDirectiveArgs
-      );
-    const arrayTap = onlyDirectives.map(genFilter).join("");
+          ) as WhoseDirectiveArgs
+      )
+      .map(mustCompileWhoseDirectiveArgs);
+    const whose = compileWhoseParams(whoseParams);
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${renderObject(
       { ...ctx, rootName: child },
       { selectedFields: f.field.selectionSet.selections, typeNode: f.definition.type },
       {
-        arrayTap,
+        whose,
       }
     )},`;
   }
@@ -116,11 +177,7 @@ const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: strin
   return dig(ctx, { selectedFields, typeNode }, ...fieldNames.slice(1));
 };
 
-const renderObject = (
-  ctx: CurrentContext,
-  object: RenderableObject,
-  opts: Partial<{ arrayTap: string }> = {}
-): string => {
+const renderObject = (ctx: CurrentContext, object: RenderableObject, opts: Partial<{ whose: string }> = {}): string => {
   if (object.typeNode.kind === Kind.NON_NULL_TYPE) {
     return renderNonNullObject(ctx, { ...object, typeNode: object.typeNode.type }, opts);
   }
@@ -135,10 +192,10 @@ const isField = (n: SelectionNode): n is FieldNode => {
 const renderNonNullObject = (
   ctx: CurrentContext,
   object: RenderableObject<NonNullTypeNode["type"]>,
-  opts: Partial<{ arrayTap: string }> = {}
+  opts: Partial<{ whose: string }> = {}
 ) => {
   if (object.typeNode.kind === Kind.LIST_TYPE) {
-    return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
+    return `${ctx.rootName}.map((elm) => {
       return { ${renderFields({ ...ctx, rootName: "elm" }, object)} };
      })`;
   }
@@ -159,7 +216,7 @@ const renderNonNullObject = (
 
     return `
     (() => {
-      const nodes = ${ctx.rootName}();
+      const nodes = ${ctx.rootName}${opts.whose ?? ""}();
       return {
         pageInfo: {
           hasPreviousPage: false,

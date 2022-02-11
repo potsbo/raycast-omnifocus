@@ -18,8 +18,14 @@ query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Bo
 }
 
 query GetInboxTasks($flagged: Boolean, $available: Boolean) {
-  inboxTasks(flagged: $flagged, available: $available) {
-    ...TaskViewModel
+  defaultDocument {
+    inboxTasks @only(field: "effectivelyCompleted", op: "=", value: "false") {
+      edges {
+        node {
+          ...TaskViewModel
+        }
+      }
+    }
   }
 }
 
@@ -28,7 +34,7 @@ query GetTasksInProject($projectId: String!) {
     projects {
       byId(id: $projectId) {
         rootTask {
-          tasks @only(field: "effectiveDeferDate", op: "<", value: "new Date()") {
+          tasks {
             ...TaskViewModel
           }
         }

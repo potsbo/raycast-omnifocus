@@ -24,21 +24,39 @@ exports[`query for Connection 1`] = `
 `;
 
 exports[`query for GetInboxTasksDocument 1`] = `
-"parent.map((elm) => {
-  return {
-    name: elm.name(),
-    id: elm.id(),
-    effectiveDueDate: elm.effectiveDueDate(),
-    completed: elm.completed(),
-    effectivelyCompleted: elm.effectivelyCompleted(),
-    containingProject: elm.containingProject()
-      ? {
-          id: elm.containingProject().id(),
-          name: elm.containingProject().name(),
-        }
-      : undefined,
-    flagged: elm.flagged(),
-  };
+"({
+  inboxTasks: (() => {
+    const nodes = parent.inboxTasks.whose({
+      effectivelyCompleted: { _equals: \\"false\\" },
+    })();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            effectiveDueDate: elm.effectiveDueDate(),
+            completed: elm.completed(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
+            containingProject: elm.containingProject()
+              ? {
+                  id: elm.containingProject().id(),
+                  name: elm.containingProject().name(),
+                }
+              : undefined,
+            flagged: elm.flagged(),
+          },
+        };
+      }),
+    };
+  })(),
 });
 "
 `;
@@ -88,7 +106,6 @@ exports[`query for GetTasksInProjectDocument 1`] = `
                     .byId(projectId)
                     .rootTask()
                     .tasks()
-                    .filter((e) => e.effectiveDeferDate() < new Date())
                     .map((elm) => {
                       return {
                         name: elm.name(),
