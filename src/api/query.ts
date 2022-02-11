@@ -1,6 +1,5 @@
 import {
   FieldNode,
-  FragmentSpreadNode,
   GraphQLResolveInfo,
   Kind,
   NamedTypeNode,
@@ -32,12 +31,8 @@ type RenderableField = {
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
-const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string => {
-  const fs = ctx.fragments[f.name.value];
-  return convertFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
-};
 
-const convertField = (ctx: CurrentContext, f: RenderableField): string => {
+const renderField = (ctx: CurrentContext, f: RenderableField): string => {
   // TODO: handle in connection renderer
   if (f.field.name.value === "pageInfo") {
     return "";
@@ -70,7 +65,7 @@ const convertField = (ctx: CurrentContext, f: RenderableField): string => {
     const arrayTap = onlyDirectives.map(genFilter).join("");
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
-    return `${name}: ${convertObject(
+    return `${name}: ${renderObject(
       { ...ctx, rootName: child },
       { selectedFields: f.field.selectionSet.selections, typeNode },
       {
@@ -120,6 +115,7 @@ const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: strin
 
   return dig(ctx, { selectedFields, typeNode }, ...fieldNames.slice(1));
 };
+
 const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: FieldNode): FieldDefinitionNode => {
   const name = field.name.value;
   const found = typeNode.fields?.find((def) => def.name.value === name);
@@ -129,7 +125,7 @@ const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: Fiel
   return found;
 };
 
-const convertObject = (
+const renderObject = (
   ctx: CurrentContext,
   object: RenderableObject,
   opts: Partial<{ arrayTap: string }> = {}
@@ -162,14 +158,12 @@ const convertNonNullFields = (
 
   if (isConnection) {
     // TODO: consider cursor
-    // TODO: convert elm
-
     const renderNodeField = () => {
       const node = dig(ctx, object, "edges", "node");
       if (node === null) {
         return "";
       }
-      return `node: ${convertObject({ ...ctx, rootName: "elm" }, node)},`;
+      return `node: ${renderObject({ ...ctx, rootName: "elm" }, node)},`;
     };
 
     return `
@@ -197,7 +191,7 @@ const convertNonNullFields = (
   return `{ ${convertFields(ctx, object)} }`;
 };
 
-const convertFields = (ctx: CurrentContext, object: RenderableObject) => {
+const convertFields = (ctx: CurrentContext, object: RenderableObject): string => {
   const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
   return object.selectedFields
     .map((f) => {
@@ -205,9 +199,10 @@ const convertFields = (ctx: CurrentContext, object: RenderableObject) => {
         throw new Error(`unsupported node type: ${f.kind}"`);
       }
       if (f.kind === Kind.FRAGMENT_SPREAD) {
-        return convertFragSpread(ctx, f);
+        const fs = ctx.fragments[f.name.value];
+        return convertFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
       }
-      return convertField(ctx, { field: f, definition: mustFindFieldDefinition(typeDef, f) });
+      return renderField(ctx, { field: f, definition: mustFindFieldDefinition(typeDef, f) });
     })
     .join("");
 };
@@ -231,5 +226,5 @@ export const genQuery = (
   }
 
   const fs = field.selectionSet.selections;
-  return `${vars}(${convertObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
+  return `${vars}(${renderObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
 };
