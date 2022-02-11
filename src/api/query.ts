@@ -149,10 +149,8 @@ const convertNonNullFields = (
       if (!nodeDef) {
         throw new Error("edges definition not found");
       }
-      console.log(nodeDef);
 
       const res = `node: ${convertObject({ ...ctx, rootName: "elm" }, nodeField, nodeDef.type)},`;
-      console.log(res);
       return res;
     };
 
