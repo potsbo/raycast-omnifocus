@@ -11,6 +11,7 @@ export const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets",
   loaders: [new GraphQLFileLoader()],
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fail(reason: any) {
   throw new Error(reason);
 }

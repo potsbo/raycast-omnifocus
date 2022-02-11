@@ -23,6 +23,7 @@ export const resolver: Resolvers = {
   Query: rootValue,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const Application: (_: "OmniFocus") => any;
 
 export const createNewTask = (task: { name: string }) => {
