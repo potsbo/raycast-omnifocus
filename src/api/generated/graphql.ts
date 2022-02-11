@@ -148,10 +148,7 @@ export type GetTasksQueryVariables = Exact<{
 
 export type GetTasksQuery = { __typename?: 'Query', flattenedTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
 
-export type GetInboxTasksQueryVariables = Exact<{
-  flagged?: InputMaybe<Scalars['Boolean']>;
-  available?: InputMaybe<Scalars['Boolean']>;
-}>;
+export type GetInboxTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetInboxTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', inboxTasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
@@ -437,9 +434,9 @@ export const GetTasksDocument = gql`
 }
     ${TaskViewModelFragmentDoc}`;
 export const GetInboxTasksDocument = gql`
-    query GetInboxTasks($flagged: Boolean, $available: Boolean) {
+    query GetInboxTasks {
   defaultDocument {
-    inboxTasks @only(field: "effectivelyCompleted", op: "=", value: "false") {
+    inboxTasks @whose(field: "effectivelyCompleted", op: "=", value: "false") {
       edges {
         node {
           ...TaskViewModel

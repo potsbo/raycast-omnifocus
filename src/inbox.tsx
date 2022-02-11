@@ -7,8 +7,9 @@ export const Inbox = () => {
 
   return (
     <List isLoading={res.isLoading} navigationTitle={"Inbox"}>
-      {res.value?.inboxTasks.map((t) => {
-        return <TaskView task={t} key={t.id} />;
+      {res.value?.defaultDocument.inboxTasks.edges.map((t) => {
+        const task = t.node;
+        return <TaskView task={task} key={task.id} />;
       })}
     </List>
   );

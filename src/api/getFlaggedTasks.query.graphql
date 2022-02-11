@@ -17,9 +17,9 @@ query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Bo
   }
 }
 
-query GetInboxTasks($flagged: Boolean, $available: Boolean) {
+query GetInboxTasks {
   defaultDocument {
-    inboxTasks @only(field: "effectivelyCompleted", op: "=", value: "false") {
+    inboxTasks @whose(field: "effectivelyCompleted", op: "=", value: "false") {
       edges {
         node {
           ...TaskViewModel

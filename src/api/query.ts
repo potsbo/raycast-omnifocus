@@ -88,10 +88,6 @@ const compileWhoseParam = (whose: WhoseParam): string => {
   return `{ ${whose.fieldName}: { ${whose.operator}: ${JSON.stringify(whose.value)}}}`;
 };
 
-const genFilter = ({ field, op = "===", value = "true" }: WhoseDirectiveArgs) => {
-  return `.filter((e) => e.${field}() ${op} ${value})`;
-};
-
 const renderField = (ctx: CurrentContext, f: RenderableField): string => {
   // TODO: handle in connection renderer
   if (f.field.name.value === "pageInfo") {
@@ -114,7 +110,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
 
     const noCall = f.definition.directives?.some((d) => d.name.value === "noCall");
     const whoseParams = (f.field.directives ?? [])
-      .filter((t) => t.name.value == "only")
+      .filter((t) => t.name.value == "whose")
       .map(
         (t) =>
           Object.fromEntries(
