@@ -122,17 +122,17 @@ const renderObject = (
   opts: Partial<{ arrayTap: string }> = {}
 ): string => {
   if (object.typeNode.kind === Kind.NON_NULL_TYPE) {
-    return convertNonNullFields(ctx, { ...object, typeNode: object.typeNode.type }, opts);
+    return renderNonNullObject(ctx, { ...object, typeNode: object.typeNode.type }, opts);
   }
 
-  return `${ctx.rootName} ? ${convertNonNullFields(ctx, { ...object, typeNode: object.typeNode }, opts)}: undefined`;
+  return `${ctx.rootName} ? ${renderNonNullObject(ctx, { ...object, typeNode: object.typeNode }, opts)}: undefined`;
 };
 
 const isField = (n: SelectionNode): n is FieldNode => {
   return n.kind === Kind.FIELD;
 };
 
-const convertNonNullFields = (
+const renderNonNullObject = (
   ctx: CurrentContext,
   object: RenderableObject<NonNullTypeNode["type"]>,
   opts: Partial<{ arrayTap: string }> = {}
