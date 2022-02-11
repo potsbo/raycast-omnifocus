@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  type-check:
+  test:
     runs-on: ubuntu-latest
 
     container:
@@ -27,3 +27,4 @@ jobs:
       - run: yarn install
       - run: yarn tsc --noEmit
       - run: yarn eslint --ext .js,.jsx,.ts,.tsx src --max-warnings 0
+      - run: yarn jest
