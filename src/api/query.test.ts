@@ -6,6 +6,8 @@ import { join } from "path";
 import { genQuery } from "./query";
 import prettier from "prettier";
 import { GraphQLError } from "graphql";
+import gql from "graphql-tag";
+import { defaultDocument } from "../defaultDocument.test";
 
 const schema = loadSchemaSync(join(__dirname, "..", "..", "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
@@ -61,34 +63,38 @@ test("run for GetTasksInProjectDocument", () => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const parent = {
-    projects: {
-      byId: () => {
-        return {
-          rootTask: (pid: string) => {
-            return {
-              tasks: () => [
-                {
-                  name: () => "foo",
-                  id: () => "bar",
-                  effectiveDueDate: () => null,
-                  completed: () => false,
-                  effectivelyCompleted: () => null,
-                  containingProject: () => {
-                    return {
-                      id: () => pid,
-                      name: () => "projectName",
-                    };
-                  },
-                  flagged: () => false,
-                  effectiveDeferDate: () => null,
-                },
-              ],
-            };
-          },
-        };
-      },
-    },
-  };
+  const parent = defaultDocument;
+  expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();
+});
+
+test("query for Connection", () => {
+  const document = gql`
+    query Hoge {
+      defaultDocument {
+        projects {
+          pageInfo {
+            hasNextPage
+          }
+          edges {
+            cursor
+            node {
+              name
+            }
+          }
+        }
+      }
+    }
+  `;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  console.log(prettier.format(genQuery("parent", exeContext)));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const parent = defaultDocument;
   expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();
 });

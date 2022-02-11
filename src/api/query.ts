@@ -103,6 +103,31 @@ const convertNonNullFields = (
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
   const typeDef = mustFindTypeDefinition(ctx, typeNode);
+  const isConnection = typeDef.interfaces?.some((i) => i.name.value === "Connection");
+
+  if (isConnection) {
+    // TODO: consider cursor
+    // TODO: convert elm
+    return `
+    (() => {
+      const nodes = ${ctx.rootName}()
+      return {
+        pageInfo: {
+          hasPreviousPage: false,
+          hasNextPage: false,
+          startCursor: "",
+          endCursor: "",
+        },
+        edges: nodes.map((elm) => {
+          return {
+            cursor: elm.id(),
+            node: elm,
+          }
+        })
+      }
+    })()
+    `;
+  }
 
   if (typeNode.kind === Kind.LIST_TYPE) {
     return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {

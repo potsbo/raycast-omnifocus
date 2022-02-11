@@ -1,5 +1,90 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`query for Connection 1`] = `
+Object {
+  "projects": Object {
+    "edges": Array [
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+    ],
+    "pageInfo": Object {
+      "endCursor": "",
+      "hasNextPage": false,
+      "hasPreviousPage": false,
+      "startCursor": "",
+    },
+  },
+}
+`;
+
 exports[`query for GetInboxTasksDocument 1`] = `
 "parent.map((elm) => {
   return {
@@ -43,37 +128,23 @@ exports[`query for GetTasksDocument 1`] = `
 exports[`query for GetTasksInProjectDocument 1`] = `
 "const projectId = \\"foobar\\";
 ({
-  projects: {
-    byId: parent.projects.byId(projectId)
-      ? {
-          rootTask: {
-            tasks: parent.projects.byId(projectId).rootTask().tasks()
-              ? parent.projects
-                  .byId(projectId)
-                  .rootTask()
-                  .tasks()
-                  .filter((e) => e.effectiveDeferDate() < new Date())
-                  .map((elm) => {
-                    return {
-                      name: elm.name(),
-                      id: elm.id(),
-                      effectiveDueDate: elm.effectiveDueDate(),
-                      completed: elm.completed(),
-                      effectivelyCompleted: elm.effectivelyCompleted(),
-                      containingProject: elm.containingProject()
-                        ? {
-                            id: elm.containingProject().id(),
-                            name: elm.containingProject().name(),
-                          }
-                        : undefined,
-                      flagged: elm.flagged(),
-                    };
-                  })
-              : undefined,
-          },
-        }
-      : undefined,
-  },
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: elm,
+        };
+      }),
+    };
+  })(),
 });
 "
 `;
@@ -81,23 +152,83 @@ exports[`query for GetTasksInProjectDocument 1`] = `
 exports[`run for GetTasksInProjectDocument 1`] = `
 Object {
   "projects": Object {
-    "byId": Object {
-      "rootTask": Object {
-        "tasks": Array [
-          Object {
-            "completed": false,
-            "containingProject": Object {
-              "id": undefined,
-              "name": "projectName",
-            },
-            "effectiveDueDate": null,
-            "effectivelyCompleted": null,
-            "flagged": false,
-            "id": "bar",
-            "name": "foo",
-          },
-        ],
+    "edges": Array [
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
       },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+      Object {
+        "cursor": "id-undefined",
+        "node": Object {
+          "id": [Function],
+          "name": [Function],
+        },
+      },
+    ],
+    "pageInfo": Object {
+      "endCursor": "",
+      "hasNextPage": false,
+      "hasPreviousPage": false,
+      "startCursor": "",
     },
   },
 }
