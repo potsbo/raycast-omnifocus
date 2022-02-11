@@ -10,7 +10,7 @@ import {
   FieldDefinitionNode,
   ObjectValueNode,
 } from "graphql";
-import { WhoseDirectiveArgs } from "./generated/graphql";
+import { Condition } from "./generated/graphql";
 
 interface CurrentContext {
   rootName: string;
@@ -68,8 +68,8 @@ const mustGetWhoseOperator = (op: string): WhoseParam["operator"] => {
   throw new Error(`Unknown operator ${op}`);
 };
 
-const mustCompileWhoseDirectiveArgs = ({ field, op, value }: WhoseDirectiveArgs): WhoseParam => {
-  return { fieldName: field, operator: mustGetWhoseOperator(op ?? "="), value: value ?? "true" };
+const mustCompileWhoseDirectiveArgs = ({ field, operation, value }: Condition): WhoseParam => {
+  return { fieldName: field, operator: mustGetWhoseOperator(operation ?? "="), value: value ?? "true" };
 };
 
 const compileWhoseParams = (whoses: WhoseParam[]): string => {
