@@ -39,6 +39,7 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
               title={p.name}
               getter={() =>
                 get("GetTasksInProject", { projectId: p.id }).then((r) =>
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   r.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
                 )
               }
