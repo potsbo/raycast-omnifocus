@@ -17,6 +17,13 @@ export type Scalars = {
   Float: number;
 };
 
+export type Condition = {
+  enabled: Scalars['Boolean'];
+  field: Scalars['String'];
+  operation?: Scalars['String'];
+  value?: Scalars['String'];
+};
+
 export type Connection = {
   byId?: Maybe<Node>;
   edges: Array<Edge>;
@@ -30,6 +37,7 @@ export type ConnectionByIdArgs = {
 
 export type DefaultDocument = {
   __typename?: 'DefaultDocument';
+  flattenedTasks: TaskConection;
   folders: Array<Folder>;
   inboxTasks: TaskConection;
   projects: ProjectConnection;
@@ -89,15 +97,6 @@ export type ProjectEdge = Edge & {
 export type Query = {
   __typename?: 'Query';
   defaultDocument: DefaultDocument;
-  flattenedTasks: Array<Task>;
-};
-
-
-export type QueryFlattenedTasksArgs = {
-  available?: InputMaybe<Scalars['Boolean']>;
-  flagged?: InputMaybe<Scalars['Boolean']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Task = Node & {
@@ -139,7 +138,7 @@ export type GetTasksQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksQuery = { __typename?: 'Query', flattenedTasks: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> };
+export type GetTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', flattenedTasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
 
 export type GetInboxTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -228,6 +227,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Condition: Condition;
   Connection: ResolversTypes['ProjectConnection'] | ResolversTypes['TaskConection'];
   DefaultDocument: ResolverTypeWrapper<DefaultDocument>;
   Edge: ResolversTypes['ProjectEdge'] | ResolversTypes['TaskEdge'];
@@ -248,6 +248,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Condition: Condition;
   Connection: ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['TaskConection'];
   DefaultDocument: DefaultDocument;
   Edge: ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['TaskEdge'];
@@ -269,6 +270,12 @@ export type CallDirectiveArgs = { };
 
 export type CallDirectiveResolver<Result, Parent, ContextType = any, Args = CallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type FilterDirectiveArgs = {
+  conditions: Array<Maybe<Condition>>;
+};
+
+export type FilterDirectiveResolver<Result, Parent, ContextType = any, Args = FilterDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type NoCallDirectiveArgs = { };
 
 export type NoCallDirectiveResolver<Result, Parent, ContextType = any, Args = NoCallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
@@ -279,7 +286,7 @@ export type NoFuncDirectiveResolver<Result, Parent, ContextType = any, Args = No
 
 export type WhoseDirectiveArgs = {
   field: Scalars['String'];
-  op?: Maybe<Scalars['String']>;
+  op?: Scalars['String'];
   value?: Maybe<Scalars['String']>;
 };
 
@@ -293,6 +300,7 @@ export type ConnectionResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
+  flattenedTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
   folders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
   inboxTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
@@ -349,7 +357,6 @@ export type ProjectEdgeResolvers<ContextType = any, ParentType extends Resolvers
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   defaultDocument?: Resolver<ResolversTypes['DefaultDocument'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<QueryFlattenedTasksArgs>>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -395,6 +402,7 @@ export type Resolvers<ContextType = any> = {
 
 export type DirectiveResolvers<ContextType = any> = {
   call?: CallDirectiveResolver<any, any, ContextType>;
+  filter?: FilterDirectiveResolver<any, any, ContextType>;
   noCall?: NoCallDirectiveResolver<any, any, ContextType>;
   noFunc?: NoFuncDirectiveResolver<any, any, ContextType>;
   whose?: WhoseDirectiveResolver<any, any, ContextType>;
@@ -416,19 +424,21 @@ export const TaskViewModelFragmentDoc = gql`
     `;
 export const GetTasksDocument = gql`
     query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
-  flattenedTasks(
-    flagged: $flagged
-    available: $available
-    withEffectiveDueDate: $withEffectiveDueDate
-  ) {
-    ...TaskViewModel
+  defaultDocument {
+    flattenedTasks {
+      edges {
+        node {
+          ...TaskViewModel
+        }
+      }
+    }
   }
 }
     ${TaskViewModelFragmentDoc}`;
 export const GetInboxTasksDocument = gql`
     query GetInboxTasks {
   defaultDocument {
-    inboxTasks @whose(field: "effectivelyCompleted", op: "=", value: "false") {
+    inboxTasks @filter(conditions: [{enabled: true, field: "effectivelyCompleted", value: "false"}]) {
       edges {
         node {
           ...TaskViewModel

@@ -8,7 +8,7 @@ import {
   SelectionNode,
   TypeNode,
   FieldDefinitionNode,
-  StringValueNode,
+  ObjectValueNode,
 } from "graphql";
 import { WhoseDirectiveArgs } from "./generated/graphql";
 
@@ -88,6 +88,62 @@ const compileWhoseParam = (whose: WhoseParam): string => {
   return `{ ${whose.fieldName}: { ${whose.operator}: ${JSON.stringify(whose.value)}}}`;
 };
 
+const extractConditions = (f: FieldNode) => {
+  const d = f.directives?.find((d) => d.name.value === "filter");
+  if (!d) {
+    return [];
+  }
+  const conditions = d.arguments?.find((a) => a.name.value === "conditions")?.value;
+  if (!conditions || conditions.kind !== Kind.LIST) {
+    throw new Error("malformed conditions");
+  }
+
+  return conditions.values
+    .map((c) => {
+      if (c.kind !== Kind.OBJECT) {
+        throw new Error("malformed conditions");
+      }
+      const enabled = mustExtractBoolArg(c, "enabled");
+      const field = mustExtractStringArg(c, "field");
+      const operation = mustExtractStringArg(c, "op", "=");
+      const value = mustExtractStringArg(c, "value", "true");
+
+      return { enabled, field, operation, value };
+    })
+    .filter((c) => c.enabled)
+    .map(mustCompileWhoseDirectiveArgs);
+};
+
+const mustExtractBoolArg = (c: ObjectValueNode, key: string, defaultValue?: boolean): boolean => {
+  const node = c.fields.find((d) => d.name.value === key)?.value;
+  if (!node) {
+    if (defaultValue) {
+      return defaultValue;
+    }
+    throw new Error(`argument ${key} not found`);
+  }
+  if (node.kind !== Kind.BOOLEAN) {
+    throw new Error();
+  }
+
+  return node.value;
+};
+
+const mustExtractStringArg = (c: ObjectValueNode, key: string, defaultValue?: string): string => {
+  const node = c.fields.find((d) => d.name.value === key)?.value;
+  if (!node) {
+    if (defaultValue) {
+      return defaultValue;
+    }
+    throw new Error(`argument ${key} not found`);
+  }
+  if (node.kind !== Kind.STRING) {
+    throw new Error();
+  }
+
+  return node.value;
+};
+
 const renderField = (ctx: CurrentContext, f: RenderableField): string => {
   // TODO: handle in connection renderer
   if (f.field.name.value === "pageInfo") {
@@ -109,16 +165,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     });
 
     const noCall = f.definition.directives?.some((d) => d.name.value === "noCall");
-    const whoseParams = (f.field.directives ?? [])
-      .filter((t) => t.name.value == "whose")
-      .map(
-        (t) =>
-          Object.fromEntries(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            t.arguments!.map((a) => [a.name.value, (a.value as StringValueNode).value])
-          ) as WhoseDirectiveArgs
-      )
-      .map(mustCompileWhoseDirectiveArgs);
+    const whoseParams = extractConditions(f.field);
     const whose = compileWhoseParams(whoseParams);
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;

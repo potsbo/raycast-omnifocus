@@ -12,14 +12,20 @@ fragment TaskViewModel on Task {
 }
 
 query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
-  flattenedTasks(flagged: $flagged, available: $available, withEffectiveDueDate: $withEffectiveDueDate) {
-    ...TaskViewModel
+  defaultDocument {
+    flattenedTasks {
+      edges {
+        node {
+          ...TaskViewModel
+        }
+      }
+    }
   }
 }
 
 query GetInboxTasks {
   defaultDocument {
-    inboxTasks @whose(field: "effectivelyCompleted", op: "=", value: "false") {
+    inboxTasks @filter(conditions: [{ enabled: true, field: "effectivelyCompleted", value: "false" }]) {
       edges {
         node {
           ...TaskViewModel

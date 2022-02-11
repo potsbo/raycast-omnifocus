@@ -78,15 +78,22 @@ type DefaultDocument {
   # TODO: use FolderConnection
   folders: [Folder!]!
   inboxTasks: TaskConection! @noCall
+  flattenedTasks: TaskConection! @noCall
 }
 
 type Query {
-  # TODO: Remove this to implement in defaultDocument
-  flattenedTasks(available: Boolean, flagged: Boolean, limit: Int, withEffectiveDueDate: Boolean): [Task!]!
   defaultDocument: DefaultDocument!
 }
 
+input Condition {
+  enabled: Boolean!
+  field: String!
+  operation: String! = "="
+  value: String! = "true"
+}
+
+directive @filter(conditions: [Condition]!) on FIELD
 directive @call on FIELD_DEFINITION
 directive @noCall on FIELD_DEFINITION
 directive @noFunc on FIELD
-directive @whose(field: String!, op: String, value: String) on FIELD
+directive @whose(field: String!, op: String! = "=", value: String) on ARGUMENT_DEFINITION

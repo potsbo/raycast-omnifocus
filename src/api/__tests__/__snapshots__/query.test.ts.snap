@@ -62,21 +62,37 @@ exports[`query for GetInboxTasksDocument 1`] = `
 `;
 
 exports[`query for GetTasksDocument 1`] = `
-"parent.map((elm) => {
-  return {
-    name: elm.name(),
-    id: elm.id(),
-    effectiveDueDate: elm.effectiveDueDate(),
-    completed: elm.completed(),
-    effectivelyCompleted: elm.effectivelyCompleted(),
-    containingProject: elm.containingProject()
-      ? {
-          id: elm.containingProject().id(),
-          name: elm.containingProject().name(),
-        }
-      : undefined,
-    flagged: elm.flagged(),
-  };
+"({
+  flattenedTasks: (() => {
+    const nodes = parent.flattenedTasks();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            effectiveDueDate: elm.effectiveDueDate(),
+            completed: elm.completed(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
+            containingProject: elm.containingProject()
+              ? {
+                  id: elm.containingProject().id(),
+                  name: elm.containingProject().name(),
+                }
+              : undefined,
+            flagged: elm.flagged(),
+          },
+        };
+      }),
+    };
+  })(),
 });
 "
 `;

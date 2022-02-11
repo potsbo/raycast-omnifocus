@@ -1,6 +1,6 @@
 import { run } from "@jxa/run";
 import { GraphQLResolveInfo } from "graphql";
-import { QueryFlattenedTasksArgs, QueryResolvers, Resolvers } from "./generated/graphql";
+import { QueryResolvers, Resolvers } from "./generated/graphql";
 import { genQuery } from "./query";
 
 const wrap = <T>(fn: () => T) => {
@@ -11,50 +11,6 @@ const wrap = <T>(fn: () => T) => {
 
 // The rootValue provides a resolver function for each API endpoint
 const rootValue: QueryResolvers = {
-  flattenedTasks: (args: QueryFlattenedTasksArgs, _: unknown, info: GraphQLResolveInfo) => {
-    const q = genQuery("t", info);
-
-    const fn = (arg: QueryFlattenedTasksArgs & { q: string }) => {
-      const app = Application("OmniFocus");
-      const doc = app.defaultDocument;
-
-      const applyAvailableFilter = (t: Task) => {
-        const a = arg.available;
-        if (a === null || a === undefined) {
-          return true;
-        }
-
-        return !t.completed() === a;
-      };
-
-      const applyFlaggedFilter = (t: Task) => {
-        const a = arg.flagged;
-        if (a === null || a === undefined) {
-          return true;
-        }
-
-        return t.flagged() === a;
-      };
-      const applyWithEffectiveDueDate = (t: Task) => {
-        const a = arg.withEffectiveDueDate;
-        if (a === null || a === undefined) {
-          return true;
-        }
-
-        return (t.effectiveDueDate() !== null) === a;
-      };
-      const t = doc
-        .flattenedTasks()
-        .slice(0, arg.limit !== null && arg.limit !== undefined ? arg.limit : -1)
-        .filter(applyAvailableFilter)
-        .filter(applyFlaggedFilter)
-        .filter(applyWithEffectiveDueDate);
-
-      return eval(arg.q);
-    };
-
-    return run(fn, { ...args, q });
-  },
   defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
     const q = genQuery("t", info);
 
