@@ -20,10 +20,10 @@ interface CurrentContext {
   schema: GraphQLResolveInfo["schema"];
 }
 
-interface RenderableObject {
+type RenderableObject<T extends TypeNode = TypeNode> = {
   selectedFields: readonly SelectionNode[];
-  typeNode: TypeNode;
-}
+  typeNode: T;
+};
 
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
@@ -32,6 +32,12 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
   const name = f.name.value;
   const fs = ctx.fragments[name];
   const astNode = ctx.schema.getType(fs.typeCondition.name.value)?.astNode;
+  if (!astNode) {
+    throw new Error("fragment definition not found");
+  }
+  if (astNode.kind !== Kind.OBJECT_TYPE_DEFINITION) {
+    throw new Error("unsupported type definition kind");
+  }
 
   return convertFields(ctx, fs.selectionSet.selections, astNode);
 };
@@ -134,10 +140,10 @@ const convertObject = (
   opts: Partial<{ arrayTap: string }> = {}
 ): string => {
   if (object.typeNode.kind === Kind.NON_NULL_TYPE) {
-    return convertNonNullFields(ctx, object.selectedFields, object.typeNode.type, opts);
+    return convertNonNullFields(ctx, { ...object, typeNode: object.typeNode.type }, opts);
   }
 
-  return `${ctx.rootName} ? ${convertNonNullFields(ctx, object.selectedFields, object.typeNode, opts)}: undefined`;
+  return `${ctx.rootName} ? ${convertNonNullFields(ctx, { ...object, typeNode: object.typeNode }, opts)}: undefined`;
 };
 
 const isField = (n: SelectionNode): n is FieldNode => {
@@ -146,14 +152,13 @@ const isField = (n: SelectionNode): n is FieldNode => {
 
 const convertNonNullFields = (
   ctx: CurrentContext,
-  fs: readonly SelectionNode[],
-  typeNode: NonNullTypeNode["type"],
+  object: RenderableObject<NonNullTypeNode["type"]>,
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
-  const typeDef = mustFindTypeDefinition(ctx, typeNode);
-  if (typeNode.kind === Kind.LIST_TYPE) {
+  const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
+  if (object.typeNode.kind === Kind.LIST_TYPE) {
     return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
-      return { ${convertFields({ ...ctx, rootName: "elm" }, fs, typeDef)} };
+      return { ${convertFields({ ...ctx, rootName: "elm" }, object.selectedFields, typeDef)} };
      })`;
   }
 
@@ -164,11 +169,11 @@ const convertNonNullFields = (
     // TODO: convert elm
 
     const renderNodeField = () => {
-      const object = dig(ctx, { selectedFields: fs, typeNode }, "edges", "node");
-      if (object === null) {
+      const node = dig(ctx, object, "edges", "node");
+      if (node === null) {
         return "";
       }
-      return `node: ${convertObject({ ...ctx, rootName: "elm" }, object)},`;
+      return `node: ${convertObject({ ...ctx, rootName: "elm" }, node)},`;
     };
 
     return `
@@ -187,27 +192,20 @@ const convertNonNullFields = (
             ${renderNodeField()}
           }
         }),
-        ${convertFields(ctx, fs, typeDef)}
+        ${convertFields(ctx, object.selectedFields, typeDef)}
       }
     })()
     `;
   }
 
-  return `{ ${convertFields(ctx, fs, typeDef)} }`;
+  return `{ ${convertFields(ctx, object.selectedFields, typeDef)} }`;
 };
 
 const convertFields = (
   ctx: CurrentContext,
   selectedFields: readonly SelectionNode[],
-  parentTypeDefinition: GraphQLNamedType["astNode"]
+  parentTypeDefinition: ObjectTypeDefinitionNode
 ) => {
-  if (!parentTypeDefinition) {
-    throw new Error("type def undefined");
-  }
-  if (parentTypeDefinition.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
-  }
-
   return selectedFields
     .map((f) => {
       if (f.kind === Kind.INLINE_FRAGMENT) {
