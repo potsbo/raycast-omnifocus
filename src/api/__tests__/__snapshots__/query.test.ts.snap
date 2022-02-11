@@ -117,13 +117,22 @@ exports[`query for GetTasksInProjectDocument 1`] = `
       byId: parent.projects.byId(projectId)
         ? {
             rootTask: {
-              tasks: parent.projects.byId(projectId).rootTask().tasks()
-                ? parent.projects
-                    .byId(projectId)
-                    .rootTask()
-                    .tasks()
-                    .map((elm) => {
-                      return {
+              tasks: (() => {
+                const nodes = parent.projects
+                  .byId(projectId)
+                  .rootTask()
+                  .tasks();
+                return {
+                  pageInfo: {
+                    hasPreviousPage: false,
+                    hasNextPage: false,
+                    startCursor: \\"\\",
+                    endCursor: \\"\\",
+                  },
+                  edges: nodes.map((elm) => {
+                    return {
+                      cursor: elm.id(),
+                      node: {
                         name: elm.name(),
                         id: elm.id(),
                         effectiveDueDate: elm.effectiveDueDate(),
@@ -136,9 +145,11 @@ exports[`query for GetTasksInProjectDocument 1`] = `
                             }
                           : undefined,
                         flagged: elm.flagged(),
-                      };
-                    })
-                : undefined,
+                      },
+                    };
+                  }),
+                };
+              })(),
             },
           }
         : undefined,

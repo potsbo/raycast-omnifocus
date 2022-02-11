@@ -38,7 +38,7 @@ export type ConnectionByIdArgs = {
 export type DefaultDocument = {
   __typename?: 'DefaultDocument';
   flattenedTasks: TaskConection;
-  folders: Array<Folder>;
+  folders: FolderConnection;
   inboxTasks: TaskConection;
   projects: ProjectConnection;
 };
@@ -48,11 +48,29 @@ export type Edge = {
   node: Node;
 };
 
-export type Folder = {
+export type Folder = Node & {
   __typename?: 'Folder';
   id: Scalars['String'];
   name: Scalars['String'];
-  projects: Array<Project>;
+  projects: ProjectConnection;
+};
+
+export type FolderConnection = Connection & {
+  __typename?: 'FolderConnection';
+  byId?: Maybe<Project>;
+  edges: Array<FolderEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type FolderConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type FolderEdge = Edge & {
+  __typename?: 'FolderEdge';
+  cursor: Scalars['String'];
+  node: Folder;
 };
 
 export type Node = {
@@ -108,7 +126,7 @@ export type Task = Node & {
   flagged: Scalars['Boolean'];
   id: Scalars['String'];
   name: Scalars['String'];
-  tasks?: Maybe<Array<Task>>;
+  tasks: TaskConection;
 };
 
 export type TaskConection = Connection & {
@@ -150,12 +168,12 @@ export type GetTasksInProjectQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks?: Array<{ __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null }> | null } } | null } } };
+export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } } | null } } };
 
 export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNestedProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: Array<{ __typename?: 'Folder', name: string, id: string, projects: Array<{ __typename?: 'Project', name: string, completed: boolean, id: string, availableTaskCount: number }> }> } };
+export type GetNestedProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, availableTaskCount: number } }> } } }> } } };
 
 
 
@@ -228,12 +246,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['ProjectConnection'] | ResolversTypes['TaskConection'];
+  Connection: ResolversTypes['FolderConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['TaskConection'];
   DefaultDocument: ResolverTypeWrapper<DefaultDocument>;
-  Edge: ResolversTypes['ProjectEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['FolderEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['TaskEdge'];
   Folder: ResolverTypeWrapper<Folder>;
+  FolderConnection: ResolverTypeWrapper<FolderConnection>;
+  FolderEdge: ResolverTypeWrapper<FolderEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Node: ResolversTypes['Project'] | ResolversTypes['Task'];
+  Node: ResolversTypes['Folder'] | ResolversTypes['Project'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
@@ -249,12 +269,14 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['TaskConection'];
+  Connection: ResolversParentTypes['FolderConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['TaskConection'];
   DefaultDocument: DefaultDocument;
-  Edge: ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['FolderEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['TaskEdge'];
   Folder: Folder;
+  FolderConnection: FolderConnection;
+  FolderEdge: FolderEdge;
   Int: Scalars['Int'];
-  Node: ResolversParentTypes['Project'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['Folder'] | ResolversParentTypes['Project'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Project: Project;
   ProjectConnection: ProjectConnection;
@@ -266,10 +288,6 @@ export type ResolversParentTypes = {
   TaskEdge: TaskEdge;
 };
 
-export type CallDirectiveArgs = { };
-
-export type CallDirectiveResolver<Result, Parent, ContextType = any, Args = CallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type FilterDirectiveArgs = {
   conditions: Array<Maybe<Condition>>;
 };
@@ -280,20 +298,8 @@ export type NoCallDirectiveArgs = { };
 
 export type NoCallDirectiveResolver<Result, Parent, ContextType = any, Args = NoCallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type NoFuncDirectiveArgs = { };
-
-export type NoFuncDirectiveResolver<Result, Parent, ContextType = any, Args = NoFuncDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type WhoseDirectiveArgs = {
-  field: Scalars['String'];
-  op?: Scalars['String'];
-  value?: Maybe<Scalars['String']>;
-};
-
-export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'ProjectConnection' | 'TaskConection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FolderConnection' | 'ProjectConnection' | 'TaskConection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -301,14 +307,14 @@ export type ConnectionResolvers<ContextType = any, ParentType extends ResolversP
 
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
   flattenedTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
-  folders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   inboxTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'ProjectEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FolderEdge' | 'ProjectEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 };
@@ -316,12 +322,25 @@ export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentT
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FolderConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderConnection'] = ResolversParentTypes['FolderConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<FolderConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['FolderEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FolderEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderEdge'] = ResolversParentTypes['FolderEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Folder'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Project' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Folder' | 'Project' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -367,7 +386,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tasks?: Resolver<Maybe<Array<ResolversTypes['Task']>>, ParentType, ContextType>;
+  tasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -389,6 +408,8 @@ export type Resolvers<ContextType = any> = {
   DefaultDocument?: DefaultDocumentResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
   Folder?: FolderResolvers<ContextType>;
+  FolderConnection?: FolderConnectionResolvers<ContextType>;
+  FolderEdge?: FolderEdgeResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
@@ -401,11 +422,8 @@ export type Resolvers<ContextType = any> = {
 };
 
 export type DirectiveResolvers<ContextType = any> = {
-  call?: CallDirectiveResolver<any, any, ContextType>;
   filter?: FilterDirectiveResolver<any, any, ContextType>;
   noCall?: NoCallDirectiveResolver<any, any, ContextType>;
-  noFunc?: NoFuncDirectiveResolver<any, any, ContextType>;
-  whose?: WhoseDirectiveResolver<any, any, ContextType>;
 };
 
 export const TaskViewModelFragmentDoc = gql`
@@ -455,7 +473,11 @@ export const GetTasksInProjectDocument = gql`
       byId(id: $projectId) {
         rootTask {
           tasks {
-            ...TaskViewModel
+            edges {
+              node {
+                ...TaskViewModel
+              }
+            }
           }
         }
       }
@@ -467,13 +489,21 @@ export const GetNestedProjectsDocument = gql`
     query GetNestedProjects {
   defaultDocument {
     folders {
-      name
-      id
-      projects {
-        name
-        completed
-        id
-        availableTaskCount
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                availableTaskCount
+              }
+            }
+          }
+        }
       }
     }
   }

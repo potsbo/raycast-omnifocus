@@ -41,7 +41,11 @@ query GetTasksInProject($projectId: String!) {
       byId(id: $projectId) {
         rootTask {
           tasks {
-            ...TaskViewModel
+            edges {
+              node {
+                ...TaskViewModel
+              }
+            }
           }
         }
       }
@@ -52,13 +56,21 @@ query GetTasksInProject($projectId: String!) {
 query GetNestedProjects {
   defaultDocument {
     folders {
-      name
-      id
-      projects {
-        name
-        completed
-        id
-        availableTaskCount
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                availableTaskCount
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -160,20 +160,24 @@ Object {
     "projects": Object {
       "byId": Object {
         "rootTask": Object {
-          "tasks": Array [
-            Object {
-              "completed": false,
-              "containingProject": Object {
-                "id": "some-project-id",
-                "name": "projectName",
+          "tasks": Object {
+            "edges": Array [
+              Object {
+                "node": Object {
+                  "completed": false,
+                  "containingProject": Object {
+                    "id": "some-project-id",
+                    "name": "projectName",
+                  },
+                  "effectiveDueDate": null,
+                  "effectivelyCompleted": false,
+                  "flagged": false,
+                  "id": "bar",
+                  "name": "foo",
+                },
               },
-              "effectiveDueDate": null,
-              "effectivelyCompleted": false,
-              "flagged": false,
-              "id": "bar",
-              "name": "foo",
-            },
-          ],
+            ],
+          },
         },
       },
     },

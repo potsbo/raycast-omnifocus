@@ -51,8 +51,7 @@ type Task implements Node {
   effectivelyCompleted: Boolean!
   containingProject: Project
   flagged: Boolean!
-  # TODO: use TaskConection
-  tasks: [Task!]
+  tasks: TaskConection! @noCall
 }
 
 type ProjectConnection implements Connection {
@@ -66,17 +65,26 @@ type ProjectEdge implements Edge {
   node: Project!
 }
 
-type Folder {
+type FolderConnection implements Connection {
+  byId(id: String!): Project
+  edges: [FolderEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FolderEdge implements Edge {
+  cursor: String!
+  node: Folder!
+}
+
+type Folder implements Node {
   name: String!
   id: String!
-  # TODO: use ProjectConnection
-  projects: [Project!]!
+  projects: ProjectConnection! @noCall
 }
 
 type DefaultDocument {
   projects: ProjectConnection! @noCall
-  # TODO: use FolderConnection
-  folders: [Folder!]!
+  folders: FolderConnection! @noCall
   inboxTasks: TaskConection! @noCall
   flattenedTasks: TaskConection! @noCall
 }
@@ -93,7 +101,4 @@ input Condition {
 }
 
 directive @filter(conditions: [Condition]!) on FIELD
-directive @call on FIELD_DEFINITION
 directive @noCall on FIELD_DEFINITION
-directive @noFunc on FIELD
-directive @whose(field: String!, op: String! = "=", value: String) on ARGUMENT_DEFINITION
