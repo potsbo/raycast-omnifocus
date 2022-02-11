@@ -1,0 +1,30 @@
+name: Main workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: node:16.14
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install
+      - run: yarn tsc --noEmit
+      - run: yarn eslint --ext .js,.jsx,.ts,.tsx src --max-warnings 0
+      - run: yarn jest
