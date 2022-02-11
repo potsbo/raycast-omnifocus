@@ -6,8 +6,8 @@ import { useLoad } from "../utils";
 
 const getProjectsAndTags = async () => {
   const tags = await getNestedTags();
-  const projects = await get("GetNestedProjects", {}).then((r) => r.defaultDocument.folders.edges.map((e) => e.node));
-  return { tags, projects };
+  const folders = await get("GetNestedProjects", {}).then((r) => r.defaultDocument.folders.edges.map((e) => e.node));
+  return { tags, folders };
 };
 
 interface Props {
@@ -25,7 +25,7 @@ interface FormFields {
 export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
   const tp = useLoad(getProjectsAndTags, "NewTask:TagsAndProjects");
   const tags = tp.value?.tags;
-  const projects = tp.value?.projects;
+  const folders = tp.value?.folders;
 
   const tagOptions = useMemo<JSX.Element[]>(() => {
     if (tags === undefined) {
@@ -43,10 +43,10 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
   const projectsOptions = useMemo<JSX.Element[]>(() => {
     const opts: JSX.Element[] = [<Form.Dropdown.Item value="inbox" key="inbox" title={`Inbox`} icon={Icon.Envelope} />];
 
-    if (projects === undefined) {
+    if (folders === undefined) {
       return opts;
     }
-    projects.forEach((f) => {
+    folders.forEach((f) => {
       f.projects.edges
         .map((e) => e.node)
         .forEach((t) => {
@@ -56,7 +56,7 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
         });
     });
     return opts;
-  }, [projects]);
+  }, [folders]);
 
   return (
     <Form
