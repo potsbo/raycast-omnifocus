@@ -40,7 +40,7 @@ export const ProjectList = () => {
                             title={"Tasks in Project"}
                             getter={() =>
                               get("GetTasksInProject", { projectId: p.id }).then(
-                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 (t) => t.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
                               )
                             }

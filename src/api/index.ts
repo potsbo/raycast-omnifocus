@@ -182,35 +182,6 @@ export const getPerspectivesNames = wrap(() => {
   return app.defaultDocument.perspectiveNames();
 });
 
-export const getTasksInProject = (projectId: string) => {
-  const fn = (pid: string) => {
-    const project = Application("OmniFocus").defaultDocument.projects.byId(pid);
-    if (project === undefined) {
-      return [];
-    }
-    return project
-      .rootTask()
-      .tasks()
-      .map((t) => {
-        return {
-          id: t.id(),
-          name: t.name(),
-          completed: t.completed(),
-          containingProject: t.containingProject()
-            ? {
-                name: t.containingProject()?.name(),
-                id: t.containingProject()?.id(),
-              }
-            : undefined,
-          flagged: t.flagged(),
-        };
-      });
-  };
-  return () => {
-    return run<ReturnType<typeof fn>>(fn, projectId);
-  };
-};
-
 export const getTasksWithTag = (tagId: string) => {
   const fn = (pid: string) => {
     const tag = Application("OmniFocus").defaultDocument.tags.byId(pid);

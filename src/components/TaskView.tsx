@@ -1,6 +1,6 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
 import { useMemo } from "react";
-import { getTasksInProject } from "../api";
+import { get } from "../api/fetch";
 import { TaskList } from "./TaskList";
 
 export interface TaskViewModel {
@@ -37,7 +37,11 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
           push(
             <TaskList
               title={p.name}
-              getter={getTasksInProject(p.id)}
+              getter={() =>
+                get("GetTasksInProject", { projectId: p.id }).then((r) =>
+                  r.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
+                )
+              }
               cacheKey={`ProjectTaskList:${p.id}`}
               disableShowInProjects={true}
             />
