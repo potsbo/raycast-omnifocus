@@ -1,0 +1,202 @@
+fragment TaskViewModel on Task {
+  name
+  id
+  effectiveDueDate
+  completed
+  effectivelyCompleted
+  containingProject {
+    id
+    name
+  }
+  flagged
+}
+
+query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
+  defaultDocument {
+    flattenedTasks {
+      edges {
+        node {
+          ...TaskViewModel
+        }
+      }
+    }
+  }
+}
+
+query GetInboxTasks {
+  defaultDocument {
+    inboxTasks @filter(conditions: [{ enabled: true, field: "effectivelyCompleted", value: "false" }]) {
+      edges {
+        node {
+          ...TaskViewModel
+        }
+      }
+    }
+  }
+}
+
+query GetTasksInProject($projectId: String!) {
+  defaultDocument {
+    projects {
+      byId(id: $projectId) {
+        rootTask {
+          tasks {
+            edges {
+              node {
+                ...TaskViewModel
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetNestedProjects {
+  defaultDocument {
+    folders {
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                numberOfAvailableTasks
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetTasksWithTag($tagId: String!) {
+  defaultDocument {
+    tags {
+      byId(id: $tagId) {
+        tasks {
+          edges {
+            node {
+              ...TaskViewModel
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetTopLevelProjects {
+  defaultDocument {
+    folders {
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                numberOfAvailableTasks
+              }
+            }
+          }
+        }
+      }
+    }
+    projects {
+      edges {
+        node {
+          id
+          name
+          completed
+          numberOfAvailableTasks
+        }
+      }
+    }
+  }
+}
+
+query GetTaskCreationSupportInfo {
+  defaultDocument {
+    folders {
+      edges {
+        node {
+          name
+          id
+          projects {
+            edges {
+              node {
+                name
+                completed
+                id
+                numberOfAvailableTasks
+              }
+            }
+          }
+        }
+      }
+    }
+    projects {
+      edges {
+        node {
+          id
+          name
+          completed
+          numberOfAvailableTasks
+        }
+      }
+    }
+    tags {
+      edges {
+        node {
+          name
+          id
+          tags {
+            edges {
+              node {
+                name
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetNestedTags {
+  defaultDocument {
+    tags {
+      edges {
+        node {
+          name
+          id
+          tags {
+            edges {
+              node {
+                name
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetPerspectiveNames {
+  defaultDocument {
+    perspectiveNames
+  }
+}

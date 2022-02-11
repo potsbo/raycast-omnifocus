@@ -1,18 +1,16 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
 import { useMemo } from "react";
-import { getTasksInProject } from "../api";
+import { get } from "../api/fetch";
 import { TaskList } from "./TaskList";
 
 export interface TaskViewModel {
   name: string;
   id: string;
   completed: boolean;
-  containingProject:
-    | {
-        id: string;
-        name: string;
-      }
-    | undefined;
+  containingProject?: {
+    id: string;
+    name: string;
+  } | null;
   flagged: boolean;
 }
 
@@ -29,7 +27,7 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
       return null;
     }
     const p = task.containingProject;
-    if (typeof p === "undefined") {
+    if (typeof p === "undefined" || p === null) {
       return null;
     }
     return (
@@ -39,7 +37,12 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
           push(
             <TaskList
               title={p.name}
-              getter={getTasksInProject(p.id)}
+              getter={() =>
+                get("GetTasksInProject", { projectId: p.id }).then((r) =>
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  r.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
+                )
+              }
               cacheKey={`ProjectTaskList:${p.id}`}
               disableShowInProjects={true}
             />

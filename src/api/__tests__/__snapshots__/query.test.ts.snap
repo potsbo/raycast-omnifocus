@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`query for Connection 1`] = `
+"({
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: { name: elm.name() },
+        };
+      }),
+    };
+  })(),
+});
+"
+`;
+
+exports[`query for GetInboxTasksDocument 1`] = `
+"({
+  inboxTasks: (() => {
+    const nodes = parent.inboxTasks.whose({
+      effectivelyCompleted: { _equals: \\"false\\" },
+    })();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            effectiveDueDate: elm.effectiveDueDate(),
+            completed: elm.completed(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
+            containingProject: elm.containingProject()
+              ? {
+                  id: elm.containingProject().id(),
+                  name: elm.containingProject().name(),
+                }
+              : undefined,
+            flagged: elm.flagged(),
+          },
+        };
+      }),
+    };
+  })(),
+});
+"
+`;
+
+exports[`query for GetTasksDocument 1`] = `
+"({
+  flattenedTasks: (() => {
+    const nodes = parent.flattenedTasks();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            effectiveDueDate: elm.effectiveDueDate(),
+            completed: elm.completed(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
+            containingProject: elm.containingProject()
+              ? {
+                  id: elm.containingProject().id(),
+                  name: elm.containingProject().name(),
+                }
+              : undefined,
+            flagged: elm.flagged(),
+          },
+        };
+      }),
+    };
+  })(),
+});
+"
+`;
+
+exports[`query for GetTasksInProjectDocument 1`] = `
+"const projectId = \\"foobar\\";
+({
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+        };
+      }),
+      byId: parent.projects.byId(projectId)
+        ? {
+            rootTask: {
+              tasks: (() => {
+                const nodes = parent.projects
+                  .byId(projectId)
+                  .rootTask()
+                  .tasks();
+                return {
+                  pageInfo: {
+                    hasPreviousPage: false,
+                    hasNextPage: false,
+                    startCursor: \\"\\",
+                    endCursor: \\"\\",
+                  },
+                  edges: nodes.map((elm) => {
+                    return {
+                      cursor: elm.id(),
+                      node: {
+                        name: elm.name(),
+                        id: elm.id(),
+                        effectiveDueDate: elm.effectiveDueDate(),
+                        completed: elm.completed(),
+                        effectivelyCompleted: elm.effectivelyCompleted(),
+                        containingProject: elm.containingProject()
+                          ? {
+                              id: elm.containingProject().id(),
+                              name: elm.containingProject().name(),
+                            }
+                          : undefined,
+                        flagged: elm.flagged(),
+                      },
+                    };
+                  }),
+                };
+              })(),
+            },
+          }
+        : undefined,
+    };
+  })(),
+});
+"
+`;
+
+exports[`query for GetTopLevelProjects 1`] = `
+"({
+  folders: (() => {
+    const nodes = parent.folders();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            projects: (() => {
+              const nodes = elm.projects();
+              return {
+                pageInfo: {
+                  hasPreviousPage: false,
+                  hasNextPage: false,
+                  startCursor: \\"\\",
+                  endCursor: \\"\\",
+                },
+                edges: nodes.map((elm) => {
+                  return {
+                    cursor: elm.id(),
+                    node: {
+                      name: elm.name(),
+                      completed: elm.completed(),
+                      id: elm.id(),
+                      numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+                    },
+                  };
+                }),
+              };
+            })(),
+          },
+        };
+      }),
+    };
+  })(),
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            id: elm.id(),
+            name: elm.name(),
+            completed: elm.completed(),
+            numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+          },
+        };
+      }),
+    };
+  })(),
+});
+"
+`;

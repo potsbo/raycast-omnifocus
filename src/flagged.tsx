@@ -1,14 +1,13 @@
 import { List } from "@raycast/api";
-import { getAllTasks } from "./api";
 import { TaskView } from "./components/TaskView";
-import { useLoad } from "./utils";
+import { useQuery } from "./api/fetch";
 
 export default function Command() {
-  const tasks = useLoad(getAllTasks, "AllTasks");
+  const res = useQuery("GetTasks", { flagged: true, available: true });
 
   return (
-    <List isLoading={tasks.isLoading}>
-      {tasks.value?.map((t) => {
+    <List isLoading={res.isLoading}>
+      {res.value?.defaultDocument.flattenedTasks.edges.map(({ node: t }) => {
         return <TaskView task={t} key={t.id} />;
       })}
     </List>

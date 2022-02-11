@@ -1,13 +1,7 @@
-import { ActionPanel, Form, SubmitFormAction, Icon, showHUD, showToast, ToastStyle } from "@raycast/api";
+import { ActionPanel, Form, SubmitFormAction, Icon, showToast, ToastStyle } from "@raycast/api";
 import { useMemo } from "react";
-import { createNewTask, getNestedProjects, getNestedTags } from "../api";
-import { useLoad } from "../utils";
-
-const getProjectsAndTags = async () => {
-  const tags = await getNestedTags();
-  const projects = await getNestedProjects();
-  return { tags, projects };
-};
+import { createNewTask } from "../api";
+import { useQuery } from "../api/fetch";
 
 interface Props {
   defaultProject: string;
@@ -22,9 +16,9 @@ interface FormFields {
 }
 
 export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
-  const tp = useLoad(getProjectsAndTags, "NewTask:TagsAndProjects");
-  const tags = tp.value?.tags;
-  const projects = tp.value?.projects;
+  const tp = useQuery("GetTaskCreationSupportInfo");
+  const tags = tp.value?.defaultDocument.tags.edges.map((e) => e.node);
+  const folders = tp.value?.defaultDocument.folders.edges.map((e) => e.node);
 
   const tagOptions = useMemo<JSX.Element[]>(() => {
     if (tags === undefined) {
@@ -32,9 +26,11 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
     }
     const opts: JSX.Element[] = [];
     tags.forEach((f) => {
-      f.tags.forEach((t) => {
-        opts.push(<Form.TagPicker.Item key={t.id} value={t.id} title={`${f.tagName}: ${t.name}`} icon={Icon.Pin} />);
-      });
+      f.tags.edges
+        .map((e) => e.node)
+        .forEach((t) => {
+          opts.push(<Form.TagPicker.Item key={t.id} value={t.id} title={`${f.name}: ${t.name}`} icon={Icon.Pin} />);
+        });
     });
     return opts;
   }, [tags]);
@@ -42,16 +38,18 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
   const projectsOptions = useMemo<JSX.Element[]>(() => {
     const opts: JSX.Element[] = [<Form.Dropdown.Item value="inbox" key="inbox" title={`Inbox`} icon={Icon.Envelope} />];
 
-    if (projects === undefined) {
+    if (folders === undefined) {
       return opts;
     }
-    projects.forEach((f) => {
-      f.projects.forEach((t) => {
-        opts.push(<Form.Dropdown.Item key={t.id} value={t.id} title={`${f.folderName}: ${t.name}`} icon={Icon.List} />);
-      });
+    folders.forEach((f) => {
+      f.projects.edges
+        .map((e) => e.node)
+        .forEach((t) => {
+          opts.push(<Form.Dropdown.Item key={t.id} value={t.id} title={`${f.name}: ${t.name}`} icon={Icon.List} />);
+        });
     });
     return opts;
-  }, [projects]);
+  }, [folders]);
 
   return (
     <Form

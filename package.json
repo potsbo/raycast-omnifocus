@@ -57,25 +57,40 @@
     }
   ],
   "dependencies": {
+    "@graphql-tools/graphql-file-loader": "^7.3.3",
     "@jacobx1/of-sdk": "^0.2.7",
     "@jxa/run": "^1.3.4",
-    "@raycast/api": "^1.27.1"
+    "@raycast/api": "^1.27.1",
+    "graphql": "^16.3.0",
+    "react-dom": "^17.0.2",
+    "react-query": "^3.34.14"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.5.0",
+    "@graphql-codegen/typescript": "2.4.3",
+    "@graphql-codegen/typescript-graphql-request": "^4.3.4",
+    "@graphql-codegen/typescript-operations": "2.2.4",
+    "@graphql-codegen/typescript-react-query": "^3.5.1",
+    "@graphql-codegen/typescript-resolvers": "2.5.0",
+    "@types/jest": "^27.4.0",
     "@types/node": "~16.10.0",
     "@types/react": "^17.0.28",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "^7.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "jest": "^27.5.0",
     "prettier": "^2.5.1",
     "react-devtools": "^4.19.2",
-    "typescript": "^4.4.3"
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.5.5"
   },
   "scripts": {
     "build": "ray build -e dist",
-    "dev": "ray develop",
+    "dev": "concurrently \"ray develop\" \"yarn generate --watch\"",
     "fix-lint": "ray lint --fix",
-    "lint": "ray lint"
+    "lint": "ray lint",
+    "generate": "graphql-codegen --config codegen.yml"
   }
 }
