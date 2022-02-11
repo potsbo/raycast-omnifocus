@@ -27,11 +27,9 @@ type RenderableObject<T extends TypeNode = TypeNode> = {
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
-
 const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string => {
   const fs = ctx.fragments[f.name.value];
-  const fieldDef = mustFindTypeDefinition(ctx, fs.typeCondition);
-  return convertFields(ctx, fs.selectionSet.selections, fieldDef);
+  return convertFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
 };
 
 const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldDefinitionNode): string => {
@@ -147,14 +145,15 @@ const convertNonNullFields = (
   object: RenderableObject<NonNullTypeNode["type"]>,
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
-  const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
   if (object.typeNode.kind === Kind.LIST_TYPE) {
     return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
-      return { ${convertFields({ ...ctx, rootName: "elm" }, object.selectedFields, typeDef)} };
+      return { ${convertFields({ ...ctx, rootName: "elm" }, object)} };
      })`;
   }
 
-  const isConnection = typeDef.interfaces?.some((i) => i.name.value === "Connection");
+  const isConnection = mustFindTypeDefinition(ctx, object.typeNode).interfaces?.some(
+    (i) => i.name.value === "Connection"
+  );
 
   if (isConnection) {
     // TODO: consider cursor
@@ -184,21 +183,18 @@ const convertNonNullFields = (
             ${renderNodeField()}
           }
         }),
-        ${convertFields(ctx, object.selectedFields, typeDef)}
+        ${convertFields(ctx, object)}
       }
     })()
     `;
   }
 
-  return `{ ${convertFields(ctx, object.selectedFields, typeDef)} }`;
+  return `{ ${convertFields(ctx, object)} }`;
 };
 
-const convertFields = (
-  ctx: CurrentContext,
-  selectedFields: readonly SelectionNode[],
-  parentTypeDefinition: ObjectTypeDefinitionNode
-) => {
-  return selectedFields
+const convertFields = (ctx: CurrentContext, object: RenderableObject) => {
+  const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
+  return object.selectedFields
     .map((f) => {
       if (f.kind === Kind.INLINE_FRAGMENT) {
         throw new Error(`unsupported node type: ${f.kind}"`);
@@ -206,7 +202,7 @@ const convertFields = (
       if (f.kind === Kind.FRAGMENT_SPREAD) {
         return convertFragSpread(ctx, f);
       }
-      return convertField(ctx, f, mustFindFieldDefinition(parentTypeDefinition, f));
+      return convertField(ctx, f, mustFindFieldDefinition(typeDef, f));
     })
     .join("");
 };
