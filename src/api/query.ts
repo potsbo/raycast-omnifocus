@@ -103,7 +103,7 @@ const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: strin
   const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
   const typeNode = typeDef.fields?.find((f) => f.name.value === fieldName)?.type;
   if (!typeNode) {
-    throw new Error("edges definition not found");
+    throw new Error(`Type definition not found for ${fieldName}`);
   }
 
   const selectedFields = object.selectedFields.filter(isField).find((f) => f.name.value === fieldName)
