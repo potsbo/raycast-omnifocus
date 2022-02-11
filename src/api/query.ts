@@ -89,6 +89,20 @@ const mustFindTypeDefinition = (ctx: CurrentContext, typeNode: TypeNode): Object
   }
   return typeDef;
 };
+
+const dig = (ctx: CurrentContext, typeNode: TypeNode, ...fieldNames: string[]): TypeNode => {
+  if (fieldNames.length === 0) {
+    return typeNode;
+  }
+  const fieldName = fieldNames[0];
+  const typeDef = mustFindTypeDefinition(ctx, typeNode);
+  const edgesDef = typeDef.fields?.find((f) => f.name.value === fieldName);
+  if (!edgesDef) {
+    throw new Error("edges definition not found");
+  }
+
+  return dig(ctx, edgesDef.type, ...fieldNames.slice(1));
+};
 const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: FieldNode): FieldDefinitionNode => {
   const name = field.name.value;
   const found = typeNode.fields?.find((def) => def.name.value === name);
@@ -145,20 +159,9 @@ const convertNonNullFields = (
         return "";
       }
 
-      const typeDef = mustFindTypeDefinition(ctx, typeNode);
-      const edgesDef = typeDef.fields?.find((f) => f.name.value === "edges");
-      if (!edgesDef) {
-        throw new Error("edges definition not found");
-      }
-      const edgesFields = mustFindTypeDefinition(ctx, edgesDef.type);
+      const nodeDef = dig(ctx, typeNode, "edges", "node");
 
-      const nodeDef = edgesFields.fields?.find((f) => f.name.value === "node");
-      if (!nodeDef) {
-        throw new Error("edges definition not found");
-      }
-
-      const res = `node: ${convertObject({ ...ctx, rootName: "elm" }, nodeField, nodeDef.type)},`;
-      return res;
+      return `node: ${convertObject({ ...ctx, rootName: "elm" }, nodeField, nodeDef)},`;
     };
 
     return `
