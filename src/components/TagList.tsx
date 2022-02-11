@@ -1,5 +1,6 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
-import { getNestedTags, getTasksWithTag } from "../api";
+import { getNestedTags } from "../api";
+import { get } from "../api/fetch";
 import { useLoad } from "../utils";
 import { TaskList } from "./TaskList";
 
@@ -24,7 +25,12 @@ export const TagList = () => {
                       onAction={() =>
                         push(
                           <TaskList
-                            getter={getTasksWithTag(p.id)}
+                            getter={() =>
+                              get("GetTasksWithTag", { tagId: p.id }).then((r) =>
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                r.defaultDocument.tags.byId!.tasks.edges.map((e) => e.node)
+                              )
+                            }
                             cacheKey={`TasksWithTag:${p.id}`}
                             title={`Tasks tagged "${p.name}"`}
                           />
