@@ -66,7 +66,7 @@ type ProjectEdge implements Edge {
 }
 
 type FolderConnection implements Connection {
-  byId(id: String!): Project
+  byId(id: String!): Folder
   edges: [FolderEdge!]!
   pageInfo: PageInfo!
 }
@@ -82,11 +82,29 @@ type Folder implements Node {
   projects: ProjectConnection! @noCall
 }
 
+type TagConnection implements Connection {
+  byId(id: String!): Tag
+  edges: [TagEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TagEdge implements Edge {
+  cursor: String!
+  node: Tag!
+}
+
+type Tag implements Node {
+  name: String!
+  id: String!
+  tasks: TaskConection! @noCall
+}
+
 type DefaultDocument {
   projects: ProjectConnection! @noCall
   folders: FolderConnection! @noCall
   inboxTasks: TaskConection! @noCall
   flattenedTasks: TaskConection! @noCall
+  tags: TagConnection! @noCall
 }
 
 type Query {
