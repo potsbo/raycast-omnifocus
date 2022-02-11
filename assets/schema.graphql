@@ -32,7 +32,18 @@ type Project implements Node {
   completed: Boolean!
 }
 
-type Task {
+type TaskConection implements Connection {
+  byId(id: String!): Task
+  edges: [TaskEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TaskEdge implements Edge {
+  cursor: String!
+  node: Task!
+}
+
+type Task implements Node {
   name: String!
   id: String!
   effectiveDueDate: String
