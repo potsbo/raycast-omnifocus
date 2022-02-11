@@ -1,98 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`query for Connection 1`] = `
-Object {
-  "projects": Object {
-    "edges": Array [
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
+"({
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
       },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-    ],
-    "pageInfo": Object {
-      "endCursor": "",
-      "hasNextPage": false,
-      "hasPreviousPage": false,
-      "startCursor": "",
-    },
-  },
-}
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: { name: elm.name() },
+        };
+      }),
+    };
+  })(),
+});
+"
 `;
 
 exports[`query for GetInboxTasksDocument 1`] = `
@@ -102,6 +30,7 @@ exports[`query for GetInboxTasksDocument 1`] = `
     id: elm.id(),
     effectiveDueDate: elm.effectiveDueDate(),
     completed: elm.completed(),
+    effectivelyCompleted: elm.effectivelyCompleted(),
     containingProject: elm.containingProject()
       ? {
           id: elm.containingProject().id(),
@@ -121,6 +50,7 @@ exports[`query for GetTasksDocument 1`] = `
     id: elm.id(),
     effectiveDueDate: elm.effectiveDueDate(),
     completed: elm.completed(),
+    effectivelyCompleted: elm.effectivelyCompleted(),
     containingProject: elm.containingProject()
       ? {
           id: elm.containingProject().id(),
@@ -148,106 +78,39 @@ exports[`query for GetTasksInProjectDocument 1`] = `
       edges: nodes.map((elm) => {
         return {
           cursor: elm.id(),
-          node: elm,
         };
       }),
+      byId: parent.projects.byId(projectId)
+        ? {
+            rootTask: {
+              tasks: parent.projects.byId(projectId).rootTask().tasks()
+                ? parent.projects
+                    .byId(projectId)
+                    .rootTask()
+                    .tasks()
+                    .filter((e) => e.effectiveDeferDate() < new Date())
+                    .map((elm) => {
+                      return {
+                        name: elm.name(),
+                        id: elm.id(),
+                        effectiveDueDate: elm.effectiveDueDate(),
+                        completed: elm.completed(),
+                        effectivelyCompleted: elm.effectivelyCompleted(),
+                        containingProject: elm.containingProject()
+                          ? {
+                              id: elm.containingProject().id(),
+                              name: elm.containingProject().name(),
+                            }
+                          : undefined,
+                        flagged: elm.flagged(),
+                      };
+                    })
+                : undefined,
+            },
+          }
+        : undefined,
     };
   })(),
 });
 "
-`;
-
-exports[`run for GetTasksInProjectDocument 1`] = `
-Object {
-  "projects": Object {
-    "edges": Array [
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-      Object {
-        "cursor": "project-id-undefined",
-        "node": Object {
-          "id": [Function],
-          "name": [Function],
-          "rootTask": [Function],
-        },
-      },
-    ],
-    "pageInfo": Object {
-      "endCursor": "",
-      "hasNextPage": false,
-      "hasPreviousPage": false,
-      "startCursor": "",
-    },
-  },
-}
 `;

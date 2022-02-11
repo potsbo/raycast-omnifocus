@@ -39,6 +39,10 @@ test("Resolve Connection Related Query", async () => {
               rootTask {
                 name
                 id
+                containingProject {
+                  name
+                  id
+                }
               }
             }
           }
@@ -49,7 +53,7 @@ test("Resolve Connection Related Query", async () => {
   const { data, errors } = await graphql({
     schema,
     source: print(document),
-    rootValue: rootValue,
+    rootValue,
   });
 
   if (errors !== null && errors !== undefined) {
@@ -63,7 +67,7 @@ test("run for GetTasksInProjectDocument", async () => {
   const { data, errors } = await graphql({
     schema,
     source: print(document),
-    rootValue: rootValue,
+    rootValue,
     variableValues: { projectId: "some-project-id" },
   });
 

@@ -7,7 +7,6 @@ import { genQuery } from "../query";
 import prettier from "prettier";
 import { GraphQLError } from "graphql";
 import gql from "graphql-tag";
-import { defaultDocument } from "../__utils__/defaultDocument";
 
 const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
@@ -77,7 +76,5 @@ test("query for Connection", () => {
     fail();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const parent = defaultDocument;
-  expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });

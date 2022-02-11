@@ -1,5 +1,5 @@
 const projects = () => {
-  return Array.from({ length: 10 }).map((i) => {
+  return [...Array(10).keys()].map((i) => {
     const projecId = `project-id-${i}`
     const projectName = `project-name-${i}`
     return {
@@ -11,7 +11,7 @@ const projects = () => {
           id: () => `rootTask-for-${projecId}`,
           effectiveDueDate: () => null,
           completed: () => false,
-          effectivelyCompleted: () => null,
+          effectivelyCompleted: () => false,
           containingProject: () => {
             return {
               id: () => projecId,
@@ -26,9 +26,9 @@ const projects = () => {
   });
 };
 
-projects.byId = () => {
+projects.byId = (pid: string) => {
   return {
-    rootTask: (pid: string) => {
+    rootTask: () => {
       return {
         tasks: () => [
           {
@@ -36,7 +36,7 @@ projects.byId = () => {
             id: () => "bar",
             effectiveDueDate: () => null,
             completed: () => false,
-            effectivelyCompleted: () => null,
+            effectivelyCompleted: () => false,
             containingProject: () => {
               return {
                 id: () => pid,

@@ -32,7 +32,11 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
 };
 
 const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldDefinitionNode): string => {
-  if (f.name.value === "effectivelyCompleted") {
+  // TODO: handle in connection renderer
+  if (f.name.value === "pageInfo") {
+    return "";
+  }
+  if (f.name.value === "edges") {
     return "";
   }
   const typeNode = fieldDefinition.type;
@@ -91,12 +95,16 @@ const convertObject = (
   fs: readonly SelectionNode[],
   typeNode: TypeNode,
   opts: Partial<{ arrayTap: string }> = {}
-) => {
+): string => {
   if (typeNode.kind === Kind.NON_NULL_TYPE) {
     return convertNonNullFields(ctx, fs, typeNode.type, opts);
   }
 
   return `${ctx.rootName} ? ${convertNonNullFields(ctx, fs, typeNode, opts)}: undefined`;
+};
+
+const isField = (n: SelectionNode): n is FieldNode => {
+  return n.kind === Kind.FIELD;
 };
 
 const convertNonNullFields = (
@@ -106,14 +114,51 @@ const convertNonNullFields = (
   opts: Partial<{ arrayTap: string }> = {}
 ) => {
   const typeDef = mustFindTypeDefinition(ctx, typeNode);
+  if (typeNode.kind === Kind.LIST_TYPE) {
+    return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
+      return { ${convertFields({ ...ctx, rootName: "elm" }, fs, typeDef)} };
+     })`;
+  }
+
   const isConnection = typeDef.interfaces?.some((i) => i.name.value === "Connection");
 
   if (isConnection) {
     // TODO: consider cursor
     // TODO: convert elm
+
+    const renderNodeField = () => {
+      const nodeField = fs
+        .filter(isField)
+        .find((f) => f.name.value === "edges")
+        ?.selectionSet?.selections.filter(isField)
+        .find((f) => f.name.value === "node")?.selectionSet?.selections;
+
+      if (!nodeField) {
+        return "";
+      }
+
+      const typeDef = mustFindTypeDefinition(ctx, typeNode);
+
+      const edgesDef = typeDef.fields?.find((f) => f.name.value === "edges");
+      if (!edgesDef) {
+        throw new Error("edges definition not found");
+      }
+      const edgesFields = mustFindTypeDefinition(ctx, edgesDef.type);
+
+      const nodeDef = edgesFields.fields?.find((f) => f.name.value === "node");
+      if (!nodeDef) {
+        throw new Error("edges definition not found");
+      }
+      console.log(nodeDef);
+
+      const res = `node: ${convertObject({ ...ctx, rootName: "elm" }, nodeField, nodeDef.type)},`;
+      console.log(res);
+      return res;
+    };
+
     return `
     (() => {
-      const nodes = ${ctx.rootName}()
+      const nodes = ${ctx.rootName}();
       return {
         pageInfo: {
           hasPreviousPage: false,
@@ -124,18 +169,13 @@ const convertNonNullFields = (
         edges: nodes.map((elm) => {
           return {
             cursor: elm.id(),
-            node: elm,
+            ${renderNodeField()}
           }
-        })
+        }),
+        ${convertFields(ctx, fs, typeDef)}
       }
     })()
     `;
-  }
-
-  if (typeNode.kind === Kind.LIST_TYPE) {
-    return `${ctx.rootName}${opts.arrayTap ?? ""}.map((elm) => {
-      return { ${convertFields({ ...ctx, rootName: "elm" }, fs, typeDef)} };
-     })`;
   }
 
   return `{ ${convertFields(ctx, fs, typeDef)} }`;
