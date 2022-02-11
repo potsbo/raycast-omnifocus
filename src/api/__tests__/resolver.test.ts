@@ -6,7 +6,6 @@ import gql from "graphql-tag";
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
-import { buildExecutionContext } from "graphql/execution/execute";
 
 export const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
