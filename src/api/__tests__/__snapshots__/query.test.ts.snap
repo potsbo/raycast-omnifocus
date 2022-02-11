@@ -5,73 +5,83 @@ Object {
   "projects": Object {
     "edges": Array [
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
     ],
@@ -152,73 +162,83 @@ Object {
   "projects": Object {
     "edges": Array [
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
       Object {
-        "cursor": "id-undefined",
+        "cursor": "project-id-undefined",
         "node": Object {
           "id": [Function],
           "name": [Function],
+          "rootTask": [Function],
         },
       },
     ],

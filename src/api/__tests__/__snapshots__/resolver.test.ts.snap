@@ -6,69 +6,119 @@ Object {
     "projects": Object {
       "edges": Array [
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
         Object {
-          "cursor": "id-undefined",
+          "cursor": "project-id-undefined",
           "node": Object {
-            "name": "name-undefined",
+            "name": "project-name-undefined",
+            "rootTask": Object {
+              "id": "rootTask-for-project-id-undefined",
+              "name": "rootTask-for-project-name-undefined",
+            },
           },
         },
       ],
       "pageInfo": Object {
         "hasNextPage": false,
       },
+    },
+  },
+}
+`;
+
+exports[`run for GetTasksInProjectDocument 1`] = `
+Object {
+  "defaultDocument": Object {
+    "projects": Object {
+      "byId": null,
     },
   },
 }

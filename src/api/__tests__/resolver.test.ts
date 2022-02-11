@@ -1,15 +1,20 @@
 import { graphql, GraphQLResolveInfo, print } from "graphql";
 import { defaultDocument } from "../__utils__/defaultDocument";
-import { QueryResolvers } from "../generated/graphql";
+import { GetTasksInProjectDocument, QueryResolvers } from "../generated/graphql";
 import { genQuery } from "../query";
 import gql from "graphql-tag";
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
+import { buildExecutionContext } from "graphql/execution/execute";
 
 export const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
 });
+
+function fail(reason: any) {
+  throw new Error(reason);
+}
 
 const rootValue: QueryResolvers = {
   defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
@@ -32,6 +37,10 @@ test("Resolve Connection Related Query", async () => {
             cursor
             node {
               name
+              rootTask {
+                name
+                id
+              }
             }
           }
         }
@@ -45,7 +54,25 @@ test("Resolve Connection Related Query", async () => {
   });
 
   if (errors !== null && errors !== undefined) {
-    fail();
+    fail(errors);
   }
+  expect(data).toMatchSnapshot();
+});
+
+test("run for GetTasksInProjectDocument", async () => {
+  const document = GetTasksInProjectDocument;
+  const { data, errors } = await graphql({
+    schema,
+    source: print(document),
+    rootValue: rootValue,
+    variableValues: { projectId: "some-project-id" },
+  });
+
+  if (errors !== null && errors !== undefined) {
+    fail(errors);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const parent = defaultDocument;
   expect(data).toMatchSnapshot();
 });

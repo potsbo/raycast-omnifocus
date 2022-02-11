@@ -1,8 +1,27 @@
 const projects = () => {
   return Array.from({ length: 10 }).map((i) => {
+    const projecId = `project-id-${i}`
+    const projectName = `project-name-${i}`
     return {
-      name: () => `name-${i}`,
-      id: () => `id-${i}`,
+      name: () => projectName,
+      id: () => projecId,
+      rootTask: () => {
+        return {
+          name: () => `rootTask-for-${projectName}`,
+          id: () => `rootTask-for-${projecId}`,
+          effectiveDueDate: () => null,
+          completed: () => false,
+          effectivelyCompleted: () => null,
+          containingProject: () => {
+            return {
+              id: () => projecId,
+              name: () => projectName,
+            };
+          },
+          flagged: () => false,
+          effectiveDeferDate: () => null,
+        };
+      },
     };
   });
 };

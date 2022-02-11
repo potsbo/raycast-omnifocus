@@ -51,22 +51,6 @@ test("query for GetTasksInProjectDocument", () => {
   expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
-test("run for GetTasksInProjectDocument", () => {
-  const document = GetTasksInProjectDocument;
-  const exeContext = buildExecutionContext({
-    schema: schema,
-    document: document,
-    variableValues: { projectId: "foobar" },
-  });
-  if (!validateExecontext(exeContext)) {
-    fail();
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const parent = defaultDocument;
-  expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();
-});
-
 test("query for Connection", () => {
   const document = gql`
     query Hoge {
