@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Resolve Connection Related Query 1`] = `
+Object {
+  "defaultDocument": Object {
+    "projects": Object {
+      "edges": Array [
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+        Object {
+          "cursor": "id-undefined",
+          "node": Object {
+            "name": "name-undefined",
+          },
+        },
+      ],
+      "pageInfo": Object {
+        "hasNextPage": false,
+      },
+    },
+  },
+}
+`;

@@ -1,15 +1,15 @@
 import { buildExecutionContext, ExecutionContext } from "graphql/execution/execute";
-import { GetInboxTasksDocument, GetTasksDocument, GetTasksInProjectDocument } from "./generated/graphql";
+import { GetInboxTasksDocument, GetTasksDocument, GetTasksInProjectDocument } from "../generated/graphql";
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
-import { genQuery } from "./query";
+import { genQuery } from "../query";
 import prettier from "prettier";
 import { GraphQLError } from "graphql";
 import gql from "graphql-tag";
-import { defaultDocument } from "../defaultDocument.test";
+import { defaultDocument } from "../__utils__/defaultDocument";
 
-const schema = loadSchemaSync(join(__dirname, "..", "..", "assets", "schema.graphql"), {
+const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
 });
 
@@ -93,7 +93,6 @@ test("query for Connection", () => {
     fail();
   }
 
-  console.log(prettier.format(genQuery("parent", exeContext)));
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parent = defaultDocument;
   expect(eval(genQuery("parent", exeContext))).toMatchSnapshot();

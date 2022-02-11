@@ -92,7 +92,6 @@ exports[`query for GetInboxTasksDocument 1`] = `
     id: elm.id(),
     effectiveDueDate: elm.effectiveDueDate(),
     completed: elm.completed(),
-    effectivelyCompleted: elm.effectivelyCompleted(),
     containingProject: elm.containingProject()
       ? {
           id: elm.containingProject().id(),
@@ -112,7 +111,6 @@ exports[`query for GetTasksDocument 1`] = `
     id: elm.id(),
     effectiveDueDate: elm.effectiveDueDate(),
     completed: elm.completed(),
-    effectivelyCompleted: elm.effectivelyCompleted(),
     containingProject: elm.containingProject()
       ? {
           id: elm.containingProject().id(),

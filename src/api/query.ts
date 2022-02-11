@@ -32,6 +32,9 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
 };
 
 const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldDefinitionNode): string => {
+  if (f.name.value === "effectivelyCompleted") {
+    return "";
+  }
   const typeNode = fieldDefinition.type;
   const name = f.name.value;
 

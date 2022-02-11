@@ -4,13 +4,7 @@ import { print } from "graphql/language/printer";
 import { resolver } from ".";
 import { useLoad } from "../utils";
 import { getSdk } from "./generated/graphql";
-import { loadSchemaSync } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-import { join } from "path";
-
-export const schema = loadSchemaSync(join(__dirname, "assets", "schema.graphql"), {
-  loaders: [new GraphQLFileLoader()],
-});
+import { schema } from "./schema";
 
 export const fetch = async <TData, TVariables extends { readonly [variable: string]: unknown }>(
   query: string,
@@ -21,7 +15,7 @@ export const fetch = async <TData, TVariables extends { readonly [variable: stri
     source: query,
     rootValue: resolver.Query,
     variableValues,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   })) as any as ExecutionResult<TData>;
   if (data === null || data === undefined || errors !== undefined) {
     console.error(errors);
