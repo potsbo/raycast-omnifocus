@@ -24,6 +24,11 @@ type RenderableObject<T extends TypeNode = TypeNode> = {
   typeNode: T;
 };
 
+type RenderableField = {
+  field: FieldNode;
+  definition: FieldDefinitionNode;
+};
+
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
@@ -32,28 +37,28 @@ const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string =
   return convertFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
 };
 
-const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldDefinitionNode): string => {
+const convertField = (ctx: CurrentContext, f: RenderableField): string => {
   // TODO: handle in connection renderer
-  if (f.name.value === "pageInfo") {
+  if (f.field.name.value === "pageInfo") {
     return "";
   }
-  if (f.name.value === "edges") {
+  if (f.field.name.value === "edges") {
     return "";
   }
-  const typeNode = fieldDefinition.type;
-  const name = f.name.value;
+  const typeNode = f.definition.type;
+  const name = f.field.name.value;
 
-  if (f.selectionSet) {
+  if (f.field.selectionSet) {
     const args: string[] = [];
-    f.arguments?.forEach((a) => {
+    f.field.arguments?.forEach((a) => {
       if (a.value.kind !== Kind.VARIABLE) {
         throw "Non variable argument found";
       }
       args.push(a.value.name.value);
     });
 
-    const noCall = fieldDefinition.directives?.some((d) => d.name.value === "noCall");
-    const onlyDirectives = (f.directives ?? [])
+    const noCall = f.definition.directives?.some((d) => d.name.value === "noCall");
+    const onlyDirectives = (f.field.directives ?? [])
       .filter((t) => t.name.value == "only")
       .map(
         (t) =>
@@ -67,7 +72,7 @@ const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldD
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${convertObject(
       { ...ctx, rootName: child },
-      { selectedFields: f.selectionSet.selections, typeNode },
+      { selectedFields: f.field.selectionSet.selections, typeNode },
       {
         arrayTap,
       }
@@ -202,7 +207,7 @@ const convertFields = (ctx: CurrentContext, object: RenderableObject) => {
       if (f.kind === Kind.FRAGMENT_SPREAD) {
         return convertFragSpread(ctx, f);
       }
-      return convertField(ctx, f, mustFindFieldDefinition(typeDef, f));
+      return convertField(ctx, { field: f, definition: mustFindFieldDefinition(typeDef, f) });
     })
     .join("");
 };
