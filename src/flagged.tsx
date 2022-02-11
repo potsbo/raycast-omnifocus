@@ -7,7 +7,7 @@ export default function Command() {
 
   return (
     <List isLoading={res.isLoading}>
-      {res.value?.flattenedTasks.map((t) => {
+      {res.value?.defaultDocument.flattenedTasks.edges.map(({ node: t }) => {
         return <TaskView task={t} key={t.id} />;
       })}
     </List>
