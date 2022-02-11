@@ -1,7 +1,6 @@
 import {
   FieldNode,
   FragmentSpreadNode,
-  GraphQLNamedType,
   GraphQLResolveInfo,
   Kind,
   NamedTypeNode,
@@ -28,18 +27,11 @@ type RenderableObject<T extends TypeNode = TypeNode> = {
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
-const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string => {
-  const name = f.name.value;
-  const fs = ctx.fragments[name];
-  const astNode = ctx.schema.getType(fs.typeCondition.name.value)?.astNode;
-  if (!astNode) {
-    throw new Error("fragment definition not found");
-  }
-  if (astNode.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
-  }
 
-  return convertFields(ctx, fs.selectionSet.selections, astNode);
+const convertFragSpread = (ctx: CurrentContext, f: FragmentSpreadNode): string => {
+  const fs = ctx.fragments[f.name.value];
+  const fieldDef = mustFindTypeDefinition(ctx, fs.typeCondition);
+  return convertFields(ctx, fs.selectionSet.selections, fieldDef);
 };
 
 const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldDefinitionNode): string => {
