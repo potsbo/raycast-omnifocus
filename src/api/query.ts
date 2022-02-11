@@ -20,6 +20,11 @@ interface CurrentContext {
   schema: GraphQLResolveInfo["schema"];
 }
 
+interface RenderableObject {
+  selectedFields: readonly SelectionNode[];
+  typeNode: TypeNode;
+}
+
 const genFilter = ({ field, op = "===", value = "true" }: OnlyDirectiveArgs) => {
   return `.filter((e) => e.${field}() ${op} ${value})`;
 };
@@ -64,9 +69,13 @@ const convertField = (ctx: CurrentContext, f: FieldNode, fieldDefinition: FieldD
     const arrayTap = onlyDirectives.map(genFilter).join("");
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
-    return `${name}: ${convertObject({ ...ctx, rootName: child }, f.selectionSet.selections, typeNode, {
-      arrayTap,
-    })},`;
+    return `${name}: ${convertObject(
+      { ...ctx, rootName: child },
+      { selectedFields: f.selectionSet.selections, typeNode },
+      {
+        arrayTap,
+      }
+    )},`;
   }
   return `${name}: ${ctx.rootName}.${name}(),`;
 };
@@ -90,18 +99,25 @@ const mustFindTypeDefinition = (ctx: CurrentContext, typeNode: TypeNode): Object
   return typeDef;
 };
 
-const dig = (ctx: CurrentContext, typeNode: TypeNode, ...fieldNames: string[]): TypeNode => {
+const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: string[]): RenderableObject | null => {
   if (fieldNames.length === 0) {
-    return typeNode;
+    return object;
   }
   const fieldName = fieldNames[0];
-  const typeDef = mustFindTypeDefinition(ctx, typeNode);
-  const edgesDef = typeDef.fields?.find((f) => f.name.value === fieldName);
-  if (!edgesDef) {
+  const typeDef = mustFindTypeDefinition(ctx, object.typeNode);
+  const typeNode = typeDef.fields?.find((f) => f.name.value === fieldName)?.type;
+  if (!typeNode) {
     throw new Error("edges definition not found");
   }
 
-  return dig(ctx, edgesDef.type, ...fieldNames.slice(1));
+  const selectedFields = object.selectedFields.filter(isField).find((f) => f.name.value === fieldName)
+    ?.selectionSet?.selections;
+
+  if (!selectedFields) {
+    return null;
+  }
+
+  return dig(ctx, { selectedFields, typeNode }, ...fieldNames.slice(1));
 };
 const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: FieldNode): FieldDefinitionNode => {
   const name = field.name.value;
@@ -114,15 +130,14 @@ const mustFindFieldDefinition = (typeNode: ObjectTypeDefinitionNode, field: Fiel
 
 const convertObject = (
   ctx: CurrentContext,
-  fs: readonly SelectionNode[],
-  typeNode: TypeNode,
+  object: RenderableObject,
   opts: Partial<{ arrayTap: string }> = {}
 ): string => {
-  if (typeNode.kind === Kind.NON_NULL_TYPE) {
-    return convertNonNullFields(ctx, fs, typeNode.type, opts);
+  if (object.typeNode.kind === Kind.NON_NULL_TYPE) {
+    return convertNonNullFields(ctx, object.selectedFields, object.typeNode.type, opts);
   }
 
-  return `${ctx.rootName} ? ${convertNonNullFields(ctx, fs, typeNode, opts)}: undefined`;
+  return `${ctx.rootName} ? ${convertNonNullFields(ctx, object.selectedFields, object.typeNode, opts)}: undefined`;
 };
 
 const isField = (n: SelectionNode): n is FieldNode => {
@@ -149,19 +164,11 @@ const convertNonNullFields = (
     // TODO: convert elm
 
     const renderNodeField = () => {
-      const nodeField = fs
-        .filter(isField)
-        .find((f) => f.name.value === "edges")
-        ?.selectionSet?.selections.filter(isField)
-        .find((f) => f.name.value === "node")?.selectionSet?.selections;
-
-      if (!nodeField) {
+      const object = dig(ctx, { selectedFields: fs, typeNode }, "edges", "node");
+      if (object === null) {
         return "";
       }
-
-      const nodeDef = dig(ctx, typeNode, "edges", "node");
-
-      return `node: ${convertObject({ ...ctx, rootName: "elm" }, nodeField, nodeDef)},`;
+      return `node: ${convertObject({ ...ctx, rootName: "elm" }, object)},`;
     };
 
     return `
@@ -233,5 +240,5 @@ export const genQuery = (
   }
 
   const fs = field.selectionSet.selections;
-  return `${vars}(${convertObject({ ...info, rootName }, fs, fdef)})`;
+  return `${vars}(${convertObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
 };
