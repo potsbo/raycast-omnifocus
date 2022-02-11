@@ -173,3 +173,24 @@ query GetTaskCreationSupportInfo {
     }
   }
 }
+
+query GetNestedTags {
+  defaultDocument {
+    tags {
+      edges {
+        node {
+          name
+          id
+          tags {
+            edges {
+              node {
+                name
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

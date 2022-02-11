@@ -191,24 +191,6 @@ export const getProjects = wrap(() => {
   return ret;
 });
 
-export const getNestedTags = wrap(() => {
-  return Application("OmniFocus")
-    .defaultDocument.tags()
-    .map((f) => {
-      return {
-        tagName: f.name(),
-        id: f.id(),
-        tags: f.tags().map((t) => {
-          return {
-            name: t.name(),
-            id: t.id(),
-          };
-        }),
-      };
-    });
-});
-
-
 export const createNewTask = (task: { name: string }) => {
   const fn = (param: { name: string }) => {
     const app = Application("OmniFocus");
