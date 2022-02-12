@@ -544,7 +544,7 @@ export const GetTasksDocument = gql`
 export const GetInboxTasksDocument = gql`
     query GetInboxTasks {
   defaultDocument {
-    inboxTasks @whose(condition: {field: "effectivelyCompleted", value: "false"}) {
+    inboxTasks @whose(condition: {operation: "_and", children: [{field: "effectivelyCompleted", value: "false"}]}) {
       edges {
         node {
           ...TaskViewModel
