@@ -18,10 +18,10 @@ export type Scalars = {
 };
 
 export type Condition = {
-  children?: InputMaybe<Array<Condition>>;
   enabled?: Scalars['Boolean'];
   field?: InputMaybe<Scalars['String']>;
-  operation?: Scalars['String'];
+  operands?: InputMaybe<Array<Condition>>;
+  operator?: Scalars['String'];
   value?: Scalars['String'];
 };
 
@@ -544,7 +544,7 @@ export const GetTasksDocument = gql`
 export const GetInboxTasksDocument = gql`
     query GetInboxTasks {
   defaultDocument {
-    inboxTasks @whose(condition: {operation: "and", children: [{field: "effectivelyCompleted", value: "false"}, {operation: "or", children: [{field: "effectiveDeferDate", operation: "=", value: "null"}, {field: "effectiveDeferDate", operation: "<", value: "new Date()"}]}]}) {
+    inboxTasks @whose(condition: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}) {
       edges {
         node {
           ...TaskViewModel

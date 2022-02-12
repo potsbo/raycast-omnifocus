@@ -115,10 +115,14 @@ type Query {
 
 input Condition {
   enabled: Boolean! = true
+
+  # match
   field: String
-  operation: String! = "="
   value: String! = "true"
-  children: [Condition!]
+
+  # logical
+  operator: String! = "="
+  operands: [Condition!]
 }
 
 directive @whose(condition: [Condition!]!) on FIELD

@@ -1,5 +1,8 @@
 import { FieldNode, Kind, ObjectValueNode, ValueNode } from "graphql";
 
+const WHOSE_DIRECTIVE_NAME = "whose";
+const OPERANDS_KEY = "operands";
+
 const MATCH_OPERATORS = [
   "_equals",
   "_contains",
@@ -100,7 +103,7 @@ const extractConditionFromValueNode = (condition: ValueNode): Condition => {
   }
 
   const enabled = mustExtractBoolArg(condition, "enabled", true);
-  const operator = mustExtractStringArg(condition, "operation", "=");
+  const operator = mustExtractStringArg(condition, "operator", "=");
   const matchOp = getMatchOperator(operator);
   if (matchOp) {
     const field = mustExtractStringArg(condition, "field");
@@ -116,7 +119,7 @@ const extractConditionFromValueNode = (condition: ValueNode): Condition => {
 
   const logicalOp = getLogicalOperator(operator);
   if (logicalOp) {
-    const childrenNode = condition.fields.find((f) => f.name.value === "children")?.value;
+    const childrenNode = condition.fields.find((f) => f.name.value === OPERANDS_KEY)?.value;
     if (!childrenNode || childrenNode.kind !== Kind.LIST) {
       throw new Error("malformed conditions");
     }
@@ -138,7 +141,7 @@ const extractConditionFromValueNode = (condition: ValueNode): Condition => {
 };
 
 export const extractCondition = (f: FieldNode): Condition | null => {
-  const d = f.directives?.find((d) => d.name.value === "whose");
+  const d = f.directives?.find((d) => d.name.value === WHOSE_DIRECTIVE_NAME);
   if (!d) {
     return null;
   }

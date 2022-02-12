@@ -28,14 +28,14 @@ query GetInboxTasks {
     inboxTasks
       @whose(
         condition: {
-          operation: "and"
-          children: [
+          operator: "and"
+          operands: [
             { field: "effectivelyCompleted", value: "false" }
             {
-              operation: "or"
-              children: [
-                { field: "effectiveDeferDate", operation: "=", value: "null" }
-                { field: "effectiveDeferDate", operation: "<", value: "new Date()" }
+              operator: "or"
+              operands: [
+                { field: "effectiveDeferDate", operator: "=", value: "null" }
+                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
               ]
             }
           ]
