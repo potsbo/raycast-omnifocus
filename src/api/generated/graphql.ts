@@ -53,9 +53,12 @@ export type Edge = {
 
 export type Folder = Node & {
   __typename?: 'Folder';
+  folders: FolderConnection;
   id: Scalars['String'];
   name: Scalars['String'];
+  note: Scalars['String'];
   projects: ProjectConnection;
+  sections?: Maybe<SectionConnection>;
 };
 
 export type FolderConnection = Connection & {
@@ -118,6 +121,24 @@ export type ProjectEdge = Edge & {
 export type Query = {
   __typename?: 'Query';
   defaultDocument: DefaultDocument;
+};
+
+export type SectionConnection = Connection & {
+  __typename?: 'SectionConnection';
+  byId?: Maybe<Folder>;
+  edges: Array<SectionEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type SectionConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type SectionEdge = Edge & {
+  __typename?: 'SectionEdge';
+  cursor: Scalars['String'];
+  node: Node;
 };
 
 export type Tag = Node & {
@@ -310,9 +331,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['FolderConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConection'];
+  Connection: ResolversTypes['FolderConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConection'];
   DefaultDocument: ResolverTypeWrapper<DefaultDocument>;
-  Edge: ResolversTypes['FolderEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['FolderEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
   Folder: ResolverTypeWrapper<Folder>;
   FolderConnection: ResolverTypeWrapper<FolderConnection>;
   FolderEdge: ResolverTypeWrapper<FolderEdge>;
@@ -323,6 +344,8 @@ export type ResolversTypes = {
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   ProjectEdge: ResolverTypeWrapper<ProjectEdge>;
   Query: ResolverTypeWrapper<{}>;
+  SectionConnection: ResolverTypeWrapper<SectionConnection>;
+  SectionEdge: ResolverTypeWrapper<SectionEdge>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Tag: ResolverTypeWrapper<Tag>;
   TagConnection: ResolverTypeWrapper<TagConnection>;
@@ -336,9 +359,9 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['FolderConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConection'];
+  Connection: ResolversParentTypes['FolderConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConection'];
   DefaultDocument: DefaultDocument;
-  Edge: ResolversParentTypes['FolderEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['FolderEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
   Folder: Folder;
   FolderConnection: FolderConnection;
   FolderEdge: FolderEdge;
@@ -349,6 +372,8 @@ export type ResolversParentTypes = {
   ProjectConnection: ProjectConnection;
   ProjectEdge: ProjectEdge;
   Query: {};
+  SectionConnection: SectionConnection;
+  SectionEdge: SectionEdge;
   String: Scalars['String'];
   Tag: Tag;
   TagConnection: TagConnection;
@@ -365,7 +390,7 @@ export type WhoseDirectiveArgs = {
 export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'FolderConnection' | 'ProjectConnection' | 'TagConnection' | 'TaskConection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FolderConnection' | 'ProjectConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -382,15 +407,18 @@ export type DefaultDocumentResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'FolderEdge' | 'ProjectEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FolderEdge' | 'ProjectEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 };
 
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  sections?: Resolver<Maybe<ResolversTypes['SectionConnection']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -444,6 +472,19 @@ export type ProjectEdgeResolvers<ContextType = any, ParentType extends Resolvers
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   defaultDocument?: Resolver<ResolversTypes['DefaultDocument'], ParentType, ContextType>;
+};
+
+export type SectionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionConnection'] = ResolversParentTypes['SectionConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType, RequireFields<SectionConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['SectionEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SectionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionEdge'] = ResolversParentTypes['SectionEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
@@ -505,6 +546,8 @@ export type Resolvers<ContextType = any> = {
   ProjectConnection?: ProjectConnectionResolvers<ContextType>;
   ProjectEdge?: ProjectEdgeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SectionConnection?: SectionConnectionResolvers<ContextType>;
+  SectionEdge?: SectionEdgeResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   TagConnection?: TagConnectionResolvers<ContextType>;
   TagEdge?: TagEdgeResolvers<ContextType>;

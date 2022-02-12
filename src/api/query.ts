@@ -8,6 +8,7 @@ import {
   SelectionNode,
   TypeNode,
   FieldDefinitionNode,
+  InterfaceTypeDefinitionNode,
 } from "graphql";
 import { compileWhoseParam, extractCondition } from "./whose";
 
@@ -67,16 +68,23 @@ const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
   return unwrapType(typeNode.type);
 };
 
-const mustFindTypeDefinition = (ctx: CurrentContext, typeNode: TypeNode): ObjectTypeDefinitionNode => {
+const mustFindTypeDefinition = (
+  ctx: CurrentContext,
+  typeNode: TypeNode
+): ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode => {
   const typeName = unwrapType(typeNode).name.value;
   const typeDef = ctx.schema.getType(typeName)?.astNode;
   if (!typeDef) {
     throw new Error("type def undefined");
   }
-  if (typeDef.kind !== Kind.OBJECT_TYPE_DEFINITION) {
-    throw new Error("unsupported type definition kind");
+  if (typeDef.kind === Kind.OBJECT_TYPE_DEFINITION) {
+    return typeDef;
   }
-  return typeDef;
+  if (typeDef.kind === Kind.INTERFACE_TYPE_DEFINITION) {
+    return typeDef;
+  }
+
+  throw new Error("unsupported type definition kind");
 };
 
 const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: string[]): RenderableObject | null => {
@@ -166,11 +174,26 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
   return object.selectedFields
     .map((field) => {
       if (field.kind === Kind.INLINE_FRAGMENT) {
-        throw new Error(`unsupported node type: ${field.kind}"`);
+        const typeNode = field.typeCondition;
+        if (typeNode === undefined) {
+          throw new Error(`Type Condition for InlineFragment not found`);
+        }
+        // TODO: calling `properties` can be expensive
+        return `...(() => {
+          return ${ctx.rootName}.properties().pcls.toLowerCase() === "${typeNode.name.value}".toLowerCase()
+            ? {
+              ${renderFields(ctx, { selectedFields: field.selectionSet.selections, typeNode })}
+               __typename: "${typeNode.name.value}",
+            }
+            : {}
+        })(),`;
       }
       if (field.kind === Kind.FRAGMENT_SPREAD) {
         const fs = ctx.fragments[field.name.value];
         return renderFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
+      }
+      if (field.name.value === "__typename") {
+        return "";
       }
       const definition = mustFindTypeDefinition(ctx, object.typeNode).fields?.find(
         (def) => def.name.value === field.name.value

@@ -65,6 +65,17 @@ type ProjectEdge implements Edge {
   node: Project!
 }
 
+type SectionConnection implements Connection {
+  byId(id: String!): Folder
+  edges: [SectionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SectionEdge implements Edge {
+  cursor: String!
+  node: Node!
+}
+
 type FolderConnection implements Connection {
   byId(id: String!): Folder
   edges: [FolderEdge!]!
@@ -79,7 +90,10 @@ type FolderEdge implements Edge {
 type Folder implements Node {
   name: String!
   id: String!
+  note: String!
   projects: ProjectConnection!
+  folders: FolderConnection!
+  sections: SectionConnection
 }
 
 type TagConnection implements Connection {
