@@ -6,7 +6,6 @@ import { genQuery } from "./query";
 // The rootValue provides a resolver function for each API endpoint
 const rootValue: QueryResolvers = {
   defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-    console.log({ _, _2, info });
     const q = genQuery("t", info);
 
     const fn = (arg: { q: string }) => {
