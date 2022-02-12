@@ -15,7 +15,7 @@ export const TaskList = ({ getter, cacheKey, disableShowInProjects, title }: Pro
   return (
     <List isLoading={isLoading} navigationTitle={title}>
       {items?.map((t) => (
-        <TaskView task={t} disableShowInProjects={disableShowInProjects} />
+        <TaskView task={t} disableShowInProjects={disableShowInProjects} key={t.id} />
       ))}
     </List>
   );
