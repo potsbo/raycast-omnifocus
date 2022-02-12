@@ -37,35 +37,37 @@ export default function Command() {
 
   return (
     <List isLoading={isLoading}>
-      {value?.defaultDocument.perspectiveNames.map((p) => (
-        <List.Item
-          title={p}
-          key={p}
-          icon={getIconForPerspective(p)}
-          actions={
-            <ActionPanel>
-              <ActionPanel.Item
-                title="Show Detail"
-                onAction={() =>
-                  push(
-                    p === "Projects" ? (
-                      <ProjectList />
-                    ) : p === "Inbox" ? (
-                      <Inbox />
-                    ) : p === "Tags" ? (
-                      <TagList />
-                    ) : p === "Forecast" ? (
-                      <Forecast />
-                    ) : (
-                      <ProjectList />
+      {value?.defaultDocument.perspectiveNames
+        .filter((p) => p !== "")
+        .map((p) => (
+          <List.Item
+            title={p}
+            key={p}
+            icon={getIconForPerspective(p)}
+            actions={
+              <ActionPanel>
+                <ActionPanel.Item
+                  title="Show Detail"
+                  onAction={() =>
+                    push(
+                      p === "Projects" ? (
+                        <ProjectList />
+                      ) : p === "Inbox" ? (
+                        <Inbox />
+                      ) : p === "Tags" ? (
+                        <TagList />
+                      ) : p === "Forecast" ? (
+                        <Forecast />
+                      ) : (
+                        <ProjectList />
+                      )
                     )
-                  )
-                }
-              />
-            </ActionPanel>
-          }
-        />
-      ))}
+                  }
+                />
+              </ActionPanel>
+            }
+          />
+        ))}
     </List>
   );
 }
