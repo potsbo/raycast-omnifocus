@@ -114,11 +114,12 @@ type Query {
 }
 
 input Condition {
-  enabled: Boolean!
-  field: String!
+  enabled: Boolean! = true
+  field: String
   operation: String! = "="
   value: String! = "true"
+  children: [Condition!]
 }
 
-directive @filter(conditions: [Condition]!) on FIELD
+directive @whose(condition: [Condition!]!) on FIELD
 directive @noCall on FIELD_DEFINITION
