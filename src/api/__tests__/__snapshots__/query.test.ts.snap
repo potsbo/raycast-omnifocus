@@ -48,18 +48,18 @@ exports[`query for GetInboxTasksDocument 1`] = `
         return {
           cursor: elm.id(),
           node: {
-            name: elm.name(),
-            id: elm.id(),
-            effectiveDueDate: elm.effectiveDueDate(),
             completed: elm.completed(),
-            effectivelyCompleted: elm.effectivelyCompleted(),
             containingProject: elm.containingProject()
               ? {
                   id: elm.containingProject().id(),
                   name: elm.containingProject().name(),
                 }
               : undefined,
+            effectiveDueDate: elm.effectiveDueDate(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
             flagged: elm.flagged(),
+            id: elm.id(),
+            name: elm.name(),
           },
         };
       }),
@@ -98,18 +98,18 @@ const withEffectiveDueDate = false;
         return {
           cursor: elm.id(),
           node: {
-            name: elm.name(),
-            id: elm.id(),
-            effectiveDueDate: elm.effectiveDueDate(),
             completed: elm.completed(),
-            effectivelyCompleted: elm.effectivelyCompleted(),
             containingProject: elm.containingProject()
               ? {
                   id: elm.containingProject().id(),
                   name: elm.containingProject().name(),
                 }
               : undefined,
+            effectiveDueDate: elm.effectiveDueDate(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
             flagged: elm.flagged(),
+            id: elm.id(),
+            name: elm.name(),
           },
         };
       }),
@@ -148,18 +148,18 @@ const withEffectiveDueDate = true;
         return {
           cursor: elm.id(),
           node: {
-            name: elm.name(),
-            id: elm.id(),
-            effectiveDueDate: elm.effectiveDueDate(),
             completed: elm.completed(),
-            effectivelyCompleted: elm.effectivelyCompleted(),
             containingProject: elm.containingProject()
               ? {
                   id: elm.containingProject().id(),
                   name: elm.containingProject().name(),
                 }
               : undefined,
+            effectiveDueDate: elm.effectiveDueDate(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
             flagged: elm.flagged(),
+            id: elm.id(),
+            name: elm.name(),
           },
         };
       }),
@@ -205,18 +205,18 @@ exports[`query for GetTasksInProjectDocument 1`] = `
                     return {
                       cursor: elm.id(),
                       node: {
-                        name: elm.name(),
-                        id: elm.id(),
-                        effectiveDueDate: elm.effectiveDueDate(),
                         completed: elm.completed(),
-                        effectivelyCompleted: elm.effectivelyCompleted(),
                         containingProject: elm.containingProject()
                           ? {
                               id: elm.containingProject().id(),
                               name: elm.containingProject().name(),
                             }
                           : undefined,
+                        effectiveDueDate: elm.effectiveDueDate(),
+                        effectivelyCompleted: elm.effectivelyCompleted(),
                         flagged: elm.flagged(),
+                        id: elm.id(),
+                        name: elm.name(),
                       },
                     };
                   }),
@@ -246,8 +246,8 @@ exports[`query for GetTopLevelProjects 1`] = `
         return {
           cursor: elm.id(),
           node: {
-            name: elm.name(),
             id: elm.id(),
+            name: elm.name(),
             projects: (() => {
               const nodes = elm.projects();
               return {
@@ -261,9 +261,9 @@ exports[`query for GetTopLevelProjects 1`] = `
                   return {
                     cursor: elm.id(),
                     node: {
-                      name: elm.name(),
                       completed: elm.completed(),
                       id: elm.id(),
+                      name: elm.name(),
                       numberOfAvailableTasks: elm.numberOfAvailableTasks(),
                     },
                   };
@@ -288,9 +288,9 @@ exports[`query for GetTopLevelProjects 1`] = `
         return {
           cursor: elm.id(),
           node: {
+            completed: elm.completed(),
             id: elm.id(),
             name: elm.name(),
-            completed: elm.completed(),
             numberOfAvailableTasks: elm.numberOfAvailableTasks(),
           },
         };

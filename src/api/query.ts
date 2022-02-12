@@ -180,6 +180,7 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
       }
       return renderField(ctx, { field, definition });
     })
+    .sort()
     .join("");
 };
 
