@@ -1,6 +1,6 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
 import { useMemo } from "react";
-import { get } from "../api/fetch";
+import { runQuery } from "../api/fetch";
 import { TaskList } from "./TaskList";
 
 export interface TaskViewModel {
@@ -38,7 +38,7 @@ export const TaskView = ({ task, disableShowInProjects }: Props) => {
             <TaskList
               title={p.name}
               getter={() =>
-                get("GetTasksInProject", { projectId: p.id }).then((r) =>
+                runQuery("GetTasksInProject", { projectId: p.id }).then((r) =>
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   r.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
                 )
