@@ -11,11 +11,9 @@ import {
 } from "graphql";
 import { compileWhoseParam, extractCondition } from "./whose";
 
-interface CurrentContext {
+type CurrentContext = {
   rootName: string;
-  fragments: GraphQLResolveInfo["fragments"];
-  schema: GraphQLResolveInfo["schema"];
-}
+} & Pick<GraphQLResolveInfo, "fragments" | "schema" | "variableValues">;
 
 type RenderableObject<T extends TypeNode = TypeNode> = {
   selectedFields: readonly SelectionNode[];
@@ -50,7 +48,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
       (i) => i.name.value === "Connection"
     );
-    const whose = compileWhoseParam(extractCondition(f.field));
+    const whose = compileWhoseParam(extractCondition(ctx, f.field));
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${renderObject(

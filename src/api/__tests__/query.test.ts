@@ -1,5 +1,10 @@
 import { buildExecutionContext, ExecutionContext } from "graphql/execution/execute";
-import { GetInboxTasksDocument, GetTasksDocument, GetTasksInProjectDocument, GetTopLevelProjectsDocument } from "../generated/graphql";
+import {
+  GetInboxTasksDocument,
+  GetTasksDocument,
+  GetTasksInProjectDocument,
+  GetTopLevelProjectsDocument,
+} from "../generated/graphql";
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
@@ -21,6 +26,18 @@ test("query for GetTasksDocument", () => {
   const exeContext = buildExecutionContext({
     schema: schema,
     document: document,
+    variableValues: { onlyFlagged: true, onlyAvailable: true },
+  }) as ExecutionContext;
+
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
+
+test("query for GetTasksDocument for forecast", () => {
+  const document = GetTasksDocument;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+    variableValues: { withEffectiveDueDate: true, onlyAvailable: true },
   }) as ExecutionContext;
 
   expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
@@ -63,8 +80,6 @@ test("query for GetTopLevelProjects", () => {
 
   expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
-
-
 
 test("query for Connection", () => {
   const document = gql`

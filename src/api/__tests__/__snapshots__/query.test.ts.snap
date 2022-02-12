@@ -70,9 +70,73 @@ exports[`query for GetInboxTasksDocument 1`] = `
 `;
 
 exports[`query for GetTasksDocument 1`] = `
-"({
+"const onlyFlagged = true;
+const onlyAvailable = true;
+const withEffectiveDueDate = false;
+({
   flattenedTasks: (() => {
-    const nodes = parent.flattenedTasks();
+    const nodes = parent.flattenedTasks.whose({
+      _and: [
+        { effectivelyCompleted: { _equals: false } },
+        { flagged: { _equals: true } },
+        {
+          _or: [
+            { effectiveDeferDate: { _equals: null } },
+            { effectiveDeferDate: { _lessThan: new Date() } },
+          ],
+        },
+      ],
+    })();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+          node: {
+            name: elm.name(),
+            id: elm.id(),
+            effectiveDueDate: elm.effectiveDueDate(),
+            completed: elm.completed(),
+            effectivelyCompleted: elm.effectivelyCompleted(),
+            containingProject: elm.containingProject()
+              ? {
+                  id: elm.containingProject().id(),
+                  name: elm.containingProject().name(),
+                }
+              : undefined,
+            flagged: elm.flagged(),
+          },
+        };
+      }),
+    };
+  })(),
+});
+"
+`;
+
+exports[`query for GetTasksDocument for forecast 1`] = `
+"const onlyFlagged = false;
+const onlyAvailable = true;
+const withEffectiveDueDate = true;
+({
+  flattenedTasks: (() => {
+    const nodes = parent.flattenedTasks.whose({
+      _and: [
+        { effectivelyCompleted: { _equals: false } },
+        { _not: [{ effectiveDeferDate: { _equals: null } }] },
+        {
+          _or: [
+            { effectiveDeferDate: { _equals: null } },
+            { effectiveDeferDate: { _lessThan: new Date() } },
+          ],
+        },
+      ],
+    })();
     return {
       pageInfo: {
         hasPreviousPage: false,

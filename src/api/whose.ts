@@ -1,4 +1,4 @@
-import { FieldNode, Kind, ObjectValueNode, ValueNode } from "graphql";
+import { FieldNode, GraphQLResolveInfo, Kind, ObjectValueNode, ValueNode } from "graphql";
 
 const WHOSE_DIRECTIVE_NAME = "whose";
 const OPERANDS_KEY = "operands";
@@ -67,13 +67,28 @@ const getLogicalOperator = (op: string): LogicalOperator | null => {
   return null;
 };
 
-const mustExtractBoolArg = (c: ObjectValueNode, key: string, defaultValue?: boolean): boolean => {
+const mustExtractBoolArg = (
+  ctx: Pick<GraphQLResolveInfo, "variableValues">,
+  c: ObjectValueNode,
+  key: string,
+  defaultValue?: boolean
+): boolean => {
   const node = c.fields.find((d) => d.name.value === key)?.value;
   if (!node) {
-    if (defaultValue) {
+    if (defaultValue !== undefined) {
       return defaultValue;
     }
-    throw new Error(`argument ${key} not found`);
+    throw new Error(`argument "${key}" not found in ${c}`);
+  }
+  if (node.kind === Kind.VARIABLE) {
+    const val = ctx.variableValues[node.name.value];
+    if (val === undefined || typeof val !== "boolean") {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      }
+      throw new Error(`unresolvable variable: ${node.name.value}`);
+    }
+    return val;
   }
   if (node.kind !== Kind.BOOLEAN) {
     throw new Error();
@@ -82,13 +97,28 @@ const mustExtractBoolArg = (c: ObjectValueNode, key: string, defaultValue?: bool
   return node.value;
 };
 
-const mustExtractStringArg = (c: ObjectValueNode, key: string, defaultValue?: string): string => {
+const mustExtractStringArg = (
+  ctx: Pick<GraphQLResolveInfo, "variableValues">,
+  c: ObjectValueNode,
+  key: string,
+  defaultValue?: string
+): string => {
   const node = c.fields.find((d) => d.name.value === key)?.value;
   if (!node) {
-    if (defaultValue) {
+    if (defaultValue !== undefined) {
       return defaultValue;
     }
-    throw new Error(`argument ${key} not found`);
+    throw new Error(`argument "${key}" not found in ${c.fields.map((d) => d.name.value)}`);
+  }
+  if (node.kind === Kind.VARIABLE) {
+    const val = ctx.variableValues[node.name.value];
+    if (val === undefined || typeof val !== "string") {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      }
+      throw new Error(`unresolvable variable: ${node.name.value}`);
+    }
+    return val;
   }
   if (node.kind !== Kind.STRING) {
     throw new Error();
@@ -97,17 +127,20 @@ const mustExtractStringArg = (c: ObjectValueNode, key: string, defaultValue?: st
   return node.value;
 };
 
-const extractConditionFromValueNode = (condition: ValueNode): Condition => {
+const extractConditionFromValueNode = (
+  ctx: Pick<GraphQLResolveInfo, "variableValues">,
+  condition: ValueNode
+): Condition => {
   if (condition.kind !== Kind.OBJECT) {
     throw new Error("malformed conditions");
   }
 
-  const enabled = mustExtractBoolArg(condition, "enabled", true);
-  const operator = mustExtractStringArg(condition, "operator", "=");
+  const enabled = mustExtractBoolArg(ctx, condition, "enabled", true);
+  const operator = mustExtractStringArg(ctx, condition, "operator", "=");
   const matchOp = getMatchOperator(operator);
   if (matchOp) {
-    const field = mustExtractStringArg(condition, "field");
-    const value = mustExtractStringArg(condition, "value");
+    const field = mustExtractStringArg(ctx, condition, "field");
+    const value = mustExtractStringArg(ctx, condition, "value", "true");
     return {
       kind: "MATCH",
       field,
@@ -131,7 +164,7 @@ const extractConditionFromValueNode = (condition: ValueNode): Condition => {
         if (f.kind !== Kind.OBJECT) {
           throw new Error("malformed conditions");
         }
-        return extractConditionFromValueNode(f);
+        return extractConditionFromValueNode(ctx, f);
       }),
       enabled,
     };
@@ -140,7 +173,7 @@ const extractConditionFromValueNode = (condition: ValueNode): Condition => {
   throw new Error(`Unknown operator ${operator}`);
 };
 
-export const extractCondition = (f: FieldNode): Condition | null => {
+export const extractCondition = (ctx: Pick<GraphQLResolveInfo, "variableValues">, f: FieldNode): Condition | null => {
   const d = f.directives?.find((d) => d.name.value === WHOSE_DIRECTIVE_NAME);
   if (!d) {
     return null;
@@ -150,7 +183,7 @@ export const extractCondition = (f: FieldNode): Condition | null => {
     throw new Error("malformed conditions");
   }
 
-  return extractConditionFromValueNode(condition);
+  return extractConditionFromValueNode(ctx, condition);
 };
 
 const filterPresent = <T>(x: T | null): x is T => {

@@ -179,9 +179,9 @@ export type TaskEdge = Edge & {
 export type TaskViewModelFragment = { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
 
 export type GetTasksQueryVariables = Exact<{
-  flagged?: InputMaybe<Scalars['Boolean']>;
-  available?: InputMaybe<Scalars['Boolean']>;
-  withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
+  onlyFlagged?: Scalars['Boolean'];
+  onlyAvailable?: Scalars['Boolean'];
+  withEffectiveDueDate?: Scalars['Boolean'];
 }>;
 
 
@@ -524,9 +524,9 @@ export const TaskViewModelFragmentDoc = gql`
 }
     `;
 export const GetTasksDocument = gql`
-    query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
+    query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean! = false, $withEffectiveDueDate: Boolean! = false) {
   defaultDocument {
-    flattenedTasks {
+    flattenedTasks @whose(condition: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {field: "flagged", enabled: $onlyFlagged}, {operator: "not", operands: [{field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate}]}, {enabled: $onlyAvailable, operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}) {
       edges {
         node {
           ...TaskViewModel
