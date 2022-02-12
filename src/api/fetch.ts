@@ -1,7 +1,7 @@
 import { graphql, ExecutionResult } from "graphql";
 import { GraphQLClient, Variables, RequestDocument } from "graphql-request";
 import { print } from "graphql/language/printer";
-import { resolver } from ".";
+import { resolvers } from ".";
 import { useLoad } from "../utils";
 import { getSdk } from "./generated/graphql";
 import { schema } from "./schema";
@@ -13,7 +13,7 @@ class MyClient extends GraphQLClient {
     const { data, errors } = (await graphql({
       schema,
       source: query,
-      rootValue: resolver.Query,
+      rootValue: resolvers.Query,
       variableValues: variables,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })) as any as ExecutionResult<T>;
