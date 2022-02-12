@@ -350,10 +350,6 @@ export type ResolversParentTypes = {
   TaskEdge: TaskEdge;
 };
 
-export type NoCallDirectiveArgs = { };
-
-export type NoCallDirectiveResolver<Result, Parent, ContextType = any, Args = NoCallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type WhoseDirectiveArgs = {
   condition: Array<Condition>;
 };
@@ -510,7 +506,6 @@ export type Resolvers<ContextType = any> = {
 };
 
 export type DirectiveResolvers<ContextType = any> = {
-  noCall?: NoCallDirectiveResolver<any, any, ContextType>;
   whose?: WhoseDirectiveResolver<any, any, ContextType>;
 };
 

@@ -47,7 +47,9 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
       args.push(a.value.name.value);
     });
 
-    const noCall = f.definition.directives?.some((d) => d.name.value === "noCall");
+    const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
+      (i) => i.name.value === "Connection"
+    );
     const whose = compileWhoseParam(extractCondition(f.field));
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
