@@ -18,9 +18,10 @@ export type Scalars = {
 };
 
 export type Condition = {
-  enabled: Scalars['Boolean'];
-  field: Scalars['String'];
-  operation?: Scalars['String'];
+  enabled?: Scalars['Boolean'];
+  field?: InputMaybe<Scalars['String']>;
+  operands?: InputMaybe<Array<Condition>>;
+  operator?: Scalars['String'];
   value?: Scalars['String'];
 };
 
@@ -349,15 +350,15 @@ export type ResolversParentTypes = {
   TaskEdge: TaskEdge;
 };
 
-export type FilterDirectiveArgs = {
-  conditions: Array<Maybe<Condition>>;
-};
-
-export type FilterDirectiveResolver<Result, Parent, ContextType = any, Args = FilterDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type NoCallDirectiveArgs = { };
 
 export type NoCallDirectiveResolver<Result, Parent, ContextType = any, Args = NoCallDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type WhoseDirectiveArgs = {
+  condition: Array<Condition>;
+};
+
+export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
   __resolveType: TypeResolveFn<'FolderConnection' | 'ProjectConnection' | 'TagConnection' | 'TaskConection', ParentType, ContextType>;
@@ -509,8 +510,8 @@ export type Resolvers<ContextType = any> = {
 };
 
 export type DirectiveResolvers<ContextType = any> = {
-  filter?: FilterDirectiveResolver<any, any, ContextType>;
   noCall?: NoCallDirectiveResolver<any, any, ContextType>;
+  whose?: WhoseDirectiveResolver<any, any, ContextType>;
 };
 
 export const TaskViewModelFragmentDoc = gql`
@@ -543,7 +544,7 @@ export const GetTasksDocument = gql`
 export const GetInboxTasksDocument = gql`
     query GetInboxTasks {
   defaultDocument {
-    inboxTasks @filter(conditions: [{enabled: true, field: "effectivelyCompleted", value: "false"}]) {
+    inboxTasks @whose(condition: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}) {
       edges {
         node {
           ...TaskViewModel

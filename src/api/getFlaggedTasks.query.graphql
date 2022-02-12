@@ -25,7 +25,22 @@ query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Bo
 
 query GetInboxTasks {
   defaultDocument {
-    inboxTasks @filter(conditions: [{ enabled: true, field: "effectivelyCompleted", value: "false" }]) {
+    inboxTasks
+      @whose(
+        condition: {
+          operator: "and"
+          operands: [
+            { field: "effectivelyCompleted", value: "false" }
+            {
+              operator: "or"
+              operands: [
+                { field: "effectiveDeferDate", operator: "=", value: "null" }
+                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
+              ]
+            }
+          ]
+        }
+      ) {
       edges {
         node {
           ...TaskViewModel
