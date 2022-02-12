@@ -27,7 +27,15 @@ exports[`query for GetInboxTasksDocument 1`] = `
 "({
   inboxTasks: (() => {
     const nodes = parent.inboxTasks.whose({
-      effectivelyCompleted: { _equals: \\"false\\" },
+      _and: [
+        { effectivelyCompleted: { _equals: false } },
+        {
+          _or: [
+            { effectiveDeferDate: { _equals: null } },
+            { effectiveDeferDate: { _lessThan: new Date() } },
+          ],
+        },
+      ],
     })();
     return {
       pageInfo: {

@@ -186,7 +186,7 @@ const compileCondition = (whose: Condition): string => {
     const children = `[${whose.children.map(compileCondition).join(",")}]`;
     return `{ ${whose.operator}: ${children}}`;
   }
-  return `{ ${whose.field}: { ${whose.operator}: ${JSON.stringify(whose.value)}}}`;
+  return `{ ${whose.field}: { ${whose.operator}: ${whose.value}}}`;
 };
 
 export const compileWhoseParam = (whose: Condition | null): string => {
