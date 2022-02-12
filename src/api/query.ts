@@ -8,9 +8,8 @@ import {
   SelectionNode,
   TypeNode,
   FieldDefinitionNode,
-  ObjectValueNode,
 } from "graphql";
-import { Condition } from "./generated/graphql";
+import { compileWhoseParam, extractCondition } from "./whose";
 
 interface CurrentContext {
   rootName: string;
@@ -26,122 +25,6 @@ type RenderableObject<T extends TypeNode = TypeNode> = {
 type RenderableField = {
   field: FieldNode;
   definition: FieldDefinitionNode;
-};
-
-const WhoseOperators = [
-  "_equals",
-  "_contains",
-  "_beginsWith",
-  "_endsWith",
-  "_greaterThan",
-  "_greaterThanEquals",
-  "_lessThan",
-  "_lessThanEquals",
-  "_match",
-] as const;
-
-type WhoseParam = {
-  fieldName: string;
-  operator: typeof WhoseOperators[number];
-  value: string;
-};
-
-const mustGetWhoseOperator = (op: string): WhoseParam["operator"] => {
-  if (WhoseOperators.indexOf(op as WhoseParam["operator"]) > -1) {
-    return op as WhoseParam["operator"];
-  }
-  if (WhoseOperators.indexOf(`_${op}` as WhoseParam["operator"]) > -1) {
-    return `_${op}` as WhoseParam["operator"];
-  }
-  switch (op) {
-    case "=":
-      return "_equals";
-    case ">":
-      return "_greaterThan";
-    case ">=":
-      return "_greaterThanEquals";
-    case "<":
-      return "_lessThan";
-    case "<=":
-      return "_lessThanEquals";
-  }
-  throw new Error(`Unknown operator ${op}`);
-};
-
-const mustCompileWhoseDirectiveArgs = ({ field, operation, value }: Condition): WhoseParam => {
-  return { fieldName: field, operator: mustGetWhoseOperator(operation ?? "="), value: value ?? "true" };
-};
-
-const compileWhoseParams = (whoses: WhoseParam[]): string => {
-  if (whoses.length === 0) {
-    return "";
-  }
-  if (whoses.length === 1) {
-    return `.whose(${compileWhoseParam(whoses[0])})`;
-  }
-  return `.whose({ _and: [
-    ${whoses.map(compileWhoseParam).join(",")}
-  ]})`;
-};
-
-const compileWhoseParam = (whose: WhoseParam): string => {
-  return `{ ${whose.fieldName}: { ${whose.operator}: ${JSON.stringify(whose.value)}}}`;
-};
-
-const extractConditions = (f: FieldNode) => {
-  const d = f.directives?.find((d) => d.name.value === "filter");
-  if (!d) {
-    return [];
-  }
-  const conditions = d.arguments?.find((a) => a.name.value === "conditions")?.value;
-  if (!conditions || conditions.kind !== Kind.LIST) {
-    throw new Error("malformed conditions");
-  }
-
-  return conditions.values
-    .map((c) => {
-      if (c.kind !== Kind.OBJECT) {
-        throw new Error("malformed conditions");
-      }
-      const enabled = mustExtractBoolArg(c, "enabled");
-      const field = mustExtractStringArg(c, "field");
-      const operation = mustExtractStringArg(c, "op", "=");
-      const value = mustExtractStringArg(c, "value", "true");
-
-      return { enabled, field, operation, value };
-    })
-    .filter((c) => c.enabled)
-    .map(mustCompileWhoseDirectiveArgs);
-};
-
-const mustExtractBoolArg = (c: ObjectValueNode, key: string, defaultValue?: boolean): boolean => {
-  const node = c.fields.find((d) => d.name.value === key)?.value;
-  if (!node) {
-    if (defaultValue) {
-      return defaultValue;
-    }
-    throw new Error(`argument ${key} not found`);
-  }
-  if (node.kind !== Kind.BOOLEAN) {
-    throw new Error();
-  }
-
-  return node.value;
-};
-
-const mustExtractStringArg = (c: ObjectValueNode, key: string, defaultValue?: string): string => {
-  const node = c.fields.find((d) => d.name.value === key)?.value;
-  if (!node) {
-    if (defaultValue) {
-      return defaultValue;
-    }
-    throw new Error(`argument ${key} not found`);
-  }
-  if (node.kind !== Kind.STRING) {
-    throw new Error();
-  }
-
-  return node.value;
 };
 
 const renderField = (ctx: CurrentContext, f: RenderableField): string => {
@@ -165,16 +48,13 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     });
 
     const noCall = f.definition.directives?.some((d) => d.name.value === "noCall");
-    const whoseParams = extractConditions(f.field);
-    const whose = compileWhoseParams(whoseParams);
+    const whose = compileWhoseParam(extractCondition(f.field));
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${renderObject(
       { ...ctx, rootName: child },
       { selectedFields: f.field.selectionSet.selections, typeNode: f.definition.type },
-      {
-        whose,
-      }
+      { whose }
     )},`;
   }
   return `${name}: ${ctx.rootName}.${name}(),`;
