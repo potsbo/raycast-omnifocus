@@ -109,3 +109,40 @@ test("query for Connection", () => {
 
   expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
+
+test("query with inline fragment", () => {
+  const document = gql`
+    query {
+      defaultDocument {
+        folders {
+          edges {
+            node {
+              name
+              sections {
+                edges {
+                  node {
+                    ... on Project {
+                      completed
+                    }
+                    ... on Folder {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
