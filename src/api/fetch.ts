@@ -6,34 +6,22 @@ import { useLoad } from "../utils";
 import { getSdk } from "./generated/graphql";
 import { schema } from "./schema";
 
-export const fetch = async <TData, TVariables extends { readonly [variable: string]: unknown }>(
-  query: string,
-  variableValues?: TVariables
-) => {
-  const { data, errors } = (await graphql({
-    schema,
-    source: query,
-    rootValue: resolver.Query,
-    variableValues,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  })) as any as ExecutionResult<TData>;
-  if (data === null || data === undefined || errors !== undefined) {
-    console.error(errors);
-    throw errors;
-  }
-  return data;
-};
-
-function resolveRequestDocument(document: RequestDocument): string {
-  if (typeof document === "string") return document;
-  return print(document);
-}
-
 class MyClient extends GraphQLClient {
-  async request<T, V = Variables>(document: RequestDocument, variables?: V): Promise<T> {
-    const query = resolveRequestDocument(document);
-    const res = fetch<T, Readonly<V>>(query, variables);
-    return res;
+  async request<T, V = Variables>(document: RequestDocument, variables?: Readonly<V>): Promise<T> {
+    const query = typeof document === "string" ? document : print(document);
+
+    const { data, errors } = (await graphql({
+      schema,
+      source: query,
+      rootValue: resolver.Query,
+      variableValues: variables,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    })) as any as ExecutionResult<T>;
+    if (data === null || data === undefined || errors !== undefined) {
+      console.error(errors);
+      throw errors;
+    }
+    return data;
   }
 }
 
