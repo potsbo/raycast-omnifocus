@@ -80,6 +80,7 @@ type Folder implements Node {
   name: String!
   id: String!
   projects: ProjectConnection!
+  folders: FolderConnection!
 }
 
 type TagConnection implements Connection {

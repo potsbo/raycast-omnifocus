@@ -53,6 +53,7 @@ export type Edge = {
 
 export type Folder = Node & {
   __typename?: 'Folder';
+  folders: FolderConnection;
   id: Scalars['String'];
   name: Scalars['String'];
   projects: ProjectConnection;
@@ -388,6 +389,7 @@ export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
