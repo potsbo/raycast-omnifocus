@@ -72,13 +72,13 @@ exports[`query for GetInboxTasksDocument 1`] = `
 exports[`query for GetTasksDocument 1`] = `
 "const onlyFlagged = true;
 const onlyAvailable = true;
+const withEffectiveDueDate = false;
 ({
   flattenedTasks: (() => {
     const nodes = parent.flattenedTasks.whose({
       _and: [
         { effectivelyCompleted: { _equals: false } },
         { flagged: { _equals: true } },
-        { _not: [{ effectiveDeferDate: { _equals: null } }] },
         {
           _or: [
             { effectiveDeferDate: { _equals: null } },
@@ -120,14 +120,14 @@ const onlyAvailable = true;
 `;
 
 exports[`query for GetTasksDocument for forecast 1`] = `
-"const onlyAvailable = true;
+"const onlyFlagged = false;
+const onlyAvailable = true;
 const withEffectiveDueDate = true;
 ({
   flattenedTasks: (() => {
     const nodes = parent.flattenedTasks.whose({
       _and: [
         { effectivelyCompleted: { _equals: false } },
-        { flagged: { _equals: true } },
         { _not: [{ effectiveDeferDate: { _equals: null } }] },
         {
           _or: [

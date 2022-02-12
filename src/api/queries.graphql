@@ -11,7 +11,11 @@ fragment TaskViewModel on Task {
   flagged
 }
 
-query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean, $withEffectiveDueDate: Boolean) {
+query GetTasks(
+  $onlyFlagged: Boolean! = false
+  $onlyAvailable: Boolean! = false
+  $withEffectiveDueDate: Boolean! = false
+) {
   defaultDocument {
     flattenedTasks
       @whose(

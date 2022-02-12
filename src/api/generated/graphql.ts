@@ -180,8 +180,8 @@ export type TaskViewModelFragment = { __typename?: 'Task', name: string, id: str
 
 export type GetTasksQueryVariables = Exact<{
   onlyFlagged?: Scalars['Boolean'];
-  onlyAvailable?: InputMaybe<Scalars['Boolean']>;
-  withEffectiveDueDate?: InputMaybe<Scalars['Boolean']>;
+  onlyAvailable?: Scalars['Boolean'];
+  withEffectiveDueDate?: Scalars['Boolean'];
 }>;
 
 
@@ -524,7 +524,7 @@ export const TaskViewModelFragmentDoc = gql`
 }
     `;
 export const GetTasksDocument = gql`
-    query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean, $withEffectiveDueDate: Boolean) {
+    query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean! = false, $withEffectiveDueDate: Boolean! = false) {
   defaultDocument {
     flattenedTasks @whose(condition: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {field: "flagged", enabled: $onlyFlagged}, {operator: "not", operands: [{field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate}]}, {enabled: $onlyAvailable, operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}) {
       edges {
