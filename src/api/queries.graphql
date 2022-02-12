@@ -11,9 +11,30 @@ fragment TaskViewModel on Task {
   flagged
 }
 
-query GetTasks($flagged: Boolean, $available: Boolean, $withEffectiveDueDate: Boolean) {
+query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean, $withEffectiveDueDate: Boolean) {
   defaultDocument {
-    flattenedTasks {
+    flattenedTasks
+      @whose(
+        condition: {
+          operator: "and"
+          operands: [
+            { field: "effectivelyCompleted", value: "false" }
+            { field: "flagged", enabled: $onlyFlagged }
+            {
+              operator: "not"
+              operands: [{ field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate }]
+            }
+            {
+              enabled: $onlyAvailable
+              operator: "or"
+              operands: [
+                { field: "effectiveDeferDate", operator: "=", value: "null" }
+                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
+              ]
+            }
+          ]
+        }
+      ) {
       edges {
         node {
           ...TaskViewModel

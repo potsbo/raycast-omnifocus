@@ -6,7 +6,7 @@ import { TaskView, TaskViewModel } from "./TaskView";
 type ForecastableTask = TaskViewModel & { effectiveDueDate?: string | null };
 
 export const Forecast = () => {
-  const tasks = useQuery("GetTasks", { withEffectiveDueDate: true, available: true });
+  const tasks = useQuery("GetTasks", { withEffectiveDueDate: true, onlyAvailable: true });
   const dates: { date: string; tasks: TaskViewModel[] }[] = useMemo(() => {
     if (tasks.value === undefined) {
       return [];
