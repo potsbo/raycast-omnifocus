@@ -178,6 +178,14 @@ export type TaskEdge = Edge & {
 
 export type TaskViewModelFragment = { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
 
+export type ProjectViewModelFragment = { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number };
+
+export type TopLevelProjectsFragment = { __typename?: 'DefaultDocument', projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } };
+
+export type FolderedProjectDepth1Fragment = { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } };
+
+export type FolderedTagDepth1Fragment = { __typename?: 'DefaultDocument', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string } }> } } }> } };
+
 export type GetTasksQueryVariables = Exact<{
   onlyFlagged?: Scalars['Boolean'];
   onlyAvailable?: Scalars['Boolean'];
@@ -214,12 +222,12 @@ export type GetTasksWithTagQuery = { __typename?: 'Query', defaultDocument: { __
 export type GetTopLevelProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTopLevelProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', id: string, name: string, completed: boolean, numberOfAvailableTasks: number } }> } } };
+export type GetTopLevelProjectsQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } };
 
 export type GetTaskCreationSupportInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCreationSupportInfoQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', id: string, name: string, completed: boolean, numberOfAvailableTasks: number } }> }, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string } }> } } }> } } };
+export type GetTaskCreationSupportInfoQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> }, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'Tag', name: string, id: string } }> } } }> } } };
 
 export type GetNestedTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -523,6 +531,64 @@ export const TaskViewModelFragmentDoc = gql`
   flagged
 }
     `;
+export const ProjectViewModelFragmentDoc = gql`
+    fragment ProjectViewModel on Project {
+  name
+  completed
+  id
+  numberOfAvailableTasks
+}
+    `;
+export const TopLevelProjectsFragmentDoc = gql`
+    fragment TopLevelProjects on DefaultDocument {
+  projects {
+    edges {
+      node {
+        ...ProjectViewModel
+      }
+    }
+  }
+}
+    ${ProjectViewModelFragmentDoc}`;
+export const FolderedProjectDepth1FragmentDoc = gql`
+    fragment FolderedProjectDepth1 on DefaultDocument {
+  folders {
+    edges {
+      node {
+        name
+        id
+        projects {
+          edges {
+            node {
+              ...ProjectViewModel
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${ProjectViewModelFragmentDoc}`;
+export const FolderedTagDepth1FragmentDoc = gql`
+    fragment FolderedTagDepth1 on DefaultDocument {
+  tags {
+    edges {
+      node {
+        name
+        id
+        tags {
+          edges {
+            node {
+              name
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
 export const GetTasksDocument = gql`
     query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean! = false, $withEffectiveDueDate: Boolean! = false) {
   defaultDocument {
@@ -571,27 +637,10 @@ export const GetTasksInProjectDocument = gql`
 export const GetNestedProjectsDocument = gql`
     query GetNestedProjects {
   defaultDocument {
-    folders {
-      edges {
-        node {
-          name
-          id
-          projects {
-            edges {
-              node {
-                name
-                completed
-                id
-                numberOfAvailableTasks
-              }
-            }
-          }
-        }
-      }
-    }
+    ...FolderedProjectDepth1
   }
 }
-    `;
+    ${FolderedProjectDepth1FragmentDoc}`;
 export const GetTasksWithTagDocument = gql`
     query GetTasksWithTag($tagId: String!) {
   defaultDocument {
@@ -612,109 +661,30 @@ export const GetTasksWithTagDocument = gql`
 export const GetTopLevelProjectsDocument = gql`
     query GetTopLevelProjects {
   defaultDocument {
-    folders {
-      edges {
-        node {
-          name
-          id
-          projects {
-            edges {
-              node {
-                name
-                completed
-                id
-                numberOfAvailableTasks
-              }
-            }
-          }
-        }
-      }
-    }
-    projects {
-      edges {
-        node {
-          id
-          name
-          completed
-          numberOfAvailableTasks
-        }
-      }
-    }
+    ...FolderedProjectDepth1
+    ...TopLevelProjects
   }
 }
-    `;
+    ${FolderedProjectDepth1FragmentDoc}
+${TopLevelProjectsFragmentDoc}`;
 export const GetTaskCreationSupportInfoDocument = gql`
     query GetTaskCreationSupportInfo {
   defaultDocument {
-    folders {
-      edges {
-        node {
-          name
-          id
-          projects {
-            edges {
-              node {
-                name
-                completed
-                id
-                numberOfAvailableTasks
-              }
-            }
-          }
-        }
-      }
-    }
-    projects {
-      edges {
-        node {
-          id
-          name
-          completed
-          numberOfAvailableTasks
-        }
-      }
-    }
-    tags {
-      edges {
-        node {
-          name
-          id
-          tags {
-            edges {
-              node {
-                name
-                id
-              }
-            }
-          }
-        }
-      }
-    }
+    ...FolderedProjectDepth1
+    ...TopLevelProjects
+    ...FolderedTagDepth1
   }
 }
-    `;
+    ${FolderedProjectDepth1FragmentDoc}
+${TopLevelProjectsFragmentDoc}
+${FolderedTagDepth1FragmentDoc}`;
 export const GetNestedTagsDocument = gql`
     query GetNestedTags {
   defaultDocument {
-    tags {
-      edges {
-        node {
-          name
-          id
-          tags {
-            edges {
-              node {
-                name
-                id
-              }
-            }
-          }
-        }
-      }
-    }
+    ...FolderedTagDepth1
   }
 }
-    `;
+    ${FolderedTagDepth1FragmentDoc}`;
 export const GetPerspectiveNamesDocument = gql`
     query GetPerspectiveNames {
   defaultDocument {

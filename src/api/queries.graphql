@@ -11,6 +11,60 @@ fragment TaskViewModel on Task {
   flagged
 }
 
+fragment ProjectViewModel on Project {
+  name
+  completed
+  id
+  numberOfAvailableTasks
+}
+
+fragment TopLevelProjects on DefaultDocument {
+  projects {
+    edges {
+      node {
+        ...ProjectViewModel
+      }
+    }
+  }
+}
+
+fragment FolderedProjectDepth1 on DefaultDocument {
+  folders {
+    edges {
+      node {
+        name
+        id
+        projects {
+          edges {
+            node {
+              ...ProjectViewModel
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment FolderedTagDepth1 on DefaultDocument {
+  tags {
+    edges {
+      node {
+        name
+        id
+        tags {
+          edges {
+            node {
+              name
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query GetTasks(
   $onlyFlagged: Boolean! = false
   $onlyAvailable: Boolean! = false
@@ -95,24 +149,7 @@ query GetTasksInProject($projectId: String!) {
 
 query GetNestedProjects {
   defaultDocument {
-    folders {
-      edges {
-        node {
-          name
-          id
-          projects {
-            edges {
-              node {
-                name
-                completed
-                id
-                numberOfAvailableTasks
-              }
-            }
-          }
-        }
-      }
-    }
+    ...FolderedProjectDepth1
   }
 }
 
@@ -134,104 +171,22 @@ query GetTasksWithTag($tagId: String!) {
 
 query GetTopLevelProjects {
   defaultDocument {
-    folders {
-      edges {
-        node {
-          name
-          id
-          projects {
-            edges {
-              node {
-                name
-                completed
-                id
-                numberOfAvailableTasks
-              }
-            }
-          }
-        }
-      }
-    }
-    projects {
-      edges {
-        node {
-          id
-          name
-          completed
-          numberOfAvailableTasks
-        }
-      }
-    }
+    ...FolderedProjectDepth1
+    ...TopLevelProjects
   }
 }
 
 query GetTaskCreationSupportInfo {
   defaultDocument {
-    folders {
-      edges {
-        node {
-          name
-          id
-          projects {
-            edges {
-              node {
-                name
-                completed
-                id
-                numberOfAvailableTasks
-              }
-            }
-          }
-        }
-      }
-    }
-    projects {
-      edges {
-        node {
-          id
-          name
-          completed
-          numberOfAvailableTasks
-        }
-      }
-    }
-    tags {
-      edges {
-        node {
-          name
-          id
-          tags {
-            edges {
-              node {
-                name
-                id
-              }
-            }
-          }
-        }
-      }
-    }
+    ...FolderedProjectDepth1
+    ...TopLevelProjects
+    ...FolderedTagDepth1
   }
 }
 
 query GetNestedTags {
   defaultDocument {
-    tags {
-      edges {
-        node {
-          name
-          id
-          tags {
-            edges {
-              node {
-                name
-                id
-              }
-            }
-          }
-        }
-      }
-    }
+    ...FolderedTagDepth1
   }
 }
 
