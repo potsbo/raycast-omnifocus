@@ -1,5 +1,5 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
-import { get, useQuery } from "../api/fetch";
+import { runQuery, useQuery } from "../api/fetch";
 import { TaskList } from "./TaskList";
 
 export const TagList = () => {
@@ -24,7 +24,7 @@ export const TagList = () => {
                         push(
                           <TaskList
                             getter={() =>
-                              get("GetTasksWithTag", { tagId: p.id }).then((r) =>
+                              runQuery("GetTasksWithTag", { tagId: p.id }).then((r) =>
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 r.defaultDocument.tags.byId!.tasks.edges.map((e) => e.node)
                               )

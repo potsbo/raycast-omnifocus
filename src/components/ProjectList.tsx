@@ -1,10 +1,10 @@
 import { ActionPanel, Icon, List, useNavigation } from "@raycast/api";
-import { get } from "../api/fetch";
+import { runQuery } from "../api/fetch";
 import { useLoad } from "../utils";
 import { TaskList } from "./TaskList";
 
 const getAllProjects = async () => {
-  const { folders, projects } = await get("GetTopLevelProjects", {}).then((r) => r.defaultDocument);
+  const { folders, projects } = await runQuery("GetTopLevelProjects", {}).then((r) => r.defaultDocument);
 
   const fs = folders.edges.map((e) => e.node).concat({ name: "Top Level Projects", projects, id: "Manual" });
   return fs
@@ -38,7 +38,7 @@ export const ProjectList = () => {
                           <TaskList
                             title={"Tasks in Project"}
                             getter={() =>
-                              get("GetTasksInProject", { projectId: p.id }).then(
+                              runQuery("GetTasksInProject", { projectId: p.id }).then(
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 (t) => t.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
                               )

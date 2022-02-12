@@ -6,42 +6,30 @@ import { useLoad } from "../utils";
 import { getSdk } from "./generated/graphql";
 import { schema } from "./schema";
 
-export const fetch = async <TData, TVariables extends { readonly [variable: string]: unknown }>(
-  query: string,
-  variableValues?: TVariables
-) => {
-  const { data, errors } = (await graphql({
-    schema,
-    source: query,
-    rootValue: resolver.Query,
-    variableValues,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  })) as any as ExecutionResult<TData>;
-  if (data === null || data === undefined || errors !== undefined) {
-    console.error(errors);
-    throw errors;
-  }
-  return data;
-};
-
-function resolveRequestDocument(document: RequestDocument): string {
-  if (typeof document === "string") return document;
-  return print(document);
-}
-
 class MyClient extends GraphQLClient {
-  async request<T, V = Variables>(document: RequestDocument, variables?: V): Promise<T> {
-    const query = resolveRequestDocument(document);
-    const res = fetch<T, Readonly<V>>(query, variables);
-    return res;
+  async request<T, V = Variables>(document: RequestDocument, variables?: Readonly<V>): Promise<T> {
+    const query = typeof document === "string" ? document : print(document);
+
+    const { data, errors } = (await graphql({
+      schema,
+      source: query,
+      rootValue: resolver.Query,
+      variableValues: variables,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    })) as any as ExecutionResult<T>;
+    if (data === null || data === undefined || errors !== undefined) {
+      console.error(errors);
+      throw errors;
+    }
+    return data;
   }
 }
 
 const client = new MyClient("");
 
-export const get = <Q extends keyof ReturnType<typeof getSdk>, Result = ReturnType<ReturnType<typeof getSdk>[Q]>>(
+export const runQuery = <Q extends keyof ReturnType<typeof getSdk>, Result = ReturnType<ReturnType<typeof getSdk>[Q]>>(
   queryName: Q,
-  args: Parameters<ReturnType<typeof getSdk>[Q]>[0]
+  args: Parameters<ReturnType<typeof getSdk>[Q]>[0] = {}
 ): Result => {
   const fn = getSdk(client)[queryName];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,6 +42,6 @@ export const useQuery = <Q extends keyof ReturnType<typeof getSdk>>(
 ) => {
   type Result = ReturnType<ReturnType<typeof getSdk>[Q]>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getter: () => any = () => get(queryName, args);
+  const getter: () => any = () => runQuery(queryName, args);
   return useLoad<Awaited<Result>>(getter, `${queryName}:${JSON.stringify(args)}`);
 };
