@@ -19,7 +19,7 @@ const rootValue: QueryResolvers = {
   },
 };
 
-export const resolver: Resolvers = {
+export const resolvers: Resolvers = {
   Query: rootValue,
 };
 

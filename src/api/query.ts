@@ -188,7 +188,7 @@ export const genQuery = (
   rootName: string,
   info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">
 ) => {
-  const vars = Object.entries(info.variableValues)
+  const vars = Object.entries(info.variableValues ?? {})
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
     .join("\n");
 
