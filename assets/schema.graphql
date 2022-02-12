@@ -51,7 +51,7 @@ type Task implements Node {
   effectivelyCompleted: Boolean!
   containingProject: Project
   flagged: Boolean!
-  tasks: TaskConection! @noCall
+  tasks: TaskConection!
 }
 
 type ProjectConnection implements Connection {
@@ -79,7 +79,7 @@ type FolderEdge implements Edge {
 type Folder implements Node {
   name: String!
   id: String!
-  projects: ProjectConnection! @noCall
+  projects: ProjectConnection!
 }
 
 type TagConnection implements Connection {
@@ -96,16 +96,16 @@ type TagEdge implements Edge {
 type Tag implements Node {
   name: String!
   id: String!
-  tasks: TaskConection! @noCall
-  tags: TagConnection! @noCall
+  tasks: TaskConection!
+  tags: TagConnection!
 }
 
 type DefaultDocument {
-  projects: ProjectConnection! @noCall
-  folders: FolderConnection! @noCall
-  inboxTasks: TaskConection! @noCall
-  flattenedTasks: TaskConection! @noCall
-  tags: TagConnection! @noCall
+  projects: ProjectConnection!
+  folders: FolderConnection!
+  inboxTasks: TaskConection!
+  flattenedTasks: TaskConection!
+  tags: TagConnection!
   perspectiveNames: [String!]!
 }
 
@@ -115,15 +115,14 @@ type Query {
 
 input Condition {
   enabled: Boolean! = true
+  operator: String! = "="
 
   # match
   field: String
   value: String! = "true"
 
   # logical
-  operator: String! = "="
   operands: [Condition!]
 }
 
 directive @whose(condition: [Condition!]!) on FIELD
-directive @noCall on FIELD_DEFINITION
