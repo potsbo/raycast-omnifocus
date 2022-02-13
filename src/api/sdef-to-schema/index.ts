@@ -20,6 +20,7 @@ import { Suite } from "./sdef";
 import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./constants";
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
+import { RecordTypeRenderer } from "./recordType";
 
 const AllowedTypes = [
   "Task",
@@ -35,6 +36,7 @@ const AllowedTypes = [
   "Int",
   "String",
   "Boolean",
+  "RepetitionInterval"
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -53,7 +55,7 @@ const isAllowedType = (type: TypeNode | string): boolean => {
     return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
   }
 
-  return false;
+  return false
 };
 
 const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
@@ -77,10 +79,12 @@ const renderSuite = (
 ): {
   classRenderers: ClassRenderer[];
   extensionRenderers: ExtensionRenderer[];
+  recordTypeRenderers: RecordTypeRenderer[];
 } => {
   const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
   const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  return { classRenderers, extensionRenderers };
+  const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
+  return { classRenderers, extensionRenderers, recordTypeRenderers };
 };
 
 const interfaces: InterfaceTypeDefinitionNode[] = [];
@@ -91,16 +95,23 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
     dictionary: { suite: Suite[] };
   };
 
-  const suites = parsed.dictionary.suite.map(renderSuite).reduce(
-    (acum: { classRenderers: ClassRenderer[]; extensionRenderers: ExtensionRenderer[] }, cur) => {
+  const { extensionRenderers, classRenderers, recordTypeRenderers } = parsed.dictionary.suite.map(renderSuite).reduce(
+    (
+      acum: {
+        classRenderers: ClassRenderer[];
+        extensionRenderers: ExtensionRenderer[];
+        recordTypeRenderers: RecordTypeRenderer[];
+      },
+      cur
+    ) => {
       return {
         classRenderers: acum.classRenderers.concat(cur.classRenderers),
         extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
+        recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
       };
     },
-    { classRenderers: [], extensionRenderers: [] }
+    { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [] }
   );
-  const { extensionRenderers, classRenderers } = suites;
 
   const inheritedClasses = new Set(
     classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
@@ -123,6 +134,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
   });
 
   const extensions = extensionRenderers.map((e) => e.getType());
+  const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
   const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
     return ns
@@ -136,6 +148,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
   ${render(definitions)}
   ${render(extensions)}
   ${render(interfaces)}
+  ${render(recordTypes)}
 
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface ${CONNECTION_TYPE_NAME} {

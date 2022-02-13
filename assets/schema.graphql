@@ -218,6 +218,11 @@ type FlattenedTask implements Node & TaskInterface {
   """
   primaryTag: Tag
 
+  """
+  The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -447,6 +452,11 @@ type InboxTask implements Node & TaskInterface {
   """
   primaryTag: Tag
 
+  """
+  The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -602,6 +612,11 @@ type Project implements Node & ProjectInterface & SectionInterface {
   primaryTag: Tag
 
   """
+  The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
+  """
   The root task of this project, holding the project's name, note, dates and child tasks.
   """
   rootTask: Task!
@@ -746,6 +761,11 @@ interface ProjectInterface {
   primaryTag: Tag
 
   """
+  The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
+  """
   The root task of this project, holding the project's name, note, dates and child tasks.
   """
   rootTask: Task!
@@ -764,6 +784,16 @@ interface ProjectInterface {
 
 type Query {
   defaultDocument: Document!
+}
+
+type RepetitionInterval {
+  """
+  If fixed, the next repetition will be relative to a fixed calendar.  If sliding, the next repetition will be calculated when needed.
+  """
+  fixed: Boolean!
+
+  """The count of the repetition interval."""
+  steps: Int!
 }
 
 """A portion of a folder or document; either a project or a folder."""
@@ -1001,6 +1031,11 @@ type Task implements Node & TaskInterface {
   """
   primaryTag: Tag
 
+  """
+  The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -1144,6 +1179,11 @@ interface TaskInterface {
   The task's first tag. Setting this will remove the current first tag on the task, if any and move or add the new tag as the first tag on the task. Setting this to missing value will remove the current first tag and leave any other remaining tags.
   """
   primaryTag: Tag
+
+  """
+  The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
 
   """If true, any children are sequentially dependent."""
   sequential: Boolean!

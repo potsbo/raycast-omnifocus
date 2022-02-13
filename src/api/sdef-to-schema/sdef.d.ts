@@ -7,7 +7,7 @@ export interface Suite {
   command: unknown[];
   enumeration: unknown[];
   class?: ClassDefinition[];
-  "record-type": unknown[];
+  "record-type": RecordTypeDefinition[];
   "value-type": unknown[];
   "class-extension": ClassExtensionDefinition[];
 }
@@ -30,6 +30,19 @@ export interface ClassExtensionDefinition {
     description: string;
     extends: string;
     inherits?: string;
+  };
+  property?: PropertyDefinition[];
+  element?: ElementDefinition[];
+  contents?: ContentDefinition[];
+}
+
+export interface RecordTypeDefinition {
+  $: {
+    code: string;
+    description?: string;
+    name: string;
+    inherits?: string;
+    hidden?: 'yes'
   };
   property?: PropertyDefinition[];
   element?: ElementDefinition[];
