@@ -2,7 +2,6 @@ import {
   FieldNode,
   GraphQLResolveInfo,
   Kind,
-  NamedTypeNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   SelectionNode,
