@@ -29,6 +29,7 @@ const AllowedTypes = [
   "Project",
   "Section",
   "Folder",
+  "FlattenedTag",
   "Tag",
   // "Application",
   "Document",
@@ -57,7 +58,7 @@ const isAllowedType = (type: TypeNode | string): boolean => {
     return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
   }
 
-  return false
+  return false;
 };
 
 const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
@@ -86,6 +87,7 @@ const renderSuite = (
   const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
   const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
   const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
+  // TODO enumeration
   return { classRenderers, extensionRenderers, recordTypeRenderers };
 };
 

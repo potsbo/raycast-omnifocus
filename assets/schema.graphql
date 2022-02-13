@@ -30,6 +30,7 @@ type Document implements Node {
 
   """If set, automatic cleanup of inbox items won't happen."""
   disableAutomaticInboxCleanup: Boolean!
+  flattenedTags: FlattenedTagConnection!
   flattenedTasks: FlattenedTaskConnection!
 
   """
@@ -97,6 +98,59 @@ type DocumentEdge implements Edge {
 interface Edge {
   cursor: String!
   node: Node!
+}
+
+"""A flattened list of tags in a document."""
+type FlattenedTag implements Node & TagInterface {
+  """
+  If false, tasks associated with this tag will be skipped when determining the next action for a project.
+  """
+  allowsNextAction: Boolean!
+
+  """
+  A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags.
+  """
+  availableTaskCount: Int!
+
+  """
+  Set if the tag is currently hidden or any of its container tags are hidden.
+  """
+  effectivelyHidden: Boolean!
+  flattenedTags: FlattenedTagConnection!
+
+  """Set if the tag is currently hidden."""
+  hidden: Boolean!
+
+  """The identifier of the tag."""
+  id: String!
+
+  """The physical location associated with the tag."""
+  location: LocationInformation
+
+  """The name of the tag."""
+  name: String!
+
+  """
+  A count of the number of incomplete tasks of this tag and all its active descendent tags.
+  """
+  remainingTaskCount: Int!
+
+  """The tags having this tag as their container."""
+  tags: TagConnection!
+
+  """The tasks having this tag."""
+  tasks: TaskConnection!
+}
+
+type FlattenedTagConnection implements Connection {
+  byId(id: String!): FlattenedTag
+  edges: [FlattenedTagEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FlattenedTagEdge implements Edge {
+  cursor: String!
+  node: FlattenedTag!
 }
 
 """A flattened list of tasks under a task or document."""
@@ -857,6 +911,7 @@ type Tag implements Node & TagInterface {
   Set if the tag is currently hidden or any of its container tags are hidden.
   """
   effectivelyHidden: Boolean!
+  flattenedTags: FlattenedTagConnection!
 
   """Set if the tag is currently hidden."""
   hidden: Boolean!
@@ -908,6 +963,7 @@ interface TagInterface {
   Set if the tag is currently hidden or any of its container tags are hidden.
   """
   effectivelyHidden: Boolean!
+  flattenedTags: FlattenedTagConnection!
 
   """Set if the tag is currently hidden."""
   hidden: Boolean!

@@ -47,6 +47,7 @@ export type Document = Node & {
   compressesTransactions: Scalars['Boolean'];
   /** If set, automatic cleanup of inbox items won't happen. */
   disableAutomaticInboxCleanup: Scalars['Boolean'];
+  flattenedTags: FlattenedTagConnection;
   flattenedTasks: FlattenedTaskConnection;
   /** The subset of the sections that are folders; folders having this folder as their container. */
   folders: FolderConnection;
@@ -101,6 +102,50 @@ export type DocumentEdge = Edge & {
 export type Edge = {
   cursor: Scalars['String'];
   node: Node;
+};
+
+/** A flattened list of tags in a document. */
+export type FlattenedTag = Node & TagInterface & {
+  __typename?: 'FlattenedTag';
+  /** If false, tasks associated with this tag will be skipped when determining the next action for a project. */
+  allowsNextAction: Scalars['Boolean'];
+  /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
+  availableTaskCount: Scalars['Int'];
+  /** Set if the tag is currently hidden or any of its container tags are hidden. */
+  effectivelyHidden: Scalars['Boolean'];
+  flattenedTags: FlattenedTagConnection;
+  /** Set if the tag is currently hidden. */
+  hidden: Scalars['Boolean'];
+  /** The identifier of the tag. */
+  id: Scalars['String'];
+  /** The physical location associated with the tag. */
+  location?: Maybe<LocationInformation>;
+  /** The name of the tag. */
+  name: Scalars['String'];
+  /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
+  remainingTaskCount: Scalars['Int'];
+  /** The tags having this tag as their container. */
+  tags: TagConnection;
+  /** The tasks having this tag. */
+  tasks: TaskConnection;
+};
+
+export type FlattenedTagConnection = Connection & {
+  __typename?: 'FlattenedTagConnection';
+  byId?: Maybe<FlattenedTag>;
+  edges: Array<FlattenedTagEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type FlattenedTagConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type FlattenedTagEdge = Edge & {
+  __typename?: 'FlattenedTagEdge';
+  cursor: Scalars['String'];
+  node: FlattenedTag;
 };
 
 /** A flattened list of tasks under a task or document. */
@@ -589,6 +634,7 @@ export type Tag = Node & TagInterface & {
   availableTaskCount: Scalars['Int'];
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  flattenedTags: FlattenedTagConnection;
   /** Set if the tag is currently hidden. */
   hidden: Scalars['Boolean'];
   /** The identifier of the tag. */
@@ -630,6 +676,7 @@ export type TagInterface = {
   availableTaskCount: Scalars['Int'];
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  flattenedTags: FlattenedTagConnection;
   /** Set if the tag is currently hidden. */
   hidden: Scalars['Boolean'];
   /** The identifier of the tag. */
@@ -946,11 +993,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  Connection: ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
   Document: ResolverTypeWrapper<Document>;
   DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
   DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
-  Edge: ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  FlattenedTag: ResolverTypeWrapper<FlattenedTag>;
+  FlattenedTagConnection: ResolverTypeWrapper<FlattenedTagConnection>;
+  FlattenedTagEdge: ResolverTypeWrapper<FlattenedTagEdge>;
   FlattenedTask: ResolverTypeWrapper<FlattenedTask>;
   FlattenedTaskConnection: ResolverTypeWrapper<FlattenedTaskConnection>;
   FlattenedTaskEdge: ResolverTypeWrapper<FlattenedTaskEdge>;
@@ -964,7 +1014,7 @@ export type ResolversTypes = {
   InboxTaskEdge: ResolverTypeWrapper<InboxTaskEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
-  Node: ResolversTypes['Document'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Project'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  Node: ResolversTypes['Document'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Project'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
@@ -980,7 +1030,7 @@ export type ResolversTypes = {
   Tag: ResolverTypeWrapper<Tag>;
   TagConnection: ResolverTypeWrapper<TagConnection>;
   TagEdge: ResolverTypeWrapper<TagEdge>;
-  TagInterface: ResolversTypes['Tag'];
+  TagInterface: ResolversTypes['FlattenedTag'] | ResolversTypes['Tag'];
   Task: ResolverTypeWrapper<Task>;
   TaskConnection: ResolverTypeWrapper<TaskConnection>;
   TaskEdge: ResolverTypeWrapper<TaskEdge>;
@@ -991,11 +1041,14 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  Connection: ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
   Document: Document;
   DocumentConnection: DocumentConnection;
   DocumentEdge: DocumentEdge;
-  Edge: ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  FlattenedTag: FlattenedTag;
+  FlattenedTagConnection: FlattenedTagConnection;
+  FlattenedTagEdge: FlattenedTagEdge;
   FlattenedTask: FlattenedTask;
   FlattenedTaskConnection: FlattenedTaskConnection;
   FlattenedTaskEdge: FlattenedTaskEdge;
@@ -1009,7 +1062,7 @@ export type ResolversParentTypes = {
   InboxTaskEdge: InboxTaskEdge;
   Int: Scalars['Int'];
   LocationInformation: LocationInformation;
-  Node: ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Project'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Project'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Project: Project;
   ProjectConnection: ProjectConnection;
@@ -1025,7 +1078,7 @@ export type ResolversParentTypes = {
   Tag: Tag;
   TagConnection: TagConnection;
   TagEdge: TagEdge;
-  TagInterface: ResolversParentTypes['Tag'];
+  TagInterface: ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['Tag'];
   Task: Task;
   TaskConnection: TaskConnection;
   TaskEdge: TaskEdge;
@@ -1039,7 +1092,7 @@ export type WhoseDirectiveArgs = {
 export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'DocumentConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'ProjectConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'DocumentConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'ProjectConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -1050,6 +1103,7 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   canUndo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   compressesTransactions?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   disableAutomaticInboxCleanup?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1084,9 +1138,37 @@ export type DocumentEdgeResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'DocumentEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'ProjectEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'DocumentEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'ProjectEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
+};
+
+export type FlattenedTagResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTag'] = ResolversParentTypes['FlattenedTag']> = {
+  allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
+  hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedTagConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTagConnection'] = ResolversParentTypes['FlattenedTagConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['FlattenedTag']>, ParentType, ContextType, RequireFields<FlattenedTagConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['FlattenedTagEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedTagEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTagEdge'] = ResolversParentTypes['FlattenedTagEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['FlattenedTag'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type FlattenedTaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTask'] = ResolversParentTypes['FlattenedTask']> = {
@@ -1240,7 +1322,7 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Document' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Project' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Document' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Project' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -1380,6 +1462,7 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
@@ -1404,10 +1487,11 @@ export type TagEdgeResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type TagInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagInterface'] = ResolversParentTypes['TagInterface']> = {
-  __resolveType: TypeResolveFn<'Tag', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FlattenedTag' | 'Tag', ParentType, ContextType>;
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
@@ -1512,6 +1596,9 @@ export type Resolvers<ContextType = any> = {
   DocumentConnection?: DocumentConnectionResolvers<ContextType>;
   DocumentEdge?: DocumentEdgeResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
+  FlattenedTag?: FlattenedTagResolvers<ContextType>;
+  FlattenedTagConnection?: FlattenedTagConnectionResolvers<ContextType>;
+  FlattenedTagEdge?: FlattenedTagEdgeResolvers<ContextType>;
   FlattenedTask?: FlattenedTaskResolvers<ContextType>;
   FlattenedTaskConnection?: FlattenedTaskConnectionResolvers<ContextType>;
   FlattenedTaskEdge?: FlattenedTaskEdgeResolvers<ContextType>;
