@@ -1,79 +1,40 @@
-# https://relay.dev/graphql/connections.htm#sec-Connection-Types
+directive @whose(condition: [Condition!]!) on FIELD
+
+input Condition {
+  enabled: Boolean! = true
+  field: String
+  operands: [Condition!]
+  operator: String! = "="
+  value: String! = "true"
+}
+
 interface Connection {
+  byId(id: String!): Node
   edges: [Edge!]!
   pageInfo: PageInfo!
-
-  # https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
-  byId(id: String!): Node
 }
 
-# https://relay.dev/graphql/connections.htm#sec-Edge-Types
+type DefaultDocument {
+  flattenedTasks: TaskConection!
+  folders: FolderConnection!
+  inboxTasks: TaskConection!
+  perspectiveNames: [String!]!
+  projects: ProjectConnection!
+  tags: TagConnection!
+}
+
 interface Edge {
-  node: Node!
-  cursor: String!
-}
-# https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
-type PageInfo {
-  hasPreviousPage: Boolean!
-  hasNextPage: Boolean!
-  startCursor: String!
-  endCursor: String!
-}
-
-interface Node {
-  id: String!
-}
-
-type Project implements Node {
-  name: String!
-  id: String!
-  rootTask: Task!
-  numberOfAvailableTasks: Int!
-  completed: Boolean!
-}
-
-type TaskConection implements Connection {
-  byId(id: String!): Task
-  edges: [TaskEdge!]!
-  pageInfo: PageInfo!
-}
-
-type TaskEdge implements Edge {
-  cursor: String!
-  node: Task!
-}
-
-type Task implements Node {
-  name: String!
-  id: String!
-  effectiveDueDate: String
-  completed: Boolean!
-  effectivelyCompleted: Boolean!
-  containingProject: Project
-  flagged: Boolean!
-  tasks: TaskConection!
-}
-
-type ProjectConnection implements Connection {
-  byId(id: String!): Project
-  edges: [ProjectEdge!]!
-  pageInfo: PageInfo!
-}
-
-type ProjectEdge implements Edge {
-  cursor: String!
-  node: Project!
-}
-
-type SectionConnection implements Connection {
-  byId(id: String!): Folder
-  edges: [SectionEdge!]!
-  pageInfo: PageInfo!
-}
-
-type SectionEdge implements Edge {
   cursor: String!
   node: Node!
+}
+
+type Folder implements Node {
+  folders: FolderConnection!
+  id: String!
+  name: String!
+  note: String!
+  projects: ProjectConnection!
+  sections: SectionConnection
 }
 
 type FolderConnection implements Connection {
@@ -87,13 +48,56 @@ type FolderEdge implements Edge {
   node: Folder!
 }
 
-type Folder implements Node {
-  name: String!
+interface Node {
   id: String!
-  note: String!
-  projects: ProjectConnection!
-  folders: FolderConnection!
-  sections: SectionConnection
+}
+
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
+type Project implements Node {
+  completed: Boolean!
+  id: String!
+  name: String!
+  numberOfAvailableTasks: Int!
+  rootTask: Task!
+}
+
+type ProjectConnection implements Connection {
+  byId(id: String!): Project
+  edges: [ProjectEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ProjectEdge implements Edge {
+  cursor: String!
+  node: Project!
+}
+
+type Query {
+  defaultDocument: DefaultDocument!
+}
+
+type SectionConnection implements Connection {
+  byId(id: String!): Folder
+  edges: [SectionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SectionEdge implements Edge {
+  cursor: String!
+  node: Node!
+}
+
+type Tag implements Node {
+  id: String!
+  name: String!
+  tags: TagConnection!
+  tasks: TaskConection!
 }
 
 type TagConnection implements Connection {
@@ -107,36 +111,24 @@ type TagEdge implements Edge {
   node: Tag!
 }
 
-type Tag implements Node {
-  name: String!
+type Task implements Node {
+  completed: Boolean!
+  containingProject: Project
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  flagged: Boolean!
   id: String!
+  name: String!
   tasks: TaskConection!
-  tags: TagConnection!
 }
 
-type DefaultDocument {
-  projects: ProjectConnection!
-  folders: FolderConnection!
-  inboxTasks: TaskConection!
-  flattenedTasks: TaskConection!
-  tags: TagConnection!
-  perspectiveNames: [String!]!
+type TaskConection implements Connection {
+  byId(id: String!): Task
+  edges: [TaskEdge!]!
+  pageInfo: PageInfo!
 }
 
-type Query {
-  defaultDocument: DefaultDocument!
+type TaskEdge implements Edge {
+  cursor: String!
+  node: Task!
 }
-
-input Condition {
-  enabled: Boolean! = true
-  operator: String! = "="
-
-  # match
-  field: String
-  value: String! = "true"
-
-  # logical
-  operands: [Condition!]
-}
-
-directive @whose(condition: [Condition!]!) on FIELD
