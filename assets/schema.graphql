@@ -102,7 +102,7 @@ type FlattenedTaskEdge implements Edge {
   node: FlattenedTask!
 }
 
-type Folder implements Node & SectionInterface {
+type Folder implements FolderInterface & Node & SectionInterface {
   creationDate: String!
   effectivelyHidden: Boolean!
   folders: FolderConnection!
@@ -123,6 +123,18 @@ type FolderConnection implements Connection {
 type FolderEdge implements Edge {
   cursor: String!
   node: Folder!
+}
+
+interface FolderInterface {
+  creationDate: String!
+  effectivelyHidden: Boolean!
+  folders: FolderConnection!
+  hidden: Boolean!
+  id: String!
+  modificationDate: String!
+  name: String!
+  projects: ProjectConnection!
+  sections: SectionConnection!
 }
 
 type InboxTask implements Node & TaskInterface {
@@ -183,7 +195,7 @@ type PageInfo {
   startCursor: String!
 }
 
-type Project implements Node & SectionInterface {
+type Project implements Node & ProjectInterface & SectionInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
@@ -230,11 +242,47 @@ type ProjectEdge implements Edge {
   node: Project!
 }
 
+interface ProjectInterface {
+  blocked: Boolean!
+  completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
+  creationDate: String!
+  defaultSingletonActionHolder: Boolean!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
+  estimatedMinutes: Int
+  flagged: Boolean!
+  folder: Folder
+  id: String!
+  lastReviewDate: String!
+  modificationDate: String!
+  name: String!
+  nextDeferDate: String
+  nextDueDate: String
+  nextReviewDate: String
+  nextTask: Task
+  numberOfAvailableTasks: Int!
+  numberOfCompletedTasks: Int!
+  numberOfTasks: Int!
+  primaryTag: Tag
+  rootTask: Task!
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  singletonActionHolder: Boolean!
+}
+
 type Query {
   defaultDocument: Document!
 }
 
-type Section implements Node {
+type Section implements Node & SectionInterface {
   id: String!
   name: String!
 }
@@ -255,7 +303,7 @@ interface SectionInterface {
   name: String!
 }
 
-type Tag implements Node {
+type Tag implements Node & TagInterface {
   allowsNextAction: Boolean!
   availableTaskCount: Int!
   effectivelyHidden: Boolean!
@@ -278,7 +326,19 @@ type TagEdge implements Edge {
   node: Tag!
 }
 
-type Task implements Node {
+interface TagInterface {
+  allowsNextAction: Boolean!
+  availableTaskCount: Int!
+  effectivelyHidden: Boolean!
+  hidden: Boolean!
+  id: String!
+  name: String!
+  remainingTaskCount: Int!
+  tags: TagConnection!
+  tasks: TaskConnection!
+}
+
+type Task implements Node & TaskInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!

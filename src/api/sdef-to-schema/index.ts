@@ -394,7 +394,14 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
     });
   });
 
-  const reduced = definitions.filter((d) => isAllowedType(d.name.value));
+  const reduced = definitions
+    .map((d) => {
+      if (interfaces.has(d.name.value)) {
+        return { ...d, interfaces: [toNamedType(`${d.name.value}Interface`)].concat(d.interfaces ?? []) };
+      }
+      return d;
+    })
+    .filter((d) => isAllowedType(d.name.value));
   const schema = `
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface ${CONNECTION_TYPE_NAME} {
