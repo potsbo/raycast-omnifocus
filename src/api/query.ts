@@ -10,6 +10,7 @@ import {
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
 } from "graphql";
+import { unwrapType } from "./graphql-utils";
 import { compileWhoseParam, extractCondition } from "./whose";
 
 type CurrentContext = {
@@ -59,13 +60,6 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     )},`;
   }
   return `${name}: ${ctx.rootName}.${name}(),`;
-};
-
-export const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
-  if (typeNode.kind === Kind.NAMED_TYPE) {
-    return typeNode;
-  }
-  return unwrapType(typeNode.type);
 };
 
 const mustFindTypeDefinition = (

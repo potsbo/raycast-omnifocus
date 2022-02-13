@@ -7,20 +7,18 @@ import fs from "fs";
 import {
   TypeNode,
   Kind,
-  NamedTypeNode,
   print,
   FieldDefinitionNode,
   lexicographicSortSchema,
   buildSchema,
   printSchema,
-  NonNullTypeNode,
-  ListTypeNode,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
 } from "graphql";
 import { join } from "path";
-import { unwrapType } from "../query";
 import { pruneSchema } from "@graphql-tools/utils";
+import { unwrapType } from "../graphql-utils";
+import { ListType, NameType, NonNullType, typeNameMap } from "./types";
 
 interface Suite {
   $: {
@@ -132,35 +130,7 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   return false;
 };
 
-const typeNameMap = (sdefName: string): string | null => {
-  switch (sdefName) {
-    case "text":
-      return "String";
-    case "boolean":
-      return "Boolean";
-    case "date":
-      return "String";
-    case "integer":
-      return "Int";
-  }
-  return null;
-};
-
-const toNamedType = (name: string, suffix = ""): NamedTypeNode => {
-  return {
-    kind: Kind.NAMED_TYPE,
-    name: {
-      kind: Kind.NAME,
-      value: typeNameMap(name) ?? camelCase(name, { pascalCase: true }) + suffix,
-    },
-  };
-};
-
-const toListType = (type: NonNullTypeNode | NamedTypeNode): ListTypeNode => {
-  return { kind: Kind.LIST_TYPE, type };
-};
-
-const toFieldDefinition = (name: string, type: TypeNode): FieldDefinitionNode => {
+const FieldDefinition = (name: string, type: TypeNode): FieldDefinitionNode => {
   return {
     kind: Kind.FIELD_DEFINITION,
     name: {
@@ -171,18 +141,11 @@ const toFieldDefinition = (name: string, type: TypeNode): FieldDefinitionNode =>
   };
 };
 
-const nonNull = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
-  return {
-    kind: Kind.NON_NULL_TYPE,
-    type,
-  };
-};
-
 const getGraphQLType = (t: PropertyDefinition): TypeNode => {
   if ("type" in t) {
     const types = t.type.map((t) => t.$);
     if (types.length === 2 && types[1].type === "missing value") {
-      return toNamedType(types[0].type);
+      return NameType(types[0].type);
     }
 
     if (types.length === 1) {
@@ -190,21 +153,21 @@ const getGraphQLType = (t: PropertyDefinition): TypeNode => {
       const converted = typeNameMap(type.type);
       if (converted !== null) {
         if (type.list === "yes") {
-          return nonNull(toListType(nonNull(toNamedType(converted))));
+          return NonNullType(ListType(NonNullType(NameType(converted))));
         }
-        return nonNull(toNamedType(converted));
+        return NonNullType(NameType(converted));
       }
     }
 
-    return toNamedType("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
+    return NameType("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
   }
 
   if ("type" in t.$) {
     const res = typeNameMap(t.$.type);
     if (res) {
-      return nonNull(toNamedType(res));
+      return NonNullType(NameType(res));
     }
-    return nonNull(toNamedType(t.$.name));
+    return NonNullType(NameType(t.$.name));
   }
 
   throw new Error("Type definition not found");
@@ -228,20 +191,18 @@ const collectFieldsDefinitions = (c: {
   contents?: ContentDefinition[];
 }) => {
   const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
-    return toFieldDefinition(t.$.name, getGraphQLType(t));
+    return FieldDefinition(t.$.name, getGraphQLType(t));
   });
 
   const elements: FieldDefinitionNode[] = (c.element ?? []).map((e) => {
-    return toFieldDefinition(`${e.$.type}s`, nonNull(toNamedType(e.$.type, CONNECTION_TYPE_NAME)));
+    return FieldDefinition(`${e.$.type}s`, NonNullType(NameType(e.$.type, CONNECTION_TYPE_NAME)));
   });
 
   const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode => {
-    const type = nonNull(toNamedType(ctnt.$.type));
-    return toFieldDefinition(ctnt.$.name, type);
+    return FieldDefinition(ctnt.$.name, NonNullType(NameType(ctnt.$.type)));
   });
   // TODO: respond-to
-  const fields = properties.concat(elements).concat(contents);
-  return reduceFieldDefinition(fields);
+  return properties.concat(elements).concat(contents);
 };
 
 const renderClass = (c: ClassDefinition) => {
@@ -255,7 +216,7 @@ const renderClass = (c: ClassDefinition) => {
         kind: Kind.NAME,
         value: name,
       },
-      interfaces: interfaces.map((n) => toNamedType(n)),
+      interfaces: interfaces.map((n) => NameType(n)),
       fields,
     };
   };
@@ -265,8 +226,8 @@ const renderClass = (c: ClassDefinition) => {
     `${className}Edge`,
     ["Edge"],
     [
-      toFieldDefinition("cursor", nonNull(toNamedType("String"))),
-      toFieldDefinition("node", nonNull(toNamedType(className))),
+      FieldDefinition("cursor", NonNullType(NameType("String"))),
+      FieldDefinition("node", NonNullType(NameType(className))),
     ]
   );
   const connectionDef = toObjectDef(
@@ -286,13 +247,13 @@ const renderClass = (c: ClassDefinition) => {
               kind: Kind.NAME,
               value: "id",
             },
-            type: nonNull(toNamedType("String")),
+            type: NonNullType(NameType("String")),
           },
         ],
-        type: toNamedType(className),
+        type: NameType(className),
       },
-      toFieldDefinition("edges", nonNull(toListType(nonNull(toNamedType(`${className}${EDGE_TYPE_NAME}`))))),
-      toFieldDefinition("pageInfo", nonNull(toNamedType("PageInfo"))),
+      FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(`${className}${EDGE_TYPE_NAME}`))))),
+      FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),
     ]
   );
   return { types: [connectionDef, edgeDef, classDef], inherits: c.$.inherits, className };
@@ -325,8 +286,8 @@ const renderSuite = (
 const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
 
 (async () => {
-  const res = await promisify(exec)("sdef /Applications/OmniFocus.app");
-  const parsed = (await parseStringPromise(res.stdout)) as {
+  const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
+  const parsed = (await parseStringPromise(sdef.stdout)) as {
     dictionary: { suite: Suite[] };
   };
 
@@ -378,7 +339,7 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
         definitions.push({
           ...d,
           fields: reduceFieldDefinition(fields).filter((f) => isAllowedType(f.type)),
-          interfaces: d.interfaces?.concat(toNamedType(parentInterface)),
+          interfaces: d.interfaces?.concat(NameType(parentInterface)),
         });
 
         return;
@@ -398,7 +359,7 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
   const reduced = definitions
     .map((d) => {
       if (interfaces.has(d.name.value)) {
-        return { ...d, interfaces: [toNamedType(`${d.name.value}Interface`)].concat(d.interfaces ?? []) };
+        return { ...d, interfaces: [NameType(`${d.name.value}Interface`)].concat(d.interfaces ?? []) };
       }
       return d;
     })
