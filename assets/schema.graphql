@@ -15,13 +15,39 @@ interface Connection {
   pageInfo: PageInfo!
 }
 
-type DefaultDocument {
-  flattenedTasks: TaskConnection!
+type Document implements Node {
+  canRedo: Boolean!
+  canUndo: Boolean!
+  compressesTransactions: Boolean!
+  disableAutomaticInboxCleanup: Boolean!
+  flattenedTasks: FlattenedTaskConnection!
   folders: FolderConnection!
-  inboxTasks: TaskConnection!
+  id: String!
+  inboxTasks: InboxTaskConnection!
+  includesSummaries: Boolean!
+  lastSyncDate: String!
+  lastSyncError: String!
+  modified: Boolean!
+  name: String!
+  path: String!
   perspectiveNames: [String!]!
   projects: ProjectConnection!
+  sections: SectionConnection!
+  syncing: Boolean!
   tags: TagConnection!
+  tasks: TaskConnection!
+  willAutosave: Boolean!
+}
+
+type DocumentConnection implements Connection {
+  byId(id: String!): Document
+  edges: [DocumentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DocumentEdge implements Edge {
+  cursor: String!
+  node: Document!
 }
 
 interface Edge {
@@ -29,7 +55,54 @@ interface Edge {
   node: Node!
 }
 
-type Folder implements Node {
+type FlattenedTask implements Node & TaskInterface {
+  blocked: Boolean!
+  completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
+  containingProject: Project
+  creationDate: String!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
+  estimatedMinutes: Int
+  flagged: Boolean!
+  flattenedTasks: FlattenedTaskConnection!
+  id: String!
+  inInbox: Boolean!
+  modificationDate: String!
+  name: String!
+  next: Boolean!
+  nextDeferDate: String
+  nextDueDate: String
+  numberOfAvailableTasks: Int!
+  numberOfCompletedTasks: Int!
+  numberOfTasks: Int!
+  parentTask: Task
+  primaryTag: Tag
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  tags: TagConnection!
+  tasks: TaskConnection!
+}
+
+type FlattenedTaskConnection implements Connection {
+  byId(id: String!): FlattenedTask
+  edges: [FlattenedTaskEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FlattenedTaskEdge implements Edge {
+  cursor: String!
+  node: FlattenedTask!
+}
+
+type Folder implements FolderInterface & Node & SectionInterface {
   creationDate: String!
   effectivelyHidden: Boolean!
   folders: FolderConnection!
@@ -52,6 +125,65 @@ type FolderEdge implements Edge {
   node: Folder!
 }
 
+interface FolderInterface {
+  creationDate: String!
+  effectivelyHidden: Boolean!
+  folders: FolderConnection!
+  hidden: Boolean!
+  id: String!
+  modificationDate: String!
+  name: String!
+  projects: ProjectConnection!
+  sections: SectionConnection!
+}
+
+type InboxTask implements Node & TaskInterface {
+  blocked: Boolean!
+  completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
+  containingProject: Project
+  creationDate: String!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
+  estimatedMinutes: Int
+  flagged: Boolean!
+  flattenedTasks: FlattenedTaskConnection!
+  id: String!
+  inInbox: Boolean!
+  modificationDate: String!
+  name: String!
+  next: Boolean!
+  nextDeferDate: String
+  nextDueDate: String
+  numberOfAvailableTasks: Int!
+  numberOfCompletedTasks: Int!
+  numberOfTasks: Int!
+  parentTask: Task
+  primaryTag: Tag
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  tags: TagConnection!
+  tasks: TaskConnection!
+}
+
+type InboxTaskConnection implements Connection {
+  byId(id: String!): InboxTask
+  edges: [InboxTaskEdge!]!
+  pageInfo: PageInfo!
+}
+
+type InboxTaskEdge implements Edge {
+  cursor: String!
+  node: InboxTask!
+}
+
 interface Node {
   id: String!
 }
@@ -63,7 +195,7 @@ type PageInfo {
   startCursor: String!
 }
 
-type Project implements Node {
+type Project implements Node & ProjectInterface & SectionInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
@@ -110,11 +242,47 @@ type ProjectEdge implements Edge {
   node: Project!
 }
 
-type Query {
-  defaultDocument: DefaultDocument!
+interface ProjectInterface {
+  blocked: Boolean!
+  completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
+  creationDate: String!
+  defaultSingletonActionHolder: Boolean!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
+  estimatedMinutes: Int
+  flagged: Boolean!
+  folder: Folder
+  id: String!
+  lastReviewDate: String!
+  modificationDate: String!
+  name: String!
+  nextDeferDate: String
+  nextDueDate: String
+  nextReviewDate: String
+  nextTask: Task
+  numberOfAvailableTasks: Int!
+  numberOfCompletedTasks: Int!
+  numberOfTasks: Int!
+  primaryTag: Tag
+  rootTask: Task!
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  singletonActionHolder: Boolean!
 }
 
-type Section implements Node {
+type Query {
+  defaultDocument: Document!
+}
+
+type Section implements Node & SectionInterface {
   id: String!
   name: String!
 }
@@ -130,7 +298,12 @@ type SectionEdge implements Edge {
   node: Section!
 }
 
-type Tag implements Node {
+interface SectionInterface {
+  id: String!
+  name: String!
+}
+
+type Tag implements Node & TagInterface {
   allowsNextAction: Boolean!
   availableTaskCount: Int!
   effectivelyHidden: Boolean!
@@ -153,7 +326,19 @@ type TagEdge implements Edge {
   node: Tag!
 }
 
-type Task implements Node {
+interface TagInterface {
+  allowsNextAction: Boolean!
+  availableTaskCount: Int!
+  effectivelyHidden: Boolean!
+  hidden: Boolean!
+  id: String!
+  name: String!
+  remainingTaskCount: Int!
+  tags: TagConnection!
+  tasks: TaskConnection!
+}
+
+type Task implements Node & TaskInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
@@ -170,6 +355,7 @@ type Task implements Node {
   effectivelyDropped: Boolean!
   estimatedMinutes: Int
   flagged: Boolean!
+  flattenedTasks: FlattenedTaskConnection!
   id: String!
   inInbox: Boolean!
   modificationDate: String!
@@ -197,4 +383,40 @@ type TaskConnection implements Connection {
 type TaskEdge implements Edge {
   cursor: String!
   node: Task!
+}
+
+interface TaskInterface {
+  blocked: Boolean!
+  completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
+  containingProject: Project
+  creationDate: String!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
+  estimatedMinutes: Int
+  flagged: Boolean!
+  flattenedTasks: FlattenedTaskConnection!
+  id: String!
+  inInbox: Boolean!
+  modificationDate: String!
+  name: String!
+  next: Boolean!
+  nextDeferDate: String
+  nextDueDate: String
+  numberOfAvailableTasks: Int!
+  numberOfCompletedTasks: Int!
+  numberOfTasks: Int!
+  parentTask: Task
+  primaryTag: Tag
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  tags: TagConnection!
+  tasks: TaskConnection!
 }

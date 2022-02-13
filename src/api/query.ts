@@ -2,7 +2,6 @@ import {
   FieldNode,
   GraphQLResolveInfo,
   Kind,
-  NamedTypeNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   SelectionNode,
@@ -10,6 +9,7 @@ import {
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
 } from "graphql";
+import { unwrapType } from "./graphql-utils";
 import { compileWhoseParam, extractCondition } from "./whose";
 
 type CurrentContext = {
@@ -61,13 +61,6 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
   return `${name}: ${ctx.rootName}.${name}(),`;
 };
 
-export const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
-  if (typeNode.kind === Kind.NAMED_TYPE) {
-    return typeNode;
-  }
-  return unwrapType(typeNode.type);
-};
-
 const mustFindTypeDefinition = (
   ctx: CurrentContext,
   typeNode: TypeNode
@@ -75,7 +68,7 @@ const mustFindTypeDefinition = (
   const typeName = unwrapType(typeNode).name.value;
   const typeDef = ctx.schema.getType(typeName)?.astNode;
   if (!typeDef) {
-    throw new Error("type def undefined");
+    throw new Error(`type def for ${typeName} undefined`);
   }
   if (typeDef.kind === Kind.OBJECT_TYPE_DEFINITION) {
     return typeDef;

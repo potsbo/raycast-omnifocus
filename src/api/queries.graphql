@@ -1,4 +1,4 @@
-fragment TaskViewModel on Task {
+fragment TaskViewModel on TaskInterface {
   name
   id
   effectiveDueDate
@@ -18,7 +18,7 @@ fragment ProjectViewModel on Project {
   numberOfAvailableTasks
 }
 
-fragment TopLevelProjects on DefaultDocument {
+fragment TopLevelProjects on Document {
   projects {
     edges {
       node {
@@ -28,7 +28,7 @@ fragment TopLevelProjects on DefaultDocument {
   }
 }
 
-fragment FolderedProjectDepth1 on DefaultDocument {
+fragment FolderedProjectDepth1 on Document {
   folders {
     edges {
       node {
@@ -46,7 +46,7 @@ fragment FolderedProjectDepth1 on DefaultDocument {
   }
 }
 
-fragment FolderedTagDepth1 on DefaultDocument {
+fragment FolderedTagDepth1 on Document {
   tags {
     edges {
       node {
