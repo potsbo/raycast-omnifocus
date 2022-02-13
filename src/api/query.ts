@@ -75,7 +75,7 @@ const mustFindTypeDefinition = (
   const typeName = unwrapType(typeNode).name.value;
   const typeDef = ctx.schema.getType(typeName)?.astNode;
   if (!typeDef) {
-    throw new Error("type def undefined");
+    throw new Error(`type def for ${typeName} undefined`);
   }
   if (typeDef.kind === Kind.OBJECT_TYPE_DEFINITION) {
     return typeDef;
