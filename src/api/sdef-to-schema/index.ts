@@ -15,6 +15,7 @@ import {
   printSchema,
   NonNullTypeNode,
   ListTypeNode,
+  ObjectTypeDefinitionNode,
 } from "graphql";
 import { join } from "path";
 import { unwrapType } from "../query";
@@ -28,6 +29,9 @@ interface Suite {
   command: unknown[];
   enumeration: unknown[];
   class?: ClassDefinition[];
+  "record-type": unknown[];
+  "value-type": unknown[];
+  "class-extension": unknown[];
 }
 
 interface ClassDefinition {
@@ -94,11 +98,15 @@ const AllowedTypes = [
 
 const CONNECTION_TYPE_NAME = "Connection";
 
-const isAllowedType = (typeNode: TypeNode) => {
-  const type = unwrapType(typeNode).name.value;
+const isAllowedType = (type: TypeNode | string): boolean => {
+  const typeName = typeof type === "string" ? type : unwrapType(type).name.value;
 
-  if (AllowedTypes.includes(type)) {
+  if (AllowedTypes.includes(typeName)) {
     return true;
+  }
+
+  if (typeName.endsWith(CONNECTION_TYPE_NAME)) {
+    return isAllowedType(typeName.slice(0, -CONNECTION_TYPE_NAME.length));
   }
 
   return false;
@@ -118,17 +126,32 @@ const typeNameMap = (sdefName: string): string | null => {
   return null;
 };
 
-const toNamedType = (name: string): NamedTypeNode => {
+const toNamedType = (name: string, suffix = ""): NamedTypeNode => {
   return {
     kind: Kind.NAMED_TYPE,
     name: {
       kind: Kind.NAME,
-      value: typeNameMap(name) ?? camelCase(name, { pascalCase: true }),
+      value: typeNameMap(name) ?? camelCase(name, { pascalCase: true }) + suffix,
     },
   };
 };
 
-const nullable = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
+const toListType = (type: NonNullTypeNode | NamedTypeNode): ListTypeNode => {
+  return { kind: Kind.LIST_TYPE, type };
+};
+
+const toFieldDefinition = (name: string, type: TypeNode): FieldDefinitionNode => {
+  return {
+    kind: Kind.FIELD_DEFINITION,
+    name: {
+      kind: Kind.NAME,
+      value: camelCase(name),
+    },
+    type,
+  };
+};
+
+const nonNull = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
   return {
     kind: Kind.NON_NULL_TYPE,
     type,
@@ -148,108 +171,38 @@ const getGraphQLType = (t: PropertyDefinition): TypeNode => {
   if ("type" in t.$) {
     const res = typeNameMap(t.$.type);
     if (res) {
-      return nullable(toNamedType(res));
+      return nonNull(toNamedType(res));
     }
-    return nullable(toNamedType(t.$.name));
+    return nonNull(toNamedType(t.$.name));
   }
 
   throw new Error("Type definition not found");
 };
 
-const renderSuite = (s: Suite): string => {
+const renderSuite = (s: Suite): ObjectTypeDefinitionNode[] => {
   const typeDefs = (s.class ?? []).map((c) => {
     const className = camelCase(c.$.name, { pascalCase: true });
-    console.log(className);
     if (!AllowedTypes.includes(className)) {
-      return "";
+      return [];
     }
 
-    const taskProperties: (FieldDefinitionNode | null)[] = (c.property ?? []).map((t) => {
-      const typeName = getGraphQLType(t);
-      if (!isAllowedType(typeName)) {
-        return null;
-      }
-      return {
-        kind: Kind.FIELD_DEFINITION,
-        name: {
-          kind: Kind.NAME,
-          value: camelCase(t.$.name),
-        },
-        type: typeName,
-      };
+    const taskProperties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
+      return toFieldDefinition(t.$.name, getGraphQLType(t));
     });
 
-    const elements: (FieldDefinitionNode | null)[] = (c.element ?? []).map((e): FieldDefinitionNode | null => {
-      camelCase(e.$.type, { pascalCase: true });
-
-      const elm: TypeNode = {
-        kind: Kind.NON_NULL_TYPE,
-        type: {
-          kind: Kind.NAMED_TYPE,
-          name: {
-            kind: Kind.NAME,
-            value: camelCase(e.$.type, { pascalCase: true }),
-          },
-        },
-      };
-      const type: TypeNode = {
-        kind: Kind.NON_NULL_TYPE,
-        type: {
-          kind: Kind.LIST_TYPE,
-          type: elm,
-        },
-      };
-      if (!isAllowedType(type)) {
-        return null;
-      }
-      return {
-        kind: Kind.FIELD_DEFINITION,
-        name: {
-          kind: Kind.NAME,
-          value: `${camelCase(e.$.type)}s`,
-        },
-        type: {
-          kind: Kind.NON_NULL_TYPE,
-          type: {
-            kind: Kind.NAMED_TYPE,
-            name: {
-              kind: Kind.NAME,
-              value: `${camelCase(e.$.type, { pascalCase: true })}${CONNECTION_TYPE_NAME}`,
-            },
-          },
-        },
-      };
+    const elements: FieldDefinitionNode[] = (c.element ?? []).map((e) => {
+      return toFieldDefinition(`${e.$.type}s`, nonNull(toNamedType(e.$.type, CONNECTION_TYPE_NAME)));
     });
 
-    const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode | null => {
-      const typeName: TypeNode = {
-        kind: Kind.NON_NULL_TYPE,
-        type: {
-          kind: Kind.NAMED_TYPE,
-          name: {
-            kind: Kind.NAME,
-            value: camelCase(ctnt.$.type, { pascalCase: true }),
-          },
-        },
-      };
-
-      if (!isAllowedType(typeName)) {
-        return null;
-      }
-      return {
-        kind: Kind.FIELD_DEFINITION,
-        name: {
-          kind: Kind.NAME,
-          value: camelCase(ctnt.$.name),
-        },
-        type: typeName,
-      };
+    const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode => {
+      const type = nonNull(toNamedType(ctnt.$.type));
+      return toFieldDefinition(ctnt.$.name, type);
     });
 
     const fields = taskProperties
       .concat(elements)
       .concat(contents)
-      .filter((f): f is FieldDefinitionNode => f !== null)
+      .filter((f) => isAllowedType(f.type))
       .reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
         if (acum.some((a) => a.name.value === cur.name.value)) {
           return acum;
@@ -259,27 +212,63 @@ const renderSuite = (s: Suite): string => {
       }, []);
 
     if (fields.length === 0) {
-      return "";
+      return [];
     }
 
-    return `
-    type ${className}${CONNECTION_TYPE_NAME} implements ${CONNECTION_TYPE_NAME} {
-        byId(id: String!): ${className}
-        edges: [${className}Edge!]!
-        pageInfo: PageInfo!
-      }
-      
-      type ${className}Edge implements Edge {
-        cursor: String!
-        node: ${className}!
-      }
+    const toObjectDef = (
+      name: string,
+      interfaces: string[],
+      fields: FieldDefinitionNode[]
+    ): ObjectTypeDefinitionNode => {
+      return {
+        kind: Kind.OBJECT_TYPE_DEFINITION,
+        name: {
+          kind: Kind.NAME,
+          value: name,
+        },
+        interfaces: interfaces.map((n) => toNamedType(n)),
+        fields,
+      };
+    };
 
-      type ${className} implements Node {
-          ${fields.map((f) => print(f))}
-      }
-      `;
+    const classDef = toObjectDef(className, ["Node"], fields);
+    const edgeDef = toObjectDef(
+      `${className}Edge`,
+      ["Edge"],
+      [
+        toFieldDefinition("cursor", nonNull(toNamedType("String"))),
+        toFieldDefinition("node", nonNull(toNamedType(className))),
+      ]
+    );
+    const connectionDef = toObjectDef(
+      `${className}${CONNECTION_TYPE_NAME}`,
+      [CONNECTION_TYPE_NAME],
+      [
+        {
+          kind: Kind.FIELD_DEFINITION,
+          name: {
+            kind: Kind.NAME,
+            value: "byId",
+          },
+          arguments: [
+            {
+              kind: Kind.INPUT_VALUE_DEFINITION,
+              name: {
+                kind: Kind.NAME,
+                value: "id",
+              },
+              type: nonNull(toNamedType("String")),
+            },
+          ],
+          type: toNamedType(className),
+        },
+        toFieldDefinition("edges", nonNull(toListType(nonNull(toNamedType(`${className}Edge`))))),
+        toFieldDefinition("pageInfo", nonNull(toNamedType("PageInfo"))),
+      ]
+    );
+    return [connectionDef, edgeDef, classDef];
   });
-  return typeDefs.sort().join("\n");
+  return typeDefs.reduce((acum, cur) => acum.concat(cur), []);
 };
 
 (async () => {
@@ -287,7 +276,7 @@ const renderSuite = (s: Suite): string => {
   const parsed = (await parseStringPromise(res.stdout)) as {
     dictionary: { suite: Suite[] };
   };
-  const suites = parsed.dictionary.suite.map(renderSuite);
+  const definitions = parsed.dictionary.suite.map(renderSuite).reduce((acum, cur) => acum.concat(cur), []);
 
   const schema = `
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
@@ -339,7 +328,7 @@ input Condition {
   value: String! = "true"
 }
 
-  ${suites.sort().join("\n")}
+  ${definitions.map(print)}
   `;
   const content = prettier.format(schema, { parser: "graphql" });
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
@@ -355,5 +344,6 @@ input Condition {
       console.error(err);
       return;
     }
+    console.log(`✅ Schemad generated`);
   });
 })();
