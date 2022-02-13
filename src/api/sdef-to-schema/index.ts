@@ -18,9 +18,11 @@ import {
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
-import { ListType, NameType, NonNullType } from "./types";
-import { ClassDefinition, Suite } from "./sdef";
+import { NameType } from "./types";
+import { Suite } from "./sdef";
 import { collectFieldsDefinitions, FieldDefinition } from "./field";
+import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME } from "./constants";
+import { ClassRenderer } from "./class";
 
 const AllowedTypes = [
   "Task",
@@ -37,9 +39,6 @@ const AllowedTypes = [
   "String",
   "Boolean",
 ];
-
-const CONNECTION_TYPE_NAME = "Connection";
-const EDGE_TYPE_NAME = "Edge";
 
 const isAllowedType = (type: TypeNode | string): boolean => {
   const typeName = typeof type === "string" ? type : unwrapType(type).name.value;
@@ -59,91 +58,40 @@ const isAllowedType = (type: TypeNode | string): boolean => {
 
 type Extensions = Record<string, FieldDefinitionNode[]>;
 
-const reduceFieldDefinition = (fs: readonly FieldDefinitionNode[]): FieldDefinitionNode[] => {
-  return fs.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
-    if (acum.some((a) => a.name.value === cur.name.value)) {
+const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
+  const fields = obj.fields
+    ?.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
+      if (acum.some((a) => a.name.value === cur.name.value)) {
+        return acum;
+      }
+      acum.push(cur);
       return acum;
-    }
-    acum.push(cur);
-    return acum;
-  }, []);
-};
-const renderClass = (c: ClassDefinition) => {
-  const className = camelCase(c.$.name, { pascalCase: true });
-  const fields = collectFieldsDefinitions(c);
-
-  const toObjectDef = (name: string, interfaces: string[], fields: FieldDefinitionNode[]): ObjectTypeDefinitionNode => {
-    return {
-      kind: Kind.OBJECT_TYPE_DEFINITION,
-      name: {
-        kind: Kind.NAME,
-        value: name,
-      },
-      interfaces: interfaces.map((n) => NameType(n)),
-      fields,
-    };
+    }, [])
+    .filter((f) => isAllowedType(f.type));
+  return {
+    ...obj,
+    fields,
   };
-
-  const classDef = toObjectDef(className, ["Node"], fields);
-  const edgeDef = toObjectDef(
-    `${className}${EDGE_TYPE_NAME}`,
-    [EDGE_TYPE_NAME],
-    [
-      FieldDefinition("cursor", NonNullType(NameType("String"))),
-      FieldDefinition("node", NonNullType(NameType(className))),
-    ]
-  );
-  const connectionDef = toObjectDef(
-    `${className}${CONNECTION_TYPE_NAME}`,
-    [CONNECTION_TYPE_NAME],
-    [
-      {
-        kind: Kind.FIELD_DEFINITION,
-        name: {
-          kind: Kind.NAME,
-          value: "byId",
-        },
-        arguments: [
-          {
-            kind: Kind.INPUT_VALUE_DEFINITION,
-            name: {
-              kind: Kind.NAME,
-              value: "id",
-            },
-            type: NonNullType(NameType("String")),
-          },
-        ],
-        type: NameType(className),
-      },
-      FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(`${className}${EDGE_TYPE_NAME}`))))),
-      FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),
-    ]
-  );
-  return { types: [connectionDef, edgeDef, classDef], inherits: c.$.inherits, className };
 };
 
 const renderSuite = (
   s: Suite
 ): {
-  classDefinition: {
-    types: ObjectTypeDefinitionNode[];
-    inherits: string | undefined;
-    className: string;
-  }[];
+  classRenderers: ClassRenderer[];
   extensions: Extensions;
 } => {
   const extensions = s["class-extension"]
     ?.map((ce) => {
       const ret: Extensions = {};
-      ret[camelCase(ce.$.extends, { pascalCase: true })] = collectFieldsDefinitions(ce);
+      ret[ce.$.extends] = collectFieldsDefinitions(ce);
       return ret;
     })
     .reduce((acum, cur) => {
       return { ...acum, ...cur };
     });
 
-  const typeDefs = (s.class ?? []).map(renderClass);
-  return { classDefinition: typeDefs, extensions };
+  const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
+  return { classRenderers, extensions };
 };
 
 const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
@@ -154,78 +102,50 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
     dictionary: { suite: Suite[] };
   };
 
-  const suites = parsed.dictionary.suite.map(renderSuite);
-  const extensions = suites
-    .map((s) => s.extensions)
-    .reduce((acum, cur) => {
-      return { ...acum, ...cur };
-    }, {});
+  const suites = parsed.dictionary.suite.map(renderSuite).reduce(
+    (acum: { classRenderers: ClassRenderer[]; extensions: Extensions }, cur) => {
+      return {
+        classRenderers: acum.classRenderers.concat(cur.classRenderers),
+        extensions: { ...acum.extensions, ...cur.extensions },
+      };
+    },
+    { classRenderers: [], extensions: {} }
+  );
+  const { extensions, classRenderers } = suites;
 
   const definitions: ObjectTypeDefinitionNode[] = [];
-  const allTypes = suites
-    .map(({ classDefinition }) => classDefinition.map(({ types }) => types))
-    .reduce((acum, cur) => {
-      return acum.concat(cur);
-    }, [])
-    .reduce((acum, cur) => {
-      return acum.concat(cur);
-    }, []);
 
-  suites.forEach(({ classDefinition }) => {
-    classDefinition.forEach((cdef) => {
-      const { inherits } = cdef;
-      if (inherits !== undefined) {
-        const parent = allTypes.find((t) => t.name.value === camelCase(inherits, { pascalCase: true }));
-        if (parent === undefined) {
-          throw new Error("parent not found");
-        }
+  const inheritedClasses = new Set(
+    classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
+  );
 
-        const parentInterface = `${parent.name.value}Interface`;
-
-        interfaces.set(parent.name.value, {
-          ...parent,
-          kind: Kind.INTERFACE_TYPE_DEFINITION,
-          fields: reduceFieldDefinition(parent.fields ?? []).filter((f) => isAllowedType(f.type)),
-          name: {
-            kind: Kind.NAME,
-            value: parentInterface,
-          },
-          interfaces: [],
-        });
-
-        // TODO: not to depend on array order
-        definitions.push(cdef.types[0]);
-        definitions.push(cdef.types[1]);
-        const d = cdef.types[2];
-
-        const fields = [...(extensions[d.name.value] ?? []), ...(d.fields ?? []), ...(parent.fields ?? [])];
-        definitions.push({
-          ...d,
-          fields: reduceFieldDefinition(fields).filter((f) => isAllowedType(f.type)),
-          interfaces: d.interfaces?.concat(NameType(parentInterface)),
-        });
-
-        return;
-      }
-      definitions.push(
-        ...cdef.types.map((d) => {
-          const fields = extensions[d.name.value] ?? [];
-          return {
-            ...d,
-            fields: d.fields?.concat(fields).filter((f) => isAllowedType(f.type)),
-          };
-        })
-      );
-    });
+  classRenderers.forEach((cdef) => {
+    const inherits = cdef.getInherits();
+    const parent = classRenderers.find((t) => t.getClassName() === inherits);
+    if (inherits !== undefined && parent === undefined) {
+      throw new Error("parent not found");
+    }
+    interfaces.set(cdef.getClassName(), cdef.getInterfaced());
+    definitions.push(
+      ...cdef.getTypes({
+        inherits: parent,
+        extensions: extensions[cdef.getClassName()],
+        inherited: inheritedClasses.has(cdef.getClassName()),
+      })
+    );
   });
 
   const reduced = definitions
     .map((d) => {
       if (interfaces.has(d.name.value)) {
-        return { ...d, interfaces: [NameType(`${d.name.value}Interface`)].concat(d.interfaces ?? []) };
+        return {
+          ...d,
+          interfaces: [NameType(`${d.name.value}Interface`)].concat(d.interfaces ?? []),
+        };
       }
       return d;
     })
+    .map(reduceFieldDefinition)
     .filter((d) => isAllowedType(d.name.value));
   const schema = `
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
@@ -269,7 +189,7 @@ input Condition {
 }
 
   ${reduced.map(print)}
-  ${[...interfaces.values()].map((i) => print(i))}
+  ${[...interfaces.values()].map(reduceFieldDefinition).map((i) => print(i))}
   `;
   const content = prettier.format(schema, { parser: "graphql" });
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
