@@ -102,7 +102,7 @@ type FlattenedTaskEdge implements Edge {
   node: FlattenedTask!
 }
 
-type Folder implements Node {
+type Folder implements Node & SectionInterface {
   creationDate: String!
   effectivelyHidden: Boolean!
   folders: FolderConnection!
@@ -183,7 +183,7 @@ type PageInfo {
   startCursor: String!
 }
 
-type Project implements Node {
+type Project implements Node & SectionInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
@@ -250,6 +250,11 @@ type SectionEdge implements Edge {
   node: Section!
 }
 
+interface SectionInterface {
+  id: String!
+  name: String!
+}
+
 type Tag implements Node {
   allowsNextAction: Boolean!
   availableTaskCount: Int!
@@ -273,8 +278,7 @@ type TagEdge implements Edge {
   node: Tag!
 }
 
-
-type Task implements Node & TaskInterface {
+type Task implements Node {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
