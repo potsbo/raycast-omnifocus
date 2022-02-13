@@ -61,7 +61,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
   return `${name}: ${ctx.rootName}.${name}(),`;
 };
 
-const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
+export const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
   if (typeNode.kind === Kind.NAMED_TYPE) {
     return typeNode;
   }

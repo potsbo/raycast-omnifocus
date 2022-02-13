@@ -103,14 +103,14 @@
     },
     "generate:schema": {
       "patterns": [
-        "src/api/sdef-to-schema"
+        "src/api"
       ],
       "extensions": "ts"
     }
   },
   "scripts": {
     "build": "ray build -e dist",
-    "dev": "concurrently \"ray develop\" \"yarn generate --watch\" \"npm-watch playground\"",
+    "dev": "concurrently \"ray develop\" \"yarn generate --watch\" \"npm-watch playground\" \"npm-watch generate:schema\"",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
     "generate": "graphql-codegen --config codegen.yml",

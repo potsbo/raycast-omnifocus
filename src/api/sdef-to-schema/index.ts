@@ -13,8 +13,11 @@ import {
   lexicographicSortSchema,
   buildSchema,
   printSchema,
+  NonNullTypeNode,
+  ListTypeNode,
 } from "graphql";
 import { join } from "path";
+import { unwrapType } from "../query";
 
 interface Suite {
   $: {
@@ -24,7 +27,7 @@ interface Suite {
   };
   command: unknown[];
   enumeration: unknown[];
-  class: ClassDefinition[];
+  class?: ClassDefinition[];
 }
 
 interface ClassDefinition {
@@ -82,19 +85,14 @@ const AllowedTypes = [
   "Section",
   "Folder",
   "Tag",
-  "Application",
-  "Document",
+  // "Application",
+  // "Document",
   "Int",
   "String",
   "Boolean",
 ];
 
-const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
-  if (typeNode.kind === Kind.NAMED_TYPE) {
-    return typeNode;
-  }
-  return unwrapType(typeNode.type);
-};
+const CONNECTION_TYPE_NAME = "Connection";
 
 const isAllowedType = (typeNode: TypeNode) => {
   const type = unwrapType(typeNode).name.value;
@@ -120,69 +118,48 @@ const typeNameMap = (sdefName: string): string | null => {
   return null;
 };
 
+const toNamedType = (name: string): NamedTypeNode => {
+  return {
+    kind: Kind.NAMED_TYPE,
+    name: {
+      kind: Kind.NAME,
+      value: typeNameMap(name) ?? camelCase(name, { pascalCase: true }),
+    },
+  };
+};
+
+const nullable = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
+  return {
+    kind: Kind.NON_NULL_TYPE,
+    type,
+  };
+};
+
 const getGraphQLType = (t: PropertyDefinition): TypeNode => {
   if ("type" in t) {
     const types = t.type.map((t) => t.$);
     if (types.length === 2 && types[1].type === "missing value") {
-      return {
-        kind: Kind.NAMED_TYPE,
-        name: {
-          kind: Kind.NAME,
-          value: typeNameMap(types[0].type) ?? camelCase(types[0].type, { pascalCase: true }),
-        },
-      };
+      return toNamedType(types[0].type);
     }
 
-    return {
-      kind: Kind.NAMED_TYPE,
-      name: {
-        kind: Kind.NAME,
-        value: "TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"),
-      },
-    };
+    return toNamedType("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
   }
 
   if ("type" in t.$) {
     const res = typeNameMap(t.$.type);
     if (res) {
-      return {
-        kind: Kind.NON_NULL_TYPE,
-        type: {
-          kind: Kind.NAMED_TYPE,
-          name: {
-            kind: Kind.NAME,
-            value: res,
-          },
-        },
-      };
+      return nullable(toNamedType(res));
     }
-    return {
-      kind: Kind.NON_NULL_TYPE,
-      type: {
-        kind: Kind.NAMED_TYPE,
-        name: {
-          kind: Kind.NAME,
-          value: camelCase(t.$.name, { pascalCase: true }),
-        },
-      },
-    };
+    return nullable(toNamedType(t.$.name));
   }
 
   throw new Error("Type definition not found");
 };
 
-(async () => {
-  const res = await promisify(exec)("sdef /Applications/OmniFocus.app");
-  const parsed = (await parseStringPromise(res.stdout)) as {
-    dictionary: { suite: Suite[] };
-  };
-  const s = parsed.dictionary.suite.find((s) => s.$.name === "OmniFocus suite");
-  if (s === undefined) {
-    throw new Error("target suite not found");
-  }
-
-  const typeDefs = s.class.map((c) => {
+const renderSuite = (s: Suite): string => {
+  const typeDefs = (s.class ?? []).map((c) => {
     const className = camelCase(c.$.name, { pascalCase: true });
+    console.log(className);
     if (!AllowedTypes.includes(className)) {
       return "";
     }
@@ -237,7 +214,7 @@ const getGraphQLType = (t: PropertyDefinition): TypeNode => {
             kind: Kind.NAMED_TYPE,
             name: {
               kind: Kind.NAME,
-              value: `${camelCase(e.$.type, { pascalCase: true })}Connection`,
+              value: `${camelCase(e.$.type, { pascalCase: true })}${CONNECTION_TYPE_NAME}`,
             },
           },
         },
@@ -286,7 +263,7 @@ const getGraphQLType = (t: PropertyDefinition): TypeNode => {
     }
 
     return `
-    type ${className}Connection implements Connection {
+    type ${className}${CONNECTION_TYPE_NAME} implements ${CONNECTION_TYPE_NAME} {
         byId(id: String!): ${className}
         edges: [${className}Edge!]!
         pageInfo: PageInfo!
@@ -302,10 +279,19 @@ const getGraphQLType = (t: PropertyDefinition): TypeNode => {
       }
       `;
   });
+  return typeDefs.sort().join("\n");
+};
+
+(async () => {
+  const res = await promisify(exec)("sdef /Applications/OmniFocus.app");
+  const parsed = (await parseStringPromise(res.stdout)) as {
+    dictionary: { suite: Suite[] };
+  };
+  const suites = parsed.dictionary.suite.map(renderSuite);
 
   const schema = `
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
-interface Connection {
+interface ${CONNECTION_TYPE_NAME} {
   edges: [Edge!]!
   pageInfo: PageInfo!
 
@@ -353,7 +339,7 @@ input Condition {
   value: String! = "true"
 }
 
-  ${typeDefs.sort().join("\n")}
+  ${suites.sort().join("\n")}
   `;
   const content = prettier.format(schema, { parser: "graphql" });
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
