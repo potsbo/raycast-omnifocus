@@ -55,7 +55,7 @@ interface Edge {
   node: Node!
 }
 
-type FlattenedTask implements TaskInterface & Node {
+type FlattenedTask implements Node & TaskInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
@@ -125,7 +125,7 @@ type FolderEdge implements Edge {
   node: Folder!
 }
 
-type InboxTask implements TaskInterface & Node {
+type InboxTask implements Node & TaskInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
@@ -309,7 +309,7 @@ interface TaskInterface implements Node {
   tasks: TaskConnection!
 }
 
-type Task implements TaskInterface & Node {
+type Task implements Node & TaskInterface {
   blocked: Boolean!
   completed: Boolean!
   completedByChildren: Boolean!
