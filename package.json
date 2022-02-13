@@ -76,6 +76,7 @@
     "@types/jest": "^27.4.0",
     "@types/node": "~16.10.0",
     "@types/react": "^17.0.28",
+    "@types/xml2js": "^0.4.9",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "concurrently": "^7.0.0",
@@ -90,12 +91,19 @@
     "react-devtools": "^4.19.2",
     "ts-jest": "^27.1.3",
     "ts-node": "^10.5.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "xml2js": "^0.4.23"
   },
   "watch": {
     "playground": {
       "patterns": [
         "src"
+      ],
+      "extensions": "ts"
+    },
+    "generate:schema": {
+      "patterns": [
+        "src/api/sdef-to-schema"
       ],
       "extensions": "ts"
     }
@@ -106,6 +114,7 @@
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
     "generate": "graphql-codegen --config codegen.yml",
-    "playground": "ts-node ./src/playground/index.ts"
+    "playground": "ts-node ./src/playground/index.ts",
+    "generate:schema": "ts-node ./src/api/sdef-to-schema/index.ts"
   }
 }

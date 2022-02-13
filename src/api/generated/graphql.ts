@@ -38,9 +38,9 @@ export type ConnectionByIdArgs = {
 
 export type DefaultDocument = {
   __typename?: 'DefaultDocument';
-  flattenedTasks: TaskConection;
+  flattenedTasks: TaskConnection;
   folders: FolderConnection;
-  inboxTasks: TaskConection;
+  inboxTasks: TaskConnection;
   perspectiveNames: Array<Scalars['String']>;
   projects: ProjectConnection;
   tags: TagConnection;
@@ -53,12 +53,15 @@ export type Edge = {
 
 export type Folder = Node & {
   __typename?: 'Folder';
+  creationDate: Scalars['String'];
+  effectivelyHidden: Scalars['Boolean'];
   folders: FolderConnection;
+  hidden: Scalars['Boolean'];
   id: Scalars['String'];
+  modificationDate: Scalars['String'];
   name: Scalars['String'];
-  note: Scalars['String'];
   projects: ProjectConnection;
-  sections?: Maybe<SectionConnection>;
+  sections: SectionConnection;
 };
 
 export type FolderConnection = Connection & {
@@ -93,11 +96,39 @@ export type PageInfo = {
 
 export type Project = Node & {
   __typename?: 'Project';
+  blocked: Scalars['Boolean'];
   completed: Scalars['Boolean'];
+  completedByChildren: Scalars['Boolean'];
+  completionDate?: Maybe<Scalars['String']>;
+  creationDate: Scalars['String'];
+  defaultSingletonActionHolder: Scalars['Boolean'];
+  deferDate?: Maybe<Scalars['String']>;
+  dropped: Scalars['Boolean'];
+  droppedDate?: Maybe<Scalars['String']>;
+  dueDate?: Maybe<Scalars['String']>;
+  effectiveDeferDate?: Maybe<Scalars['String']>;
+  effectiveDueDate?: Maybe<Scalars['String']>;
+  effectivelyCompleted: Scalars['Boolean'];
+  effectivelyDropped: Scalars['Boolean'];
+  estimatedMinutes?: Maybe<Scalars['Int']>;
+  flagged: Scalars['Boolean'];
+  folder?: Maybe<Folder>;
   id: Scalars['String'];
+  lastReviewDate: Scalars['String'];
+  modificationDate: Scalars['String'];
   name: Scalars['String'];
+  nextDeferDate?: Maybe<Scalars['String']>;
+  nextDueDate?: Maybe<Scalars['String']>;
+  nextReviewDate?: Maybe<Scalars['String']>;
+  nextTask?: Maybe<Task>;
   numberOfAvailableTasks: Scalars['Int'];
+  numberOfCompletedTasks: Scalars['Int'];
+  numberOfTasks: Scalars['Int'];
+  primaryTag?: Maybe<Tag>;
   rootTask: Task;
+  sequential: Scalars['Boolean'];
+  shouldUseFloatingTimeZone: Scalars['Boolean'];
+  singletonActionHolder: Scalars['Boolean'];
 };
 
 export type ProjectConnection = Connection & {
@@ -123,9 +154,15 @@ export type Query = {
   defaultDocument: DefaultDocument;
 };
 
+export type Section = Node & {
+  __typename?: 'Section';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type SectionConnection = Connection & {
   __typename?: 'SectionConnection';
-  byId?: Maybe<Folder>;
+  byId?: Maybe<Section>;
   edges: Array<SectionEdge>;
   pageInfo: PageInfo;
 };
@@ -138,15 +175,20 @@ export type SectionConnectionByIdArgs = {
 export type SectionEdge = Edge & {
   __typename?: 'SectionEdge';
   cursor: Scalars['String'];
-  node: Node;
+  node: Section;
 };
 
 export type Tag = Node & {
   __typename?: 'Tag';
+  allowsNextAction: Scalars['Boolean'];
+  availableTaskCount: Scalars['Int'];
+  effectivelyHidden: Scalars['Boolean'];
+  hidden: Scalars['Boolean'];
   id: Scalars['String'];
   name: Scalars['String'];
+  remainingTaskCount: Scalars['Int'];
   tags: TagConnection;
-  tasks: TaskConection;
+  tasks: TaskConnection;
 };
 
 export type TagConnection = Connection & {
@@ -169,25 +211,49 @@ export type TagEdge = Edge & {
 
 export type Task = Node & {
   __typename?: 'Task';
+  blocked: Scalars['Boolean'];
   completed: Scalars['Boolean'];
+  completedByChildren: Scalars['Boolean'];
+  completionDate?: Maybe<Scalars['String']>;
   containingProject?: Maybe<Project>;
+  creationDate: Scalars['String'];
+  deferDate?: Maybe<Scalars['String']>;
+  dropped: Scalars['Boolean'];
+  droppedDate?: Maybe<Scalars['String']>;
+  dueDate?: Maybe<Scalars['String']>;
+  effectiveDeferDate?: Maybe<Scalars['String']>;
   effectiveDueDate?: Maybe<Scalars['String']>;
   effectivelyCompleted: Scalars['Boolean'];
+  effectivelyDropped: Scalars['Boolean'];
+  estimatedMinutes?: Maybe<Scalars['Int']>;
   flagged: Scalars['Boolean'];
   id: Scalars['String'];
+  inInbox: Scalars['Boolean'];
+  modificationDate: Scalars['String'];
   name: Scalars['String'];
-  tasks: TaskConection;
+  next: Scalars['Boolean'];
+  nextDeferDate?: Maybe<Scalars['String']>;
+  nextDueDate?: Maybe<Scalars['String']>;
+  numberOfAvailableTasks: Scalars['Int'];
+  numberOfCompletedTasks: Scalars['Int'];
+  numberOfTasks: Scalars['Int'];
+  parentTask?: Maybe<Task>;
+  primaryTag?: Maybe<Tag>;
+  sequential: Scalars['Boolean'];
+  shouldUseFloatingTimeZone: Scalars['Boolean'];
+  tags: TagConnection;
+  tasks: TaskConnection;
 };
 
-export type TaskConection = Connection & {
-  __typename?: 'TaskConection';
+export type TaskConnection = Connection & {
+  __typename?: 'TaskConnection';
   byId?: Maybe<Task>;
   edges: Array<TaskEdge>;
   pageInfo: PageInfo;
 };
 
 
-export type TaskConectionByIdArgs = {
+export type TaskConnectionByIdArgs = {
   id: Scalars['String'];
 };
 
@@ -214,19 +280,19 @@ export type GetTasksQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', flattenedTasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
+export type GetTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', flattenedTasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
 
 export type GetInboxTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInboxTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', inboxTasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
+export type GetInboxTasksQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', inboxTasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } };
 
 export type GetTasksInProjectQueryVariables = Exact<{
   projectId: Scalars['String'];
 }>;
 
 
-export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } } | null } } };
+export type GetTasksInProjectQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } } | null } } };
 
 export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -238,7 +304,7 @@ export type GetTasksWithTagQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksWithTagQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'Tag', tasks: { __typename?: 'TaskConection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | null } } };
+export type GetTasksWithTagQuery = { __typename?: 'Query', defaultDocument: { __typename?: 'DefaultDocument', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'Tag', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | null } } };
 
 export type GetTopLevelProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -331,19 +397,20 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['FolderConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConection'];
+  Connection: ResolversTypes['FolderConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
   DefaultDocument: ResolverTypeWrapper<DefaultDocument>;
   Edge: ResolversTypes['FolderEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
   Folder: ResolverTypeWrapper<Folder>;
   FolderConnection: ResolverTypeWrapper<FolderConnection>;
   FolderEdge: ResolverTypeWrapper<FolderEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Node: ResolversTypes['Folder'] | ResolversTypes['Project'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  Node: ResolversTypes['Folder'] | ResolversTypes['Project'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   ProjectEdge: ResolverTypeWrapper<ProjectEdge>;
   Query: ResolverTypeWrapper<{}>;
+  Section: ResolverTypeWrapper<Section>;
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -351,7 +418,7 @@ export type ResolversTypes = {
   TagConnection: ResolverTypeWrapper<TagConnection>;
   TagEdge: ResolverTypeWrapper<TagEdge>;
   Task: ResolverTypeWrapper<Task>;
-  TaskConection: ResolverTypeWrapper<TaskConection>;
+  TaskConnection: ResolverTypeWrapper<TaskConnection>;
   TaskEdge: ResolverTypeWrapper<TaskEdge>;
 };
 
@@ -359,19 +426,20 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['FolderConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConection'];
+  Connection: ResolversParentTypes['FolderConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
   DefaultDocument: DefaultDocument;
   Edge: ResolversParentTypes['FolderEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
   Folder: Folder;
   FolderConnection: FolderConnection;
   FolderEdge: FolderEdge;
   Int: Scalars['Int'];
-  Node: ResolversParentTypes['Folder'] | ResolversParentTypes['Project'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['Folder'] | ResolversParentTypes['Project'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Project: Project;
   ProjectConnection: ProjectConnection;
   ProjectEdge: ProjectEdge;
   Query: {};
+  Section: Section;
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
   String: Scalars['String'];
@@ -379,7 +447,7 @@ export type ResolversParentTypes = {
   TagConnection: TagConnection;
   TagEdge: TagEdge;
   Task: Task;
-  TaskConection: TaskConection;
+  TaskConnection: TaskConnection;
   TaskEdge: TaskEdge;
 };
 
@@ -390,16 +458,16 @@ export type WhoseDirectiveArgs = {
 export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'FolderConnection' | 'ProjectConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FolderConnection' | 'ProjectConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
 };
 
 export type DefaultDocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultDocument'] = ResolversParentTypes['DefaultDocument']> = {
-  flattenedTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
-  inboxTasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
+  inboxTasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
   perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -413,12 +481,15 @@ export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
+  creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  note?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
-  sections?: Resolver<Maybe<ResolversTypes['SectionConnection']>, ParentType, ContextType>;
+  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -436,7 +507,7 @@ export type FolderEdgeResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Folder' | 'Project' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Folder' | 'Project' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -449,11 +520,39 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
+  blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completedByChildren?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completionDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  defaultSingletonActionHolder?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  deferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  droppedDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectivelyCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  folder?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  lastReviewDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextReviewDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
+  sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  singletonActionHolder?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -474,8 +573,14 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   defaultDocument?: Resolver<ResolversTypes['DefaultDocument'], ParentType, ContextType>;
 };
 
+export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type SectionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionConnection'] = ResolversParentTypes['SectionConnection']> = {
-  byId?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType, RequireFields<SectionConnectionByIdArgs, 'id'>>;
+  byId?: Resolver<Maybe<ResolversTypes['Section']>, ParentType, ContextType, RequireFields<SectionConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['SectionEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -483,15 +588,20 @@ export type SectionConnectionResolvers<ContextType = any, ParentType extends Res
 
 export type SectionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionEdge'] = ResolversParentTypes['SectionEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Section'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
+  allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -509,19 +619,43 @@ export type TagEdgeResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
+  blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completedByChildren?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completionDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   containingProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
+  creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  deferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  droppedDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   effectiveDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   effectivelyCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConection'], ParentType, ContextType>;
+  next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  parentTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
+  primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
+  sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TaskConectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TaskConection'] = ResolversParentTypes['TaskConection']> = {
-  byId?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<TaskConectionByIdArgs, 'id'>>;
+export type TaskConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TaskConnection'] = ResolversParentTypes['TaskConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<TaskConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['TaskEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -546,13 +680,14 @@ export type Resolvers<ContextType = any> = {
   ProjectConnection?: ProjectConnectionResolvers<ContextType>;
   ProjectEdge?: ProjectEdgeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Section?: SectionResolvers<ContextType>;
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   TagConnection?: TagConnectionResolvers<ContextType>;
   TagEdge?: TagEdgeResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
-  TaskConection?: TaskConectionResolvers<ContextType>;
+  TaskConnection?: TaskConnectionResolvers<ContextType>;
   TaskEdge?: TaskEdgeResolvers<ContextType>;
 };
 
