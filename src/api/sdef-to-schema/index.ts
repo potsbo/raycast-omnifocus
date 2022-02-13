@@ -19,6 +19,7 @@ import { Suite } from "./sdef";
 import { collectFieldsDefinitions } from "./field";
 import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME } from "./constants";
 import { ClassRenderer } from "./class";
+import { ExtensionRenderer } from "./extension";
 
 const AllowedTypes = [
   "Task",
@@ -74,18 +75,9 @@ const renderSuite = (
   s: Suite
 ): {
   classRenderers: ClassRenderer[];
-  extensions: Extensions;
+  extensions: ExtensionRenderer[];
 } => {
-  const extensions = s["class-extension"]
-    ?.map((ce) => {
-      const ret: Extensions = {};
-      ret[ce.$.extends] = collectFieldsDefinitions(ce);
-      return ret;
-    })
-    .reduce((acum, cur) => {
-      return { ...acum, ...cur };
-    });
-
+  const extensions = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
   const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
   return { classRenderers, extensions };
 };
@@ -99,13 +91,13 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
   };
 
   const suites = parsed.dictionary.suite.map(renderSuite).reduce(
-    (acum: { classRenderers: ClassRenderer[]; extensions: Extensions }, cur) => {
+    (acum: { classRenderers: ClassRenderer[]; extensions: ExtensionRenderer[] }, cur) => {
       return {
         classRenderers: acum.classRenderers.concat(cur.classRenderers),
-        extensions: { ...acum.extensions, ...cur.extensions },
+        extensions: acum.extensions.concat(cur.extensions),
       };
     },
-    { classRenderers: [], extensions: {} }
+    { classRenderers: [], extensions: [] }
   );
   const { extensions, classRenderers } = suites;
 
@@ -125,11 +117,15 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
     definitions.push(
       ...cdef.getTypes({
         inherits: parent,
-        extensions: extensions[cdef.getClassName()],
         inherited: inheritedClasses.has(cdef.getClassName()),
       })
     );
   });
+
+  const reducetExtension = extensions
+    .map((e) => e.getType())
+    .map(reduceFieldDefinition)
+    .filter((d) => isAllowedType(d.name.value));
 
   const reduced = definitions.map(reduceFieldDefinition).filter((d) => isAllowedType(d.name.value));
   const schema = `
@@ -174,6 +170,7 @@ input Condition {
 }
 
   ${reduced.map(print)}
+  ${reducetExtension.map(print)}
   ${[...interfaces.values()].map(reduceFieldDefinition).map((i) => print(i))}
   `;
 

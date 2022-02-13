@@ -27,15 +27,7 @@ export class ClassRenderer {
       interfaces: [],
     };
   };
-  getTypes = ({
-    inherits,
-    inherited,
-    extensions,
-  }: {
-    inherits: ClassRenderer | undefined;
-    extensions: FieldDefinitionNode[] | undefined;
-    inherited: boolean;
-  }) => {
+  getTypes = ({ inherits, inherited }: { inherits: ClassRenderer | undefined; inherited: boolean }) => {
     const className = camelCase(this.c.$.name, { pascalCase: true });
 
     const toObjectDef = (
@@ -54,7 +46,7 @@ export class ClassRenderer {
       };
     };
 
-    const fields = [...(extensions ?? []), ...(this.fields ?? []), ...(inherits?.fields ?? [])];
+    const fields = [...(this.fields ?? []), ...(inherits?.fields ?? [])];
 
     const interfaces: string[] = [];
     if (inherits) {
