@@ -37,9 +37,6 @@ export class ClassRenderer {
     inherited: boolean;
   }) => {
     const className = camelCase(this.c.$.name, { pascalCase: true });
-    if (className === "Project") {
-      console.log(inherits?.fields, extensions);
-    }
 
     const toObjectDef = (
       name: string,
