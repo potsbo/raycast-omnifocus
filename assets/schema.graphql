@@ -1,77 +1,57 @@
+# https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface Connection {
-  byId(id: String!): Node
   edges: [Edge!]!
   pageInfo: PageInfo!
+
+  # https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
+  byId(id: String!): Node
 }
 
+# https://relay.dev/graphql/connections.htm#sec-Edge-Types
 interface Edge {
-  cursor: String!
   node: Node!
-}
-
-type Folder implements Node {
-  creationDate: String!
-  effectivelyHidden: Boolean!
-  folders: FolderConnection!
-  hidden: Boolean!
-  id: String!
-  modificationDate: String!
-  name: String!
-  projects: ProjectConnection!
-  sections: SectionConnection!
-}
-
-type FolderConnection implements Connection {
-  byId(id: String!): Folder
-  edges: [FolderEdge!]!
-  pageInfo: PageInfo!
-}
-
-type FolderEdge implements Edge {
   cursor: String!
-  node: Folder!
+}
+# https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
+type PageInfo {
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+  startCursor: String!
+  endCursor: String!
 }
 
 interface Node {
   id: String!
 }
 
-type PageInfo {
-  endCursor: String!
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String!
+type Project implements Node {
+  name: String!
+  id: String!
+  rootTask: Task!
+  numberOfAvailableTasks: Int!
+  completed: Boolean!
 }
 
-type Project implements Node {
-  blocked: Boolean!
-  completed: Boolean!
-  completedByChildren: Boolean!
-  completionDate: String
-  creationDate: String!
-  defaultSingletonActionHolder: Boolean!
-  deferDate: String
-  dropped: Boolean!
-  droppedDate: String
-  dueDate: String
-  effectiveDeferDate: String
-  effectiveDueDate: String
-  effectivelyCompleted: Boolean!
-  effectivelyDropped: Boolean!
-  flagged: Boolean!
-  folder: Folder
-  id: String!
-  lastReviewDate: String!
-  modificationDate: String!
+type TaskConnection implements Connection {
+  byId(id: String!): Task
+  edges: [TaskEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TaskEdge implements Edge {
+  cursor: String!
+  node: Task!
+}
+
+type Task implements Node {
   name: String!
-  nextDeferDate: String
-  nextDueDate: String
-  nextReviewDate: String
-  nextTask: Task
-  primaryTag: Tag
-  sequential: Boolean!
-  shouldUseFloatingTimeZone: Boolean!
-  singletonActionHolder: Boolean!
+  id: String!
+  effectiveDueDate: String
+  completed: Boolean!
+  effectivelyCompleted: Boolean!
+  containingProject: Project
+  flagged: Boolean!
+  tasks: TaskConnection!
 }
 
 type ProjectConnection implements Connection {
@@ -85,30 +65,21 @@ type ProjectEdge implements Edge {
   node: Project!
 }
 
-type Section implements Node {
-  id: String!
-  name: String!
-}
-
-type SectionConnection implements Connection {
-  byId(id: String!): Section
-  edges: [SectionEdge!]!
+type FolderConnection implements Connection {
+  byId(id: String!): Folder
+  edges: [FolderEdge!]!
   pageInfo: PageInfo!
 }
 
-type SectionEdge implements Edge {
+type FolderEdge implements Edge {
   cursor: String!
-  node: Section!
+  node: Folder!
 }
 
-type Tag implements Node {
-  allowsNextAction: Boolean!
-  effectivelyHidden: Boolean!
-  hidden: Boolean!
-  id: String!
+type Folder implements Node {
   name: String!
-  tags: TagConnection!
-  tasks: TaskConnection!
+  id: String!
+  projects: ProjectConnection!
 }
 
 type TagConnection implements Connection {
@@ -122,44 +93,36 @@ type TagEdge implements Edge {
   node: Tag!
 }
 
-type Task implements Node {
-  blocked: Boolean!
-  completed: Boolean!
-  completedByChildren: Boolean!
-  completionDate: String
-  containingProject: Project
-  creationDate: String!
-  deferDate: String
-  dropped: Boolean!
-  droppedDate: String
-  dueDate: String
-  effectiveDeferDate: String
-  effectiveDueDate: String
-  effectivelyCompleted: Boolean!
-  effectivelyDropped: Boolean!
-  flagged: Boolean!
-  id: String!
-  inInbox: Boolean!
-  modificationDate: String!
+type Tag implements Node {
   name: String!
-  next: Boolean!
-  nextDeferDate: String
-  nextDueDate: String
-  parentTask: Task
-  primaryTag: Tag
-  sequential: Boolean!
-  shouldUseFloatingTimeZone: Boolean!
-  tags: TagConnection!
+  id: String!
   tasks: TaskConnection!
+  tags: TagConnection!
 }
 
-type TaskConnection implements Connection {
-  byId(id: String!): Task
-  edges: [TaskEdge!]!
-  pageInfo: PageInfo!
+type DefaultDocument {
+  projects: ProjectConnection!
+  folders: FolderConnection!
+  inboxTasks: TaskConnection!
+  flattenedTasks: TaskConnection!
+  tags: TagConnection!
+  perspectiveNames: [String!]!
 }
 
-type TaskEdge implements Edge {
-  cursor: String!
-  node: Task!
+type Query {
+  defaultDocument: DefaultDocument!
 }
+
+input Condition {
+  enabled: Boolean! = true
+  operator: String! = "="
+
+  # match
+  field: String
+  value: String! = "true"
+
+  # logical
+  operands: [Condition!]
+}
+
+directive @whose(condition: [Condition!]!) on FIELD
