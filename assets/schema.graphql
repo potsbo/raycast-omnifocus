@@ -1,17 +1,7 @@
-# https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface Connection {
   byId(id: String!): Node
   edges: [Edge!]!
   pageInfo: PageInfo!
-}
-
-type DefaultDocument {
-  flattenedTasks: TaskConnection!
-  folders: FolderConnection!
-  inboxTasks: TaskConnection!
-  perspectiveNames: [String!]!
-  projects: ProjectConnection!
-  tags: TagConnection!
 }
 
 interface Edge {
@@ -20,12 +10,15 @@ interface Edge {
 }
 
 type Folder implements Node {
+  creationDate: String!
+  effectivelyHidden: Boolean!
   folders: FolderConnection!
+  hidden: Boolean!
   id: String!
+  modificationDate: String!
   name: String!
-  note: String!
   projects: ProjectConnection!
-  sections: SectionConnection
+  sections: SectionConnection!
 }
 
 type FolderConnection implements Connection {
@@ -51,11 +44,34 @@ type PageInfo {
 }
 
 type Project implements Node {
+  blocked: Boolean!
   completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
+  creationDate: String!
+  defaultSingletonActionHolder: Boolean!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
+  effectiveDueDate: String
+  effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
+  flagged: Boolean!
+  folder: Folder
   id: String!
+  lastReviewDate: String!
+  modificationDate: String!
   name: String!
-  numberOfAvailableTasks: Int!
-  rootTask: Task!
+  nextDeferDate: String
+  nextDueDate: String
+  nextReviewDate: String
+  nextTask: Task
+  primaryTag: Tag
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  singletonActionHolder: Boolean!
 }
 
 type ProjectConnection implements Connection {
@@ -69,22 +85,26 @@ type ProjectEdge implements Edge {
   node: Project!
 }
 
-type Query {
-  defaultDocument: DefaultDocument!
+type Section implements Node {
+  id: String!
+  name: String!
 }
 
 type SectionConnection implements Connection {
-  byId(id: String!): Folder
+  byId(id: String!): Section
   edges: [SectionEdge!]!
   pageInfo: PageInfo!
 }
 
 type SectionEdge implements Edge {
   cursor: String!
-  node: Node!
+  node: Section!
 }
 
 type Tag implements Node {
+  allowsNextAction: Boolean!
+  effectivelyHidden: Boolean!
+  hidden: Boolean!
   id: String!
   name: String!
   tags: TagConnection!
@@ -103,13 +123,33 @@ type TagEdge implements Edge {
 }
 
 type Task implements Node {
+  blocked: Boolean!
   completed: Boolean!
+  completedByChildren: Boolean!
+  completionDate: String
   containingProject: Project
+  creationDate: String!
+  deferDate: String
+  dropped: Boolean!
+  droppedDate: String
+  dueDate: String
+  effectiveDeferDate: String
   effectiveDueDate: String
   effectivelyCompleted: Boolean!
+  effectivelyDropped: Boolean!
   flagged: Boolean!
   id: String!
+  inInbox: Boolean!
+  modificationDate: String!
   name: String!
+  next: Boolean!
+  nextDeferDate: String
+  nextDueDate: String
+  parentTask: Task
+  primaryTag: Tag
+  sequential: Boolean!
+  shouldUseFloatingTimeZone: Boolean!
+  tags: TagConnection!
   tasks: TaskConnection!
 }
 
