@@ -12,6 +12,8 @@ export const typeNameMap = (sdefName: string): string | null => {
       return "String";
     case "integer":
       return "Int";
+    case "real":
+      return "Float";
   }
   return null;
 };

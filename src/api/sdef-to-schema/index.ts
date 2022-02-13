@@ -36,7 +36,9 @@ const AllowedTypes = [
   "Int",
   "String",
   "Boolean",
-  "RepetitionInterval"
+  "Float",
+  "RepetitionInterval",
+  "LocationInformation",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {

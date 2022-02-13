@@ -345,6 +345,20 @@ export type InboxTaskEdge = Edge & {
   node: InboxTask;
 };
 
+export type LocationInformation = {
+  __typename?: 'LocationInformation';
+  /** Altitude in meters from sea level. */
+  altitude: Scalars['Float'];
+  /** Latitude in degrees from -90 to +90. */
+  latitude: Scalars['Float'];
+  /** Longitude in degrees from -180 to +180. */
+  longitude: Scalars['Float'];
+  /** A display name for the location. */
+  name: Scalars['String'];
+  /** Radius of accuracy in kilometers, from 0.1km to 10km. */
+  radius: Scalars['Float'];
+};
+
 export type Node = {
   id: Scalars['String'];
 };
@@ -579,6 +593,8 @@ export type Tag = Node & TagInterface & {
   hidden: Scalars['Boolean'];
   /** The identifier of the tag. */
   id: Scalars['String'];
+  /** The physical location associated with the tag. */
+  location?: Maybe<LocationInformation>;
   /** The name of the tag. */
   name: Scalars['String'];
   /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
@@ -618,6 +634,8 @@ export type TagInterface = {
   hidden: Scalars['Boolean'];
   /** The identifier of the tag. */
   id: Scalars['String'];
+  /** The physical location associated with the tag. */
+  location?: Maybe<LocationInformation>;
   /** The name of the tag. */
   name: Scalars['String'];
   /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
@@ -936,6 +954,7 @@ export type ResolversTypes = {
   FlattenedTask: ResolverTypeWrapper<FlattenedTask>;
   FlattenedTaskConnection: ResolverTypeWrapper<FlattenedTaskConnection>;
   FlattenedTaskEdge: ResolverTypeWrapper<FlattenedTaskEdge>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   Folder: ResolverTypeWrapper<Folder>;
   FolderConnection: ResolverTypeWrapper<FolderConnection>;
   FolderEdge: ResolverTypeWrapper<FolderEdge>;
@@ -944,6 +963,7 @@ export type ResolversTypes = {
   InboxTaskConnection: ResolverTypeWrapper<InboxTaskConnection>;
   InboxTaskEdge: ResolverTypeWrapper<InboxTaskEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  LocationInformation: ResolverTypeWrapper<LocationInformation>;
   Node: ResolversTypes['Document'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Project'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Project: ResolverTypeWrapper<Project>;
@@ -979,6 +999,7 @@ export type ResolversParentTypes = {
   FlattenedTask: FlattenedTask;
   FlattenedTaskConnection: FlattenedTaskConnection;
   FlattenedTaskEdge: FlattenedTaskEdge;
+  Float: Scalars['Float'];
   Folder: Folder;
   FolderConnection: FolderConnection;
   FolderEdge: FolderEdge;
@@ -987,6 +1008,7 @@ export type ResolversParentTypes = {
   InboxTaskConnection: InboxTaskConnection;
   InboxTaskEdge: InboxTaskEdge;
   Int: Scalars['Int'];
+  LocationInformation: LocationInformation;
   Node: ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Project'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Project: Project;
@@ -1208,6 +1230,15 @@ export type InboxTaskEdgeResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type LocationInformationResolvers<ContextType = any, ParentType extends ResolversParentTypes['LocationInformation'] = ResolversParentTypes['LocationInformation']> = {
+  altitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  radius?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
   __resolveType: TypeResolveFn<'Document' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Project' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1351,6 +1382,7 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1378,6 +1410,7 @@ export type TagInterfaceResolvers<ContextType = any, ParentType extends Resolver
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1489,6 +1522,7 @@ export type Resolvers<ContextType = any> = {
   InboxTask?: InboxTaskResolvers<ContextType>;
   InboxTaskConnection?: InboxTaskConnectionResolvers<ContextType>;
   InboxTaskEdge?: InboxTaskEdgeResolvers<ContextType>;
+  LocationInformation?: LocationInformationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;

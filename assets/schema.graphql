@@ -483,6 +483,23 @@ type InboxTaskEdge implements Edge {
   node: InboxTask!
 }
 
+type LocationInformation {
+  """Altitude in meters from sea level."""
+  altitude: Float!
+
+  """Latitude in degrees from -90 to +90."""
+  latitude: Float!
+
+  """Longitude in degrees from -180 to +180."""
+  longitude: Float!
+
+  """A display name for the location."""
+  name: String!
+
+  """Radius of accuracy in kilometers, from 0.1km to 10km."""
+  radius: Float!
+}
+
 interface Node {
   id: String!
 }
@@ -847,6 +864,9 @@ type Tag implements Node & TagInterface {
   """The identifier of the tag."""
   id: String!
 
+  """The physical location associated with the tag."""
+  location: LocationInformation
+
   """The name of the tag."""
   name: String!
 
@@ -894,6 +914,9 @@ interface TagInterface {
 
   """The identifier of the tag."""
   id: String!
+
+  """The physical location associated with the tag."""
+  location: LocationInformation
 
   """The name of the tag."""
   name: String!
