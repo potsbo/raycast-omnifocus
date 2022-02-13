@@ -1,7 +1,7 @@
 const projects = () => {
   return [...Array(10).keys()].map((i) => {
-    const projecId = `project-id-${i}`
-    const projectName = `project-name-${i}`
+    const projecId = `project-id-${i}`;
+    const projectName = `project-name-${i}`;
     return {
       name: () => projectName,
       id: () => projecId,

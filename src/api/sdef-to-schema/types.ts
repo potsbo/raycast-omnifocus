@@ -1,5 +1,6 @@
 import camelCase from "camelcase";
-import { Kind, ListTypeNode, NamedTypeNode, NonNullTypeNode } from "graphql";
+import { Kind, ListTypeNode, NamedTypeNode, NonNullTypeNode, TypeNode } from "graphql";
+import { PropertyDefinition } from "./sdef";
 
 export const typeNameMap = (sdefName: string): string | null => {
   switch (sdefName) {
@@ -34,4 +35,36 @@ export const NonNullType = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode
     kind: Kind.NON_NULL_TYPE,
     type,
   };
+};
+
+export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
+  if ("type" in t) {
+    const types = t.type.map((t) => t.$);
+    if (types.length === 2 && types[1].type === "missing value") {
+      return NameType(types[0].type);
+    }
+
+    if (types.length === 1) {
+      const type = types[0];
+      const converted = typeNameMap(type.type);
+      if (converted !== null) {
+        if (type.list === "yes") {
+          return NonNullType(ListType(NonNullType(NameType(converted))));
+        }
+        return NonNullType(NameType(converted));
+      }
+    }
+
+    return NameType("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
+  }
+
+  if ("type" in t.$) {
+    const res = typeNameMap(t.$.type);
+    if (res) {
+      return NonNullType(NameType(res));
+    }
+    return NonNullType(NameType(t.$.name));
+  }
+
+  throw new Error("Type definition not found");
 };

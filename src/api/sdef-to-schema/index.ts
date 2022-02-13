@@ -18,82 +18,9 @@ import {
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
-import { ListType, NameType, NonNullType, typeNameMap } from "./types";
-
-interface Suite {
-  $: {
-    code: string;
-    description: string;
-    name: string;
-  };
-  command: unknown[];
-  enumeration: unknown[];
-  class?: ClassDefinition[];
-  "record-type": unknown[];
-  "value-type": unknown[];
-  "class-extension": ClassExtensionDefinition[];
-}
-
-interface ClassDefinition {
-  $: {
-    code: string;
-    description: string;
-    name: string;
-    inherits?: string;
-  };
-  property?: PropertyDefinition[];
-  element?: ElementDefinition[];
-  contents?: ContentDefinition[];
-}
-
-interface ClassExtensionDefinition {
-  $: {
-    code: string;
-    description: string;
-    extends: string;
-    inherits?: string;
-  };
-  property?: PropertyDefinition[];
-  element?: ElementDefinition[];
-  contents?: ContentDefinition[];
-}
-
-type PropertyDefinition =
-  | {
-      $: {
-        code: string;
-        description: string;
-        name: string;
-        type: string;
-      };
-    }
-  | {
-      $: {
-        code: string;
-        description: string;
-        name: string;
-      };
-      type: { $: { list?: "yes"; type: string } }[];
-    };
-
-type ElementDefinition = {
-  $: {
-    description: string;
-    type: string;
-  };
-  cocoa: [{ $: { key: string } }];
-};
-
-type ContentDefinition = {
-  $: {
-    access: string;
-    code: string;
-    description: string;
-    name: string;
-    type: string;
-  };
-  cocoa: [{ $: unknown[] }];
-};
+import { ListType, NameType, NonNullType } from "./types";
+import { ClassDefinition, Suite } from "./sdef";
+import { collectFieldsDefinitions, FieldDefinition } from "./field";
 
 const AllowedTypes = [
   "Task",
@@ -130,49 +57,6 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   return false;
 };
 
-const FieldDefinition = (name: string, type: TypeNode): FieldDefinitionNode => {
-  return {
-    kind: Kind.FIELD_DEFINITION,
-    name: {
-      kind: Kind.NAME,
-      value: camelCase(name),
-    },
-    type,
-  };
-};
-
-const getGraphQLType = (t: PropertyDefinition): TypeNode => {
-  if ("type" in t) {
-    const types = t.type.map((t) => t.$);
-    if (types.length === 2 && types[1].type === "missing value") {
-      return NameType(types[0].type);
-    }
-
-    if (types.length === 1) {
-      const type = types[0];
-      const converted = typeNameMap(type.type);
-      if (converted !== null) {
-        if (type.list === "yes") {
-          return NonNullType(ListType(NonNullType(NameType(converted))));
-        }
-        return NonNullType(NameType(converted));
-      }
-    }
-
-    return NameType("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
-  }
-
-  if ("type" in t.$) {
-    const res = typeNameMap(t.$.type);
-    if (res) {
-      return NonNullType(NameType(res));
-    }
-    return NonNullType(NameType(t.$.name));
-  }
-
-  throw new Error("Type definition not found");
-};
-
 type Extensions = Record<string, FieldDefinitionNode[]>;
 
 const reduceFieldDefinition = (fs: readonly FieldDefinitionNode[]): FieldDefinitionNode[] => {
@@ -184,27 +68,6 @@ const reduceFieldDefinition = (fs: readonly FieldDefinitionNode[]): FieldDefinit
     return acum;
   }, []);
 };
-
-const collectFieldsDefinitions = (c: {
-  property?: PropertyDefinition[];
-  element?: ElementDefinition[];
-  contents?: ContentDefinition[];
-}) => {
-  const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
-    return FieldDefinition(t.$.name, getGraphQLType(t));
-  });
-
-  const elements: FieldDefinitionNode[] = (c.element ?? []).map((e) => {
-    return FieldDefinition(`${e.$.type}s`, NonNullType(NameType(e.$.type, CONNECTION_TYPE_NAME)));
-  });
-
-  const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode => {
-    return FieldDefinition(ctnt.$.name, NonNullType(NameType(ctnt.$.type)));
-  });
-  // TODO: respond-to
-  return properties.concat(elements).concat(contents);
-};
-
 const renderClass = (c: ClassDefinition) => {
   const className = camelCase(c.$.name, { pascalCase: true });
   const fields = collectFieldsDefinitions(c);
@@ -223,8 +86,8 @@ const renderClass = (c: ClassDefinition) => {
 
   const classDef = toObjectDef(className, ["Node"], fields);
   const edgeDef = toObjectDef(
-    `${className}Edge`,
-    ["Edge"],
+    `${className}${EDGE_TYPE_NAME}`,
+    [EDGE_TYPE_NAME],
     [
       FieldDefinition("cursor", NonNullType(NameType("String"))),
       FieldDefinition("node", NonNullType(NameType(className))),
