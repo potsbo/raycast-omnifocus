@@ -349,8 +349,9 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
 
   suites.forEach(({ classDefinition }) => {
     classDefinition.forEach((cdef) => {
-      if (cdef.inherits !== undefined) {
-        const parent = allTypes.find((t) => t.name.value === camelCase(cdef.inherits!, { pascalCase: true }));
+      const { inherits } = cdef;
+      if (inherits !== undefined) {
+        const parent = allTypes.find((t) => t.name.value === camelCase(inherits, { pascalCase: true }));
         if (parent === undefined) {
           throw new Error("parent not found");
         }
