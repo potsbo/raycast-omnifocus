@@ -1,13 +1,4 @@
-directive @whose(condition: [Condition!]!) on FIELD
-
-input Condition {
-  enabled: Boolean! = true
-  field: String
-  operands: [Condition!]
-  operator: String! = "="
-  value: String! = "true"
-}
-
+# https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface Connection {
   byId(id: String!): Node
   edges: [Edge!]!
@@ -15,9 +6,9 @@ interface Connection {
 }
 
 type DefaultDocument {
-  flattenedTasks: TaskConection!
+  flattenedTasks: TaskConnection!
   folders: FolderConnection!
-  inboxTasks: TaskConection!
+  inboxTasks: TaskConnection!
   perspectiveNames: [String!]!
   projects: ProjectConnection!
   tags: TagConnection!
@@ -97,7 +88,7 @@ type Tag implements Node {
   id: String!
   name: String!
   tags: TagConnection!
-  tasks: TaskConection!
+  tasks: TaskConnection!
 }
 
 type TagConnection implements Connection {
@@ -119,10 +110,10 @@ type Task implements Node {
   flagged: Boolean!
   id: String!
   name: String!
-  tasks: TaskConection!
+  tasks: TaskConnection!
 }
 
-type TaskConection implements Connection {
+type TaskConnection implements Connection {
   byId(id: String!): Task
   edges: [TaskEdge!]!
   pageInfo: PageInfo!
