@@ -11,13 +11,13 @@ import {
   printSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
+  ObjectTypeExtensionNode,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
-import { collectFieldsDefinitions } from "./field";
-import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME } from "./constants";
+import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./constants";
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
 
@@ -49,11 +49,12 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   if (typeName.endsWith(EDGE_TYPE_NAME)) {
     return isAllowedType(typeName.slice(0, -EDGE_TYPE_NAME.length));
   }
+  if (typeName.endsWith(INTERFACE_SUFFIX)) {
+    return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
+  }
 
   return false;
 };
-
-type Extensions = Record<string, FieldDefinitionNode[]>;
 
 const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
   const fields = obj.fields
@@ -75,14 +76,14 @@ const renderSuite = (
   s: Suite
 ): {
   classRenderers: ClassRenderer[];
-  extensions: ExtensionRenderer[];
+  extensionRenderers: ExtensionRenderer[];
 } => {
-  const extensions = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
+  const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
   const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  return { classRenderers, extensions };
+  return { classRenderers, extensionRenderers };
 };
 
-const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
+const interfaces: InterfaceTypeDefinitionNode[] = [];
 
 (async () => {
   const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
@@ -91,29 +92,28 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
   };
 
   const suites = parsed.dictionary.suite.map(renderSuite).reduce(
-    (acum: { classRenderers: ClassRenderer[]; extensions: ExtensionRenderer[] }, cur) => {
+    (acum: { classRenderers: ClassRenderer[]; extensionRenderers: ExtensionRenderer[] }, cur) => {
       return {
         classRenderers: acum.classRenderers.concat(cur.classRenderers),
-        extensions: acum.extensions.concat(cur.extensions),
+        extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
       };
     },
-    { classRenderers: [], extensions: [] }
+    { classRenderers: [], extensionRenderers: [] }
   );
-  const { extensions, classRenderers } = suites;
-
-  const definitions: ObjectTypeDefinitionNode[] = [];
+  const { extensionRenderers, classRenderers } = suites;
 
   const inheritedClasses = new Set(
     classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
   );
 
+  const definitions: ObjectTypeDefinitionNode[] = [];
   classRenderers.forEach((cdef) => {
     const inherits = cdef.getInherits();
     const parent = classRenderers.find((t) => t.getClassName() === inherits);
     if (inherits !== undefined && parent === undefined) {
       throw new Error("parent not found");
     }
-    interfaces.set(cdef.getClassName(), cdef.getInterfaced());
+    interfaces.push(cdef.getInterfaced());
     definitions.push(
       ...cdef.getTypes({
         inherits: parent,
@@ -122,13 +122,21 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
     );
   });
 
-  const reducetExtension = extensions
-    .map((e) => e.getType())
-    .map(reduceFieldDefinition)
-    .filter((d) => isAllowedType(d.name.value));
+  const extensions = extensionRenderers.map((e) => e.getType());
 
-  const reduced = definitions.map(reduceFieldDefinition).filter((d) => isAllowedType(d.name.value));
+  const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
+    return ns
+      .map(reduceFieldDefinition)
+      .filter((n) => isAllowedType(n.name.value))
+      .map(print)
+      .join("\n");
+  };
+
   const schema = `
+  ${render(definitions)}
+  ${render(extensions)}
+  ${render(interfaces)}
+
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface ${CONNECTION_TYPE_NAME} {
   edges: [Edge!]!
@@ -168,10 +176,6 @@ input Condition {
   operator: String! = "="
   value: String! = "true"
 }
-
-  ${reduced.map(print)}
-  ${reducetExtension.map(print)}
-  ${[...interfaces.values()].map(reduceFieldDefinition).map((i) => print(i))}
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
