@@ -1,4 +1,10 @@
-import { FieldDefinitionNode, InterfaceTypeDefinitionNode, Kind, ObjectTypeDefinitionNode } from "graphql";
+import {
+  FieldDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  Kind,
+  ObjectTypeDefinitionNode,
+  StringValueNode,
+} from "graphql";
 import camelCase from "camelcase";
 import { collectFieldsDefinitions, FieldDefinition } from "./field";
 import { ClassDefinition } from "./sdef";
@@ -33,8 +39,16 @@ export class ClassRenderer {
     const toObjectDef = (
       name: string,
       interfaces: string[],
-      fields: FieldDefinitionNode[]
+      fields: FieldDefinitionNode[],
+      description?: string
     ): ObjectTypeDefinitionNode => {
+      const desc: StringValueNode | undefined = description
+        ? {
+            kind: Kind.STRING,
+            value: description,
+          }
+        : undefined;
+
       return {
         kind: Kind.OBJECT_TYPE_DEFINITION,
         name: {
@@ -43,6 +57,7 @@ export class ClassRenderer {
         },
         interfaces: interfaces.map((n) => NameType(n)),
         fields,
+        description: desc,
       };
     };
 
@@ -56,7 +71,7 @@ export class ClassRenderer {
       interfaces.push(this.getInterfaceName());
     }
 
-    const classDef = toObjectDef(className, ["Node", ...interfaces], fields);
+    const classDef = toObjectDef(className, ["Node", ...interfaces], fields, this.c.$.description);
     const edgeDef = toObjectDef(
       `${className}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],

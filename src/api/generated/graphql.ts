@@ -36,28 +36,47 @@ export type ConnectionByIdArgs = {
   id: Scalars['String'];
 };
 
+/** A document. */
 export type Document = Node & {
   __typename?: 'Document';
+  /** Whether the document can redo the most recently undone command. */
   canRedo: Scalars['Boolean'];
+  /** Whether the document can undo the most recent command. */
   canUndo: Scalars['Boolean'];
+  /** Whether the document will write compressed transactions to disk; defaults to true. */
   compressesTransactions: Scalars['Boolean'];
+  /** If set, automatic cleanup of inbox items won't happen. */
   disableAutomaticInboxCleanup: Scalars['Boolean'];
   flattenedTasks: FlattenedTaskConnection;
+  /** The subset of the sections that are folders; folders having this folder as their container. */
   folders: FolderConnection;
+  /** The document's unique identifier. */
   id: Scalars['String'];
   inboxTasks: InboxTaskConnection;
+  /** Whether the document will write computed summary information when writing transactions. */
   includesSummaries: Scalars['Boolean'];
+  /** Date of the last sync. */
   lastSyncDate: Scalars['String'];
+  /** Error message (if any) for the last sync. */
   lastSyncError: Scalars['String'];
+  /** Has it been modified since the last save? */
   modified: Scalars['Boolean'];
+  /** Its name. */
   name: Scalars['String'];
+  /** The document's path on disk. */
   path: Scalars['String'];
+  /** The names of all available perspectives in this document. */
   perspectiveNames: Array<Scalars['String']>;
+  /** The subset of the sections that are projects; projects having this folder as their container. */
   projects: ProjectConnection;
+  /** The projects and folders contained by no folder. */
   sections: SectionConnection;
+  /** True if the document is currently syncing, false otherwise. */
   syncing: Scalars['Boolean'];
+  /** The top-level tags of the document. */
   tags: TagConnection;
   tasks: TaskConnection;
+  /** Whether the document will autosave. */
   willAutosave: Scalars['Boolean'];
 };
 
@@ -84,40 +103,73 @@ export type Edge = {
   node: Node;
 };
 
+/** A flattened list of tasks under a task or document. */
 export type FlattenedTask = Node & TaskInterface & {
   __typename?: 'FlattenedTask';
+  /** True if the task has a task that must be completed prior to it being actionable. */
   blocked: Scalars['Boolean'];
+  /** True if the task is completed. Use the "mark complete" and "mark incomplete" commands to change a task's status. */
   completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
   completedByChildren: Scalars['Boolean'];
+  /** The task's date of completion. This can only be modified on a completed task to backdate the completion date. */
   completionDate?: Maybe<Scalars['String']>;
+  /** The task's project, up however many levels of parent tasks.  Inbox tasks aren't considered contained by their provisionalliy assigned container, so if the task is actually an inbox task, this will be missing value. */
   containingProject?: Maybe<Project>;
+  /** When the task was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
   creationDate: Scalars['String'];
+  /** When the task should become available for action. */
   deferDate?: Maybe<Scalars['String']>;
+  /** True if the task is dropped. Use the "mark dropped" and "mark incomplete" commands to change a task's status. */
   dropped: Scalars['Boolean'];
+  /** The date the task was dropped. This can only be modified on a dropped task to backdate the dropped date. */
   droppedDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished. */
   dueDate?: Maybe<Scalars['String']>;
+  /** When the task should become available for action (including inherited). */
   effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** True if the task is completed, or any of it's containing tasks or project are completed. */
   effectivelyCompleted: Scalars['Boolean'];
+  /** True if the task is dropped, or any of it's containing tasks or project are dropped. */
   effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this task will take to finish. */
   estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
   flagged: Scalars['Boolean'];
   flattenedTasks: FlattenedTaskConnection;
+  /** The identifier of the task. */
   id: Scalars['String'];
+  /** Returns true if the task itself is an inbox task or if the task is contained by an inbox task. */
   inInbox: Scalars['Boolean'];
+  /** When the task was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the task. */
   name: Scalars['String'];
+  /** If the task is the next task of its containing project, next is true. */
   next: Scalars['Boolean'];
+  /** The next defer date if this task repeats on a fixed schedule and it has a defer date. */
   nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this task. */
   numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this task. */
   numberOfTasks: Scalars['Int'];
+  /** The task holding this task.  If this is missing value, then this is a top level task -- either the root of a project or an inbox item. */
   parentTask?: Maybe<Task>;
+  /** The task's first tag. Setting this will remove the current first tag on the task, if any and move or add the new tag as the first tag on the task. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
   primaryTag?: Maybe<Tag>;
+  /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
   shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** The tags assigned to this task. */
   tags: TagConnection;
+  /** The tasks having this task as their container. */
   tasks: TaskConnection;
 };
 
@@ -139,16 +191,26 @@ export type FlattenedTaskEdge = Edge & {
   node: FlattenedTask;
 };
 
+/** A group of projects and sub-folders representing an area of responsibility. */
 export type Folder = FolderInterface & Node & SectionInterface & {
   __typename?: 'Folder';
+  /** When the folder was created. */
   creationDate: Scalars['String'];
+  /** Set if the folder is currently hidden or any of its container folders are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  /** The subset of the sections that are folders; folders having this folder as their container. */
   folders: FolderConnection;
+  /** Set if the folder is currently hidden. */
   hidden: Scalars['Boolean'];
+  /** The identifier of the folder. */
   id: Scalars['String'];
+  /** When the folder was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the folder. */
   name: Scalars['String'];
+  /** The subset of the sections that are projects; projects having this folder as their container. */
   projects: ProjectConnection;
+  /** The projects and folders having this folder as their container. */
   sections: SectionConnection;
 };
 
@@ -171,51 +233,93 @@ export type FolderEdge = Edge & {
 };
 
 export type FolderInterface = {
+  /** When the folder was created. */
   creationDate: Scalars['String'];
+  /** Set if the folder is currently hidden or any of its container folders are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  /** The subset of the sections that are folders; folders having this folder as their container. */
   folders: FolderConnection;
+  /** Set if the folder is currently hidden. */
   hidden: Scalars['Boolean'];
+  /** The identifier of the folder. */
   id: Scalars['String'];
+  /** When the folder was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the folder. */
   name: Scalars['String'];
+  /** The subset of the sections that are projects; projects having this folder as their container. */
   projects: ProjectConnection;
+  /** The projects and folders having this folder as their container. */
   sections: SectionConnection;
 };
 
+/** A task that is in the document's inbox */
 export type InboxTask = Node & TaskInterface & {
   __typename?: 'InboxTask';
+  /** True if the task has a task that must be completed prior to it being actionable. */
   blocked: Scalars['Boolean'];
+  /** True if the task is completed. Use the "mark complete" and "mark incomplete" commands to change a task's status. */
   completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
   completedByChildren: Scalars['Boolean'];
+  /** The task's date of completion. This can only be modified on a completed task to backdate the completion date. */
   completionDate?: Maybe<Scalars['String']>;
+  /** The task's project, up however many levels of parent tasks.  Inbox tasks aren't considered contained by their provisionalliy assigned container, so if the task is actually an inbox task, this will be missing value. */
   containingProject?: Maybe<Project>;
+  /** When the task was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
   creationDate: Scalars['String'];
+  /** When the task should become available for action. */
   deferDate?: Maybe<Scalars['String']>;
+  /** True if the task is dropped. Use the "mark dropped" and "mark incomplete" commands to change a task's status. */
   dropped: Scalars['Boolean'];
+  /** The date the task was dropped. This can only be modified on a dropped task to backdate the dropped date. */
   droppedDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished. */
   dueDate?: Maybe<Scalars['String']>;
+  /** When the task should become available for action (including inherited). */
   effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** True if the task is completed, or any of it's containing tasks or project are completed. */
   effectivelyCompleted: Scalars['Boolean'];
+  /** True if the task is dropped, or any of it's containing tasks or project are dropped. */
   effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this task will take to finish. */
   estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
   flagged: Scalars['Boolean'];
   flattenedTasks: FlattenedTaskConnection;
+  /** The identifier of the task. */
   id: Scalars['String'];
+  /** Returns true if the task itself is an inbox task or if the task is contained by an inbox task. */
   inInbox: Scalars['Boolean'];
+  /** When the task was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the task. */
   name: Scalars['String'];
+  /** If the task is the next task of its containing project, next is true. */
   next: Scalars['Boolean'];
+  /** The next defer date if this task repeats on a fixed schedule and it has a defer date. */
   nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this task. */
   numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this task. */
   numberOfTasks: Scalars['Int'];
+  /** The task holding this task.  If this is missing value, then this is a top level task -- either the root of a project or an inbox item. */
   parentTask?: Maybe<Task>;
+  /** The task's first tag. Setting this will remove the current first tag on the task, if any and move or add the new tag as the first tag on the task. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
   primaryTag?: Maybe<Tag>;
+  /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
   shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** The tags assigned to this task. */
   tags: TagConnection;
+  /** The tasks having this task as their container. */
   tasks: TaskConnection;
 };
 
@@ -249,40 +353,74 @@ export type PageInfo = {
   startCursor: Scalars['String'];
 };
 
+/** A project. */
 export type Project = Node & ProjectInterface & SectionInterface & {
   __typename?: 'Project';
+  /** True if the project has a project that must be completed prior to it being actionable. */
   blocked: Scalars['Boolean'];
+  /** True if the project is completed. Use the "mark complete" and "mark incomplete" commands to change a project's status. */
   completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
   completedByChildren: Scalars['Boolean'];
+  /** The project's date of completion. This can only be modified on a completed project to backdate the completion date. */
   completionDate?: Maybe<Scalars['String']>;
+  /** When the project was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
   creationDate: Scalars['String'];
+  /** True if the project is the default holder of sington actions.  Only one project can have this flag set; setting it on a project will clear it on any other project having it.  Setting this to true will set 'singleton action holder' to true if not already so set. */
   defaultSingletonActionHolder: Scalars['Boolean'];
+  /** When the project should become available for action. */
   deferDate?: Maybe<Scalars['String']>;
+  /** True if the project is dropped. Use the "mark dropped" and "mark incomplete" commands to change a project's status. */
   dropped: Scalars['Boolean'];
+  /** The date the project was dropped. This can only be modified on a dropped project to backdate the dropped date. */
   droppedDate?: Maybe<Scalars['String']>;
+  /** When the project must be finished. */
   dueDate?: Maybe<Scalars['String']>;
+  /** When the project should become available for action (including inherited). */
   effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the project must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** True if the project is completed */
   effectivelyCompleted: Scalars['Boolean'];
+  /** True if the project is dropped */
   effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this project will take to finish. */
   estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
   flagged: Scalars['Boolean'];
+  /** The folder of the project, or missing value if it is contained directly by the document. */
   folder?: Maybe<Folder>;
+  /** The identifier of the project. */
   id: Scalars['String'];
+  /** When the project was last reviewed. */
   lastReviewDate: Scalars['String'];
+  /** When the project was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the project. */
   name: Scalars['String'];
+  /** The next defer date if this project repeats on a fixed schedule and it has a defer date. */
   nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this project repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** When the project should next be reviewed. Setting this to missing value will set the review date based off the last review date and review interval. */
   nextReviewDate?: Maybe<Scalars['String']>;
+  /** The next actionable child of this project. */
   nextTask?: Maybe<Task>;
+  /** The number of available direct children of this project. */
   numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this project. */
   numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this project. */
   numberOfTasks: Scalars['Int'];
+  /** The project's first tag. Setting this will remove the current first tag on the project, if any and move or add the new tag as the first tag on the project. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
   primaryTag?: Maybe<Tag>;
+  /** The root task of this project, holding the project's name, note, dates and child tasks. */
   rootTask: Task;
+  /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
   shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** True if the project contains singleton actions. */
   singletonActionHolder: Scalars['Boolean'];
 };
 
@@ -305,38 +443,71 @@ export type ProjectEdge = Edge & {
 };
 
 export type ProjectInterface = {
+  /** True if the project has a project that must be completed prior to it being actionable. */
   blocked: Scalars['Boolean'];
+  /** True if the project is completed. Use the "mark complete" and "mark incomplete" commands to change a project's status. */
   completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
   completedByChildren: Scalars['Boolean'];
+  /** The project's date of completion. This can only be modified on a completed project to backdate the completion date. */
   completionDate?: Maybe<Scalars['String']>;
+  /** When the project was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
   creationDate: Scalars['String'];
+  /** True if the project is the default holder of sington actions.  Only one project can have this flag set; setting it on a project will clear it on any other project having it.  Setting this to true will set 'singleton action holder' to true if not already so set. */
   defaultSingletonActionHolder: Scalars['Boolean'];
+  /** When the project should become available for action. */
   deferDate?: Maybe<Scalars['String']>;
+  /** True if the project is dropped. Use the "mark dropped" and "mark incomplete" commands to change a project's status. */
   dropped: Scalars['Boolean'];
+  /** The date the project was dropped. This can only be modified on a dropped project to backdate the dropped date. */
   droppedDate?: Maybe<Scalars['String']>;
+  /** When the project must be finished. */
   dueDate?: Maybe<Scalars['String']>;
+  /** When the project should become available for action (including inherited). */
   effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the project must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** True if the project is completed */
   effectivelyCompleted: Scalars['Boolean'];
+  /** True if the project is dropped */
   effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this project will take to finish. */
   estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
   flagged: Scalars['Boolean'];
+  /** The folder of the project, or missing value if it is contained directly by the document. */
   folder?: Maybe<Folder>;
+  /** The identifier of the project. */
   id: Scalars['String'];
+  /** When the project was last reviewed. */
   lastReviewDate: Scalars['String'];
+  /** When the project was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the project. */
   name: Scalars['String'];
+  /** The next defer date if this project repeats on a fixed schedule and it has a defer date. */
   nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this project repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** When the project should next be reviewed. Setting this to missing value will set the review date based off the last review date and review interval. */
   nextReviewDate?: Maybe<Scalars['String']>;
+  /** The next actionable child of this project. */
   nextTask?: Maybe<Task>;
+  /** The number of available direct children of this project. */
   numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this project. */
   numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this project. */
   numberOfTasks: Scalars['Int'];
+  /** The project's first tag. Setting this will remove the current first tag on the project, if any and move or add the new tag as the first tag on the project. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
   primaryTag?: Maybe<Tag>;
+  /** The root task of this project, holding the project's name, note, dates and child tasks. */
   rootTask: Task;
+  /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
   shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** True if the project contains singleton actions. */
   singletonActionHolder: Scalars['Boolean'];
 };
 
@@ -345,9 +516,12 @@ export type Query = {
   defaultDocument: Document;
 };
 
+/** A portion of a folder or document; either a project or a folder. */
 export type Section = Node & SectionInterface & {
   __typename?: 'Section';
+  /** The identifier of the project or folder. */
   id: Scalars['String'];
+  /** The name of the project or folder. */
   name: Scalars['String'];
 };
 
@@ -370,20 +544,32 @@ export type SectionEdge = Edge & {
 };
 
 export type SectionInterface = {
+  /** The identifier of the project or folder. */
   id: Scalars['String'];
+  /** The name of the project or folder. */
   name: Scalars['String'];
 };
 
+/** A tag. */
 export type Tag = Node & TagInterface & {
   __typename?: 'Tag';
+  /** If false, tasks associated with this tag will be skipped when determining the next action for a project. */
   allowsNextAction: Scalars['Boolean'];
+  /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
   availableTaskCount: Scalars['Int'];
+  /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  /** Set if the tag is currently hidden. */
   hidden: Scalars['Boolean'];
+  /** The identifier of the tag. */
   id: Scalars['String'];
+  /** The name of the tag. */
   name: Scalars['String'];
+  /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
   remainingTaskCount: Scalars['Int'];
+  /** The tags having this tag as their container. */
   tags: TagConnection;
+  /** The tasks having this tag. */
   tasks: TaskConnection;
 };
 
@@ -406,51 +592,93 @@ export type TagEdge = Edge & {
 };
 
 export type TagInterface = {
+  /** If false, tasks associated with this tag will be skipped when determining the next action for a project. */
   allowsNextAction: Scalars['Boolean'];
+  /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
   availableTaskCount: Scalars['Int'];
+  /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  /** Set if the tag is currently hidden. */
   hidden: Scalars['Boolean'];
+  /** The identifier of the tag. */
   id: Scalars['String'];
+  /** The name of the tag. */
   name: Scalars['String'];
+  /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
   remainingTaskCount: Scalars['Int'];
+  /** The tags having this tag as their container. */
   tags: TagConnection;
+  /** The tasks having this tag. */
   tasks: TaskConnection;
 };
 
+/** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
 export type Task = Node & TaskInterface & {
   __typename?: 'Task';
+  /** True if the task has a task that must be completed prior to it being actionable. */
   blocked: Scalars['Boolean'];
+  /** True if the task is completed. Use the "mark complete" and "mark incomplete" commands to change a task's status. */
   completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
   completedByChildren: Scalars['Boolean'];
+  /** The task's date of completion. This can only be modified on a completed task to backdate the completion date. */
   completionDate?: Maybe<Scalars['String']>;
+  /** The task's project, up however many levels of parent tasks.  Inbox tasks aren't considered contained by their provisionalliy assigned container, so if the task is actually an inbox task, this will be missing value. */
   containingProject?: Maybe<Project>;
+  /** When the task was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
   creationDate: Scalars['String'];
+  /** When the task should become available for action. */
   deferDate?: Maybe<Scalars['String']>;
+  /** True if the task is dropped. Use the "mark dropped" and "mark incomplete" commands to change a task's status. */
   dropped: Scalars['Boolean'];
+  /** The date the task was dropped. This can only be modified on a dropped task to backdate the dropped date. */
   droppedDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished. */
   dueDate?: Maybe<Scalars['String']>;
+  /** When the task should become available for action (including inherited). */
   effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** True if the task is completed, or any of it's containing tasks or project are completed. */
   effectivelyCompleted: Scalars['Boolean'];
+  /** True if the task is dropped, or any of it's containing tasks or project are dropped. */
   effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this task will take to finish. */
   estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
   flagged: Scalars['Boolean'];
   flattenedTasks: FlattenedTaskConnection;
+  /** The identifier of the task. */
   id: Scalars['String'];
+  /** Returns true if the task itself is an inbox task or if the task is contained by an inbox task. */
   inInbox: Scalars['Boolean'];
+  /** When the task was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the task. */
   name: Scalars['String'];
+  /** If the task is the next task of its containing project, next is true. */
   next: Scalars['Boolean'];
+  /** The next defer date if this task repeats on a fixed schedule and it has a defer date. */
   nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this task. */
   numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this task. */
   numberOfTasks: Scalars['Int'];
+  /** The task holding this task.  If this is missing value, then this is a top level task -- either the root of a project or an inbox item. */
   parentTask?: Maybe<Task>;
+  /** The task's first tag. Setting this will remove the current first tag on the task, if any and move or add the new tag as the first tag on the task. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
   primaryTag?: Maybe<Tag>;
+  /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
   shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** The tags assigned to this task. */
   tags: TagConnection;
+  /** The tasks having this task as their container. */
   tasks: TaskConnection;
 };
 
@@ -473,38 +701,70 @@ export type TaskEdge = Edge & {
 };
 
 export type TaskInterface = {
+  /** True if the task has a task that must be completed prior to it being actionable. */
   blocked: Scalars['Boolean'];
+  /** True if the task is completed. Use the "mark complete" and "mark incomplete" commands to change a task's status. */
   completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
   completedByChildren: Scalars['Boolean'];
+  /** The task's date of completion. This can only be modified on a completed task to backdate the completion date. */
   completionDate?: Maybe<Scalars['String']>;
+  /** The task's project, up however many levels of parent tasks.  Inbox tasks aren't considered contained by their provisionalliy assigned container, so if the task is actually an inbox task, this will be missing value. */
   containingProject?: Maybe<Project>;
+  /** When the task was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
   creationDate: Scalars['String'];
+  /** When the task should become available for action. */
   deferDate?: Maybe<Scalars['String']>;
+  /** True if the task is dropped. Use the "mark dropped" and "mark incomplete" commands to change a task's status. */
   dropped: Scalars['Boolean'];
+  /** The date the task was dropped. This can only be modified on a dropped task to backdate the dropped date. */
   droppedDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished. */
   dueDate?: Maybe<Scalars['String']>;
+  /** When the task should become available for action (including inherited). */
   effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the task must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** True if the task is completed, or any of it's containing tasks or project are completed. */
   effectivelyCompleted: Scalars['Boolean'];
+  /** True if the task is dropped, or any of it's containing tasks or project are dropped. */
   effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this task will take to finish. */
   estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
   flagged: Scalars['Boolean'];
   flattenedTasks: FlattenedTaskConnection;
+  /** The identifier of the task. */
   id: Scalars['String'];
+  /** Returns true if the task itself is an inbox task or if the task is contained by an inbox task. */
   inInbox: Scalars['Boolean'];
+  /** When the task was last modified. */
   modificationDate: Scalars['String'];
+  /** The name of the task. */
   name: Scalars['String'];
+  /** If the task is the next task of its containing project, next is true. */
   next: Scalars['Boolean'];
+  /** The next defer date if this task repeats on a fixed schedule and it has a defer date. */
   nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this task. */
   numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this task. */
   numberOfTasks: Scalars['Int'];
+  /** The task holding this task.  If this is missing value, then this is a top level task -- either the root of a project or an inbox item. */
   parentTask?: Maybe<Task>;
+  /** The task's first tag. Setting this will remove the current first tag on the task, if any and move or add the new tag as the first tag on the task. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
   primaryTag?: Maybe<Tag>;
+  /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
   shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** The tags assigned to this task. */
   tags: TagConnection;
+  /** The tasks having this task as their container. */
   tasks: TaskConnection;
 };
 
