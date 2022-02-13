@@ -317,44 +317,42 @@ exports[`query with inline fragment 1`] = `
           cursor: elm.id(),
           node: {
             name: elm.name(),
-            sections: elm.sections
-              ? (() => {
-                  const nodes = elm.sections();
+            sections: (() => {
+              const nodes = elm.sections();
+              return {
+                pageInfo: {
+                  hasPreviousPage: false,
+                  hasNextPage: false,
+                  startCursor: \\"\\",
+                  endCursor: \\"\\",
+                },
+                edges: nodes.map((elm) => {
                   return {
-                    pageInfo: {
-                      hasPreviousPage: false,
-                      hasNextPage: false,
-                      startCursor: \\"\\",
-                      endCursor: \\"\\",
+                    cursor: elm.id(),
+                    node: {
+                      ...(() => {
+                        return elm.properties().pcls.toLowerCase() ===
+                          \\"Folder\\".toLowerCase()
+                          ? {
+                              name: elm.name(),
+                              __typename: \\"Folder\\",
+                            }
+                          : {};
+                      })(),
+                      ...(() => {
+                        return elm.properties().pcls.toLowerCase() ===
+                          \\"Project\\".toLowerCase()
+                          ? {
+                              completed: elm.completed(),
+                              __typename: \\"Project\\",
+                            }
+                          : {};
+                      })(),
                     },
-                    edges: nodes.map((elm) => {
-                      return {
-                        cursor: elm.id(),
-                        node: {
-                          ...(() => {
-                            return elm.properties().pcls.toLowerCase() ===
-                              \\"Folder\\".toLowerCase()
-                              ? {
-                                  name: elm.name(),
-                                  __typename: \\"Folder\\",
-                                }
-                              : {};
-                          })(),
-                          ...(() => {
-                            return elm.properties().pcls.toLowerCase() ===
-                              \\"Project\\".toLowerCase()
-                              ? {
-                                  completed: elm.completed(),
-                                  __typename: \\"Project\\",
-                                }
-                              : {};
-                          })(),
-                        },
-                      };
-                    }),
                   };
-                })()
-              : undefined,
+                }),
+              };
+            })(),
           },
         };
       }),
