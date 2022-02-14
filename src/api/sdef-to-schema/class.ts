@@ -77,14 +77,6 @@ export class ClassRenderer {
       interfaces.push(NodeInterface.name.value);
     }
 
-    if (className === "RichText") {
-      console.log({
-        fields: fields.map((f) => f.name.value),
-        interfaceFields: NodeInterface.fields?.map((f) => f.name.value),
-        isNode,
-      });
-    }
-
     const classDef = toObjectDef(className, interfaces, fields, this.c.$.description);
     if (!isNode) {
       return [classDef];
