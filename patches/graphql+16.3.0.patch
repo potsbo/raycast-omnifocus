@@ -9,7 +9,7 @@ index 0d47611..1c56e7e 100644
 +function printObjectDirectives(type) {
 +  const directives = type.astNode?.directives;
 +  // TODO: args
-+  return directives.map((d) => ` @${d.name.value}`).join('')
++  return directives ? directives.map((d) => ` @${d.name.value}`).join('') : ""
 +}
 +
  function printObject(type) {
