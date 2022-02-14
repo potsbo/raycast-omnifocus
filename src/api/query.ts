@@ -44,10 +44,15 @@ const renderField = (
   if (f.field.selectionSet) {
     const args: string[] = [];
     f.field.arguments?.forEach((a) => {
-      if (a.value.kind !== Kind.VARIABLE) {
-        throw "Non variable argument found";
+      if (a.value.kind === Kind.VARIABLE) {
+        args.push(a.value.name.value);
+        return;
       }
-      args.push(a.value.name.value);
+      if (a.value.kind === Kind.STRING) {
+        args.push(`"${a.value.value}"`);
+        return;
+      }
+      throw `Non variable argument found ${JSON.stringify(a)}`;
     });
 
     const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
@@ -178,8 +183,13 @@ const renderNonNullObject = (
 };
 
 const renderFields = (ctx: CurrentContext, object: RenderableObject): string => {
-  const isRecordType =
-    mustFindTypeDefinition(ctx, object.typeNode).directives?.some((d) => d.name.value === "recordType") ?? false;
+  const objectDef = mustFindTypeDefinition(ctx, object.typeNode);
+  const isRecordType = objectDef.directives?.some((d) => d.name.value === "recordType") ?? false;
+
+  const reflectionRequired =
+    objectDef.kind === Kind.INTERFACE_TYPE_DEFINITION &&
+    !object.selectedFields.some((f) => "name" in f && f.name.value === "__typename");
+  const reflection = `__typename:  pascalCase(${ctx.rootName}.properties().pcls),`;
 
   return object.selectedFields
     .map((field) => {
@@ -203,7 +213,7 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
         return renderFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
       }
       if (field.name.value === "__typename") {
-        return "";
+        return reflection;
       }
       const definition = mustFindTypeDefinition(ctx, object.typeNode).fields?.find(
         (def) => def.name.value === field.name.value
@@ -213,9 +223,14 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
       }
       return renderField(ctx, { field, definition }, { isRecordType });
     })
+    .concat(reflectionRequired ? reflection : "")
     .sort()
     .join("");
 };
+
+function pascalCase(s: string) {
+  return (s.match(/[a-zA-Z0-9]+/g) || []).map((w) => `${w[0].toUpperCase()}${w.slice(1)}`).join("");
+}
 
 export const genQuery = (
   rootName: string,
@@ -224,6 +239,7 @@ export const genQuery = (
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
     .join("\n");
+  const lib = pascalCase.toString();
 
   const field = info.operation.selectionSet.selections[0];
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
@@ -236,5 +252,5 @@ export const genQuery = (
   }
 
   const fs = field.selectionSet.selections;
-  return `${vars}(${renderObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
+  return `${lib};${vars}(${renderObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
 };

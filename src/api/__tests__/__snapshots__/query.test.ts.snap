@@ -1,7 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`query for Connection 1`] = `
-"({
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+({
   projects: (() => {
     const nodes = parent.projects();
     return {
@@ -14,7 +19,10 @@ exports[`query for Connection 1`] = `
       edges: nodes.map((elm) => {
         return {
           cursor: elm.id(),
-          node: { name: elm.name() },
+          node: {
+            __typename: pascalCase(elm.properties().pcls),
+            name: elm.name(),
+          },
         };
       }),
     };
@@ -24,7 +32,12 @@ exports[`query for Connection 1`] = `
 `;
 
 exports[`query for GetInboxTasksDocument 1`] = `
-"({
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+({
   inboxTasks: (() => {
     const nodes = parent.inboxTasks.whose({
       _and: [
@@ -48,6 +61,7 @@ exports[`query for GetInboxTasksDocument 1`] = `
         return {
           cursor: elm.id(),
           node: {
+            __typename: pascalCase(elm.properties().pcls),
             completed: elm.completed(),
             containingProject: elm.containingProject()
               ? {
@@ -70,7 +84,12 @@ exports[`query for GetInboxTasksDocument 1`] = `
 `;
 
 exports[`query for GetTasksDocument 1`] = `
-"const onlyFlagged = true;
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+const onlyFlagged = true;
 const onlyAvailable = true;
 const withEffectiveDueDate = false;
 ({
@@ -98,6 +117,7 @@ const withEffectiveDueDate = false;
         return {
           cursor: elm.id(),
           node: {
+            __typename: pascalCase(elm.properties().pcls),
             completed: elm.completed(),
             containingProject: elm.containingProject()
               ? {
@@ -120,7 +140,12 @@ const withEffectiveDueDate = false;
 `;
 
 exports[`query for GetTasksDocument for forecast 1`] = `
-"const onlyFlagged = false;
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+const onlyFlagged = false;
 const onlyAvailable = true;
 const withEffectiveDueDate = true;
 ({
@@ -148,6 +173,7 @@ const withEffectiveDueDate = true;
         return {
           cursor: elm.id(),
           node: {
+            __typename: pascalCase(elm.properties().pcls),
             completed: elm.completed(),
             containingProject: elm.containingProject()
               ? {
@@ -170,7 +196,12 @@ const withEffectiveDueDate = true;
 `;
 
 exports[`query for GetTasksInProjectDocument 1`] = `
-"const projectId = \\"foobar\\";
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+const projectId = \\"foobar\\";
 ({
   projects: (() => {
     const nodes = parent.projects();
@@ -188,6 +219,9 @@ exports[`query for GetTasksInProjectDocument 1`] = `
       }),
       byId: parent.projects.byId(projectId)
         ? {
+            __typename: pascalCase(
+              parent.projects.byId(projectId).properties().pcls
+            ),
             rootTask: {
               tasks: (() => {
                 const nodes = parent.projects
@@ -205,6 +239,8 @@ exports[`query for GetTasksInProjectDocument 1`] = `
                     return {
                       cursor: elm.id(),
                       node: {
+                        __typename: pascalCase(elm.properties().pcls),
+                        __typename: pascalCase(elm.properties().pcls),
                         completed: elm.completed(),
                         containingProject: elm.containingProject()
                           ? {
@@ -232,7 +268,12 @@ exports[`query for GetTasksInProjectDocument 1`] = `
 `;
 
 exports[`query for GetTopLevelProjects 1`] = `
-"({
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+({
   folders: (() => {
     const nodes = parent.folders();
     return {
@@ -246,6 +287,7 @@ exports[`query for GetTopLevelProjects 1`] = `
         return {
           cursor: elm.id(),
           node: {
+            __typename: pascalCase(elm.properties().pcls),
             id: elm.id(),
             name: elm.name(),
             projects: (() => {
@@ -261,6 +303,7 @@ exports[`query for GetTopLevelProjects 1`] = `
                   return {
                     cursor: elm.id(),
                     node: {
+                      __typename: pascalCase(elm.properties().pcls),
                       completed: elm.completed(),
                       id: elm.id(),
                       name: elm.name(),
@@ -288,6 +331,7 @@ exports[`query for GetTopLevelProjects 1`] = `
         return {
           cursor: elm.id(),
           node: {
+            __typename: pascalCase(elm.properties().pcls),
             completed: elm.completed(),
             id: elm.id(),
             name: elm.name(),
@@ -302,7 +346,12 @@ exports[`query for GetTopLevelProjects 1`] = `
 `;
 
 exports[`query with inline fragment 1`] = `
-"({
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+({
   folders: (() => {
     const nodes = parent.folders();
     return {
@@ -316,6 +365,7 @@ exports[`query with inline fragment 1`] = `
         return {
           cursor: elm.id(),
           node: {
+            __typename: pascalCase(elm.properties().pcls),
             name: elm.name(),
             sections: (() => {
               const nodes = elm.sections();
@@ -348,6 +398,7 @@ exports[`query with inline fragment 1`] = `
                             }
                           : {};
                       })(),
+                      __typename: pascalCase(elm.properties().pcls),
                     },
                   };
                 }),
@@ -356,6 +407,43 @@ exports[`query with inline fragment 1`] = `
           },
         };
       }),
+    };
+  })(),
+});
+"
+`;
+
+exports[`query with project interface 1`] = `
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+({
+  projects: (() => {
+    const nodes = parent.projects();
+    return {
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: \\"\\",
+        endCursor: \\"\\",
+      },
+      edges: nodes.map((elm) => {
+        return {
+          cursor: elm.id(),
+        };
+      }),
+      byId: parent.projects.byId(\\"hZoaSakOnG4\\")
+        ? {
+            __typename: pascalCase(
+              parent.projects.byId(\\"hZoaSakOnG4\\").properties().pcls
+            ),
+            rootTask: {
+              id: parent.projects.byId(\\"hZoaSakOnG4\\").rootTask().id(),
+            },
+          }
+        : undefined,
     };
   })(),
 });

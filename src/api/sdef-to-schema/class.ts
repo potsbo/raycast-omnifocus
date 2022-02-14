@@ -24,6 +24,7 @@ export class ClassRenderer {
   getInherits = () => this.c.$.inherits;
   getInterfaceName = () => `${this.getBaseTypeName()}Interface`;
   getInterfaced = (): InterfaceTypeDefinitionNode => {
+    const isNode = implementsInterface({ fields: this.fields }, NodeInterface);
     return {
       kind: Kind.INTERFACE_TYPE_DEFINITION,
       fields: this.fields,
@@ -31,7 +32,7 @@ export class ClassRenderer {
         kind: Kind.NAME,
         value: this.getInterfaceName(),
       },
-      interfaces: [],
+      interfaces: isNode ? [NameType(NodeInterface.name.value)] : [],
     };
   };
   getTypes = ({ inherits, inherited }: { inherits: ClassRenderer | undefined; inherited: boolean }) => {
@@ -86,7 +87,7 @@ export class ClassRenderer {
       [EDGE_TYPE_NAME],
       [
         FieldDefinition("cursor", NonNullType(NameType("String"))),
-        FieldDefinition("node", NonNullType(NameType(className))),
+        FieldDefinition("node", NonNullType(NameType(inherited ? this.getInterfaceName() : className))),
       ]
     );
     const connectionDef = toObjectDef(
@@ -109,7 +110,7 @@ export class ClassRenderer {
               type: NonNullType(NameType("String")),
             },
           ],
-          type: NameType(className),
+          type: NameType(inherited ? this.getInterfaceName() : className),
         },
         FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(`${className}${EDGE_TYPE_NAME}`))))),
         FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),

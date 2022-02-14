@@ -513,17 +513,17 @@ type Folder implements FolderInterface & Node & SectionInterface {
 }
 
 type FolderConnection implements Connection {
-  byId(id: String!): Folder
+  byId(id: String!): FolderInterface
   edges: [FolderEdge!]!
   pageInfo: PageInfo!
 }
 
 type FolderEdge implements Edge {
   cursor: String!
-  node: Folder!
+  node: FolderInterface!
 }
 
-interface FolderInterface {
+interface FolderInterface implements Node {
   """When the folder was created."""
   creationDate: String!
 
@@ -788,17 +788,17 @@ type Perspective implements Node & PerspectiveInterface {
 }
 
 type PerspectiveConnection implements Connection {
-  byId(id: String!): Perspective
+  byId(id: String!): PerspectiveInterface
   edges: [PerspectiveEdge!]!
   pageInfo: PageInfo!
 }
 
 type PerspectiveEdge implements Edge {
   cursor: String!
-  node: Perspective!
+  node: PerspectiveInterface!
 }
 
-interface PerspectiveInterface {
+interface PerspectiveInterface implements Node {
   """The identifier of the perspective."""
   id: String!
 
@@ -963,17 +963,17 @@ type Project implements Node & ProjectInterface & SectionInterface {
 }
 
 type ProjectConnection implements Connection {
-  byId(id: String!): Project
+  byId(id: String!): ProjectInterface
   edges: [ProjectEdge!]!
   pageInfo: PageInfo!
 }
 
 type ProjectEdge implements Edge {
   cursor: String!
-  node: Project!
+  node: ProjectInterface!
 }
 
-interface ProjectInterface {
+interface ProjectInterface implements Node {
   """
   True if the project has a project that must be completed prior to it being actionable.
   """
@@ -1385,17 +1385,17 @@ type Section implements Node & SectionInterface {
 }
 
 type SectionConnection implements Connection {
-  byId(id: String!): Section
+  byId(id: String!): SectionInterface
   edges: [SectionEdge!]!
   pageInfo: PageInfo!
 }
 
 type SectionEdge implements Edge {
   cursor: String!
-  node: Section!
+  node: SectionInterface!
 }
 
-interface SectionInterface {
+interface SectionInterface implements Node {
   """The identifier of the project or folder."""
   id: String!
 
@@ -1454,17 +1454,17 @@ type Tag implements Node & TagInterface {
 }
 
 type TagConnection implements Connection {
-  byId(id: String!): Tag
+  byId(id: String!): TagInterface
   edges: [TagEdge!]!
   pageInfo: PageInfo!
 }
 
 type TagEdge implements Edge {
   cursor: String!
-  node: Tag!
+  node: TagInterface!
 }
 
-interface TagInterface {
+interface TagInterface implements Node {
   """
   If false, tasks associated with this tag will be skipped when determining the next action for a project.
   """
@@ -1663,17 +1663,17 @@ type Task implements Node & TaskInterface {
 }
 
 type TaskConnection implements Connection {
-  byId(id: String!): Task
+  byId(id: String!): TaskInterface
   edges: [TaskEdge!]!
   pageInfo: PageInfo!
 }
 
 type TaskEdge implements Edge {
   cursor: String!
-  node: Task!
+  node: TaskInterface!
 }
 
-interface TaskInterface {
+interface TaskInterface implements Node {
   """
   True if the task has a task that must be completed prior to it being actionable.
   """
