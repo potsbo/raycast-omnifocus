@@ -25,6 +25,7 @@ export const ProjectList = () => {
           {f.projects?.map((p) => {
             return (
               <List.Item
+                keywords={[f.name]}
                 title={p.name}
                 subtitle={`${p.numberOfAvailableTasks} available`}
                 key={p.id}

@@ -1,5 +1,5 @@
-import { Detail } from "@raycast/api";
+import { TagList } from "./components/TagList";
 
 export default function Command() {
-  return <Detail markdown="**Hello** _World_!" />;
+  return <TagList />
 }

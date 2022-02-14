@@ -65,6 +65,34 @@ fragment FolderedTagDepth1 on Document {
   }
 }
 
+fragment FolderedTagDepth2 on Document {
+  tags {
+    edges {
+      node {
+        name # folder
+        id
+        availableTaskCount
+        tags {
+          edges {
+            node {
+              name # item
+              id
+              availableTaskCount
+              tags {
+                edges {
+                  node {
+                    id # for children count
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query GetTasks(
   $onlyFlagged: Boolean! = false
   $onlyAvailable: Boolean! = false
@@ -186,7 +214,43 @@ query GetTaskCreationSupportInfo {
 
 query GetNestedTags {
   defaultDocument {
-    ...FolderedTagDepth1
+    ...FolderedTagDepth2
+  }
+}
+
+query GetNestedTagsFrom($tagId: String!) {
+  defaultDocument {
+    tags {
+      byId(id: $tagId) {
+        id
+        name # title
+        tags {
+          edges {
+            node {
+              name # folder
+              id
+              availableTaskCount
+              tags {
+                edges {
+                  node {
+                    name # item
+                    id
+                    availableTaskCount
+                    tags {
+                      edges {
+                        node {
+                          id # for children count
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
