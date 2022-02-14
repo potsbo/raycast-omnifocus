@@ -18,6 +18,15 @@ export class RecordTypeRenderer {
         value: camelCase(this.e.$.name, { pascalCase: true }),
       },
       fields,
+      directives: [
+        {
+          kind: Kind.DIRECTIVE,
+          name: {
+            kind: Kind.NAME,
+            value: "recordType",
+          },
+        },
+      ],
     };
   };
 }

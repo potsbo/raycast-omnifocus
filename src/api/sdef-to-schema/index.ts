@@ -8,10 +8,10 @@ import {
   FieldDefinitionNode,
   lexicographicSortSchema,
   buildSchema,
-  printSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
   ObjectTypeExtensionNode,
+  printSchema,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
@@ -21,6 +21,7 @@ import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./consta
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
 import { RecordTypeRenderer } from "./recordType";
+
 
 const AllowedTypes = [
   "Task",
@@ -185,6 +186,7 @@ type Query {
 }
   
   directive @whose(condition: [Condition!]!) on FIELD
+  directive @recordType on OBJECT
 
 input Condition {
   enabled: Boolean! = true

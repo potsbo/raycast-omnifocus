@@ -1085,6 +1085,10 @@ export type ResolversParentTypes = {
   TaskInterface: ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Task'];
 };
 
+export type RecordTypeDirectiveArgs = { };
+
+export type RecordTypeDirectiveResolver<Result, Parent, ContextType = any, Args = RecordTypeDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type WhoseDirectiveArgs = {
   condition: Array<Condition>;
 };
@@ -1633,6 +1637,7 @@ export type Resolvers<ContextType = any> = {
 };
 
 export type DirectiveResolvers<ContextType = any> = {
+  recordType?: RecordTypeDirectiveResolver<any, any, ContextType>;
   whose?: WhoseDirectiveResolver<any, any, ContextType>;
 };
 

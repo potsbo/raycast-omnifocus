@@ -30,6 +30,7 @@ export const FieldDefinition = (name: string, type: TypeNode, description?: stri
     ? {
         kind: Kind.STRING,
         value: description,
+        block: true,
       }
     : undefined;
   return {

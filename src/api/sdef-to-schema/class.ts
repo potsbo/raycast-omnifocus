@@ -46,6 +46,7 @@ export class ClassRenderer {
         ? {
             kind: Kind.STRING,
             value: description,
+            block: true,
           }
         : undefined;
 
