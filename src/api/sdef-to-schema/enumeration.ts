@@ -1,5 +1,5 @@
 import { EnumTypeDefinitionNode, EnumValueDefinitionNode, Kind, StringValueNode } from "graphql";
-import camelCase from "camelCase";
+import camelCase from "camelcase";
 import { EnumDefinition } from "./sdef";
 
 export class EnumRenderer {

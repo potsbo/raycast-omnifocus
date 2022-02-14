@@ -1,5 +1,5 @@
 import { Kind, ObjectTypeDefinitionNode } from "graphql";
-import camelCase from "camelCase";
+import camelCase from "camelcase";
 import { collectFieldsDefinitions } from "./field";
 import { RecordTypeDefinition } from "./sdef";
 
