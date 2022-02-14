@@ -129,6 +129,11 @@ type AvailableTask implements Node & TaskInterface {
   """
   repetition: RepetitionInterval
 
+  """
+  The repetition rule for this task, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -435,6 +440,11 @@ type FlattenedTask implements Node & TaskInterface {
   """
   repetition: RepetitionInterval
 
+  """
+  The repetition rule for this task, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -669,6 +679,11 @@ type InboxTask implements Node & TaskInterface {
   """
   repetition: RepetitionInterval
 
+  """
+  The repetition rule for this task, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -879,6 +894,11 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   repetition: RepetitionInterval
 
+  """
+  The repetition rule for this project, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
   """The review interval for the project."""
   reviewInterval: RepetitionInterval!
 
@@ -1037,6 +1057,11 @@ interface ProjectInterface {
   """
   repetition: RepetitionInterval
 
+  """
+  The repetition rule for this project, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
   """The review interval for the project."""
   reviewInterval: RepetitionInterval!
 
@@ -1089,6 +1114,27 @@ type RepetitionInterval @recordType {
 
   """The units of the repetition interval."""
   unit: IntervalUnit!
+}
+
+enum RepetitionMethod {
+  """Due again after completion."""
+  DUE_AFTER_COMPLETION
+
+  """Repeat on a fixed schedule."""
+  FIXED_REPETITION
+
+  """Start again after completion."""
+  START_AFTER_COMPLETION
+}
+
+type RepetitionRule @recordType {
+  """The iCalendar (RFC 2445) string describing the recurrence."""
+  recurrence: String!
+
+  """
+  The repetition method. If fixed, the next repetition will be relative to a fixed calendar.  If sliding, the next repetition will be calculated when the action or inbox item is resolved.
+  """
+  repetitionMethod: RepetitionMethod!
 }
 
 """A portion of a folder or document; either a project or a folder."""
@@ -1347,6 +1393,11 @@ type Task implements Node & TaskInterface {
   """
   repetition: RepetitionInterval
 
+  """
+  The repetition rule for this task, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
   """If true, any children are sequentially dependent."""
   sequential: Boolean!
 
@@ -1495,6 +1546,11 @@ interface TaskInterface {
   The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
   """
   repetition: RepetitionInterval
+
+  """
+  The repetition rule for this task, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
 
   """If true, any children are sequentially dependent."""
   sequential: Boolean!

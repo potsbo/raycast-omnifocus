@@ -42,6 +42,7 @@ const AllowedTypes = [
   "RepetitionInterval",
   "LocationInformation",
   "AvailableTask",
+  "RepetitionRule",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -151,7 +152,8 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
   const extensions = extensionRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
-  const knownTypes = new Set(enums.map((e) => e.name.value));
+  // TODO: Add class definitions
+  const knownTypes = new Set(enums.map((e) => e.name.value).concat(recordTypes.map((r) => r.name.value)));
 
   const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
     return ns

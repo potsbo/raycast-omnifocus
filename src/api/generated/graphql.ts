@@ -79,6 +79,8 @@ export type AvailableTask = Node & TaskInterface & {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this task, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
   /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
@@ -303,6 +305,8 @@ export type FlattenedTask = Node & TaskInterface & {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this task, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
   /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
@@ -455,6 +459,8 @@ export type InboxTask = Node & TaskInterface & {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this task, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
   /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
@@ -598,6 +604,8 @@ export type Project = Node & ProjectInterface & SectionInterface & {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this project, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** The review interval for the project. */
   reviewInterval: RepetitionInterval;
   /** The root task of this project, holding the project's name, note, dates and child tasks. */
@@ -693,6 +701,8 @@ export type ProjectInterface = {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this project, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** The review interval for the project. */
   reviewInterval: RepetitionInterval;
   /** The root task of this project, holding the project's name, note, dates and child tasks. */
@@ -731,6 +741,23 @@ export type RepetitionInterval = {
   steps: Scalars['Int'];
   /** The units of the repetition interval. */
   unit: IntervalUnit;
+};
+
+export enum RepetitionMethod {
+  /** Due again after completion. */
+  DueAfterCompletion = 'DUE_AFTER_COMPLETION',
+  /** Repeat on a fixed schedule. */
+  FixedRepetition = 'FIXED_REPETITION',
+  /** Start again after completion. */
+  StartAfterCompletion = 'START_AFTER_COMPLETION'
+}
+
+export type RepetitionRule = {
+  __typename?: 'RepetitionRule';
+  /** The iCalendar (RFC 2445) string describing the recurrence. */
+  recurrence: Scalars['String'];
+  /** The repetition method. If fixed, the next repetition will be relative to a fixed calendar.  If sliding, the next repetition will be calculated when the action or inbox item is resolved. */
+  repetitionMethod: RepetitionMethod;
 };
 
 /** A portion of a folder or document; either a project or a folder. */
@@ -903,6 +930,8 @@ export type Task = Node & TaskInterface & {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this task, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
   /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
@@ -991,6 +1020,8 @@ export type TaskInterface = {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this task, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
   /** If true, any children are sequentially dependent. */
   sequential: Scalars['Boolean'];
   /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
@@ -1178,6 +1209,8 @@ export type ResolversTypes = {
   ProjectStatus: ProjectStatus;
   Query: ResolverTypeWrapper<{}>;
   RepetitionInterval: ResolverTypeWrapper<RepetitionInterval>;
+  RepetitionMethod: RepetitionMethod;
+  RepetitionRule: ResolverTypeWrapper<RepetitionRule>;
   Section: ResolverTypeWrapper<Section>;
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
@@ -1229,6 +1262,7 @@ export type ResolversParentTypes = {
   ProjectInterface: ResolversParentTypes['Project'];
   Query: {};
   RepetitionInterval: RepetitionInterval;
+  RepetitionRule: RepetitionRule;
   Section: Section;
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
@@ -1285,6 +1319,7 @@ export type AvailableTaskResolvers<ContextType = any, ParentType extends Resolve
   parentTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1418,6 +1453,7 @@ export type FlattenedTaskResolvers<ContextType = any, ParentType extends Resolve
   parentTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1508,6 +1544,7 @@ export type InboxTaskResolvers<ContextType = any, ParentType extends ResolversPa
   parentTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1583,6 +1620,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   reviewInterval?: Resolver<ResolversTypes['RepetitionInterval'], ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1638,6 +1676,7 @@ export type ProjectInterfaceResolvers<ContextType = any, ParentType extends Reso
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   reviewInterval?: Resolver<ResolversTypes['RepetitionInterval'], ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1654,6 +1693,12 @@ export type RepetitionIntervalResolvers<ContextType = any, ParentType extends Re
   fixed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   steps?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   unit?: Resolver<ResolversTypes['IntervalUnit'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RepetitionRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepetitionRule'] = ResolversParentTypes['RepetitionRule']> = {
+  recurrence?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  repetitionMethod?: Resolver<ResolversTypes['RepetitionMethod'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1760,6 +1805,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   parentTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1812,6 +1858,7 @@ export type TaskInterfaceResolvers<ContextType = any, ParentType extends Resolve
   parentTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1849,6 +1896,7 @@ export type Resolvers<ContextType = any> = {
   ProjectInterface?: ProjectInterfaceResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RepetitionInterval?: RepetitionIntervalResolvers<ContextType>;
+  RepetitionRule?: RepetitionRuleResolvers<ContextType>;
   Section?: SectionResolvers<ContextType>;
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;
