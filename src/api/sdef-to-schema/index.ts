@@ -41,6 +41,7 @@ const AllowedTypes = [
   "Float",
   "RepetitionInterval",
   "LocationInformation",
+  "AvailableTask",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
