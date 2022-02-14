@@ -6,7 +6,6 @@ export class EnumRenderer {
   private e: EnumDefinition;
   constructor(e: EnumDefinition) {
     this.e = e;
-    this.getType();
   }
 
   getType = (): EnumTypeDefinitionNode => {

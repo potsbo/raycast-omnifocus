@@ -21,7 +21,7 @@ import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./consta
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
 import { RecordTypeRenderer } from "./recordType";
-
+import { EnumRenderer } from "./enumeration";
 
 const AllowedTypes = [
   "Task",
@@ -62,7 +62,10 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   return false;
 };
 
-const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
+const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(
+  obj: T,
+  knownTypes: Set<string>
+): T => {
   const fields = obj.fields
     ?.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
       if (acum.some((a) => a.name.value === cur.name.value)) {
@@ -71,7 +74,7 @@ const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode
       acum.push(cur);
       return acum;
     }, [])
-    .filter((f) => isAllowedType(f.type));
+    .filter((f) => knownTypes.has(unwrapType(f.type).name.value) || isAllowedType(f.type));
   return {
     ...obj,
     fields,
@@ -84,12 +87,13 @@ const renderSuite = (
   classRenderers: ClassRenderer[];
   extensionRenderers: ExtensionRenderer[];
   recordTypeRenderers: RecordTypeRenderer[];
+  enumRenderers: EnumRenderer[];
 } => {
   const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
   const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
   const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
-  // TODO enumeration
-  return { classRenderers, extensionRenderers, recordTypeRenderers };
+  const enumRenderers = (s.enumeration ?? []).map((e) => new EnumRenderer(e));
+  return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
 };
 
 const interfaces: InterfaceTypeDefinitionNode[] = [];
@@ -100,23 +104,27 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
     dictionary: { suite: Suite[] };
   };
 
-  const { extensionRenderers, classRenderers, recordTypeRenderers } = parsed.dictionary.suite.map(renderSuite).reduce(
-    (
-      acum: {
-        classRenderers: ClassRenderer[];
-        extensionRenderers: ExtensionRenderer[];
-        recordTypeRenderers: RecordTypeRenderer[];
+  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parsed.dictionary.suite
+    .map(renderSuite)
+    .reduce(
+      (
+        acum: {
+          classRenderers: ClassRenderer[];
+          extensionRenderers: ExtensionRenderer[];
+          recordTypeRenderers: RecordTypeRenderer[];
+          enumRenderers: EnumRenderer[];
+        },
+        cur
+      ) => {
+        return {
+          classRenderers: acum.classRenderers.concat(cur.classRenderers),
+          extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
+          recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
+          enumRenderers: acum.enumRenderers.concat(cur.enumRenderers),
+        };
       },
-      cur
-    ) => {
-      return {
-        classRenderers: acum.classRenderers.concat(cur.classRenderers),
-        extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
-        recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
-      };
-    },
-    { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [] }
-  );
+      { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
+    );
 
   const inheritedClasses = new Set(
     classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
@@ -138,12 +146,15 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
     );
   });
 
+  const enums = enumRenderers.map((e) => e.getType());
   const extensions = extensionRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
+  const knownTypes = new Set(enums.map((e) => e.name.value));
+
   const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
     return ns
-      .map(reduceFieldDefinition)
+      .map((n) => reduceFieldDefinition(n, knownTypes))
       .filter((n) => isAllowedType(n.name.value))
       .map(print)
       .join("\n");
@@ -154,6 +165,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
   ${render(extensions)}
   ${render(interfaces)}
   ${render(recordTypes)}
+  ${enums.map(print)}
 
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface ${CONNECTION_TYPE_NAME} {

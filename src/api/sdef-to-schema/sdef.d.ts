@@ -5,11 +5,11 @@ export interface Suite {
     name: string;
   };
   command: unknown[];
-  enumeration: unknown[];
   class?: ClassDefinition[];
   "record-type": RecordTypeDefinition[];
   "value-type": unknown[];
   "class-extension": ClassExtensionDefinition[];
+  "enumeration"?: EnumDefinition[]
 }
 
 export interface ClassDefinition {

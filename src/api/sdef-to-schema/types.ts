@@ -65,7 +65,7 @@ export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
     if (res) {
       return NonNullType(NameType(res));
     }
-    return NonNullType(NameType(t.$.name));
+    return NonNullType(NameType(t.$.type));
   }
 
   throw new Error("Type definition not found");

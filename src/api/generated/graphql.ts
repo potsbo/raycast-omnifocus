@@ -111,6 +111,8 @@ export type FlattenedTag = Node & TagInterface & {
   allowsNextAction: Scalars['Boolean'];
   /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
   availableTaskCount: Scalars['Int'];
+  /** The containing tag. */
+  container: Tag;
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
   flattenedTags: FlattenedTagConnection;
@@ -390,6 +392,21 @@ export type InboxTaskEdge = Edge & {
   node: InboxTask;
 };
 
+export enum IntervalUnit {
+  /** Days */
+  Day = 'DAY',
+  /** Hours */
+  Hour = 'HOUR',
+  /** Minutes */
+  Minute = 'MINUTE',
+  /** Months */
+  Month = 'MONTH',
+  /** Weeks */
+  Week = 'WEEK',
+  /** Years */
+  Year = 'YEAR'
+}
+
 export type LocationInformation = {
   __typename?: 'LocationInformation';
   /** Altitude in meters from sea level. */
@@ -402,7 +419,16 @@ export type LocationInformation = {
   name: Scalars['String'];
   /** Radius of accuracy in kilometers, from 0.1km to 10km. */
   radius: Scalars['Float'];
+  /** Location notification trigger. */
+  trigger: LocationTrigger;
 };
+
+export enum LocationTrigger {
+  /** notify when arriving at this location */
+  NotifyWhenArriving = 'NOTIFY_WHEN_ARRIVING',
+  /** notify when leaving this location */
+  NotifyWhenLeaving = 'NOTIFY_WHEN_LEAVING'
+}
 
 export type Node = {
   id: Scalars['String'];
@@ -443,6 +469,8 @@ export type Project = Node & ProjectInterface & SectionInterface & {
   effectiveDeferDate?: Maybe<Scalars['String']>;
   /** When the project must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** The effective status of the project. */
+  effectiveStatus: ProjectStatus;
   /** True if the project is completed */
   effectivelyCompleted: Scalars['Boolean'];
   /** True if the project is dropped */
@@ -479,6 +507,8 @@ export type Project = Node & ProjectInterface & SectionInterface & {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The review interval for the project. */
+  reviewInterval: RepetitionInterval;
   /** The root task of this project, holding the project's name, note, dates and child tasks. */
   rootTask: Task;
   /** If true, any children are sequentially dependent. */
@@ -487,6 +517,8 @@ export type Project = Node & ProjectInterface & SectionInterface & {
   shouldUseFloatingTimeZone: Scalars['Boolean'];
   /** True if the project contains singleton actions. */
   singletonActionHolder: Scalars['Boolean'];
+  /** The status of the project. */
+  status: ProjectStatus;
 };
 
 export type ProjectConnection = Connection & {
@@ -532,6 +564,8 @@ export type ProjectInterface = {
   effectiveDeferDate?: Maybe<Scalars['String']>;
   /** When the project must be finished (including inherited). */
   effectiveDueDate?: Maybe<Scalars['String']>;
+  /** The effective status of the project. */
+  effectiveStatus: ProjectStatus;
   /** True if the project is completed */
   effectivelyCompleted: Scalars['Boolean'];
   /** True if the project is dropped */
@@ -568,6 +602,8 @@ export type ProjectInterface = {
   primaryTag?: Maybe<Tag>;
   /** The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
   repetition?: Maybe<RepetitionInterval>;
+  /** The review interval for the project. */
+  reviewInterval: RepetitionInterval;
   /** The root task of this project, holding the project's name, note, dates and child tasks. */
   rootTask: Task;
   /** If true, any children are sequentially dependent. */
@@ -576,7 +612,20 @@ export type ProjectInterface = {
   shouldUseFloatingTimeZone: Scalars['Boolean'];
   /** True if the project contains singleton actions. */
   singletonActionHolder: Scalars['Boolean'];
+  /** The status of the project. */
+  status: ProjectStatus;
 };
+
+export enum ProjectStatus {
+  /** Active */
+  ActiveStatus = 'ACTIVE_STATUS',
+  /** Done */
+  DoneStatus = 'DONE_STATUS',
+  /** Dropped */
+  DroppedStatus = 'DROPPED_STATUS',
+  /** On Hold */
+  OnHoldStatus = 'ON_HOLD_STATUS'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -589,6 +638,8 @@ export type RepetitionInterval = {
   fixed: Scalars['Boolean'];
   /** The count of the repetition interval. */
   steps: Scalars['Int'];
+  /** The units of the repetition interval. */
+  unit: IntervalUnit;
 };
 
 /** A portion of a folder or document; either a project or a folder. */
@@ -632,6 +683,8 @@ export type Tag = Node & TagInterface & {
   allowsNextAction: Scalars['Boolean'];
   /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
   availableTaskCount: Scalars['Int'];
+  /** The containing tag. */
+  container: Tag;
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
   flattenedTags: FlattenedTagConnection;
@@ -674,6 +727,8 @@ export type TagInterface = {
   allowsNextAction: Scalars['Boolean'];
   /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
   availableTaskCount: Scalars['Int'];
+  /** The containing tag. */
+  container: Tag;
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
   flattenedTags: FlattenedTagConnection;
@@ -1013,13 +1068,16 @@ export type ResolversTypes = {
   InboxTaskConnection: ResolverTypeWrapper<InboxTaskConnection>;
   InboxTaskEdge: ResolverTypeWrapper<InboxTaskEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  IntervalUnit: IntervalUnit;
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
+  LocationTrigger: LocationTrigger;
   Node: ResolversTypes['Document'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Project'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   ProjectEdge: ResolverTypeWrapper<ProjectEdge>;
   ProjectInterface: ResolversTypes['Project'];
+  ProjectStatus: ProjectStatus;
   Query: ResolverTypeWrapper<{}>;
   RepetitionInterval: ResolverTypeWrapper<RepetitionInterval>;
   Section: ResolverTypeWrapper<Section>;
@@ -1150,6 +1208,7 @@ export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentT
 export type FlattenedTagResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTag'] = ResolversParentTypes['FlattenedTag']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1322,6 +1381,7 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
   longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   radius?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  trigger?: Resolver<ResolversTypes['LocationTrigger'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1351,6 +1411,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   dueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   effectiveDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   effectiveDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveStatus?: Resolver<ResolversTypes['ProjectStatus'], ParentType, ContextType>;
   effectivelyCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -1369,10 +1430,12 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  reviewInterval?: Resolver<ResolversTypes['RepetitionInterval'], ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   singletonActionHolder?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['ProjectStatus'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1403,6 +1466,7 @@ export type ProjectInterfaceResolvers<ContextType = any, ParentType extends Reso
   dueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   effectiveDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   effectiveDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveStatus?: Resolver<ResolversTypes['ProjectStatus'], ParentType, ContextType>;
   effectivelyCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -1421,10 +1485,12 @@ export type ProjectInterfaceResolvers<ContextType = any, ParentType extends Reso
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
   repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  reviewInterval?: Resolver<ResolversTypes['RepetitionInterval'], ParentType, ContextType>;
   rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   singletonActionHolder?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['ProjectStatus'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -1434,6 +1500,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type RepetitionIntervalResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepetitionInterval'] = ResolversParentTypes['RepetitionInterval']> = {
   fixed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   steps?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  unit?: Resolver<ResolversTypes['IntervalUnit'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1465,6 +1532,7 @@ export type SectionInterfaceResolvers<ContextType = any, ParentType extends Reso
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1494,6 +1562,7 @@ export type TagInterfaceResolvers<ContextType = any, ParentType extends Resolver
   __resolveType: TypeResolveFn<'FlattenedTag' | 'Tag', ParentType, ContextType>;
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;

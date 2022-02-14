@@ -114,6 +114,9 @@ type FlattenedTag implements Node & TagInterface {
   """
   availableTaskCount: Int!
 
+  """The containing tag."""
+  container: Tag!
+
   """
   Set if the tag is currently hidden or any of its container tags are hidden.
   """
@@ -539,6 +542,26 @@ type InboxTaskEdge implements Edge {
   node: InboxTask!
 }
 
+enum IntervalUnit {
+  """Days"""
+  DAY
+
+  """Hours"""
+  HOUR
+
+  """Minutes"""
+  MINUTE
+
+  """Months"""
+  MONTH
+
+  """Weeks"""
+  WEEK
+
+  """Years"""
+  YEAR
+}
+
 type LocationInformation @recordType {
   """Altitude in meters from sea level."""
   altitude: Float!
@@ -554,6 +577,17 @@ type LocationInformation @recordType {
 
   """Radius of accuracy in kilometers, from 0.1km to 10km."""
   radius: Float!
+
+  """Location notification trigger."""
+  trigger: LocationTrigger!
+}
+
+enum LocationTrigger {
+  """notify when arriving at this location"""
+  NOTIFY_WHEN_ARRIVING
+
+  """notify when leaving this location"""
+  NOTIFY_WHEN_LEAVING
 }
 
 interface Node {
@@ -621,6 +655,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """When the project must be finished (including inherited)."""
   effectiveDueDate: String
 
+  """The effective status of the project."""
+  effectiveStatus: ProjectStatus!
+
   """True if the project is completed"""
   effectivelyCompleted: Boolean!
 
@@ -689,6 +726,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   repetition: RepetitionInterval
 
+  """The review interval for the project."""
+  reviewInterval: RepetitionInterval!
+
   """
   The root task of this project, holding the project's name, note, dates and child tasks.
   """
@@ -704,6 +744,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
 
   """True if the project contains singleton actions."""
   singletonActionHolder: Boolean!
+
+  """The status of the project."""
+  status: ProjectStatus!
 }
 
 type ProjectConnection implements Connection {
@@ -770,6 +813,9 @@ interface ProjectInterface {
   """When the project must be finished (including inherited)."""
   effectiveDueDate: String
 
+  """The effective status of the project."""
+  effectiveStatus: ProjectStatus!
+
   """True if the project is completed"""
   effectivelyCompleted: Boolean!
 
@@ -838,6 +884,9 @@ interface ProjectInterface {
   """
   repetition: RepetitionInterval
 
+  """The review interval for the project."""
+  reviewInterval: RepetitionInterval!
+
   """
   The root task of this project, holding the project's name, note, dates and child tasks.
   """
@@ -853,6 +902,23 @@ interface ProjectInterface {
 
   """True if the project contains singleton actions."""
   singletonActionHolder: Boolean!
+
+  """The status of the project."""
+  status: ProjectStatus!
+}
+
+enum ProjectStatus {
+  """Active"""
+  ACTIVE_STATUS
+
+  """Done"""
+  DONE_STATUS
+
+  """Dropped"""
+  DROPPED_STATUS
+
+  """On Hold"""
+  ON_HOLD_STATUS
 }
 
 type Query {
@@ -867,6 +933,9 @@ type RepetitionInterval @recordType {
 
   """The count of the repetition interval."""
   steps: Int!
+
+  """The units of the repetition interval."""
+  unit: IntervalUnit!
 }
 
 """A portion of a folder or document; either a project or a folder."""
@@ -908,6 +977,9 @@ type Tag implements Node & TagInterface {
   A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags.
   """
   availableTaskCount: Int!
+
+  """The containing tag."""
+  container: Tag!
 
   """
   Set if the tag is currently hidden or any of its container tags are hidden.
@@ -960,6 +1032,9 @@ interface TagInterface {
   A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags.
   """
   availableTaskCount: Int!
+
+  """The containing tag."""
+  container: Tag!
 
   """
   Set if the tag is currently hidden or any of its container tags are hidden.
