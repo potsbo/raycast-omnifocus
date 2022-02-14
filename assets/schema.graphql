@@ -223,6 +223,7 @@ type Document implements Node {
 
   """The names of all available perspectives in this document."""
   perspectiveNames: [String!]!
+  perspectives: PerspectiveConnection!
 
   """
   The subset of the sections that are projects; projects having this folder as their container.
@@ -297,6 +298,7 @@ type FlattenedTag implements Node & TagInterface {
   A count of the number of incomplete tasks of this tag and all its active descendent tags.
   """
   remainingTaskCount: Int!
+  remainingTasks: RemainingTaskConnection!
 
   """The tags having this tag as their container."""
   tags: TagConnection!
@@ -769,6 +771,34 @@ type PageInfo {
   startCursor: String!
 }
 
+"""A perspective."""
+type Perspective implements Node & PerspectiveInterface {
+  """The identifier of the perspective."""
+  id: String!
+
+  """The name of the perspective."""
+  name: String!
+}
+
+type PerspectiveConnection implements Connection {
+  byId(id: String!): Perspective
+  edges: [PerspectiveEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PerspectiveEdge implements Edge {
+  cursor: String!
+  node: Perspective!
+}
+
+interface PerspectiveInterface {
+  """The identifier of the perspective."""
+  id: String!
+
+  """The name of the perspective."""
+  name: String!
+}
+
 """A project."""
 type Project implements Node & ProjectInterface & SectionInterface {
   """
@@ -1103,6 +1133,163 @@ type Query {
   defaultDocument: Document!
 }
 
+"""
+A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task.
+"""
+type RemainingTask implements Node & TaskInterface {
+  """
+  True if the task has a task that must be completed prior to it being actionable.
+  """
+  blocked: Boolean!
+
+  """
+  True if the task is completed. Use the "mark complete" and "mark incomplete" commands to change a task's status.
+  """
+  completed: Boolean!
+
+  """If true, complete when children are completed."""
+  completedByChildren: Boolean!
+
+  """
+  The task's date of completion. This can only be modified on a completed task to backdate the completion date.
+  """
+  completionDate: String
+
+  """
+  The task's project, up however many levels of parent tasks.  Inbox tasks aren't considered contained by their provisionalliy assigned container, so if the task is actually an inbox task, this will be missing value.
+  """
+  containingProject: Project
+
+  """
+  When the task was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved.
+  """
+  creationDate: String!
+
+  """When the task should become available for action."""
+  deferDate: String
+
+  """
+  True if the task is dropped. Use the "mark dropped" and "mark incomplete" commands to change a task's status.
+  """
+  dropped: Boolean!
+
+  """
+  The date the task was dropped. This can only be modified on a dropped task to backdate the dropped date.
+  """
+  droppedDate: String
+
+  """When the task must be finished."""
+  dueDate: String
+
+  """
+  When the task should become available for action (including inherited).
+  """
+  effectiveDeferDate: String
+
+  """When the task must be finished (including inherited)."""
+  effectiveDueDate: String
+
+  """
+  True if the task is completed, or any of it's containing tasks or project are completed.
+  """
+  effectivelyCompleted: Boolean!
+
+  """
+  True if the task is dropped, or any of it's containing tasks or project are dropped.
+  """
+  effectivelyDropped: Boolean!
+
+  """
+  The estimated time, in whole minutes, that this task will take to finish.
+  """
+  estimatedMinutes: Int
+
+  """True if flagged"""
+  flagged: Boolean!
+  flattenedTasks: FlattenedTaskConnection!
+
+  """The identifier of the task."""
+  id: String!
+
+  """
+  Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
+  """
+  inInbox: Boolean!
+
+  """When the task was last modified."""
+  modificationDate: String!
+
+  """The name of the task."""
+  name: String!
+
+  """If the task is the next task of its containing project, next is true."""
+  next: Boolean!
+
+  """
+  The next defer date if this task repeats on a fixed schedule and it has a defer date.
+  """
+  nextDeferDate: String
+
+  """
+  The next due date if this task repeats on a fixed schedule and it has a due date.
+  """
+  nextDueDate: String
+
+  """The number of available direct children of this task."""
+  numberOfAvailableTasks: Int!
+
+  """The number of completed direct children of this task."""
+  numberOfCompletedTasks: Int!
+
+  """The number of direct children of this task."""
+  numberOfTasks: Int!
+
+  """
+  The task holding this task.  If this is missing value, then this is a top level task -- either the root of a project or an inbox item.
+  """
+  parentTask: Task
+
+  """
+  The task's first tag. Setting this will remove the current first tag on the task, if any and move or add the new tag as the first tag on the task. Setting this to missing value will remove the current first tag and leave any other remaining tags.
+  """
+  primaryTag: Tag
+
+  """
+  The repetition interval of the task, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
+  """
+  The repetition rule for this task, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
+  """If true, any children are sequentially dependent."""
+  sequential: Boolean!
+
+  """
+  When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.)
+  """
+  shouldUseFloatingTimeZone: Boolean!
+
+  """The tags assigned to this task."""
+  tags: TagConnection!
+
+  """The tasks having this task as their container."""
+  tasks: TaskConnection!
+}
+
+type RemainingTaskConnection implements Connection {
+  byId(id: String!): RemainingTask
+  edges: [RemainingTaskEdge!]!
+  pageInfo: PageInfo!
+}
+
+type RemainingTaskEdge implements Edge {
+  cursor: String!
+  node: RemainingTask!
+}
+
 type RepetitionInterval @recordType {
   """
   If fixed, the next repetition will be relative to a fixed calendar.  If sliding, the next repetition will be calculated when needed.
@@ -1203,6 +1390,7 @@ type Tag implements Node & TagInterface {
   A count of the number of incomplete tasks of this tag and all its active descendent tags.
   """
   remainingTaskCount: Int!
+  remainingTasks: RemainingTaskConnection!
 
   """The tags having this tag as their container."""
   tags: TagConnection!
@@ -1259,6 +1447,7 @@ interface TagInterface {
   A count of the number of incomplete tasks of this tag and all its active descendent tags.
   """
   remainingTaskCount: Int!
+  remainingTasks: RemainingTaskConnection!
 
   """The tags having this tag as their container."""
   tags: TagConnection!

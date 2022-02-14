@@ -43,6 +43,8 @@ const AllowedTypes = [
   "LocationInformation",
   "AvailableTask",
   "RepetitionRule",
+  "Perspective",
+  "RemainingTask",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
