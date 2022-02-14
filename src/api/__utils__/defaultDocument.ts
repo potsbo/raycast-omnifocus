@@ -3,6 +3,7 @@ const projects = () => {
     const projecId = `project-id-${i}`;
     const projectName = `project-name-${i}`;
     return {
+      properties: () => ({ pcls: "Project" }),
       name: () => projectName,
       id: () => projecId,
       rootTask: () => {
@@ -28,10 +29,14 @@ const projects = () => {
 
 projects.byId = (pid: string) => {
   return {
+    properties: () => ({
+      pcls: "Project",
+    }),
     rootTask: () => {
       return {
         tasks: () => [
           {
+            properties: () => ({ pcls: "Task" }),
             name: () => "foo",
             id: () => "bar",
             effectiveDueDate: () => null,
@@ -41,6 +46,9 @@ projects.byId = (pid: string) => {
               return {
                 id: () => pid,
                 name: () => "projectName",
+                properties: () => ({
+                  pcls: "Project",
+                }),
               };
             },
             flagged: () => false,

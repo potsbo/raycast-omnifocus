@@ -146,3 +146,28 @@ test("query with inline fragment", () => {
 
   expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
+
+test("query with project interface", () => {
+  const document = gql`
+    query {
+      defaultDocument {
+        projects {
+          byId(id: "hZoaSakOnG4") {
+            rootTask {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
