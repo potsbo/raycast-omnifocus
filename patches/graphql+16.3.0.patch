@@ -1,0 +1,22 @@
+diff --git a/node_modules/graphql/utilities/printSchema.js b/node_modules/graphql/utilities/printSchema.js
+index 0d47611..1c56e7e 100644
+--- a/node_modules/graphql/utilities/printSchema.js
++++ b/node_modules/graphql/utilities/printSchema.js
+@@ -173,10 +173,17 @@ function printImplementedInterfaces(type) {
+     : '';
+ }
+ 
++function printObjectDirectives(type) {
++  const directives = type.astNode?.directives;
++  // TODO: args
++  return directives ? directives.map((d) => ` @${d.name.value}`).join('') : ""
++}
++
+ function printObject(type) {
+   return (
+     printDescription(type) +
+     `type ${type.name}` +
++    printObjectDirectives(type) +
+     printImplementedInterfaces(type) +
+     printFields(type)
+   );

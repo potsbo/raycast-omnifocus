@@ -1,9 +1,16 @@
-import { FieldDefinitionNode, InterfaceTypeDefinitionNode, Kind, ObjectTypeDefinitionNode } from "graphql";
+import {
+  FieldDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  Kind,
+  ObjectTypeDefinitionNode,
+  StringValueNode,
+} from "graphql";
 import camelCase from "camelcase";
 import { collectFieldsDefinitions, FieldDefinition } from "./field";
 import { ClassDefinition } from "./sdef";
 import { NameType, NonNullType, ListType } from "./types";
-import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME } from "./constants";
+import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
+import { implementsInterface } from "../graphql-utils";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -27,22 +34,23 @@ export class ClassRenderer {
       interfaces: [],
     };
   };
-  getTypes = ({
-    inherits,
-    inherited,
-    extensions,
-  }: {
-    inherits: ClassRenderer | undefined;
-    extensions: FieldDefinitionNode[] | undefined;
-    inherited: boolean;
-  }) => {
+  getTypes = ({ inherits, inherited }: { inherits: ClassRenderer | undefined; inherited: boolean }) => {
     const className = camelCase(this.c.$.name, { pascalCase: true });
 
     const toObjectDef = (
       name: string,
       interfaces: string[],
-      fields: FieldDefinitionNode[]
+      fields: FieldDefinitionNode[],
+      description?: string
     ): ObjectTypeDefinitionNode => {
+      const desc: StringValueNode | undefined = description
+        ? {
+            kind: Kind.STRING,
+            value: description,
+            block: true,
+          }
+        : undefined;
+
       return {
         kind: Kind.OBJECT_TYPE_DEFINITION,
         name: {
@@ -51,10 +59,11 @@ export class ClassRenderer {
         },
         interfaces: interfaces.map((n) => NameType(n)),
         fields,
+        description: desc,
       };
     };
 
-    const fields = [...(extensions ?? []), ...(this.fields ?? []), ...(inherits?.fields ?? [])];
+    const fields = [...(this.fields ?? []), ...(inherits?.fields ?? [])];
 
     const interfaces: string[] = [];
     if (inherits) {
@@ -63,8 +72,15 @@ export class ClassRenderer {
     if (inherited) {
       interfaces.push(this.getInterfaceName());
     }
+    const isNode = implementsInterface({ fields }, NodeInterface);
+    if (isNode) {
+      interfaces.push(NodeInterface.name.value);
+    }
 
-    const classDef = toObjectDef(className, ["Node", ...interfaces], fields);
+    const classDef = toObjectDef(className, interfaces, fields, this.c.$.description);
+    if (!isNode) {
+      return [classDef];
+    }
     const edgeDef = toObjectDef(
       `${className}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],

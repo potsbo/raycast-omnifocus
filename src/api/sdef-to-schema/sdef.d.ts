@@ -5,11 +5,11 @@ export interface Suite {
     name: string;
   };
   command: unknown[];
-  enumeration: unknown[];
   class?: ClassDefinition[];
-  "record-type": unknown[];
+  "record-type": RecordTypeDefinition[];
   "value-type": unknown[];
   "class-extension": ClassExtensionDefinition[];
+  "enumeration"?: EnumDefinition[]
 }
 
 export interface ClassDefinition {
@@ -36,6 +36,19 @@ export interface ClassExtensionDefinition {
   contents?: ContentDefinition[];
 }
 
+export interface RecordTypeDefinition {
+  $: {
+    code: string;
+    description?: string;
+    name: string;
+    inherits?: string;
+    hidden?: "yes";
+  };
+  property?: PropertyDefinition[];
+  element?: ElementDefinition[];
+  contents?: ContentDefinition[];
+}
+
 export type PropertyDefinition =
   | {
       $: {
@@ -43,6 +56,7 @@ export type PropertyDefinition =
         description: string;
         name: string;
         type: string;
+        optional?: "yes";
       };
     }
   | {
@@ -60,6 +74,15 @@ export type ElementDefinition = {
     type: string;
   };
   cocoa: [{ $: { key: string } }];
+};
+
+export type EnumDefinition = {
+  $: {
+    name: string;
+    description?: string;
+    type: string;
+  };
+  enumerator: { $: { code: string; description: string; name: string } }[];
 };
 
 export type ContentDefinition = {

@@ -26,7 +26,11 @@ type RenderableField = {
   definition: FieldDefinitionNode;
 };
 
-const renderField = (ctx: CurrentContext, f: RenderableField): string => {
+const renderField = (
+  ctx: CurrentContext,
+  f: RenderableField,
+  opts: Partial<{ isRecordType: boolean; isEnum: boolean }> = {}
+): string => {
   // TODO: handle in connection renderer
   if (f.field.name.value === "pageInfo") {
     return "";
@@ -49,6 +53,7 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
     const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
       (i) => i.name.value === "Connection"
     );
+
     const whose = compileWhoseParam(extractCondition(ctx, f.field));
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
@@ -58,7 +63,16 @@ const renderField = (ctx: CurrentContext, f: RenderableField): string => {
       { whose }
     )},`;
   }
-  return `${name}: ${ctx.rootName}.${name}(),`;
+
+  const isEnum = isEnumValue(ctx, f.definition);
+  const suffix = isEnum ? `?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
+  return `${name}: ${ctx.rootName}.${name}${suffix},`;
+};
+
+const isEnumValue = (ctx: CurrentContext, f: FieldDefinitionNode): boolean => {
+  const typeName = unwrapType(f.type).name.value;
+  const typeDef = ctx.schema.getType(typeName)?.astNode;
+  return typeDef?.kind === Kind.ENUM_TYPE_DEFINITION;
 };
 
 const mustFindTypeDefinition = (
@@ -164,6 +178,9 @@ const renderNonNullObject = (
 };
 
 const renderFields = (ctx: CurrentContext, object: RenderableObject): string => {
+  const isRecordType =
+    mustFindTypeDefinition(ctx, object.typeNode).directives?.some((d) => d.name.value === "recordType") ?? false;
+
   return object.selectedFields
     .map((field) => {
       if (field.kind === Kind.INLINE_FRAGMENT) {
@@ -194,7 +211,7 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
       if (!definition) {
         throw new Error(`Field definition for "${field.name.value}" not found`);
       }
-      return renderField(ctx, { field, definition });
+      return renderField(ctx, { field, definition }, { isRecordType });
     })
     .sort()
     .join("");

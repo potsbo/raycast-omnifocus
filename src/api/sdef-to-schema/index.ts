@@ -8,17 +8,20 @@ import {
   FieldDefinitionNode,
   lexicographicSortSchema,
   buildSchema,
-  printSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
+  ObjectTypeExtensionNode,
+  printSchema,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
-import { collectFieldsDefinitions } from "./field";
-import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME } from "./constants";
+import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./constants";
 import { ClassRenderer } from "./class";
+import { ExtensionRenderer } from "./extension";
+import { RecordTypeRenderer } from "./recordType";
+import { EnumRenderer } from "./enumeration";
 
 const AllowedTypes = [
   "Task",
@@ -27,6 +30,7 @@ const AllowedTypes = [
   "Project",
   "Section",
   "Folder",
+  "FlattenedTag",
   "Tag",
   // "Application",
   "Document",
@@ -34,6 +38,14 @@ const AllowedTypes = [
   "Int",
   "String",
   "Boolean",
+  "Float",
+  "RepetitionInterval",
+  "LocationInformation",
+  "AvailableTask",
+  "RepetitionRule",
+  "Perspective",
+  "RemainingTask",
+  "RichText"
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -48,13 +60,17 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   if (typeName.endsWith(EDGE_TYPE_NAME)) {
     return isAllowedType(typeName.slice(0, -EDGE_TYPE_NAME.length));
   }
+  if (typeName.endsWith(INTERFACE_SUFFIX)) {
+    return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
+  }
 
   return false;
 };
 
-type Extensions = Record<string, FieldDefinitionNode[]>;
-
-const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
+const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(
+  obj: T,
+  knownTypes: Set<string>
+): T => {
   const fields = obj.fields
     ?.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
       if (acum.some((a) => a.name.value === cur.name.value)) {
@@ -63,7 +79,7 @@ const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode
       acum.push(cur);
       return acum;
     }, [])
-    .filter((f) => isAllowedType(f.type));
+    .filter((f) => knownTypes.has(unwrapType(f.type).name.value) || isAllowedType(f.type));
   return {
     ...obj,
     fields,
@@ -74,23 +90,18 @@ const renderSuite = (
   s: Suite
 ): {
   classRenderers: ClassRenderer[];
-  extensions: Extensions;
+  extensionRenderers: ExtensionRenderer[];
+  recordTypeRenderers: RecordTypeRenderer[];
+  enumRenderers: EnumRenderer[];
 } => {
-  const extensions = s["class-extension"]
-    ?.map((ce) => {
-      const ret: Extensions = {};
-      ret[ce.$.extends] = collectFieldsDefinitions(ce);
-      return ret;
-    })
-    .reduce((acum, cur) => {
-      return { ...acum, ...cur };
-    });
-
+  const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
   const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  return { classRenderers, extensions };
+  const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
+  const enumRenderers = (s.enumeration ?? []).map((e) => new EnumRenderer(e));
+  return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
 };
 
-const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
+const interfaces: InterfaceTypeDefinitionNode[] = [];
 
 (async () => {
   const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
@@ -98,41 +109,70 @@ const interfaces = new Map<string, InterfaceTypeDefinitionNode>();
     dictionary: { suite: Suite[] };
   };
 
-  const suites = parsed.dictionary.suite.map(renderSuite).reduce(
-    (acum: { classRenderers: ClassRenderer[]; extensions: Extensions }, cur) => {
-      return {
-        classRenderers: acum.classRenderers.concat(cur.classRenderers),
-        extensions: { ...acum.extensions, ...cur.extensions },
-      };
-    },
-    { classRenderers: [], extensions: {} }
-  );
-  const { extensions, classRenderers } = suites;
-
-  const definitions: ObjectTypeDefinitionNode[] = [];
+  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parsed.dictionary.suite
+    .map(renderSuite)
+    .reduce(
+      (
+        acum: {
+          classRenderers: ClassRenderer[];
+          extensionRenderers: ExtensionRenderer[];
+          recordTypeRenderers: RecordTypeRenderer[];
+          enumRenderers: EnumRenderer[];
+        },
+        cur
+      ) => {
+        return {
+          classRenderers: acum.classRenderers.concat(cur.classRenderers),
+          extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
+          recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
+          enumRenderers: acum.enumRenderers.concat(cur.enumRenderers),
+        };
+      },
+      { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
+    );
 
   const inheritedClasses = new Set(
     classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
   );
 
+  const definitions: ObjectTypeDefinitionNode[] = [];
   classRenderers.forEach((cdef) => {
     const inherits = cdef.getInherits();
     const parent = classRenderers.find((t) => t.getClassName() === inherits);
     if (inherits !== undefined && parent === undefined) {
       throw new Error("parent not found");
     }
-    interfaces.set(cdef.getClassName(), cdef.getInterfaced());
+    interfaces.push(cdef.getInterfaced());
     definitions.push(
       ...cdef.getTypes({
         inherits: parent,
-        extensions: extensions[cdef.getClassName()],
         inherited: inheritedClasses.has(cdef.getClassName()),
       })
     );
   });
 
-  const reduced = definitions.map(reduceFieldDefinition).filter((d) => isAllowedType(d.name.value));
+  const enums = enumRenderers.map((e) => e.getType());
+  const extensions = extensionRenderers.map((e) => e.getType());
+  const recordTypes = recordTypeRenderers.map((e) => e.getType());
+
+  // TODO: Add class definitions
+  const knownTypes = new Set(enums.map((e) => e.name.value).concat(recordTypes.map((r) => r.name.value)));
+
+  const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
+    return ns
+      .map((n) => reduceFieldDefinition(n, knownTypes))
+      .filter((n) => isAllowedType(n.name.value))
+      .map(print)
+      .join("\n");
+  };
+
   const schema = `
+  ${render(definitions)}
+  ${render(extensions)}
+  ${render(interfaces)}
+  ${render(recordTypes)}
+  ${enums.map(print)}
+
   # https://relay.dev/graphql/connections.htm#sec-Connection-Types
 interface ${CONNECTION_TYPE_NAME} {
   edges: [Edge!]!
@@ -164,6 +204,7 @@ type Query {
 }
   
   directive @whose(condition: [Condition!]!) on FIELD
+  directive @recordType on OBJECT
 
 input Condition {
   enabled: Boolean! = true
@@ -172,9 +213,6 @@ input Condition {
   operator: String! = "="
   value: String! = "true"
 }
-
-  ${reduced.map(print)}
-  ${[...interfaces.values()].map(reduceFieldDefinition).map((i) => print(i))}
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");

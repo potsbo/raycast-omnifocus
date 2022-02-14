@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConnectionInterface snapshot 1`] = `
+"interface Edge {
+  edges: [Edge!]!
+  pageInfo: PageInfo!
+  byId(id: String!): Node
+}"
+`;
+
+exports[`EdgeInterface snapshot 1`] = `
+"interface Edge {
+  node: Node!
+  cursor: String!
+}"
+`;
+
+exports[`NodeInterface snapshot 1`] = `
+"interface Node {
+  id: String!
+}"
+`;
