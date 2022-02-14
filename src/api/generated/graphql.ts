@@ -67,6 +67,8 @@ export type AvailableTask = Node & TaskInterface & {
   nextDeferDate?: Maybe<Scalars['String']>;
   /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The note of the task. */
+  note: RichText;
   /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this task. */
@@ -129,7 +131,7 @@ export type ConnectionByIdArgs = {
 };
 
 /** A document. */
-export type Document = Node & {
+export type Document = {
   __typename?: 'Document';
   /** Whether the document can redo the most recently undone command. */
   canRedo: Scalars['Boolean'];
@@ -174,24 +176,6 @@ export type Document = Node & {
   willAutosave: Scalars['Boolean'];
 };
 
-export type DocumentConnection = Connection & {
-  __typename?: 'DocumentConnection';
-  byId?: Maybe<Document>;
-  edges: Array<DocumentEdge>;
-  pageInfo: PageInfo;
-};
-
-
-export type DocumentConnectionByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type DocumentEdge = Edge & {
-  __typename?: 'DocumentEdge';
-  cursor: Scalars['String'];
-  node: Document;
-};
-
 export type Edge = {
   cursor: Scalars['String'];
   node: Node;
@@ -218,6 +202,8 @@ export type FlattenedTag = Node & TagInterface & {
   location?: Maybe<LocationInformation>;
   /** The name of the tag. */
   name: Scalars['String'];
+  /** The note of the tag. */
+  note: RichText;
   /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
   remainingTaskCount: Scalars['Int'];
   remainingTasks: RemainingTaskConnection;
@@ -295,6 +281,8 @@ export type FlattenedTask = Node & TaskInterface & {
   nextDeferDate?: Maybe<Scalars['String']>;
   /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The note of the task. */
+  note: RichText;
   /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this task. */
@@ -354,6 +342,8 @@ export type Folder = FolderInterface & Node & SectionInterface & {
   modificationDate: Scalars['String'];
   /** The name of the folder. */
   name: Scalars['String'];
+  /** The note of the folder. */
+  note: RichText;
   /** The subset of the sections that are projects; projects having this folder as their container. */
   projects: ProjectConnection;
   /** The projects and folders having this folder as their container. */
@@ -393,6 +383,8 @@ export type FolderInterface = {
   modificationDate: Scalars['String'];
   /** The name of the folder. */
   name: Scalars['String'];
+  /** The note of the folder. */
+  note: RichText;
   /** The subset of the sections that are projects; projects having this folder as their container. */
   projects: ProjectConnection;
   /** The projects and folders having this folder as their container. */
@@ -449,6 +441,8 @@ export type InboxTask = Node & TaskInterface & {
   nextDeferDate?: Maybe<Scalars['String']>;
   /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The note of the task. */
+  note: RichText;
   /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this task. */
@@ -630,6 +624,8 @@ export type Project = Node & ProjectInterface & SectionInterface & {
   nextReviewDate?: Maybe<Scalars['String']>;
   /** The next actionable child of this project. */
   nextTask?: Maybe<Task>;
+  /** The note of the project. */
+  note: RichText;
   /** The number of available direct children of this project. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this project. */
@@ -727,6 +723,8 @@ export type ProjectInterface = {
   nextReviewDate?: Maybe<Scalars['String']>;
   /** The next actionable child of this project. */
   nextTask?: Maybe<Task>;
+  /** The note of the project. */
+  note: RichText;
   /** The number of available direct children of this project. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this project. */
@@ -819,6 +817,8 @@ export type RemainingTask = Node & TaskInterface & {
   nextDeferDate?: Maybe<Scalars['String']>;
   /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The note of the task. */
+  note: RichText;
   /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this task. */
@@ -888,6 +888,34 @@ export type RepetitionRule = {
   repetitionMethod: RepetitionMethod;
 };
 
+/** Rich (styled) text */
+export type RichText = RichTextInterface & {
+  __typename?: 'RichText';
+  /** Alignment of the text. */
+  alignment: TextAlignment;
+  /** Number of pixels shifted above or below the normal baseline. */
+  baselineOffset: Scalars['Float'];
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The superscript level of the text. */
+  superscript: Scalars['Int'];
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+  /** Is the first character underlined? */
+  underlined: Scalars['Boolean'];
+};
+
+export type RichTextInterface = {
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
 /** A portion of a folder or document; either a project or a folder. */
 export type Section = Node & SectionInterface & {
   __typename?: 'Section';
@@ -943,6 +971,8 @@ export type Tag = Node & TagInterface & {
   location?: Maybe<LocationInformation>;
   /** The name of the tag. */
   name: Scalars['String'];
+  /** The note of the tag. */
+  note: RichText;
   /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
   remainingTaskCount: Scalars['Int'];
   remainingTasks: RemainingTaskConnection;
@@ -989,6 +1019,8 @@ export type TagInterface = {
   location?: Maybe<LocationInformation>;
   /** The name of the tag. */
   name: Scalars['String'];
+  /** The note of the tag. */
+  note: RichText;
   /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
   remainingTaskCount: Scalars['Int'];
   remainingTasks: RemainingTaskConnection;
@@ -1048,6 +1080,8 @@ export type Task = Node & TaskInterface & {
   nextDeferDate?: Maybe<Scalars['String']>;
   /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The note of the task. */
+  note: RichText;
   /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this task. */
@@ -1138,6 +1172,8 @@ export type TaskInterface = {
   nextDeferDate?: Maybe<Scalars['String']>;
   /** The next due date if this task repeats on a fixed schedule and it has a due date. */
   nextDueDate?: Maybe<Scalars['String']>;
+  /** The note of the task. */
+  note: RichText;
   /** The number of available direct children of this task. */
   numberOfAvailableTasks: Scalars['Int'];
   /** The number of completed direct children of this task. */
@@ -1161,6 +1197,14 @@ export type TaskInterface = {
   /** The tasks having this task as their container. */
   tasks: TaskConnection;
 };
+
+export enum TextAlignment {
+  Center = 'CENTER',
+  Justified = 'JUSTIFIED',
+  Left = 'LEFT',
+  Natural = 'NATURAL',
+  Right = 'RIGHT'
+}
 
 type TaskViewModel_AvailableTask_Fragment = { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
 
@@ -1309,11 +1353,9 @@ export type ResolversTypes = {
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
   Document: ResolverTypeWrapper<Document>;
-  DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
-  DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
-  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
   FlattenedTag: ResolverTypeWrapper<FlattenedTag>;
   FlattenedTagConnection: ResolverTypeWrapper<FlattenedTagConnection>;
   FlattenedTagEdge: ResolverTypeWrapper<FlattenedTagEdge>;
@@ -1332,7 +1374,7 @@ export type ResolversTypes = {
   IntervalUnit: IntervalUnit;
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
   LocationTrigger: LocationTrigger;
-  Node: ResolversTypes['AvailableTask'] | ResolversTypes['Document'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  Node: ResolversTypes['AvailableTask'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
@@ -1350,6 +1392,8 @@ export type ResolversTypes = {
   RepetitionInterval: ResolverTypeWrapper<RepetitionInterval>;
   RepetitionMethod: RepetitionMethod;
   RepetitionRule: ResolverTypeWrapper<RepetitionRule>;
+  RichText: ResolverTypeWrapper<RichText>;
+  RichTextInterface: ResolversTypes['RichText'];
   Section: ResolverTypeWrapper<Section>;
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
@@ -1363,6 +1407,7 @@ export type ResolversTypes = {
   TaskConnection: ResolverTypeWrapper<TaskConnection>;
   TaskEdge: ResolverTypeWrapper<TaskEdge>;
   TaskInterface: ResolversTypes['AvailableTask'] | ResolversTypes['FlattenedTask'] | ResolversTypes['InboxTask'] | ResolversTypes['RemainingTask'] | ResolversTypes['Task'];
+  TextAlignment: TextAlignment;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -1372,11 +1417,9 @@ export type ResolversParentTypes = {
   AvailableTaskEdge: AvailableTaskEdge;
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
   Document: Document;
-  DocumentConnection: DocumentConnection;
-  DocumentEdge: DocumentEdge;
-  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
   FlattenedTag: FlattenedTag;
   FlattenedTagConnection: FlattenedTagConnection;
   FlattenedTagEdge: FlattenedTagEdge;
@@ -1393,7 +1436,7 @@ export type ResolversParentTypes = {
   InboxTaskEdge: InboxTaskEdge;
   Int: Scalars['Int'];
   LocationInformation: LocationInformation;
-  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
@@ -1409,6 +1452,8 @@ export type ResolversParentTypes = {
   RemainingTaskEdge: RemainingTaskEdge;
   RepetitionInterval: RepetitionInterval;
   RepetitionRule: RepetitionRule;
+  RichText: RichText;
+  RichTextInterface: ResolversParentTypes['RichText'];
   Section: Section;
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
@@ -1459,6 +1504,7 @@ export type AvailableTaskResolvers<ContextType = any, ParentType extends Resolve
   next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1487,7 +1533,7 @@ export type AvailableTaskEdgeResolvers<ContextType = any, ParentType extends Res
 };
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'DocumentConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -1520,21 +1566,8 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DocumentConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentConnection'] = ResolversParentTypes['DocumentConnection']> = {
-  byId?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<DocumentConnectionByIdArgs, 'id'>>;
-  edges?: Resolver<Array<ResolversTypes['DocumentEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DocumentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentEdge'] = ResolversParentTypes['DocumentEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'DocumentEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 };
@@ -1550,6 +1583,7 @@ export type FlattenedTagResolvers<ContextType = any, ParentType extends Resolver
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1595,6 +1629,7 @@ export type FlattenedTaskResolvers<ContextType = any, ParentType extends Resolve
   next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1630,6 +1665,7 @@ export type FolderResolvers<ContextType = any, ParentType extends ResolversParen
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -1657,6 +1693,7 @@ export type FolderInterfaceResolvers<ContextType = any, ParentType extends Resol
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
 };
@@ -1686,6 +1723,7 @@ export type InboxTaskResolvers<ContextType = any, ParentType extends ResolversPa
   next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1724,7 +1762,7 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'AvailableTask' | 'Document' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTask' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -1788,6 +1826,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextReviewDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1844,6 +1883,7 @@ export type ProjectInterfaceResolvers<ContextType = any, ParentType extends Reso
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextReviewDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1887,6 +1927,7 @@ export type RemainingTaskResolvers<ContextType = any, ParentType extends Resolve
   next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1927,6 +1968,24 @@ export type RepetitionRuleResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type RichTextResolvers<ContextType = any, ParentType extends ResolversParentTypes['RichText'] = ResolversParentTypes['RichText']> = {
+  alignment?: Resolver<ResolversTypes['TextAlignment'], ParentType, ContextType>;
+  baselineOffset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  superscript?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  underlined?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RichTextInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['RichTextInterface'] = ResolversParentTypes['RichTextInterface']> = {
+  __resolveType: TypeResolveFn<'RichText', ParentType, ContextType>;
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1963,6 +2022,7 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -1995,6 +2055,7 @@ export type TagInterfaceResolvers<ContextType = any, ParentType extends Resolver
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
@@ -2026,6 +2087,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -2079,6 +2141,7 @@ export type TaskInterfaceResolvers<ContextType = any, ParentType extends Resolve
   next?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -2098,8 +2161,6 @@ export type Resolvers<ContextType = any> = {
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
-  DocumentConnection?: DocumentConnectionResolvers<ContextType>;
-  DocumentEdge?: DocumentEdgeResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
   FlattenedTag?: FlattenedTagResolvers<ContextType>;
   FlattenedTagConnection?: FlattenedTagConnectionResolvers<ContextType>;
@@ -2131,6 +2192,8 @@ export type Resolvers<ContextType = any> = {
   RemainingTaskEdge?: RemainingTaskEdgeResolvers<ContextType>;
   RepetitionInterval?: RepetitionIntervalResolvers<ContextType>;
   RepetitionRule?: RepetitionRuleResolvers<ContextType>;
+  RichText?: RichTextResolvers<ContextType>;
+  RichTextInterface?: RichTextInterfaceResolvers<ContextType>;
   Section?: SectionResolvers<ContextType>;
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;

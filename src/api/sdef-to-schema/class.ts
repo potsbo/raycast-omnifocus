@@ -9,7 +9,8 @@ import camelCase from "camelcase";
 import { collectFieldsDefinitions, FieldDefinition } from "./field";
 import { ClassDefinition } from "./sdef";
 import { NameType, NonNullType, ListType } from "./types";
-import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME } from "./constants";
+import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
+import { implementsInterface } from "../graphql-utils";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -71,8 +72,23 @@ export class ClassRenderer {
     if (inherited) {
       interfaces.push(this.getInterfaceName());
     }
+    const isNode = implementsInterface({ fields }, NodeInterface);
+    if (isNode) {
+      interfaces.push(NodeInterface.name.value);
+    }
 
-    const classDef = toObjectDef(className, ["Node", ...interfaces], fields, this.c.$.description);
+    if (className === "RichText") {
+      console.log({
+        fields: fields.map((f) => f.name.value),
+        interfaceFields: NodeInterface.fields?.map((f) => f.name.value),
+        isNode,
+      });
+    }
+
+    const classDef = toObjectDef(className, interfaces, fields, this.c.$.description);
+    if (!isNode) {
+      return [classDef];
+    }
     const edgeDef = toObjectDef(
       `${className}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],

@@ -105,6 +105,9 @@ type AvailableTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
+  """The note of the task."""
+  note: RichText!
+
   """The number of available direct children of this task."""
   numberOfAvailableTasks: Int!
 
@@ -175,7 +178,7 @@ interface Connection {
 }
 
 """A document."""
-type Document implements Node {
+type Document {
   """Whether the document can redo the most recently undone command."""
   canRedo: Boolean!
 
@@ -244,17 +247,6 @@ type Document implements Node {
   willAutosave: Boolean!
 }
 
-type DocumentConnection implements Connection {
-  byId(id: String!): Document
-  edges: [DocumentEdge!]!
-  pageInfo: PageInfo!
-}
-
-type DocumentEdge implements Edge {
-  cursor: String!
-  node: Document!
-}
-
 interface Edge {
   cursor: String!
   node: Node!
@@ -293,6 +285,9 @@ type FlattenedTag implements Node & TagInterface {
 
   """The name of the tag."""
   name: String!
+
+  """The note of the tag."""
+  note: RichText!
 
   """
   A count of the number of incomplete tasks of this tag and all its active descendent tags.
@@ -418,6 +413,9 @@ type FlattenedTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
+  """The note of the task."""
+  note: RichText!
+
   """The number of available direct children of this task."""
   numberOfAvailableTasks: Int!
 
@@ -502,6 +500,9 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """The name of the folder."""
   name: String!
 
+  """The note of the folder."""
+  note: RichText!
+
   """
   The subset of the sections that are projects; projects having this folder as their container.
   """
@@ -547,6 +548,9 @@ interface FolderInterface {
 
   """The name of the folder."""
   name: String!
+
+  """The note of the folder."""
+  note: RichText!
 
   """
   The subset of the sections that are projects; projects having this folder as their container.
@@ -656,6 +660,9 @@ type InboxTask implements Node & TaskInterface {
   The next due date if this task repeats on a fixed schedule and it has a due date.
   """
   nextDueDate: String
+
+  """The note of the task."""
+  note: RichText!
 
   """The number of available direct children of this task."""
   numberOfAvailableTasks: Int!
@@ -905,6 +912,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """The next actionable child of this project."""
   nextTask: Task
 
+  """The note of the project."""
+  note: RichText!
+
   """The number of available direct children of this project."""
   numberOfAvailableTasks: Int!
 
@@ -1067,6 +1077,9 @@ interface ProjectInterface {
 
   """The next actionable child of this project."""
   nextTask: Task
+
+  """The note of the project."""
+  note: RichText!
 
   """The number of available direct children of this project."""
   numberOfAvailableTasks: Int!
@@ -1235,6 +1248,9 @@ type RemainingTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
+  """The note of the task."""
+  note: RichText!
+
   """The number of available direct children of this task."""
   numberOfAvailableTasks: Int!
 
@@ -1324,6 +1340,41 @@ type RepetitionRule @recordType {
   repetitionMethod: RepetitionMethod!
 }
 
+"""Rich (styled) text"""
+type RichText implements RichTextInterface {
+  """Alignment of the text."""
+  alignment: TextAlignment!
+
+  """Number of pixels shifted above or below the normal baseline."""
+  baselineOffset: Float!
+
+  """The name of the font of the first character."""
+  font: String!
+
+  """The size in points of the first character."""
+  size: Int!
+
+  """The superscript level of the text."""
+  superscript: Int!
+
+  """The plain text contents of the rich text."""
+  text: String!
+
+  """Is the first character underlined?"""
+  underlined: Boolean!
+}
+
+interface RichTextInterface {
+  """The name of the font of the first character."""
+  font: String!
+
+  """The size in points of the first character."""
+  size: Int!
+
+  """The plain text contents of the rich text."""
+  text: String!
+}
+
 """A portion of a folder or document; either a project or a folder."""
 type Section implements Node & SectionInterface {
   """The identifier of the project or folder."""
@@ -1386,6 +1437,9 @@ type Tag implements Node & TagInterface {
   """The name of the tag."""
   name: String!
 
+  """The note of the tag."""
+  note: RichText!
+
   """
   A count of the number of incomplete tasks of this tag and all its active descendent tags.
   """
@@ -1442,6 +1496,9 @@ interface TagInterface {
 
   """The name of the tag."""
   name: String!
+
+  """The note of the tag."""
+  note: RichText!
 
   """
   A count of the number of incomplete tasks of this tag and all its active descendent tags.
@@ -1557,6 +1614,9 @@ type Task implements Node & TaskInterface {
   The next due date if this task repeats on a fixed schedule and it has a due date.
   """
   nextDueDate: String
+
+  """The note of the task."""
+  note: RichText!
 
   """The number of available direct children of this task."""
   numberOfAvailableTasks: Int!
@@ -1712,6 +1772,9 @@ interface TaskInterface {
   """
   nextDueDate: String
 
+  """The note of the task."""
+  note: RichText!
+
   """The number of available direct children of this task."""
   numberOfAvailableTasks: Int!
 
@@ -1754,4 +1817,12 @@ interface TaskInterface {
 
   """The tasks having this task as their container."""
   tasks: TaskConnection!
+}
+
+enum TextAlignment {
+  CENTER
+  JUSTIFIED
+  LEFT
+  NATURAL
+  RIGHT
 }

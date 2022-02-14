@@ -45,6 +45,7 @@ const AllowedTypes = [
   "RepetitionRule",
   "Perspective",
   "RemainingTask",
+  "RichText"
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
