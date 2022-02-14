@@ -42,7 +42,7 @@ export interface RecordTypeDefinition {
     description?: string;
     name: string;
     inherits?: string;
-    hidden?: 'yes'
+    hidden?: "yes";
   };
   property?: PropertyDefinition[];
   element?: ElementDefinition[];
@@ -56,6 +56,7 @@ export type PropertyDefinition =
         description: string;
         name: string;
         type: string;
+        optional?: "yes";
       };
     }
   | {
@@ -73,6 +74,15 @@ export type ElementDefinition = {
     type: string;
   };
   cocoa: [{ $: { key: string } }];
+};
+
+export type EnumDefinition = {
+  $: {
+    name: string;
+    description?: string;
+    type: string;
+  };
+  enumerator: { $: { code: string; description: string; name: string } }[];
 };
 
 export type ContentDefinition = {
