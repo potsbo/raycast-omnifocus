@@ -46,6 +46,8 @@ const AllowedTypes = [
   "Perspective",
   "RemainingTask",
   "RichText",
+  "FlattenedProject",
+  "FlattenedFolder",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -63,6 +65,7 @@ const isAllowedType = (type: TypeNode | string): boolean => {
     return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
   }
 
+  console.log(typeName);
   return false;
 };
 

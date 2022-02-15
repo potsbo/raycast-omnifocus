@@ -164,6 +164,8 @@ export type Document = Node & {
   compressesTransactions: Scalars['Boolean'];
   /** If set, automatic cleanup of inbox items won't happen. */
   disableAutomaticInboxCleanup: Scalars['Boolean'];
+  flattenedFolders: FlattenedFolderConnection;
+  flattenedProjects: FlattenedProjectConnection;
   flattenedTags: FlattenedTagConnection;
   flattenedTasks: FlattenedTaskConnection;
   /** The subset of the sections that are folders; folders having this folder as their container. */
@@ -220,6 +222,152 @@ export type DocumentEdge = Edge & {
 export type Edge = {
   cursor: Scalars['String'];
   node: Node;
+};
+
+/** A flattened list of folders in a document. */
+export type FlattenedFolder = FolderInterface & Node & {
+  __typename?: 'FlattenedFolder';
+  /** When the folder was created. */
+  creationDate: Scalars['String'];
+  /** Set if the folder is currently hidden or any of its container folders are hidden. */
+  effectivelyHidden: Scalars['Boolean'];
+  flattenedFolders: FlattenedFolderConnection;
+  flattenedProjects: FlattenedProjectConnection;
+  /** The subset of the sections that are folders; folders having this folder as their container. */
+  folders: FolderConnection;
+  /** Set if the folder is currently hidden. */
+  hidden: Scalars['Boolean'];
+  /** The identifier of the folder. */
+  id: Scalars['String'];
+  /** When the folder was last modified. */
+  modificationDate: Scalars['String'];
+  /** The name of the folder. */
+  name: Scalars['String'];
+  /** The note of the folder. */
+  note: RichText;
+  /** The subset of the sections that are projects; projects having this folder as their container. */
+  projects: ProjectConnection;
+  /** The projects and folders having this folder as their container. */
+  sections: SectionConnection;
+};
+
+export type FlattenedFolderConnection = Connection & {
+  __typename?: 'FlattenedFolderConnection';
+  byId?: Maybe<FlattenedFolder>;
+  edges: Array<FlattenedFolderEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type FlattenedFolderConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type FlattenedFolderEdge = Edge & {
+  __typename?: 'FlattenedFolderEdge';
+  cursor: Scalars['String'];
+  node: FlattenedFolder;
+};
+
+/** A flattened list of projects under a folder or document. */
+export type FlattenedProject = Node & ProjectInterface & {
+  __typename?: 'FlattenedProject';
+  /** True if the project has a project that must be completed prior to it being actionable. */
+  blocked: Scalars['Boolean'];
+  /** True if the project is completed. Use the "mark complete" and "mark incomplete" commands to change a project's status. */
+  completed: Scalars['Boolean'];
+  /** If true, complete when children are completed. */
+  completedByChildren: Scalars['Boolean'];
+  /** The project's date of completion. This can only be modified on a completed project to backdate the completion date. */
+  completionDate?: Maybe<Scalars['String']>;
+  /** When the project was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved. */
+  creationDate: Scalars['String'];
+  /** True if the project is the default holder of sington actions.  Only one project can have this flag set; setting it on a project will clear it on any other project having it.  Setting this to true will set 'singleton action holder' to true if not already so set. */
+  defaultSingletonActionHolder: Scalars['Boolean'];
+  /** When the project should become available for action. */
+  deferDate?: Maybe<Scalars['String']>;
+  /** True if the project is dropped. Use the "mark dropped" and "mark incomplete" commands to change a project's status. */
+  dropped: Scalars['Boolean'];
+  /** The date the project was dropped. This can only be modified on a dropped project to backdate the dropped date. */
+  droppedDate?: Maybe<Scalars['String']>;
+  /** When the project must be finished. */
+  dueDate?: Maybe<Scalars['String']>;
+  /** When the project should become available for action (including inherited). */
+  effectiveDeferDate?: Maybe<Scalars['String']>;
+  /** When the project must be finished (including inherited). */
+  effectiveDueDate?: Maybe<Scalars['String']>;
+  /** The effective status of the project. */
+  effectiveStatus: ProjectStatus;
+  /** True if the project is completed */
+  effectivelyCompleted: Scalars['Boolean'];
+  /** True if the project is dropped */
+  effectivelyDropped: Scalars['Boolean'];
+  /** The estimated time, in whole minutes, that this project will take to finish. */
+  estimatedMinutes?: Maybe<Scalars['Int']>;
+  /** True if flagged */
+  flagged: Scalars['Boolean'];
+  /** The folder of the project, or missing value if it is contained directly by the document. */
+  folder?: Maybe<Folder>;
+  /** The identifier of the project. */
+  id: Scalars['String'];
+  /** When the project was last reviewed. */
+  lastReviewDate: Scalars['String'];
+  /** When the project was last modified. */
+  modificationDate: Scalars['String'];
+  /** The name of the project. */
+  name: Scalars['String'];
+  /** The next defer date if this project repeats on a fixed schedule and it has a defer date. */
+  nextDeferDate?: Maybe<Scalars['String']>;
+  /** The next due date if this project repeats on a fixed schedule and it has a due date. */
+  nextDueDate?: Maybe<Scalars['String']>;
+  /** When the project should next be reviewed. Setting this to missing value will set the review date based off the last review date and review interval. */
+  nextReviewDate?: Maybe<Scalars['String']>;
+  /** The next actionable child of this project. */
+  nextTask?: Maybe<Task>;
+  /** The note of the project. */
+  note: RichText;
+  /** The number of available direct children of this project. */
+  numberOfAvailableTasks: Scalars['Int'];
+  /** The number of completed direct children of this project. */
+  numberOfCompletedTasks: Scalars['Int'];
+  /** The number of direct children of this project. */
+  numberOfTasks: Scalars['Int'];
+  /** The project's first tag. Setting this will remove the current first tag on the project, if any and move or add the new tag as the first tag on the project. Setting this to missing value will remove the current first tag and leave any other remaining tags. */
+  primaryTag?: Maybe<Tag>;
+  /** The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts. */
+  repetition?: Maybe<RepetitionInterval>;
+  /** The repetition rule for this project, or missing value if it does not repeat. */
+  repetitionRule?: Maybe<RepetitionRule>;
+  /** The review interval for the project. */
+  reviewInterval: RepetitionInterval;
+  /** The root task of this project, holding the project's name, note, dates and child tasks. */
+  rootTask: Task;
+  /** If true, any children are sequentially dependent. */
+  sequential: Scalars['Boolean'];
+  /** When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.) */
+  shouldUseFloatingTimeZone: Scalars['Boolean'];
+  /** True if the project contains singleton actions. */
+  singletonActionHolder: Scalars['Boolean'];
+  /** The status of the project. */
+  status: ProjectStatus;
+};
+
+export type FlattenedProjectConnection = Connection & {
+  __typename?: 'FlattenedProjectConnection';
+  byId?: Maybe<FlattenedProject>;
+  edges: Array<FlattenedProjectEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type FlattenedProjectConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type FlattenedProjectEdge = Edge & {
+  __typename?: 'FlattenedProjectEdge';
+  cursor: Scalars['String'];
+  node: FlattenedProject;
 };
 
 /** A flattened list of tags in a document. */
@@ -373,6 +521,8 @@ export type Folder = FolderInterface & Node & SectionInterface & {
   creationDate: Scalars['String'];
   /** Set if the folder is currently hidden or any of its container folders are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  flattenedFolders: FlattenedFolderConnection;
+  flattenedProjects: FlattenedProjectConnection;
   /** The subset of the sections that are folders; folders having this folder as their container. */
   folders: FolderConnection;
   /** Set if the folder is currently hidden. */
@@ -414,6 +564,8 @@ export type FolderInterface = {
   creationDate: Scalars['String'];
   /** Set if the folder is currently hidden or any of its container folders are hidden. */
   effectivelyHidden: Scalars['Boolean'];
+  flattenedFolders: FlattenedFolderConnection;
+  flattenedProjects: FlattenedProjectConnection;
   /** The subset of the sections that are folders; folders having this folder as their container. */
   folders: FolderConnection;
   /** Set if the folder is currently hidden. */
@@ -1271,9 +1423,9 @@ export type TaskViewModelFragment = TaskViewModel_AvailableTask_Fragment | TaskV
 
 export type ProjectViewModelFragment = { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number };
 
-export type TopLevelProjectsFragment = { __typename?: 'Document', projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } };
+export type TopLevelProjectsFragment = { __typename?: 'Document', projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } };
 
-export type FolderedProjectDepth1Fragment = { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } };
+export type FolderedProjectDepth1Fragment = { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } };
 
 export type FolderedTagDepth1Fragment = { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } };
 
@@ -1298,12 +1450,12 @@ export type GetTasksInProjectQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksInProjectQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } } | null } } } };
+export type GetTasksInProjectQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', projects: { __typename?: 'ProjectConnection', byId?: { __typename?: 'FlattenedProject', rootTask: { __typename?: 'Task', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } } | { __typename?: 'Project', rootTask: { __typename?: 'Task', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } } | null } } } };
 
 export type GetNestedProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNestedProjectsQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } } } };
+export type GetNestedProjectsQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } } } };
 
 export type GetTasksWithTagQueryVariables = Exact<{
   tagId: Scalars['String'];
@@ -1315,12 +1467,12 @@ export type GetTasksWithTagQuery = { __typename?: 'Query', application: { __type
 export type GetTopLevelProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTopLevelProjectsQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } } };
+export type GetTopLevelProjectsQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } } };
 
 export type GetTaskCreationSupportInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCreationSupportInfoQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> }, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } } } };
+export type GetTaskCreationSupportInfoQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject' } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> }, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } } } };
 
 export type GetNestedTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1414,11 +1566,17 @@ export type ResolversTypes = {
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
   Document: ResolverTypeWrapper<Document>;
   DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
   DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
-  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  FlattenedFolder: ResolverTypeWrapper<FlattenedFolder>;
+  FlattenedFolderConnection: ResolverTypeWrapper<FlattenedFolderConnection>;
+  FlattenedFolderEdge: ResolverTypeWrapper<FlattenedFolderEdge>;
+  FlattenedProject: ResolverTypeWrapper<FlattenedProject>;
+  FlattenedProjectConnection: ResolverTypeWrapper<FlattenedProjectConnection>;
+  FlattenedProjectEdge: ResolverTypeWrapper<FlattenedProjectEdge>;
   FlattenedTag: ResolverTypeWrapper<FlattenedTag>;
   FlattenedTagConnection: ResolverTypeWrapper<FlattenedTagConnection>;
   FlattenedTagEdge: ResolverTypeWrapper<FlattenedTagEdge>;
@@ -1429,7 +1587,7 @@ export type ResolversTypes = {
   Folder: ResolverTypeWrapper<Folder>;
   FolderConnection: ResolverTypeWrapper<FolderConnection>;
   FolderEdge: ResolverTypeWrapper<FolderEdge>;
-  FolderInterface: ResolversTypes['Folder'];
+  FolderInterface: ResolversTypes['FlattenedFolder'] | ResolversTypes['Folder'];
   InboxTask: ResolverTypeWrapper<InboxTask>;
   InboxTaskConnection: ResolverTypeWrapper<InboxTaskConnection>;
   InboxTaskEdge: ResolverTypeWrapper<InboxTaskEdge>;
@@ -1438,7 +1596,7 @@ export type ResolversTypes = {
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
   LocationTrigger: LocationTrigger;
   Mutation: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['AvailableTask'] | ResolversTypes['Document'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  Node: ResolversTypes['AvailableTask'] | ResolversTypes['Document'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
@@ -1447,7 +1605,7 @@ export type ResolversTypes = {
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   ProjectEdge: ResolverTypeWrapper<ProjectEdge>;
-  ProjectInterface: ResolversTypes['Project'];
+  ProjectInterface: ResolversTypes['FlattenedProject'] | ResolversTypes['Project'];
   ProjectStatus: ProjectStatus;
   Query: ResolverTypeWrapper<{}>;
   RemainingTask: ResolverTypeWrapper<RemainingTask>;
@@ -1482,11 +1640,17 @@ export type ResolversParentTypes = {
   AvailableTaskEdge: AvailableTaskEdge;
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
   Document: Document;
   DocumentConnection: DocumentConnection;
   DocumentEdge: DocumentEdge;
-  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  FlattenedFolder: FlattenedFolder;
+  FlattenedFolderConnection: FlattenedFolderConnection;
+  FlattenedFolderEdge: FlattenedFolderEdge;
+  FlattenedProject: FlattenedProject;
+  FlattenedProjectConnection: FlattenedProjectConnection;
+  FlattenedProjectEdge: FlattenedProjectEdge;
   FlattenedTag: FlattenedTag;
   FlattenedTagConnection: FlattenedTagConnection;
   FlattenedTagEdge: FlattenedTagEdge;
@@ -1497,14 +1661,14 @@ export type ResolversParentTypes = {
   Folder: Folder;
   FolderConnection: FolderConnection;
   FolderEdge: FolderEdge;
-  FolderInterface: ResolversParentTypes['Folder'];
+  FolderInterface: ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['Folder'];
   InboxTask: InboxTask;
   InboxTaskConnection: InboxTaskConnection;
   InboxTaskEdge: InboxTaskEdge;
   Int: Scalars['Int'];
   LocationInformation: LocationInformation;
   Mutation: {};
-  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
@@ -1513,7 +1677,7 @@ export type ResolversParentTypes = {
   Project: Project;
   ProjectConnection: ProjectConnection;
   ProjectEdge: ProjectEdge;
-  ProjectInterface: ResolversParentTypes['Project'];
+  ProjectInterface: ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['Project'];
   Query: {};
   RemainingTask: RemainingTask;
   RemainingTaskConnection: RemainingTaskConnection;
@@ -1615,7 +1779,7 @@ export type AvailableTaskEdgeResolvers<ContextType = any, ParentType extends Res
 };
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'DocumentConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'DocumentConnection' | 'FlattenedFolderConnection' | 'FlattenedProjectConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -1626,6 +1790,8 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   canUndo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   compressesTransactions?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   disableAutomaticInboxCleanup?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
@@ -1662,9 +1828,94 @@ export type DocumentEdgeResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'DocumentEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'DocumentEdge' | 'FlattenedFolderEdge' | 'FlattenedProjectEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
+};
+
+export type FlattenedFolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedFolder'] = ResolversParentTypes['FlattenedFolder']> = {
+  creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedFolderConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedFolderConnection'] = ResolversParentTypes['FlattenedFolderConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['FlattenedFolder']>, ParentType, ContextType, RequireFields<FlattenedFolderConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['FlattenedFolderEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedFolderEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedFolderEdge'] = ResolversParentTypes['FlattenedFolderEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['FlattenedFolder'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedProject'] = ResolversParentTypes['FlattenedProject']> = {
+  blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completedByChildren?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completionDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  defaultSingletonActionHolder?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  deferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  droppedDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  effectiveStatus?: Resolver<ResolversTypes['ProjectStatus'], ParentType, ContextType>;
+  effectivelyCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  folder?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  lastReviewDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nextDeferDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextDueDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextReviewDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nextTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
+  numberOfAvailableTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  numberOfCompletedTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  numberOfTasks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  primaryTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType>;
+  repetition?: Resolver<Maybe<ResolversTypes['RepetitionInterval']>, ParentType, ContextType>;
+  repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
+  reviewInterval?: Resolver<ResolversTypes['RepetitionInterval'], ParentType, ContextType>;
+  rootTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
+  sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  singletonActionHolder?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['ProjectStatus'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedProjectConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedProjectConnection'] = ResolversParentTypes['FlattenedProjectConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['FlattenedProject']>, ParentType, ContextType, RequireFields<FlattenedProjectConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['FlattenedProjectEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlattenedProjectEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedProjectEdge'] = ResolversParentTypes['FlattenedProjectEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['FlattenedProject'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type FlattenedTagResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTag'] = ResolversParentTypes['FlattenedTag']> = {
@@ -1755,6 +2006,8 @@ export type FlattenedTaskEdgeResolvers<ContextType = any, ParentType extends Res
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
   creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1780,9 +2033,11 @@ export type FolderEdgeResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type FolderInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderInterface'] = ResolversParentTypes['FolderInterface']> = {
-  __resolveType: TypeResolveFn<'Folder', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FlattenedFolder' | 'Folder', ParentType, ContextType>;
   creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
   folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1861,7 +2116,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'AvailableTask' | 'Document' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTask' | 'Document' | 'FlattenedFolder' | 'FlattenedProject' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -1955,7 +2210,7 @@ export type ProjectEdgeResolvers<ContextType = any, ParentType extends Resolvers
 };
 
 export type ProjectInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProjectInterface'] = ResolversParentTypes['ProjectInterface']> = {
-  __resolveType: TypeResolveFn<'Project', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'FlattenedProject' | 'Project', ParentType, ContextType>;
   blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   completedByChildren?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2264,6 +2519,12 @@ export type Resolvers<ContextType = any> = {
   DocumentConnection?: DocumentConnectionResolvers<ContextType>;
   DocumentEdge?: DocumentEdgeResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
+  FlattenedFolder?: FlattenedFolderResolvers<ContextType>;
+  FlattenedFolderConnection?: FlattenedFolderConnectionResolvers<ContextType>;
+  FlattenedFolderEdge?: FlattenedFolderEdgeResolvers<ContextType>;
+  FlattenedProject?: FlattenedProjectResolvers<ContextType>;
+  FlattenedProjectConnection?: FlattenedProjectConnectionResolvers<ContextType>;
+  FlattenedProjectEdge?: FlattenedProjectEdgeResolvers<ContextType>;
   FlattenedTag?: FlattenedTagResolvers<ContextType>;
   FlattenedTagConnection?: FlattenedTagConnectionResolvers<ContextType>;
   FlattenedTagEdge?: FlattenedTagEdgeResolvers<ContextType>;

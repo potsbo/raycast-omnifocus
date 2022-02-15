@@ -227,6 +227,8 @@ type Document implements Node {
 
   """If set, automatic cleanup of inbox items won't happen."""
   disableAutomaticInboxCleanup: Boolean!
+  flattenedFolders: FlattenedFolderConnection!
+  flattenedProjects: FlattenedProjectConnection!
   flattenedTags: FlattenedTagConnection!
   flattenedTasks: FlattenedTaskConnection!
 
@@ -296,6 +298,225 @@ type DocumentEdge implements Edge {
 interface Edge {
   cursor: String!
   node: Node!
+}
+
+"""A flattened list of folders in a document."""
+type FlattenedFolder implements FolderInterface & Node {
+  """When the folder was created."""
+  creationDate: String!
+
+  """
+  Set if the folder is currently hidden or any of its container folders are hidden.
+  """
+  effectivelyHidden: Boolean!
+  flattenedFolders: FlattenedFolderConnection!
+  flattenedProjects: FlattenedProjectConnection!
+
+  """
+  The subset of the sections that are folders; folders having this folder as their container.
+  """
+  folders: FolderConnection!
+
+  """Set if the folder is currently hidden."""
+  hidden: Boolean!
+
+  """The identifier of the folder."""
+  id: String!
+
+  """When the folder was last modified."""
+  modificationDate: String!
+
+  """The name of the folder."""
+  name: String!
+
+  """The note of the folder."""
+  note: RichText!
+
+  """
+  The subset of the sections that are projects; projects having this folder as their container.
+  """
+  projects: ProjectConnection!
+
+  """The projects and folders having this folder as their container."""
+  sections: SectionConnection!
+}
+
+type FlattenedFolderConnection implements Connection {
+  byId(id: String!): FlattenedFolder
+  edges: [FlattenedFolderEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FlattenedFolderEdge implements Edge {
+  cursor: String!
+  node: FlattenedFolder!
+}
+
+"""A flattened list of projects under a folder or document."""
+type FlattenedProject implements Node & ProjectInterface {
+  """
+  True if the project has a project that must be completed prior to it being actionable.
+  """
+  blocked: Boolean!
+
+  """
+  True if the project is completed. Use the "mark complete" and "mark incomplete" commands to change a project's status.
+  """
+  completed: Boolean!
+
+  """If true, complete when children are completed."""
+  completedByChildren: Boolean!
+
+  """
+  The project's date of completion. This can only be modified on a completed project to backdate the completion date.
+  """
+  completionDate: String
+
+  """
+  When the project was created.  This can only be set when the object is still in the inserted state.  For objects created in the document, it can be passed with the creation properties.  For objects in a quick entry tree, it can be set until the quick entry panel is saved.
+  """
+  creationDate: String!
+
+  """
+  True if the project is the default holder of sington actions.  Only one project can have this flag set; setting it on a project will clear it on any other project having it.  Setting this to true will set 'singleton action holder' to true if not already so set.
+  """
+  defaultSingletonActionHolder: Boolean!
+
+  """When the project should become available for action."""
+  deferDate: String
+
+  """
+  True if the project is dropped. Use the "mark dropped" and "mark incomplete" commands to change a project's status.
+  """
+  dropped: Boolean!
+
+  """
+  The date the project was dropped. This can only be modified on a dropped project to backdate the dropped date.
+  """
+  droppedDate: String
+
+  """When the project must be finished."""
+  dueDate: String
+
+  """
+  When the project should become available for action (including inherited).
+  """
+  effectiveDeferDate: String
+
+  """When the project must be finished (including inherited)."""
+  effectiveDueDate: String
+
+  """The effective status of the project."""
+  effectiveStatus: ProjectStatus!
+
+  """True if the project is completed"""
+  effectivelyCompleted: Boolean!
+
+  """True if the project is dropped"""
+  effectivelyDropped: Boolean!
+
+  """
+  The estimated time, in whole minutes, that this project will take to finish.
+  """
+  estimatedMinutes: Int
+
+  """True if flagged"""
+  flagged: Boolean!
+
+  """
+  The folder of the project, or missing value if it is contained directly by the document.
+  """
+  folder: Folder
+
+  """The identifier of the project."""
+  id: String!
+
+  """When the project was last reviewed."""
+  lastReviewDate: String!
+
+  """When the project was last modified."""
+  modificationDate: String!
+
+  """The name of the project."""
+  name: String!
+
+  """
+  The next defer date if this project repeats on a fixed schedule and it has a defer date.
+  """
+  nextDeferDate: String
+
+  """
+  The next due date if this project repeats on a fixed schedule and it has a due date.
+  """
+  nextDueDate: String
+
+  """
+  When the project should next be reviewed. Setting this to missing value will set the review date based off the last review date and review interval.
+  """
+  nextReviewDate: String
+
+  """The next actionable child of this project."""
+  nextTask: Task
+
+  """The note of the project."""
+  note: RichText!
+
+  """The number of available direct children of this project."""
+  numberOfAvailableTasks: Int!
+
+  """The number of completed direct children of this project."""
+  numberOfCompletedTasks: Int!
+
+  """The number of direct children of this project."""
+  numberOfTasks: Int!
+
+  """
+  The project's first tag. Setting this will remove the current first tag on the project, if any and move or add the new tag as the first tag on the project. Setting this to missing value will remove the current first tag and leave any other remaining tags.
+  """
+  primaryTag: Tag
+
+  """
+  The repetition interval of the project, or missing value if it does not repeat. This property is deprecated in favor of “repetition rule” and is here only for backwards compatibility with existing scripts.
+  """
+  repetition: RepetitionInterval
+
+  """
+  The repetition rule for this project, or missing value if it does not repeat.
+  """
+  repetitionRule: RepetitionRule
+
+  """The review interval for the project."""
+  reviewInterval: RepetitionInterval!
+
+  """
+  The root task of this project, holding the project's name, note, dates and child tasks.
+  """
+  rootTask: Task!
+
+  """If true, any children are sequentially dependent."""
+  sequential: Boolean!
+
+  """
+  When set, the due date and defer date properties will use floating time zones. (Note: if a Task has no due or defer dates assigned, this property will revert to the database’s default setting.)
+  """
+  shouldUseFloatingTimeZone: Boolean!
+
+  """True if the project contains singleton actions."""
+  singletonActionHolder: Boolean!
+
+  """The status of the project."""
+  status: ProjectStatus!
+}
+
+type FlattenedProjectConnection implements Connection {
+  byId(id: String!): FlattenedProject
+  edges: [FlattenedProjectEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FlattenedProjectEdge implements Edge {
+  cursor: String!
+  node: FlattenedProject!
 }
 
 """A flattened list of tags in a document."""
@@ -528,6 +749,8 @@ type Folder implements FolderInterface & Node & SectionInterface {
   Set if the folder is currently hidden or any of its container folders are hidden.
   """
   effectivelyHidden: Boolean!
+  flattenedFolders: FlattenedFolderConnection!
+  flattenedProjects: FlattenedProjectConnection!
 
   """
   The subset of the sections that are folders; folders having this folder as their container.
@@ -577,6 +800,8 @@ interface FolderInterface implements Node {
   Set if the folder is currently hidden or any of its container folders are hidden.
   """
   effectivelyHidden: Boolean!
+  flattenedFolders: FlattenedFolderConnection!
+  flattenedProjects: FlattenedProjectConnection!
 
   """
   The subset of the sections that are folders; folders having this folder as their container.
