@@ -251,9 +251,14 @@ export const genQuery = (
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
 
+  const primarySelection = info.operation.selectionSet.selections[0];
+  if (primarySelection.kind !== Kind.FIELD) {
+    throw new Error("Field is expected at top level selection set");
+  }
+
   const fs = field.selectionSet.selections;
   const parent = `_${rootName}`;
-  const convert = `const ${parent} = ${rootName}.defaultDocument;`;
+  const convert = `const ${parent} = ${rootName}.${primarySelection.name.value};`;
   return `${lib};${vars};${convert};(${renderObject(
     { ...info, rootName: parent },
     { selectedFields: fs, typeNode: fdef }
