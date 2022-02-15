@@ -45,7 +45,7 @@ const AllowedTypes = [
   "RepetitionRule",
   "Perspective",
   "RemainingTask",
-  "RichText"
+  "RichText",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -213,6 +213,12 @@ input Condition {
   operator: String! = "="
   value: String! = "true"
 }
+
+type Mutation {
+  pushInboxTask(name: String!): InboxTask!
+}
+
+
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
