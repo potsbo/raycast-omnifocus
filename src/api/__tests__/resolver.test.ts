@@ -80,8 +80,6 @@ test("run for GetTasksInProjectDocument", async () => {
     fail(errors);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const parent = defaultDocument;
   expect(data).toMatchSnapshot();
 });
 
