@@ -17,8 +17,8 @@ interface FormFields {
 
 export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
   const tp = useQuery("GetTaskCreationSupportInfo");
-  const tags = tp.value?.defaultDocument.tags.edges.map((e) => e.node);
-  const folders = tp.value?.defaultDocument.folders.edges.map((e) => e.node);
+  const tags = tp.value?.application.defaultDocument.tags.edges.map((e) => e.node);
+  const folders = tp.value?.application.defaultDocument.folders.edges.map((e) => e.node);
 
   const tagOptions = useMemo<JSX.Element[]>(() => {
     if (tags === undefined) {

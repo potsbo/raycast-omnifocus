@@ -4,7 +4,7 @@ import { useLoad } from "../utils";
 import { TaskList } from "./TaskList";
 
 const getAllProjects = async () => {
-  const { folders, projects } = await runQuery("GetTopLevelProjects", {}).then((r) => r.defaultDocument);
+  const { folders, projects } = await runQuery("GetTopLevelProjects", {}).then((r) => r.application.defaultDocument);
 
   const fs = folders.edges.map((e) => e.node).concat({ name: "Top Level Projects", projects, id: "Manual" });
   return fs
@@ -41,7 +41,7 @@ export const ProjectList = () => {
                             getter={() =>
                               runQuery("GetTasksInProject", { projectId: p.id }).then(
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                (t) => t.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
+                                (t) => t.application.defaultDocument.projects.byId!.rootTask.tasks.edges.map((e) => e.node)
                               )
                             }
                             cacheKey={`TaskInProject:${p.id}`}

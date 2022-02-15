@@ -17,10 +17,13 @@ function fail(reason: any) {
 }
 
 const rootValue: QueryResolvers = {
-  defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-    const q = genQuery("t", info);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const t = { defaultDocument };
+  application: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
+    const q = genQuery("t", "OmniFocus", info);
+
+    const Application = (_: "OmniFocus") => {
+      return { defaultDocument: () => defaultDocument };
+    };
+
     return eval(q);
   },
 };
@@ -28,21 +31,23 @@ const rootValue: QueryResolvers = {
 test("Resolve Connection Related Query", async () => {
   const document = gql`
     query Hoge {
-      defaultDocument {
-        projects {
-          pageInfo {
-            hasNextPage
-          }
-          edges {
-            cursor
-            node {
-              name
-              rootTask {
+      application {
+        defaultDocument {
+          projects {
+            pageInfo {
+              hasNextPage
+            }
+            edges {
+              cursor
+              node {
                 name
-                id
-                containingProject {
+                rootTask {
                   name
                   id
+                  containingProject {
+                    name
+                    id
+                  }
                 }
               }
             }

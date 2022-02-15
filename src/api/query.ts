@@ -234,6 +234,7 @@ function pascalCase(s: string) {
 
 export const genQuery = (
   rootName: string,
+  appName: string,
   info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">
 ) => {
   const vars = Object.entries(info.variableValues)
@@ -258,7 +259,7 @@ export const genQuery = (
 
   const fs = field.selectionSet.selections;
   const parent = `_${rootName}`;
-  const convert = `const ${parent} = ${rootName}.${primarySelection.name.value};`;
+  const convert = `const ${parent} = Application("${appName}");`;
   return `${lib};${vars};${convert};(${renderObject(
     { ...info, rootName: parent },
     { selectedFields: fs, typeNode: fdef }

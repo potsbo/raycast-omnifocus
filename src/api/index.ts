@@ -6,12 +6,10 @@ import camelCase from "camelcase";
 
 // The rootValue provides a resolver function for each API endpoint
 const rootValue: QueryResolvers = {
-  defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-    const q = genQuery("t", info);
+  application: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
+    const q = genQuery("t", "OmniFocus", info);
 
     const fn = (arg: { q: string }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const t = Application("OmniFocus");
       return eval(arg.q);
     };
 
@@ -21,7 +19,7 @@ const rootValue: QueryResolvers = {
 
 const push = (typeName: string, props: unknown, info: GraphQLResolveInfo) => {
   const fieldName = camelCase(typeName);
-  const q = genQuery("t", info);
+  const q = genQuery("t", "OmniFocus", info);
   const mut = `
   const app = Application("OmniFocus");
   const obj = app.${typeName}(${JSON.stringify(props)});
@@ -41,7 +39,7 @@ const push = (typeName: string, props: unknown, info: GraphQLResolveInfo) => {
 
 const query = new Proxy(rootValue, {
   get: function (target, name: string) {
-    if (name === "defaultDocument") {
+    if (name === "application") {
       return target[name];
     }
 
