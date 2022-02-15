@@ -32,7 +32,7 @@ const AllowedTypes = [
   "Folder",
   "FlattenedTag",
   "Tag",
-  // "Application",
+  "Application",
   "Document",
   "PageInfo",
   "Int",
@@ -52,6 +52,9 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   const typeName = typeof type === "string" ? type : unwrapType(type).name.value;
   if (AllowedTypes.includes(typeName)) {
     return true;
+  }
+  if (typeName === "DocumentConnection") {
+    return false;
   }
 
   if (typeName.endsWith(CONNECTION_TYPE_NAME)) {
@@ -201,6 +204,7 @@ interface Node {
 
 type Query {
   defaultDocument: Document!
+  application: Application!
 }
   
   directive @whose(condition: [Condition!]!) on FIELD

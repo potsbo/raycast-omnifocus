@@ -3,6 +3,40 @@ directive @recordType on OBJECT
 
 directive @whose(condition: [Condition!]!) on FIELD
 
+"""The application's top-level scripting object."""
+type Application {
+  """
+  This is the build number of the application, for example 63.1 or 63.  Major and minor versions are separated by a dot.  So 63.10 comes after 63.1.
+  """
+  buildNumber: String!
+
+  """
+  The current time offset from a reference date. Useful for timing scripts.
+  """
+  currentTimeOffset: Float!
+
+  """The user's default document."""
+  defaultDocument: Document!
+
+  """Is this the active application?"""
+  frontmost: Boolean!
+
+  """The name of the application."""
+  name: String!
+
+  """The names of all available perspectives in the default document."""
+  perspectiveNames: [String!]!
+  perspectives: PerspectiveConnection!
+
+  """
+  The date on from which the date collated smart groups are based.  When set, the reference date will be rounded to the first instant of the day of the specified date.
+  """
+  referenceDate: String!
+
+  """The version number of the application."""
+  version: String!
+}
+
 """
 A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task.
 """
@@ -1147,6 +1181,7 @@ enum ProjectStatus {
 }
 
 type Query {
+  application: Application!
   defaultDocument: Document!
 }
 

@@ -17,6 +17,28 @@ export type Scalars = {
   Float: number;
 };
 
+/** The application's top-level scripting object. */
+export type Application = {
+  __typename?: 'Application';
+  /** This is the build number of the application, for example 63.1 or 63.  Major and minor versions are separated by a dot.  So 63.10 comes after 63.1. */
+  buildNumber: Scalars['String'];
+  /** The current time offset from a reference date. Useful for timing scripts. */
+  currentTimeOffset: Scalars['Float'];
+  /** The user's default document. */
+  defaultDocument: Document;
+  /** Is this the active application? */
+  frontmost: Scalars['Boolean'];
+  /** The name of the application. */
+  name: Scalars['String'];
+  /** The names of all available perspectives in the default document. */
+  perspectiveNames: Array<Scalars['String']>;
+  perspectives: PerspectiveConnection;
+  /** The date on from which the date collated smart groups are based.  When set, the reference date will be rounded to the first instant of the day of the specified date. */
+  referenceDate: Scalars['String'];
+  /** The version number of the application. */
+  version: Scalars['String'];
+};
+
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type AvailableTask = Node & TaskInterface & {
   __typename?: 'AvailableTask';
@@ -774,6 +796,7 @@ export enum ProjectStatus {
 
 export type Query = {
   __typename?: 'Query';
+  application: Application;
   defaultDocument: Document;
 };
 
@@ -1367,6 +1390,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Application: ResolverTypeWrapper<Application>;
   AvailableTask: ResolverTypeWrapper<AvailableTask>;
   AvailableTaskConnection: ResolverTypeWrapper<AvailableTaskConnection>;
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
@@ -1432,6 +1456,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Application: Application;
   AvailableTask: AvailableTask;
   AvailableTaskConnection: AvailableTaskConnection;
   AvailableTaskEdge: AvailableTaskEdge;
@@ -1499,6 +1524,19 @@ export type WhoseDirectiveArgs = {
 };
 
 export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
+  buildNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  currentTimeOffset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  defaultDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  frontmost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType>;
+  referenceDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type AvailableTaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['AvailableTask'] = ResolversParentTypes['AvailableTask']> = {
   blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1924,6 +1962,7 @@ export type ProjectInterfaceResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  application?: Resolver<ResolversTypes['Application'], ParentType, ContextType>;
   defaultDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
 };
 
@@ -2181,6 +2220,7 @@ export type TaskInterfaceResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type Resolvers<ContextType = any> = {
+  Application?: ApplicationResolvers<ContextType>;
   AvailableTask?: AvailableTaskResolvers<ContextType>;
   AvailableTaskConnection?: AvailableTaskConnectionResolvers<ContextType>;
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
