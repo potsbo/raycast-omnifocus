@@ -1,5 +1,19 @@
 import { GraphQLResolveInfo } from "graphql";
 import { genQuery } from "./query";
+import camelCase from "camelcase";
+
+const MUTATION_TYPES = ["push"] as const;
+type MutationType = typeof MUTATION_TYPES[number];
+
+const splitMutationName = (name: string): [MutationType, string] => {
+  for (const mut of MUTATION_TYPES) {
+    if (name.startsWith(mut)) {
+      return [mut, camelCase(name.slice(mut.length), { pascalCase: true })];
+    }
+  }
+
+  throw new Error(`Failed to infer mutation type for ${name}`);
+};
 
 export const buildRootValue = (appName: string, runner: (code: string) => unknown) => {
   return new Proxy(
@@ -15,12 +29,16 @@ export const buildRootValue = (appName: string, runner: (code: string) => unknow
         }
 
         // mutation
-        return (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-          const q = genQuery(appName, info, "obj");
+        return (args: unknown, _2: unknown, info: GraphQLResolveInfo) => {
+          const [mut, typeName] = splitMutationName(info.fieldName);
+          const objName = "obj";
+          const q = genQuery(appName, info, objName);
+
+          // TODO: not to hardcode defaultDocument here
           const code = `
-              const app = Application("OmniFocus");
-              const obj = app.InboxTask({ name: "something" });
-              app.defaultDocument().inboxTasks.push(obj);
+              const app = Application("${appName}");
+              const ${objName} = app.${typeName}(${JSON.stringify(args)});
+              app.defaultDocument().${camelCase(typeName)}s.${mut}(${objName});
               ${q}
           `;
           return runner(code);
