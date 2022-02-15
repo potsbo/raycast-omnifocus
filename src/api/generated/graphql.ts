@@ -523,6 +523,16 @@ export enum LocationTrigger {
   NotifyWhenLeaving = 'NOTIFY_WHEN_LEAVING'
 }
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  pushInboxTask: InboxTask;
+};
+
+
+export type MutationPushInboxTaskArgs = {
+  name: Scalars['String'];
+};
+
 export type Node = {
   id: Scalars['String'];
 };
@@ -1383,6 +1393,7 @@ export type ResolversTypes = {
   IntervalUnit: IntervalUnit;
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
   LocationTrigger: LocationTrigger;
+  Mutation: ResolverTypeWrapper<{}>;
   Node: ResolversTypes['AvailableTask'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Perspective: ResolverTypeWrapper<Perspective>;
@@ -1445,6 +1456,7 @@ export type ResolversParentTypes = {
   InboxTaskEdge: InboxTaskEdge;
   Int: Scalars['Int'];
   LocationInformation: LocationInformation;
+  Mutation: {};
   Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Perspective: Perspective;
@@ -1768,6 +1780,10 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
   radius?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   trigger?: Resolver<ResolversTypes['LocationTrigger'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  pushInboxTask?: Resolver<ResolversTypes['InboxTask'], ParentType, ContextType, RequireFields<MutationPushInboxTaskArgs, 'name'>>;
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
@@ -2185,6 +2201,7 @@ export type Resolvers<ContextType = any> = {
   InboxTaskConnection?: InboxTaskConnectionResolvers<ContextType>;
   InboxTaskEdge?: InboxTaskEdgeResolvers<ContextType>;
   LocationInformation?: LocationInformationResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Perspective?: PerspectiveResolvers<ContextType>;
