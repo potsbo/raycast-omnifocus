@@ -767,6 +767,10 @@ enum LocationTrigger {
   NOTIFY_WHEN_LEAVING
 }
 
+type Mutation {
+  pushInboxTask(name: String!): InboxTask!
+}
+
 interface Node {
   id: String!
 }
