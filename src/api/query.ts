@@ -263,15 +263,15 @@ export const genQuery = (
     const fs = field.selectionSet.selections;
     const parent = `_parent`;
     const convert = `const ${parent} = Application("${appName}");`;
-    return `${lib};${vars};${convert};(${renderObject(
+    return `${lib};${vars};${convert};JSON.stringify({ result: ${renderObject(
       { ...info, rootName: parent },
       { selectedFields: fs, typeNode: fdef }
-    )})`;
+    )}})`;
   }
 
   const fs = field.selectionSet.selections;
-  return `${lib};${vars};(${renderObject(
+  return `${lib};${vars};JSON.stringify({ result: ${renderObject(
     { ...info, rootName: rootObjName },
     { selectedFields: fs, typeNode: fdef }
-  )})`;
+  )}})`;
 };

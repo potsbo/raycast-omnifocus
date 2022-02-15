@@ -15,7 +15,7 @@ const splitMutationName = (name: string): [MutationType, string] => {
   throw new Error(`Failed to infer mutation type for ${name}`);
 };
 
-export const buildRootValue = (appName: string, runner: (code: string) => unknown) => {
+export const buildRootValue = (appName: string, runner: (code: string) => Promise<unknown>) => {
   return new Proxy(
     {},
     {
@@ -23,8 +23,8 @@ export const buildRootValue = (appName: string, runner: (code: string) => unknow
         // query
         if (name === "application") {
           return (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-            const q = genQuery(appName, info);
-            return runner(q);
+            const code = genQuery(appName, info);
+            return runner(code);
           };
         }
 

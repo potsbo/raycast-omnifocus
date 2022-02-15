@@ -24,7 +24,8 @@ const rootValue = buildRootValue("OmniFocus", (query) => {
       return Object.fromEntries(Object.entries(props).map(([k, v]) => [k, () => v]));
     },
   });
-  return eval(query);
+
+  return new Promise((resolve) => resolve(JSON.parse(eval(query)).result));
 });
 
 test("Resolve Connection Related Query", async () => {
