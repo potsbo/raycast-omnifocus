@@ -6,9 +6,10 @@ exports[`query for Connection 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+const _parent = parent.defaultDocument;
 ({
   projects: (() => {
-    const nodes = parent.projects();
+    const nodes = _parent.projects();
     return {
       pageInfo: {
         hasPreviousPage: false,
@@ -37,9 +38,10 @@ exports[`query for GetInboxTasksDocument 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+const _parent = parent.defaultDocument;
 ({
   inboxTasks: (() => {
-    const nodes = parent.inboxTasks.whose({
+    const nodes = _parent.inboxTasks.whose({
       _and: [
         { effectivelyCompleted: { _equals: false } },
         {
@@ -92,9 +94,10 @@ exports[`query for GetTasksDocument 1`] = `
 const onlyFlagged = true;
 const onlyAvailable = true;
 const withEffectiveDueDate = false;
+const _parent = parent.defaultDocument;
 ({
   flattenedTasks: (() => {
-    const nodes = parent.flattenedTasks.whose({
+    const nodes = _parent.flattenedTasks.whose({
       _and: [
         { effectivelyCompleted: { _equals: false } },
         { flagged: { _equals: true } },
@@ -148,9 +151,10 @@ exports[`query for GetTasksDocument for forecast 1`] = `
 const onlyFlagged = false;
 const onlyAvailable = true;
 const withEffectiveDueDate = true;
+const _parent = parent.defaultDocument;
 ({
   flattenedTasks: (() => {
-    const nodes = parent.flattenedTasks.whose({
+    const nodes = _parent.flattenedTasks.whose({
       _and: [
         { effectivelyCompleted: { _equals: false } },
         { _not: [{ effectiveDeferDate: { _equals: null } }] },
@@ -202,9 +206,10 @@ exports[`query for GetTasksInProjectDocument 1`] = `
     .join(\\"\\");
 }
 const projectId = \\"foobar\\";
+const _parent = parent.defaultDocument;
 ({
   projects: (() => {
-    const nodes = parent.projects();
+    const nodes = _parent.projects();
     return {
       pageInfo: {
         hasPreviousPage: false,
@@ -217,14 +222,14 @@ const projectId = \\"foobar\\";
           cursor: elm.id(),
         };
       }),
-      byId: parent.projects.byId(projectId)
+      byId: _parent.projects.byId(projectId)
         ? {
             __typename: pascalCase(
-              parent.projects.byId(projectId).properties().pcls
+              _parent.projects.byId(projectId).properties().pcls
             ),
             rootTask: {
               tasks: (() => {
-                const nodes = parent.projects
+                const nodes = _parent.projects
                   .byId(projectId)
                   .rootTask()
                   .tasks();
@@ -273,9 +278,10 @@ exports[`query for GetTopLevelProjects 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+const _parent = parent.defaultDocument;
 ({
   folders: (() => {
-    const nodes = parent.folders();
+    const nodes = _parent.folders();
     return {
       pageInfo: {
         hasPreviousPage: false,
@@ -319,7 +325,7 @@ exports[`query for GetTopLevelProjects 1`] = `
     };
   })(),
   projects: (() => {
-    const nodes = parent.projects();
+    const nodes = _parent.projects();
     return {
       pageInfo: {
         hasPreviousPage: false,
@@ -351,9 +357,10 @@ exports[`query with inline fragment 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+const _parent = parent.defaultDocument;
 ({
   folders: (() => {
-    const nodes = parent.folders();
+    const nodes = _parent.folders();
     return {
       pageInfo: {
         hasPreviousPage: false,
@@ -419,9 +426,10 @@ exports[`query with project interface 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+const _parent = parent.defaultDocument;
 ({
   projects: (() => {
-    const nodes = parent.projects();
+    const nodes = _parent.projects();
     return {
       pageInfo: {
         hasPreviousPage: false,
@@ -434,13 +442,13 @@ exports[`query with project interface 1`] = `
           cursor: elm.id(),
         };
       }),
-      byId: parent.projects.byId(\\"hZoaSakOnG4\\")
+      byId: _parent.projects.byId(\\"hZoaSakOnG4\\")
         ? {
             __typename: pascalCase(
-              parent.projects.byId(\\"hZoaSakOnG4\\").properties().pcls
+              _parent.projects.byId(\\"hZoaSakOnG4\\").properties().pcls
             ),
             rootTask: {
-              id: parent.projects.byId(\\"hZoaSakOnG4\\").rootTask().id(),
+              id: _parent.projects.byId(\\"hZoaSakOnG4\\").rootTask().id(),
             },
           }
         : undefined,

@@ -252,9 +252,10 @@ export const genQuery = (
   }
 
   const fs = field.selectionSet.selections;
-  const convert = `const parent = ${rootName}.defaultDocument;`;
+  const parent = `_${rootName}`;
+  const convert = `const ${parent} = ${rootName}.defaultDocument;`;
   return `${lib};${vars};${convert};(${renderObject(
-    { ...info, rootName: "parent" },
+    { ...info, rootName: parent },
     { selectedFields: fs, typeNode: fdef }
   )})`;
 };
