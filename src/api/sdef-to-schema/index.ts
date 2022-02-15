@@ -53,10 +53,6 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   if (AllowedTypes.includes(typeName)) {
     return true;
   }
-  if (typeName === "DocumentConnection") {
-    return false;
-  }
-
   if (typeName.endsWith(CONNECTION_TYPE_NAME)) {
     return isAllowedType(typeName.slice(0, -CONNECTION_TYPE_NAME.length));
   }
@@ -150,6 +146,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
       ...cdef.getTypes({
         inherits: parent,
         inherited: inheritedClasses.has(cdef.getClassName()),
+        extensions: extensionRenderers.filter((e) => e.extends === cdef.getClassName()),
       })
     );
   });

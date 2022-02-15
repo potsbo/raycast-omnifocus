@@ -26,6 +26,7 @@ export type Application = {
   currentTimeOffset: Scalars['Float'];
   /** The user's default document. */
   defaultDocument: Document;
+  documents: DocumentConnection;
   /** Is this the active application? */
   frontmost: Scalars['Boolean'];
   /** The name of the application. */
@@ -153,7 +154,7 @@ export type ConnectionByIdArgs = {
 };
 
 /** A document. */
-export type Document = {
+export type Document = Node & {
   __typename?: 'Document';
   /** Whether the document can redo the most recently undone command. */
   canRedo: Scalars['Boolean'];
@@ -196,6 +197,24 @@ export type Document = {
   tasks: TaskConnection;
   /** Whether the document will autosave. */
   willAutosave: Scalars['Boolean'];
+};
+
+export type DocumentConnection = Connection & {
+  __typename?: 'DocumentConnection';
+  byId?: Maybe<Document>;
+  edges: Array<DocumentEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type DocumentConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type DocumentEdge = Edge & {
+  __typename?: 'DocumentEdge';
+  cursor: Scalars['String'];
+  node: Document;
 };
 
 export type Edge = {
@@ -1395,9 +1414,11 @@ export type ResolversTypes = {
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Condition: Condition;
-  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
   Document: ResolverTypeWrapper<Document>;
-  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
+  DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
+  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
   FlattenedTag: ResolverTypeWrapper<FlattenedTag>;
   FlattenedTagConnection: ResolverTypeWrapper<FlattenedTagConnection>;
   FlattenedTagEdge: ResolverTypeWrapper<FlattenedTagEdge>;
@@ -1417,7 +1438,7 @@ export type ResolversTypes = {
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
   LocationTrigger: LocationTrigger;
   Mutation: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['AvailableTask'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  Node: ResolversTypes['AvailableTask'] | ResolversTypes['Document'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
@@ -1461,9 +1482,11 @@ export type ResolversParentTypes = {
   AvailableTaskEdge: AvailableTaskEdge;
   Boolean: Scalars['Boolean'];
   Condition: Condition;
-  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
   Document: Document;
-  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  DocumentConnection: DocumentConnection;
+  DocumentEdge: DocumentEdge;
+  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
   FlattenedTag: FlattenedTag;
   FlattenedTagConnection: FlattenedTagConnection;
   FlattenedTagEdge: FlattenedTagEdge;
@@ -1481,7 +1504,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'];
   LocationInformation: LocationInformation;
   Mutation: {};
-  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
@@ -1528,6 +1551,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   buildNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   currentTimeOffset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   defaultDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  documents?: Resolver<ResolversTypes['DocumentConnection'], ParentType, ContextType>;
   frontmost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1591,7 +1615,7 @@ export type AvailableTaskEdgeResolvers<ContextType = any, ParentType extends Res
 };
 
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'DocumentConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -1624,8 +1648,21 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DocumentConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentConnection'] = ResolversParentTypes['DocumentConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<DocumentConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['DocumentEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentEdge'] = ResolversParentTypes['DocumentEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'DocumentEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 };
@@ -1824,7 +1861,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'AvailableTask' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTask' | 'Document' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -2224,6 +2261,8 @@ export type Resolvers<ContextType = any> = {
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
+  DocumentConnection?: DocumentConnectionResolvers<ContextType>;
+  DocumentEdge?: DocumentEdgeResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
   FlattenedTag?: FlattenedTagResolvers<ContextType>;
   FlattenedTagConnection?: FlattenedTagConnectionResolvers<ContextType>;

@@ -17,6 +17,7 @@ type Application {
 
   """The user's default document."""
   defaultDocument: Document!
+  documents: DocumentConnection!
 
   """Is this the active application?"""
   frontmost: Boolean!
@@ -212,7 +213,7 @@ interface Connection {
 }
 
 """A document."""
-type Document {
+type Document implements Node {
   """Whether the document can redo the most recently undone command."""
   canRedo: Boolean!
 
@@ -279,6 +280,17 @@ type Document {
 
   """Whether the document will autosave."""
   willAutosave: Boolean!
+}
+
+type DocumentConnection implements Connection {
+  byId(id: String!): Document
+  edges: [DocumentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DocumentEdge implements Edge {
+  cursor: String!
+  node: Document!
 }
 
 interface Edge {

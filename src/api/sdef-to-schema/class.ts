@@ -11,6 +11,7 @@ import { ClassDefinition } from "./sdef";
 import { NameType, NonNullType, ListType } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
 import { implementsInterface } from "../graphql-utils";
+import { ExtensionRenderer } from "./extension";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -35,7 +36,15 @@ export class ClassRenderer {
       interfaces: isNode ? [NameType(NodeInterface.name.value)] : [],
     };
   };
-  getTypes = ({ inherits, inherited }: { inherits: ClassRenderer | undefined; inherited: boolean }) => {
+  getTypes = ({
+    inherits,
+    inherited,
+    extensions,
+  }: {
+    inherits: ClassRenderer | undefined;
+    inherited: boolean;
+    extensions: ExtensionRenderer[];
+  }) => {
     const className = camelCase(this.c.$.name, { pascalCase: true });
 
     const toObjectDef = (
@@ -73,7 +82,12 @@ export class ClassRenderer {
     if (inherited) {
       interfaces.push(this.getInterfaceName());
     }
-    const isNode = implementsInterface({ fields }, NodeInterface);
+    const isNode = implementsInterface(
+      {
+        fields: fields.concat(extensions.map((e) => e.fields).reduce((acum, cur) => [...acum, ...cur], [])),
+      },
+      NodeInterface
+    );
     if (isNode) {
       interfaces.push(NodeInterface.name.value);
     }
