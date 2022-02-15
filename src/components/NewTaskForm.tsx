@@ -1,6 +1,5 @@
 import { ActionPanel, Form, SubmitFormAction, Icon, showToast, ToastStyle } from "@raycast/api";
 import { useMemo } from "react";
-import { createNewTask } from "../api";
 import { useQuery } from "../api/fetch";
 
 interface Props {
@@ -59,7 +58,7 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
             title="Submit Description"
             onSubmit={async (values: FormFields) => {
               showToast(ToastStyle.Animated, "Creating");
-              await createNewTask(values);
+              console.log(values);
               showToast(ToastStyle.Success, "Created");
             }}
           />

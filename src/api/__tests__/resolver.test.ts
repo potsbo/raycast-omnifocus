@@ -1,11 +1,11 @@
-import { graphql, GraphQLResolveInfo, print } from "graphql";
+import { graphql, print } from "graphql";
 import { defaultDocument } from "../__utils__/defaultDocument";
-import { GetTasksInProjectDocument, QueryResolvers } from "../generated/graphql";
-import { genQuery } from "../query";
+import { GetTasksInProjectDocument } from "../generated/graphql";
 import gql from "graphql-tag";
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
+import { buildRootValue } from "../rootValue";
 
 export const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
   loaders: [new GraphQLFileLoader()],
@@ -16,17 +16,10 @@ function fail(reason: any) {
   throw new Error(reason);
 }
 
-const rootValue: QueryResolvers = {
-  application: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
-    const q = genQuery("t", "OmniFocus", info);
-
-    const Application = (_: "OmniFocus") => {
-      return { defaultDocument: () => defaultDocument };
-    };
-
-    return eval(q);
-  },
-};
+const rootValue = buildRootValue("OmniFocus", (query) => {
+  const Application = (_: string) => ({ defaultDocument: () => defaultDocument });
+  return eval(query);
+});
 
 test("Resolve Connection Related Query", async () => {
   const document = gql`

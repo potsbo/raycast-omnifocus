@@ -29,7 +29,7 @@ test("query for GetTasksDocument", () => {
     variableValues: { onlyFlagged: true, onlyAvailable: true },
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTasksDocument for forecast", () => {
@@ -40,7 +40,7 @@ test("query for GetTasksDocument for forecast", () => {
     variableValues: { withEffectiveDueDate: true, onlyAvailable: true },
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetInboxTasksDocument", () => {
@@ -50,7 +50,7 @@ test("query for GetInboxTasksDocument", () => {
     document: document,
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTasksInProjectDocument", () => {
@@ -64,7 +64,7 @@ test("query for GetTasksInProjectDocument", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTopLevelProjects", () => {
@@ -78,7 +78,7 @@ test("query for GetTopLevelProjects", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for Connection", () => {
@@ -109,7 +109,7 @@ test("query for Connection", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query with inline fragment", () => {
@@ -148,7 +148,7 @@ test("query with inline fragment", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query with project interface", () => {
@@ -175,5 +175,5 @@ test("query with project interface", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", "OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
