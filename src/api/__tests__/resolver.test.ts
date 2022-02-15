@@ -20,7 +20,7 @@ const rootValue: QueryResolvers = {
   defaultDocument: (_: unknown, _2: unknown, info: GraphQLResolveInfo) => {
     const q = genQuery("t", info);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const t = defaultDocument;
+    const t = { defaultDocument: () => defaultDocument };
     return eval(q);
   },
 };
