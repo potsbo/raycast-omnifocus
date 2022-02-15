@@ -17,7 +17,13 @@ function fail(reason: any) {
 }
 
 const rootValue = buildRootValue("OmniFocus", (query) => {
-  const Application = (_: string) => ({ defaultDocument: () => defaultDocument });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Application = (_: string) => ({
+    defaultDocument: () => defaultDocument,
+    InboxTask: (props: Record<string, unknown>) => {
+      return Object.fromEntries(Object.entries(props).map(([k, v]) => [k, () => v]));
+    },
+  });
   return eval(query);
 });
 
@@ -76,5 +82,25 @@ test("run for GetTasksInProjectDocument", async () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parent = defaultDocument;
+  expect(data).toMatchSnapshot();
+});
+
+test("simple mutation", async () => {
+  const document = gql`
+    mutation {
+      pushInboxTask(name: "SomeTask") {
+        name
+      }
+    }
+  `;
+  const { data, errors } = await graphql({
+    schema,
+    source: print(document),
+    rootValue,
+  });
+
+  if (errors !== null && errors !== undefined) {
+    fail(errors);
+  }
   expect(data).toMatchSnapshot();
 });

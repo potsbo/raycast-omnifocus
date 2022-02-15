@@ -188,3 +188,11 @@ Object {
   },
 }
 `;
+
+exports[`simple mutation 1`] = `
+Object {
+  "pushInboxTask": Object {
+    "name": "something",
+  },
+}
+`;
