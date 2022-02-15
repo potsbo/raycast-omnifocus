@@ -203,7 +203,6 @@ interface Node {
 }
 
 type Query {
-  defaultDocument: Document!
   application: Application!
 }
   
