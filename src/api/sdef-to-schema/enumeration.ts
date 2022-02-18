@@ -17,7 +17,6 @@ export class EnumRenderer {
             block: true,
           }
         : undefined;
-
       return {
         kind: Kind.ENUM_VALUE_DEFINITION,
         description: desc,

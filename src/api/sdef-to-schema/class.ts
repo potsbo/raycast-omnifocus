@@ -3,6 +3,7 @@ import {
   InterfaceTypeDefinitionNode,
   Kind,
   ObjectTypeDefinitionNode,
+  ObjectTypeExtensionNode,
   StringValueNode,
 } from "graphql";
 import camelCase from "camelcase";
@@ -12,6 +13,7 @@ import { NameType, NonNullType, ListType } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
 import { implementsInterface } from "../graphql-utils";
 import { ExtensionRenderer } from "./extension";
+import { collectMutationArgs } from "./mutation";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -34,6 +36,27 @@ export class ClassRenderer {
         value: this.getInterfaceName(),
       },
       interfaces: isNode ? [NameType(NodeInterface.name.value)] : [],
+    };
+  };
+  getMutationExtension = (verb: string, inherits: ClassRenderer | undefined): ObjectTypeExtensionNode | null => {
+    const mutableFields = collectMutationArgs(this.c).concat(inherits ? collectMutationArgs(inherits.c) : []);
+
+    if (mutableFields.length === 0) {
+      return null;
+    }
+    const typeName = camelCase(this.c.$.name, { pascalCase: true });
+    return {
+      kind: Kind.OBJECT_TYPE_EXTENSION,
+      name: {
+        kind: Kind.NAME,
+        value: "Mutation",
+      },
+      fields: [
+        {
+          ...FieldDefinition(`${verb}${typeName}`, NonNullType(NameType(typeName))),
+          arguments: mutableFields,
+        },
+      ],
     };
   };
   getTypes = ({

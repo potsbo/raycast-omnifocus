@@ -3,7 +3,9 @@ directive @recordType on OBJECT
 
 directive @whose(condition: [Condition!]!) on FIELD
 
-"""The application's top-level scripting object."""
+"""
+The application's top-level scripting object.
+"""
 type Application {
   """
   This is the build number of the application, for example 63.1 or 63.  Major and minor versions are separated by a dot.  So 63.10 comes after 63.1.
@@ -15,17 +17,25 @@ type Application {
   """
   currentTimeOffset: Float!
 
-  """The user's default document."""
+  """
+  The user's default document.
+  """
   defaultDocument: Document!
   documents: DocumentConnection!
 
-  """Is this the active application?"""
+  """
+  Is this the active application?
+  """
   frontmost: Boolean!
 
-  """The name of the application."""
+  """
+  The name of the application.
+  """
   name: String!
 
-  """The names of all available perspectives in the default document."""
+  """
+  The names of all available perspectives in the default document.
+  """
   perspectiveNames: [String!]!
   perspectives: PerspectiveConnection!
 
@@ -34,7 +44,9 @@ type Application {
   """
   referenceDate: String!
 
-  """The version number of the application."""
+  """
+  The version number of the application.
+  """
   version: String!
 }
 
@@ -52,7 +64,9 @@ type AvailableTask implements Node & TaskInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -70,7 +84,9 @@ type AvailableTask implements Node & TaskInterface {
   """
   creationDate: String!
 
-  """When the task should become available for action."""
+  """
+  When the task should become available for action.
+  """
   deferDate: String
 
   """
@@ -83,7 +99,9 @@ type AvailableTask implements Node & TaskInterface {
   """
   droppedDate: String
 
-  """When the task must be finished."""
+  """
+  When the task must be finished.
+  """
   dueDate: String
 
   """
@@ -91,7 +109,9 @@ type AvailableTask implements Node & TaskInterface {
   """
   effectiveDeferDate: String
 
-  """When the task must be finished (including inherited)."""
+  """
+  When the task must be finished (including inherited).
+  """
   effectiveDueDate: String
 
   """
@@ -109,11 +129,15 @@ type AvailableTask implements Node & TaskInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
   flattenedTasks: FlattenedTaskConnection!
 
-  """The identifier of the task."""
+  """
+  The identifier of the task.
+  """
   id: String!
 
   """
@@ -121,13 +145,19 @@ type AvailableTask implements Node & TaskInterface {
   """
   inInbox: Boolean!
 
-  """When the task was last modified."""
+  """
+  When the task was last modified.
+  """
   modificationDate: String!
 
-  """The name of the task."""
+  """
+  The name of the task.
+  """
   name: String!
 
-  """If the task is the next task of its containing project, next is true."""
+  """
+  If the task is the next task of its containing project, next is true.
+  """
   next: Boolean!
 
   """
@@ -140,16 +170,24 @@ type AvailableTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
-  """The note of the task."""
+  """
+  The note of the task.
+  """
   note: RichText!
 
-  """The number of available direct children of this task."""
+  """
+  The number of available direct children of this task.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this task."""
+  """
+  The number of completed direct children of this task.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this task."""
+  """
+  The number of direct children of this task.
+  """
   numberOfTasks: Int!
 
   """
@@ -172,7 +210,9 @@ type AvailableTask implements Node & TaskInterface {
   """
   repetitionRule: RepetitionRule
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -180,10 +220,14 @@ type AvailableTask implements Node & TaskInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """The tags assigned to this task."""
+  """
+  The tags assigned to this task.
+  """
   tags: TagConnection!
 
-  """The tasks having this task as their container."""
+  """
+  The tasks having this task as their container.
+  """
   tasks: TaskConnection!
 }
 
@@ -198,12 +242,18 @@ type AvailableTaskEdge implements Edge {
   node: AvailableTask!
 }
 
-"""A built-in perspective."""
+"""
+A built-in perspective.
+"""
 type BuiltinPerspective implements Node & PerspectiveInterface {
-  """The identifier of the perspective."""
+  """
+  The identifier of the perspective.
+  """
   id: String!
 
-  """The name of the perspective."""
+  """
+  The name of the perspective.
+  """
   name: String!
 }
 
@@ -232,12 +282,18 @@ interface Connection {
   pageInfo: PageInfo!
 }
 
-"""A user created perspective."""
+"""
+A user created perspective.
+"""
 type CustomPerspective implements Node & PerspectiveInterface {
-  """The identifier of the perspective."""
+  """
+  The identifier of the perspective.
+  """
   id: String!
 
-  """The name of the perspective."""
+  """
+  The name of the perspective.
+  """
   name: String!
 }
 
@@ -252,12 +308,18 @@ type CustomPerspectiveEdge implements Edge {
   node: CustomPerspective!
 }
 
-"""A document."""
+"""
+A document.
+"""
 type Document implements Node {
-  """Whether the document can redo the most recently undone command."""
+  """
+  Whether the document can redo the most recently undone command.
+  """
   canRedo: Boolean!
 
-  """Whether the document can undo the most recent command."""
+  """
+  Whether the document can undo the most recent command.
+  """
   canUndo: Boolean!
 
   """
@@ -265,7 +327,9 @@ type Document implements Node {
   """
   compressesTransactions: Boolean!
 
-  """If set, automatic cleanup of inbox items won't happen."""
+  """
+  If set, automatic cleanup of inbox items won't happen.
+  """
   disableAutomaticInboxCleanup: Boolean!
   flattenedFolders: FlattenedFolderConnection!
   flattenedProjects: FlattenedProjectConnection!
@@ -277,7 +341,9 @@ type Document implements Node {
   """
   folders: FolderConnection!
 
-  """The document's unique identifier."""
+  """
+  The document's unique identifier.
+  """
   id: String!
   inboxTasks: InboxTaskConnection!
 
@@ -286,22 +352,34 @@ type Document implements Node {
   """
   includesSummaries: Boolean!
 
-  """Date of the last sync."""
+  """
+  Date of the last sync.
+  """
   lastSyncDate: String!
 
-  """Error message (if any) for the last sync."""
+  """
+  Error message (if any) for the last sync.
+  """
   lastSyncError: String!
 
-  """Has it been modified since the last save?"""
+  """
+  Has it been modified since the last save?
+  """
   modified: Boolean!
 
-  """Its name."""
+  """
+  Its name.
+  """
   name: String!
 
-  """The document's path on disk."""
+  """
+  The document's path on disk.
+  """
   path: String!
 
-  """The names of all available perspectives in this document."""
+  """
+  The names of all available perspectives in this document.
+  """
   perspectiveNames: [String!]!
   perspectives: PerspectiveConnection!
 
@@ -310,18 +388,26 @@ type Document implements Node {
   """
   projects: ProjectConnection!
 
-  """The projects and folders contained by no folder."""
+  """
+  The projects and folders contained by no folder.
+  """
   sections: SectionConnection!
   settings: SettingConnection!
 
-  """True if the document is currently syncing, false otherwise."""
+  """
+  True if the document is currently syncing, false otherwise.
+  """
   syncing: Boolean!
 
-  """The top-level tags of the document."""
+  """
+  The top-level tags of the document.
+  """
   tags: TagConnection!
   tasks: TaskConnection!
 
-  """Whether the document will autosave."""
+  """
+  Whether the document will autosave.
+  """
   willAutosave: Boolean!
 }
 
@@ -341,9 +427,13 @@ interface Edge {
   node: Node!
 }
 
-"""A flattened list of folders in a document."""
+"""
+A flattened list of folders in a document.
+"""
 type FlattenedFolder implements FolderInterface & Node {
-  """When the folder was created."""
+  """
+  When the folder was created.
+  """
   creationDate: String!
 
   """
@@ -358,19 +448,29 @@ type FlattenedFolder implements FolderInterface & Node {
   """
   folders: FolderConnection!
 
-  """Set if the folder is currently hidden."""
+  """
+  Set if the folder is currently hidden.
+  """
   hidden: Boolean!
 
-  """The identifier of the folder."""
+  """
+  The identifier of the folder.
+  """
   id: String!
 
-  """When the folder was last modified."""
+  """
+  When the folder was last modified.
+  """
   modificationDate: String!
 
-  """The name of the folder."""
+  """
+  The name of the folder.
+  """
   name: String!
 
-  """The note of the folder."""
+  """
+  The note of the folder.
+  """
   note: RichText!
 
   """
@@ -378,7 +478,9 @@ type FlattenedFolder implements FolderInterface & Node {
   """
   projects: ProjectConnection!
 
-  """The projects and folders having this folder as their container."""
+  """
+  The projects and folders having this folder as their container.
+  """
   sections: SectionConnection!
 }
 
@@ -393,7 +495,9 @@ type FlattenedFolderEdge implements Edge {
   node: FlattenedFolder!
 }
 
-"""A flattened list of projects under a folder or document."""
+"""
+A flattened list of projects under a folder or document.
+"""
 type FlattenedProject implements Node & ProjectInterface {
   """
   True if the project has a project that must be completed prior to it being actionable.
@@ -405,7 +509,9 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -423,7 +529,9 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   defaultSingletonActionHolder: Boolean!
 
-  """When the project should become available for action."""
+  """
+  When the project should become available for action.
+  """
   deferDate: String
 
   """
@@ -436,7 +544,9 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   droppedDate: String
 
-  """When the project must be finished."""
+  """
+  When the project must be finished.
+  """
   dueDate: String
 
   """
@@ -444,16 +554,24 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   effectiveDeferDate: String
 
-  """When the project must be finished (including inherited)."""
+  """
+  When the project must be finished (including inherited).
+  """
   effectiveDueDate: String
 
-  """The effective status of the project."""
+  """
+  The effective status of the project.
+  """
   effectiveStatus: ProjectStatus!
 
-  """True if the project is completed"""
+  """
+  True if the project is completed
+  """
   effectivelyCompleted: Boolean!
 
-  """True if the project is dropped"""
+  """
+  True if the project is dropped
+  """
   effectivelyDropped: Boolean!
 
   """
@@ -461,7 +579,9 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
 
   """
@@ -469,16 +589,24 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   folder: Folder
 
-  """The identifier of the project."""
+  """
+  The identifier of the project.
+  """
   id: String!
 
-  """When the project was last reviewed."""
+  """
+  When the project was last reviewed.
+  """
   lastReviewDate: String!
 
-  """When the project was last modified."""
+  """
+  When the project was last modified.
+  """
   modificationDate: String!
 
-  """The name of the project."""
+  """
+  The name of the project.
+  """
   name: String!
 
   """
@@ -496,19 +624,29 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   nextReviewDate: String
 
-  """The next actionable child of this project."""
+  """
+  The next actionable child of this project.
+  """
   nextTask: Task
 
-  """The note of the project."""
+  """
+  The note of the project.
+  """
   note: RichText!
 
-  """The number of available direct children of this project."""
+  """
+  The number of available direct children of this project.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this project."""
+  """
+  The number of completed direct children of this project.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this project."""
+  """
+  The number of direct children of this project.
+  """
   numberOfTasks: Int!
 
   """
@@ -526,7 +664,9 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   repetitionRule: RepetitionRule
 
-  """The review interval for the project."""
+  """
+  The review interval for the project.
+  """
   reviewInterval: RepetitionInterval!
 
   """
@@ -534,7 +674,9 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   rootTask: Task!
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -542,10 +684,14 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """True if the project contains singleton actions."""
+  """
+  True if the project contains singleton actions.
+  """
   singletonActionHolder: Boolean!
 
-  """The status of the project."""
+  """
+  The status of the project.
+  """
   status: ProjectStatus!
 }
 
@@ -560,7 +706,9 @@ type FlattenedProjectEdge implements Edge {
   node: FlattenedProject!
 }
 
-"""A flattened list of tags in a document."""
+"""
+A flattened list of tags in a document.
+"""
 type FlattenedTag implements Node & TagInterface {
   """
   If false, tasks associated with this tag will be skipped when determining the next action for a project.
@@ -573,7 +721,9 @@ type FlattenedTag implements Node & TagInterface {
   availableTaskCount: Int!
   availableTasks: AvailableTaskConnection!
 
-  """The containing tag."""
+  """
+  The containing tag.
+  """
   container: Tag!
 
   """
@@ -582,19 +732,29 @@ type FlattenedTag implements Node & TagInterface {
   effectivelyHidden: Boolean!
   flattenedTags: FlattenedTagConnection!
 
-  """Set if the tag is currently hidden."""
+  """
+  Set if the tag is currently hidden.
+  """
   hidden: Boolean!
 
-  """The identifier of the tag."""
+  """
+  The identifier of the tag.
+  """
   id: String!
 
-  """The physical location associated with the tag."""
+  """
+  The physical location associated with the tag.
+  """
   location: LocationInformation
 
-  """The name of the tag."""
+  """
+  The name of the tag.
+  """
   name: String!
 
-  """The note of the tag."""
+  """
+  The note of the tag.
+  """
   note: RichText!
 
   """
@@ -603,10 +763,14 @@ type FlattenedTag implements Node & TagInterface {
   remainingTaskCount: Int!
   remainingTasks: RemainingTaskConnection!
 
-  """The tags having this tag as their container."""
+  """
+  The tags having this tag as their container.
+  """
   tags: TagConnection!
 
-  """The tasks having this tag."""
+  """
+  The tasks having this tag.
+  """
   tasks: TaskConnection!
 }
 
@@ -621,7 +785,9 @@ type FlattenedTagEdge implements Edge {
   node: FlattenedTag!
 }
 
-"""A flattened list of tasks under a task or document."""
+"""
+A flattened list of tasks under a task or document.
+"""
 type FlattenedTask implements Node & TaskInterface {
   """
   True if the task has a task that must be completed prior to it being actionable.
@@ -633,7 +799,9 @@ type FlattenedTask implements Node & TaskInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -651,7 +819,9 @@ type FlattenedTask implements Node & TaskInterface {
   """
   creationDate: String!
 
-  """When the task should become available for action."""
+  """
+  When the task should become available for action.
+  """
   deferDate: String
 
   """
@@ -664,7 +834,9 @@ type FlattenedTask implements Node & TaskInterface {
   """
   droppedDate: String
 
-  """When the task must be finished."""
+  """
+  When the task must be finished.
+  """
   dueDate: String
 
   """
@@ -672,7 +844,9 @@ type FlattenedTask implements Node & TaskInterface {
   """
   effectiveDeferDate: String
 
-  """When the task must be finished (including inherited)."""
+  """
+  When the task must be finished (including inherited).
+  """
   effectiveDueDate: String
 
   """
@@ -690,11 +864,15 @@ type FlattenedTask implements Node & TaskInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
   flattenedTasks: FlattenedTaskConnection!
 
-  """The identifier of the task."""
+  """
+  The identifier of the task.
+  """
   id: String!
 
   """
@@ -702,13 +880,19 @@ type FlattenedTask implements Node & TaskInterface {
   """
   inInbox: Boolean!
 
-  """When the task was last modified."""
+  """
+  When the task was last modified.
+  """
   modificationDate: String!
 
-  """The name of the task."""
+  """
+  The name of the task.
+  """
   name: String!
 
-  """If the task is the next task of its containing project, next is true."""
+  """
+  If the task is the next task of its containing project, next is true.
+  """
   next: Boolean!
 
   """
@@ -721,16 +905,24 @@ type FlattenedTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
-  """The note of the task."""
+  """
+  The note of the task.
+  """
   note: RichText!
 
-  """The number of available direct children of this task."""
+  """
+  The number of available direct children of this task.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this task."""
+  """
+  The number of completed direct children of this task.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this task."""
+  """
+  The number of direct children of this task.
+  """
   numberOfTasks: Int!
 
   """
@@ -753,7 +945,9 @@ type FlattenedTask implements Node & TaskInterface {
   """
   repetitionRule: RepetitionRule
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -761,10 +955,14 @@ type FlattenedTask implements Node & TaskInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """The tags assigned to this task."""
+  """
+  The tags assigned to this task.
+  """
   tags: TagConnection!
 
-  """The tasks having this task as their container."""
+  """
+  The tasks having this task as their container.
+  """
   tasks: TaskConnection!
 }
 
@@ -783,7 +981,9 @@ type FlattenedTaskEdge implements Edge {
 A group of projects and sub-folders representing an area of responsibility.
 """
 type Folder implements FolderInterface & Node & SectionInterface {
-  """When the folder was created."""
+  """
+  When the folder was created.
+  """
   creationDate: String!
 
   """
@@ -798,19 +998,29 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """
   folders: FolderConnection!
 
-  """Set if the folder is currently hidden."""
+  """
+  Set if the folder is currently hidden.
+  """
   hidden: Boolean!
 
-  """The identifier of the folder."""
+  """
+  The identifier of the folder.
+  """
   id: String!
 
-  """When the folder was last modified."""
+  """
+  When the folder was last modified.
+  """
   modificationDate: String!
 
-  """The name of the folder."""
+  """
+  The name of the folder.
+  """
   name: String!
 
-  """The note of the folder."""
+  """
+  The note of the folder.
+  """
   note: RichText!
 
   """
@@ -818,7 +1028,9 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """
   projects: ProjectConnection!
 
-  """The projects and folders having this folder as their container."""
+  """
+  The projects and folders having this folder as their container.
+  """
   sections: SectionConnection!
 }
 
@@ -834,7 +1046,9 @@ type FolderEdge implements Edge {
 }
 
 interface FolderInterface implements Node {
-  """When the folder was created."""
+  """
+  When the folder was created.
+  """
   creationDate: String!
 
   """
@@ -849,19 +1063,29 @@ interface FolderInterface implements Node {
   """
   folders: FolderConnection!
 
-  """Set if the folder is currently hidden."""
+  """
+  Set if the folder is currently hidden.
+  """
   hidden: Boolean!
 
-  """The identifier of the folder."""
+  """
+  The identifier of the folder.
+  """
   id: String!
 
-  """When the folder was last modified."""
+  """
+  When the folder was last modified.
+  """
   modificationDate: String!
 
-  """The name of the folder."""
+  """
+  The name of the folder.
+  """
   name: String!
 
-  """The note of the folder."""
+  """
+  The note of the folder.
+  """
   note: RichText!
 
   """
@@ -869,11 +1093,15 @@ interface FolderInterface implements Node {
   """
   projects: ProjectConnection!
 
-  """The projects and folders having this folder as their container."""
+  """
+  The projects and folders having this folder as their container.
+  """
   sections: SectionConnection!
 }
 
-"""A task that is in the document's inbox"""
+"""
+A task that is in the document's inbox
+"""
 type InboxTask implements Node & TaskInterface {
   """
   True if the task has a task that must be completed prior to it being actionable.
@@ -885,7 +1113,9 @@ type InboxTask implements Node & TaskInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -903,7 +1133,9 @@ type InboxTask implements Node & TaskInterface {
   """
   creationDate: String!
 
-  """When the task should become available for action."""
+  """
+  When the task should become available for action.
+  """
   deferDate: String
 
   """
@@ -916,7 +1148,9 @@ type InboxTask implements Node & TaskInterface {
   """
   droppedDate: String
 
-  """When the task must be finished."""
+  """
+  When the task must be finished.
+  """
   dueDate: String
 
   """
@@ -924,7 +1158,9 @@ type InboxTask implements Node & TaskInterface {
   """
   effectiveDeferDate: String
 
-  """When the task must be finished (including inherited)."""
+  """
+  When the task must be finished (including inherited).
+  """
   effectiveDueDate: String
 
   """
@@ -942,11 +1178,15 @@ type InboxTask implements Node & TaskInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
   flattenedTasks: FlattenedTaskConnection!
 
-  """The identifier of the task."""
+  """
+  The identifier of the task.
+  """
   id: String!
 
   """
@@ -954,13 +1194,19 @@ type InboxTask implements Node & TaskInterface {
   """
   inInbox: Boolean!
 
-  """When the task was last modified."""
+  """
+  When the task was last modified.
+  """
   modificationDate: String!
 
-  """The name of the task."""
+  """
+  The name of the task.
+  """
   name: String!
 
-  """If the task is the next task of its containing project, next is true."""
+  """
+  If the task is the next task of its containing project, next is true.
+  """
   next: Boolean!
 
   """
@@ -973,16 +1219,24 @@ type InboxTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
-  """The note of the task."""
+  """
+  The note of the task.
+  """
   note: RichText!
 
-  """The number of available direct children of this task."""
+  """
+  The number of available direct children of this task.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this task."""
+  """
+  The number of completed direct children of this task.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this task."""
+  """
+  The number of direct children of this task.
+  """
   numberOfTasks: Int!
 
   """
@@ -1005,7 +1259,9 @@ type InboxTask implements Node & TaskInterface {
   """
   repetitionRule: RepetitionRule
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -1013,10 +1269,14 @@ type InboxTask implements Node & TaskInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """The tags assigned to this task."""
+  """
+  The tags assigned to this task.
+  """
   tags: TagConnection!
 
-  """The tasks having this task as their container."""
+  """
+  The tasks having this task as their container.
+  """
   tasks: TaskConnection!
 }
 
@@ -1032,55 +1292,100 @@ type InboxTaskEdge implements Edge {
 }
 
 enum IntervalUnit {
-  """Days"""
+  """
+  Days
+  """
   DAY
 
-  """Hours"""
+  """
+  Hours
+  """
   HOUR
 
-  """Minutes"""
+  """
+  Minutes
+  """
   MINUTE
 
-  """Months"""
+  """
+  Months
+  """
   MONTH
 
-  """Weeks"""
+  """
+  Weeks
+  """
   WEEK
 
-  """Years"""
+  """
+  Years
+  """
   YEAR
 }
 
 type LocationInformation @recordType {
-  """Altitude in meters from sea level."""
+  """
+  Altitude in meters from sea level.
+  """
   altitude: Float!
 
-  """Latitude in degrees from -90 to +90."""
+  """
+  Latitude in degrees from -90 to +90.
+  """
   latitude: Float!
 
-  """Longitude in degrees from -180 to +180."""
+  """
+  Longitude in degrees from -180 to +180.
+  """
   longitude: Float!
 
-  """A display name for the location."""
+  """
+  A display name for the location.
+  """
   name: String!
 
-  """Radius of accuracy in kilometers, from 0.1km to 10km."""
+  """
+  Radius of accuracy in kilometers, from 0.1km to 10km.
+  """
   radius: Float!
 
-  """Location notification trigger."""
+  """
+  Location notification trigger.
+  """
   trigger: LocationTrigger!
 }
 
 enum LocationTrigger {
-  """notify when arriving at this location"""
+  """
+  notify when arriving at this location
+  """
   NOTIFY_WHEN_ARRIVING
 
-  """notify when leaving this location"""
+  """
+  notify when leaving this location
+  """
   NOTIFY_WHEN_LEAVING
 }
 
 type Mutation {
-  pushInboxTask(name: String!): InboxTask!
+  pushInboxTask(
+    completedByChildren: Boolean!
+    completionDate: String
+    creationDate: String!
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean!
+    id: String!
+    name: String!
+    note: RichText!
+    primaryTag: Tag
+    repetition: RepetitionInterval
+    repetitionRule: RepetitionRule
+    sequential: Boolean!
+    shouldUseFloatingTimeZone: Boolean!
+  ): InboxTask!
 }
 
 interface Node {
@@ -1094,12 +1399,18 @@ type PageInfo {
   startCursor: String!
 }
 
-"""A perspective."""
+"""
+A perspective.
+"""
 type Perspective implements Node & PerspectiveInterface {
-  """The identifier of the perspective."""
+  """
+  The identifier of the perspective.
+  """
   id: String!
 
-  """The name of the perspective."""
+  """
+  The name of the perspective.
+  """
   name: String!
 }
 
@@ -1115,14 +1426,20 @@ type PerspectiveEdge implements Edge {
 }
 
 interface PerspectiveInterface implements Node {
-  """The identifier of the perspective."""
+  """
+  The identifier of the perspective.
+  """
   id: String!
 
-  """The name of the perspective."""
+  """
+  The name of the perspective.
+  """
   name: String!
 }
 
-"""A project."""
+"""
+A project.
+"""
 type Project implements Node & ProjectInterface & SectionInterface {
   """
   True if the project has a project that must be completed prior to it being actionable.
@@ -1134,7 +1451,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -1152,7 +1471,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   defaultSingletonActionHolder: Boolean!
 
-  """When the project should become available for action."""
+  """
+  When the project should become available for action.
+  """
   deferDate: String
 
   """
@@ -1165,7 +1486,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   droppedDate: String
 
-  """When the project must be finished."""
+  """
+  When the project must be finished.
+  """
   dueDate: String
 
   """
@@ -1173,16 +1496,24 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   effectiveDeferDate: String
 
-  """When the project must be finished (including inherited)."""
+  """
+  When the project must be finished (including inherited).
+  """
   effectiveDueDate: String
 
-  """The effective status of the project."""
+  """
+  The effective status of the project.
+  """
   effectiveStatus: ProjectStatus!
 
-  """True if the project is completed"""
+  """
+  True if the project is completed
+  """
   effectivelyCompleted: Boolean!
 
-  """True if the project is dropped"""
+  """
+  True if the project is dropped
+  """
   effectivelyDropped: Boolean!
 
   """
@@ -1190,7 +1521,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
 
   """
@@ -1198,16 +1531,24 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   folder: Folder
 
-  """The identifier of the project."""
+  """
+  The identifier of the project.
+  """
   id: String!
 
-  """When the project was last reviewed."""
+  """
+  When the project was last reviewed.
+  """
   lastReviewDate: String!
 
-  """When the project was last modified."""
+  """
+  When the project was last modified.
+  """
   modificationDate: String!
 
-  """The name of the project."""
+  """
+  The name of the project.
+  """
   name: String!
 
   """
@@ -1225,19 +1566,29 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   nextReviewDate: String
 
-  """The next actionable child of this project."""
+  """
+  The next actionable child of this project.
+  """
   nextTask: Task
 
-  """The note of the project."""
+  """
+  The note of the project.
+  """
   note: RichText!
 
-  """The number of available direct children of this project."""
+  """
+  The number of available direct children of this project.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this project."""
+  """
+  The number of completed direct children of this project.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this project."""
+  """
+  The number of direct children of this project.
+  """
   numberOfTasks: Int!
 
   """
@@ -1255,7 +1606,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   repetitionRule: RepetitionRule
 
-  """The review interval for the project."""
+  """
+  The review interval for the project.
+  """
   reviewInterval: RepetitionInterval!
 
   """
@@ -1263,7 +1616,9 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   rootTask: Task!
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -1271,10 +1626,14 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """True if the project contains singleton actions."""
+  """
+  True if the project contains singleton actions.
+  """
   singletonActionHolder: Boolean!
 
-  """The status of the project."""
+  """
+  The status of the project.
+  """
   status: ProjectStatus!
 }
 
@@ -1300,7 +1659,9 @@ interface ProjectInterface implements Node {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -1318,7 +1679,9 @@ interface ProjectInterface implements Node {
   """
   defaultSingletonActionHolder: Boolean!
 
-  """When the project should become available for action."""
+  """
+  When the project should become available for action.
+  """
   deferDate: String
 
   """
@@ -1331,7 +1694,9 @@ interface ProjectInterface implements Node {
   """
   droppedDate: String
 
-  """When the project must be finished."""
+  """
+  When the project must be finished.
+  """
   dueDate: String
 
   """
@@ -1339,16 +1704,24 @@ interface ProjectInterface implements Node {
   """
   effectiveDeferDate: String
 
-  """When the project must be finished (including inherited)."""
+  """
+  When the project must be finished (including inherited).
+  """
   effectiveDueDate: String
 
-  """The effective status of the project."""
+  """
+  The effective status of the project.
+  """
   effectiveStatus: ProjectStatus!
 
-  """True if the project is completed"""
+  """
+  True if the project is completed
+  """
   effectivelyCompleted: Boolean!
 
-  """True if the project is dropped"""
+  """
+  True if the project is dropped
+  """
   effectivelyDropped: Boolean!
 
   """
@@ -1356,7 +1729,9 @@ interface ProjectInterface implements Node {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
 
   """
@@ -1364,16 +1739,24 @@ interface ProjectInterface implements Node {
   """
   folder: Folder
 
-  """The identifier of the project."""
+  """
+  The identifier of the project.
+  """
   id: String!
 
-  """When the project was last reviewed."""
+  """
+  When the project was last reviewed.
+  """
   lastReviewDate: String!
 
-  """When the project was last modified."""
+  """
+  When the project was last modified.
+  """
   modificationDate: String!
 
-  """The name of the project."""
+  """
+  The name of the project.
+  """
   name: String!
 
   """
@@ -1391,19 +1774,29 @@ interface ProjectInterface implements Node {
   """
   nextReviewDate: String
 
-  """The next actionable child of this project."""
+  """
+  The next actionable child of this project.
+  """
   nextTask: Task
 
-  """The note of the project."""
+  """
+  The note of the project.
+  """
   note: RichText!
 
-  """The number of available direct children of this project."""
+  """
+  The number of available direct children of this project.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this project."""
+  """
+  The number of completed direct children of this project.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this project."""
+  """
+  The number of direct children of this project.
+  """
   numberOfTasks: Int!
 
   """
@@ -1421,7 +1814,9 @@ interface ProjectInterface implements Node {
   """
   repetitionRule: RepetitionRule
 
-  """The review interval for the project."""
+  """
+  The review interval for the project.
+  """
   reviewInterval: RepetitionInterval!
 
   """
@@ -1429,7 +1824,9 @@ interface ProjectInterface implements Node {
   """
   rootTask: Task!
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -1437,24 +1834,36 @@ interface ProjectInterface implements Node {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """True if the project contains singleton actions."""
+  """
+  True if the project contains singleton actions.
+  """
   singletonActionHolder: Boolean!
 
-  """The status of the project."""
+  """
+  The status of the project.
+  """
   status: ProjectStatus!
 }
 
 enum ProjectStatus {
-  """Active"""
+  """
+  Active
+  """
   ACTIVE_STATUS
 
-  """Done"""
+  """
+  Done
+  """
   DONE_STATUS
 
-  """Dropped"""
+  """
+  Dropped
+  """
   DROPPED_STATUS
 
-  """On Hold"""
+  """
+  On Hold
+  """
   ON_HOLD_STATUS
 }
 
@@ -1476,7 +1885,9 @@ type RemainingTask implements Node & TaskInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -1494,7 +1905,9 @@ type RemainingTask implements Node & TaskInterface {
   """
   creationDate: String!
 
-  """When the task should become available for action."""
+  """
+  When the task should become available for action.
+  """
   deferDate: String
 
   """
@@ -1507,7 +1920,9 @@ type RemainingTask implements Node & TaskInterface {
   """
   droppedDate: String
 
-  """When the task must be finished."""
+  """
+  When the task must be finished.
+  """
   dueDate: String
 
   """
@@ -1515,7 +1930,9 @@ type RemainingTask implements Node & TaskInterface {
   """
   effectiveDeferDate: String
 
-  """When the task must be finished (including inherited)."""
+  """
+  When the task must be finished (including inherited).
+  """
   effectiveDueDate: String
 
   """
@@ -1533,11 +1950,15 @@ type RemainingTask implements Node & TaskInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
   flattenedTasks: FlattenedTaskConnection!
 
-  """The identifier of the task."""
+  """
+  The identifier of the task.
+  """
   id: String!
 
   """
@@ -1545,13 +1966,19 @@ type RemainingTask implements Node & TaskInterface {
   """
   inInbox: Boolean!
 
-  """When the task was last modified."""
+  """
+  When the task was last modified.
+  """
   modificationDate: String!
 
-  """The name of the task."""
+  """
+  The name of the task.
+  """
   name: String!
 
-  """If the task is the next task of its containing project, next is true."""
+  """
+  If the task is the next task of its containing project, next is true.
+  """
   next: Boolean!
 
   """
@@ -1564,16 +1991,24 @@ type RemainingTask implements Node & TaskInterface {
   """
   nextDueDate: String
 
-  """The note of the task."""
+  """
+  The note of the task.
+  """
   note: RichText!
 
-  """The number of available direct children of this task."""
+  """
+  The number of available direct children of this task.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this task."""
+  """
+  The number of completed direct children of this task.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this task."""
+  """
+  The number of direct children of this task.
+  """
   numberOfTasks: Int!
 
   """
@@ -1596,7 +2031,9 @@ type RemainingTask implements Node & TaskInterface {
   """
   repetitionRule: RepetitionRule
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -1604,10 +2041,14 @@ type RemainingTask implements Node & TaskInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """The tags assigned to this task."""
+  """
+  The tags assigned to this task.
+  """
   tags: TagConnection!
 
-  """The tasks having this task as their container."""
+  """
+  The tasks having this task as their container.
+  """
   tasks: TaskConnection!
 }
 
@@ -1628,26 +2069,38 @@ type RepetitionInterval @recordType {
   """
   fixed: Boolean!
 
-  """The count of the repetition interval."""
+  """
+  The count of the repetition interval.
+  """
   steps: Int!
 
-  """The units of the repetition interval."""
+  """
+  The units of the repetition interval.
+  """
   unit: IntervalUnit!
 }
 
 enum RepetitionMethod {
-  """Due again after completion."""
+  """
+  Due again after completion.
+  """
   DUE_AFTER_COMPLETION
 
-  """Repeat on a fixed schedule."""
+  """
+  Repeat on a fixed schedule.
+  """
   FIXED_REPETITION
 
-  """Start again after completion."""
+  """
+  Start again after completion.
+  """
   START_AFTER_COMPLETION
 }
 
 type RepetitionRule @recordType {
-  """The iCalendar (RFC 2445) string describing the recurrence."""
+  """
+  The iCalendar (RFC 2445) string describing the recurrence.
+  """
   recurrence: String!
 
   """
@@ -1656,47 +2109,75 @@ type RepetitionRule @recordType {
   repetitionMethod: RepetitionMethod!
 }
 
-"""Rich (styled) text"""
+"""
+Rich (styled) text
+"""
 type RichText implements RichTextInterface {
-  """Alignment of the text."""
+  """
+  Alignment of the text.
+  """
   alignment: TextAlignment!
 
-  """Number of pixels shifted above or below the normal baseline."""
+  """
+  Number of pixels shifted above or below the normal baseline.
+  """
   baselineOffset: Float!
 
-  """The name of the font of the first character."""
+  """
+  The name of the font of the first character.
+  """
   font: String!
 
-  """The size in points of the first character."""
+  """
+  The size in points of the first character.
+  """
   size: Int!
 
-  """The superscript level of the text."""
+  """
+  The superscript level of the text.
+  """
   superscript: Int!
 
-  """The plain text contents of the rich text."""
+  """
+  The plain text contents of the rich text.
+  """
   text: String!
 
-  """Is the first character underlined?"""
+  """
+  Is the first character underlined?
+  """
   underlined: Boolean!
 }
 
 interface RichTextInterface {
-  """The name of the font of the first character."""
+  """
+  The name of the font of the first character.
+  """
   font: String!
 
-  """The size in points of the first character."""
+  """
+  The size in points of the first character.
+  """
   size: Int!
 
-  """The plain text contents of the rich text."""
+  """
+  The plain text contents of the rich text.
+  """
   text: String!
 }
 
-"""A portion of a folder or document; either a project or a folder."""
+"""
+A portion of a folder or document; either a project or a folder.
+"""
 type Section implements Node & SectionInterface {
-  """The identifier of the project or folder."""
+  """
+  The identifier of the project or folder.
+  """
   id: String!
 
-  """The name of the project or folder."""
+  """
+  The name of the project or folder.
+  """
   name: String!
 }
 
@@ -1712,16 +2193,24 @@ type SectionEdge implements Edge {
 }
 
 interface SectionInterface implements Node {
-  """The identifier of the project or folder."""
+  """
+  The identifier of the project or folder.
+  """
   id: String!
 
-  """The name of the project or folder."""
+  """
+  The name of the project or folder.
+  """
   name: String!
 }
 
-"""Document setting"""
+"""
+Document setting
+"""
 type Setting implements Node {
-  """The identifier of the setting."""
+  """
+  The identifier of the setting.
+  """
   id: String!
 }
 
@@ -1737,11 +2226,15 @@ type SettingEdge implements Edge {
 }
 
 interface SettingInterface implements Node {
-  """The identifier of the setting."""
+  """
+  The identifier of the setting.
+  """
   id: String!
 }
 
-"""A tag."""
+"""
+A tag.
+"""
 type Tag implements Node & TagInterface {
   """
   If false, tasks associated with this tag will be skipped when determining the next action for a project.
@@ -1754,7 +2247,9 @@ type Tag implements Node & TagInterface {
   availableTaskCount: Int!
   availableTasks: AvailableTaskConnection!
 
-  """The containing tag."""
+  """
+  The containing tag.
+  """
   container: Tag!
 
   """
@@ -1763,19 +2258,29 @@ type Tag implements Node & TagInterface {
   effectivelyHidden: Boolean!
   flattenedTags: FlattenedTagConnection!
 
-  """Set if the tag is currently hidden."""
+  """
+  Set if the tag is currently hidden.
+  """
   hidden: Boolean!
 
-  """The identifier of the tag."""
+  """
+  The identifier of the tag.
+  """
   id: String!
 
-  """The physical location associated with the tag."""
+  """
+  The physical location associated with the tag.
+  """
   location: LocationInformation
 
-  """The name of the tag."""
+  """
+  The name of the tag.
+  """
   name: String!
 
-  """The note of the tag."""
+  """
+  The note of the tag.
+  """
   note: RichText!
 
   """
@@ -1784,10 +2289,14 @@ type Tag implements Node & TagInterface {
   remainingTaskCount: Int!
   remainingTasks: RemainingTaskConnection!
 
-  """The tags having this tag as their container."""
+  """
+  The tags having this tag as their container.
+  """
   tags: TagConnection!
 
-  """The tasks having this tag."""
+  """
+  The tasks having this tag.
+  """
   tasks: TaskConnection!
 }
 
@@ -1814,7 +2323,9 @@ interface TagInterface implements Node {
   availableTaskCount: Int!
   availableTasks: AvailableTaskConnection!
 
-  """The containing tag."""
+  """
+  The containing tag.
+  """
   container: Tag!
 
   """
@@ -1823,19 +2334,29 @@ interface TagInterface implements Node {
   effectivelyHidden: Boolean!
   flattenedTags: FlattenedTagConnection!
 
-  """Set if the tag is currently hidden."""
+  """
+  Set if the tag is currently hidden.
+  """
   hidden: Boolean!
 
-  """The identifier of the tag."""
+  """
+  The identifier of the tag.
+  """
   id: String!
 
-  """The physical location associated with the tag."""
+  """
+  The physical location associated with the tag.
+  """
   location: LocationInformation
 
-  """The name of the tag."""
+  """
+  The name of the tag.
+  """
   name: String!
 
-  """The note of the tag."""
+  """
+  The note of the tag.
+  """
   note: RichText!
 
   """
@@ -1844,10 +2365,14 @@ interface TagInterface implements Node {
   remainingTaskCount: Int!
   remainingTasks: RemainingTaskConnection!
 
-  """The tags having this tag as their container."""
+  """
+  The tags having this tag as their container.
+  """
   tags: TagConnection!
 
-  """The tasks having this tag."""
+  """
+  The tasks having this tag.
+  """
   tasks: TaskConnection!
 }
 
@@ -1865,7 +2390,9 @@ type Task implements Node & TaskInterface {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -1883,7 +2410,9 @@ type Task implements Node & TaskInterface {
   """
   creationDate: String!
 
-  """When the task should become available for action."""
+  """
+  When the task should become available for action.
+  """
   deferDate: String
 
   """
@@ -1896,7 +2425,9 @@ type Task implements Node & TaskInterface {
   """
   droppedDate: String
 
-  """When the task must be finished."""
+  """
+  When the task must be finished.
+  """
   dueDate: String
 
   """
@@ -1904,7 +2435,9 @@ type Task implements Node & TaskInterface {
   """
   effectiveDeferDate: String
 
-  """When the task must be finished (including inherited)."""
+  """
+  When the task must be finished (including inherited).
+  """
   effectiveDueDate: String
 
   """
@@ -1922,11 +2455,15 @@ type Task implements Node & TaskInterface {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
   flattenedTasks: FlattenedTaskConnection!
 
-  """The identifier of the task."""
+  """
+  The identifier of the task.
+  """
   id: String!
 
   """
@@ -1934,13 +2471,19 @@ type Task implements Node & TaskInterface {
   """
   inInbox: Boolean!
 
-  """When the task was last modified."""
+  """
+  When the task was last modified.
+  """
   modificationDate: String!
 
-  """The name of the task."""
+  """
+  The name of the task.
+  """
   name: String!
 
-  """If the task is the next task of its containing project, next is true."""
+  """
+  If the task is the next task of its containing project, next is true.
+  """
   next: Boolean!
 
   """
@@ -1953,16 +2496,24 @@ type Task implements Node & TaskInterface {
   """
   nextDueDate: String
 
-  """The note of the task."""
+  """
+  The note of the task.
+  """
   note: RichText!
 
-  """The number of available direct children of this task."""
+  """
+  The number of available direct children of this task.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this task."""
+  """
+  The number of completed direct children of this task.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this task."""
+  """
+  The number of direct children of this task.
+  """
   numberOfTasks: Int!
 
   """
@@ -1985,7 +2536,9 @@ type Task implements Node & TaskInterface {
   """
   repetitionRule: RepetitionRule
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -1993,10 +2546,14 @@ type Task implements Node & TaskInterface {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """The tags assigned to this task."""
+  """
+  The tags assigned to this task.
+  """
   tags: TagConnection!
 
-  """The tasks having this task as their container."""
+  """
+  The tasks having this task as their container.
+  """
   tasks: TaskConnection!
 }
 
@@ -2022,7 +2579,9 @@ interface TaskInterface implements Node {
   """
   completed: Boolean!
 
-  """If true, complete when children are completed."""
+  """
+  If true, complete when children are completed.
+  """
   completedByChildren: Boolean!
 
   """
@@ -2040,7 +2599,9 @@ interface TaskInterface implements Node {
   """
   creationDate: String!
 
-  """When the task should become available for action."""
+  """
+  When the task should become available for action.
+  """
   deferDate: String
 
   """
@@ -2053,7 +2614,9 @@ interface TaskInterface implements Node {
   """
   droppedDate: String
 
-  """When the task must be finished."""
+  """
+  When the task must be finished.
+  """
   dueDate: String
 
   """
@@ -2061,7 +2624,9 @@ interface TaskInterface implements Node {
   """
   effectiveDeferDate: String
 
-  """When the task must be finished (including inherited)."""
+  """
+  When the task must be finished (including inherited).
+  """
   effectiveDueDate: String
 
   """
@@ -2079,11 +2644,15 @@ interface TaskInterface implements Node {
   """
   estimatedMinutes: Int
 
-  """True if flagged"""
+  """
+  True if flagged
+  """
   flagged: Boolean!
   flattenedTasks: FlattenedTaskConnection!
 
-  """The identifier of the task."""
+  """
+  The identifier of the task.
+  """
   id: String!
 
   """
@@ -2091,13 +2660,19 @@ interface TaskInterface implements Node {
   """
   inInbox: Boolean!
 
-  """When the task was last modified."""
+  """
+  When the task was last modified.
+  """
   modificationDate: String!
 
-  """The name of the task."""
+  """
+  The name of the task.
+  """
   name: String!
 
-  """If the task is the next task of its containing project, next is true."""
+  """
+  If the task is the next task of its containing project, next is true.
+  """
   next: Boolean!
 
   """
@@ -2110,16 +2685,24 @@ interface TaskInterface implements Node {
   """
   nextDueDate: String
 
-  """The note of the task."""
+  """
+  The note of the task.
+  """
   note: RichText!
 
-  """The number of available direct children of this task."""
+  """
+  The number of available direct children of this task.
+  """
   numberOfAvailableTasks: Int!
 
-  """The number of completed direct children of this task."""
+  """
+  The number of completed direct children of this task.
+  """
   numberOfCompletedTasks: Int!
 
-  """The number of direct children of this task."""
+  """
+  The number of direct children of this task.
+  """
   numberOfTasks: Int!
 
   """
@@ -2142,7 +2725,9 @@ interface TaskInterface implements Node {
   """
   repetitionRule: RepetitionRule
 
-  """If true, any children are sequentially dependent."""
+  """
+  If true, any children are sequentially dependent.
+  """
   sequential: Boolean!
 
   """
@@ -2150,10 +2735,14 @@ interface TaskInterface implements Node {
   """
   shouldUseFloatingTimeZone: Boolean!
 
-  """The tags assigned to this task."""
+  """
+  The tags assigned to this task.
+  """
   tags: TagConnection!
 
-  """The tasks having this task as their container."""
+  """
+  The tasks having this task as their container.
+  """
   tasks: TaskConnection!
 }
 
