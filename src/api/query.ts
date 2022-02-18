@@ -182,13 +182,15 @@ const renderNonNullObject = (
   return `{ ${renderFields(ctx, object)} }`;
 };
 
-const renderFields = (ctx: CurrentContext, object: RenderableObject): string => {
+const renderFields = (ctx: CurrentContext, object: RenderableObject, withReflection?: boolean): string => {
   const objectDef = mustFindTypeDefinition(ctx, object.typeNode);
   const isRecordType = objectDef.directives?.some((d) => d.name.value === "recordType") ?? false;
 
   const reflectionRequired =
-    objectDef.kind === Kind.INTERFACE_TYPE_DEFINITION &&
-    !object.selectedFields.some((f) => "name" in f && f.name.value === "__typename");
+    withReflection !== undefined
+      ? withReflection
+      : objectDef.kind === Kind.INTERFACE_TYPE_DEFINITION &&
+        !object.selectedFields.some((f) => "name" in f && f.name.value === "__typename");
   const reflection = `__typename:  pascalCase(${ctx.rootName}.properties().pcls),`;
 
   return object.selectedFields
@@ -202,7 +204,7 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
         return `...(() => {
           return ${ctx.rootName}.properties().pcls.toLowerCase() === "${typeNode.name.value}".toLowerCase()
             ? {
-              ${renderFields(ctx, { selectedFields: field.selectionSet.selections, typeNode })}
+              ${renderFields(ctx, { selectedFields: field.selectionSet.selections, typeNode }, false)}
                __typename: "${typeNode.name.value}",
             }
             : {}
@@ -210,7 +212,11 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
       }
       if (field.kind === Kind.FRAGMENT_SPREAD) {
         const fs = ctx.fragments[field.name.value];
-        return renderFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
+        return renderFields(
+          ctx,
+          { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition },
+          false
+        );
       }
       if (field.name.value === "__typename") {
         return reflection;

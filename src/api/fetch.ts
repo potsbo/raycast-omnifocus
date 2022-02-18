@@ -13,7 +13,7 @@ class MyClient extends GraphQLClient {
     const { data, errors } = (await graphql({
       schema,
       source: query,
-      rootValue: resolvers.Query,
+      rootValue: resolvers,
       variableValues: variables,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })) as any as ExecutionResult<T>;

@@ -71,7 +71,6 @@ JSON.stringify({
             return {
               cursor: elm.id(),
               node: {
-                __typename: pascalCase(elm.properties().pcls),
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
                   ? {
@@ -134,7 +133,6 @@ JSON.stringify({
             return {
               cursor: elm.id(),
               node: {
-                __typename: pascalCase(elm.properties().pcls),
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
                   ? {
@@ -197,7 +195,6 @@ JSON.stringify({
             return {
               cursor: elm.id(),
               node: {
-                __typename: pascalCase(elm.properties().pcls),
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
                   ? {
@@ -272,7 +269,6 @@ JSON.stringify({
                         return {
                           cursor: elm.id(),
                           node: {
-                            __typename: pascalCase(elm.properties().pcls),
                             __typename: pascalCase(elm.properties().pcls),
                             completed: elm.completed(),
                             containingProject: elm.containingProject()
