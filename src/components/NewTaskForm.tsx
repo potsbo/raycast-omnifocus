@@ -1,6 +1,5 @@
 import { ActionPanel, Form, SubmitFormAction, Icon, showToast, ToastStyle } from "@raycast/api";
 import { useMemo } from "react";
-import { createNewTask } from "../api";
 import { useQuery } from "../api/fetch";
 
 interface Props {
@@ -17,8 +16,8 @@ interface FormFields {
 
 export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
   const tp = useQuery("GetTaskCreationSupportInfo");
-  const tags = tp.value?.defaultDocument.tags.edges.map((e) => e.node);
-  const folders = tp.value?.defaultDocument.folders.edges.map((e) => e.node);
+  const tags = tp.value?.application.defaultDocument.tags.edges.map((e) => e.node);
+  const folders = tp.value?.application.defaultDocument.folders.edges.map((e) => e.node);
 
   const tagOptions = useMemo<JSX.Element[]>(() => {
     if (tags === undefined) {
@@ -59,7 +58,7 @@ export const NewTaskForm = ({ defaultProject, defaultTags }: Props) => {
             title="Submit Description"
             onSubmit={async (values: FormFields) => {
               showToast(ToastStyle.Animated, "Creating");
-              await createNewTask(values);
+              console.log(values);
               showToast(ToastStyle.Success, "Created");
             }}
           />

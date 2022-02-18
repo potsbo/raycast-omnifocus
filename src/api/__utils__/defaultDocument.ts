@@ -62,4 +62,5 @@ projects.byId = (pid: string) => {
 
 export const defaultDocument = {
   projects,
+  inboxTasks: [],
 };

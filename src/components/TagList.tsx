@@ -51,12 +51,12 @@ export const TagList = ({ tagId }: Props) => {
     if (folders.value === undefined) {
       return undefined;
     }
-    const { tags } = folders.value.defaultDocument;
+    const { tags } = folders.value.application.defaultDocument;
     if ("byId" in tags) {
       return tags.byId ?? undefined;
     }
 
-    return { tags: tags as GetNestedTagsQuery["defaultDocument"]["tags"] };
+    return { tags: tags as GetNestedTagsQuery["application"]["defaultDocument"]["tags"] };
   }, [folders.value]);
 
   return (
@@ -84,7 +84,7 @@ export const TagList = ({ tagId }: Props) => {
                               getter={() =>
                                 runQuery("GetTasksWithTag", { tagId: p.id }).then((r) =>
                                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                  r.defaultDocument.tags.byId!.tasks.edges.map((e) => e.node)
+                                  r.application.defaultDocument.tags.byId!.tasks.edges.map((e) => e.node)
                                 )
                               }
                               cacheKey={`TasksWithTag:${p.id}`}

@@ -32,7 +32,7 @@ const AllowedTypes = [
   "Folder",
   "FlattenedTag",
   "Tag",
-  // "Application",
+  "Application",
   "Document",
   "PageInfo",
   "Int",
@@ -45,7 +45,12 @@ const AllowedTypes = [
   "RepetitionRule",
   "Perspective",
   "RemainingTask",
-  "RichText"
+  "RichText",
+  "FlattenedProject",
+  "FlattenedFolder",
+  "Setting",
+  "BuiltinPerspective",
+  "CustomPerspective",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -53,7 +58,6 @@ const isAllowedType = (type: TypeNode | string): boolean => {
   if (AllowedTypes.includes(typeName)) {
     return true;
   }
-
   if (typeName.endsWith(CONNECTION_TYPE_NAME)) {
     return isAllowedType(typeName.slice(0, -CONNECTION_TYPE_NAME.length));
   }
@@ -64,6 +68,7 @@ const isAllowedType = (type: TypeNode | string): boolean => {
     return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
   }
 
+  console.log(typeName);
   return false;
 };
 
@@ -147,6 +152,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
       ...cdef.getTypes({
         inherits: parent,
         inherited: inheritedClasses.has(cdef.getClassName()),
+        extensions: extensionRenderers.filter((e) => e.extends === cdef.getClassName()),
       })
     );
   });
@@ -200,7 +206,7 @@ interface Node {
 }
 
 type Query {
-  defaultDocument: Document!
+  application: Application!
 }
   
   directive @whose(condition: [Condition!]!) on FIELD
@@ -213,6 +219,12 @@ input Condition {
   operator: String! = "="
   value: String! = "true"
 }
+
+type Mutation {
+  pushInboxTask(name: String!): InboxTask!
+}
+
+
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");

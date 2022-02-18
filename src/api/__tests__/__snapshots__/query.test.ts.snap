@@ -6,27 +6,32 @@ exports[`query for Connection 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
-({
-  projects: (() => {
-    const nodes = parent.projects();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      projects: (() => {
+        const nodes = _parent.defaultDocument().projects();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            name: elm.name(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
           },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                __typename: pascalCase(elm.properties().pcls),
+                name: elm.name(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;
@@ -37,48 +42,54 @@ exports[`query for GetInboxTasksDocument 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
-({
-  inboxTasks: (() => {
-    const nodes = parent.inboxTasks.whose({
-      _and: [
-        { effectivelyCompleted: { _equals: false } },
-        {
-          _or: [
-            { effectiveDeferDate: { _equals: null } },
-            { effectiveDeferDate: { _lessThan: new Date() } },
-          ],
-        },
-      ],
-    })();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      inboxTasks: (() => {
+        const nodes = _parent
+          .defaultDocument()
+          .inboxTasks.whose({
+            _and: [
+              { effectivelyCompleted: { _equals: false } },
+              {
+                _or: [
+                  { effectiveDeferDate: { _equals: null } },
+                  { effectiveDeferDate: { _lessThan: new Date() } },
+                ],
+              },
+            ],
+          })();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            completed: elm.completed(),
-            containingProject: elm.containingProject()
-              ? {
-                  id: elm.containingProject().id(),
-                  name: elm.containingProject().name(),
-                }
-              : undefined,
-            effectiveDueDate: elm.effectiveDueDate(),
-            effectivelyCompleted: elm.effectivelyCompleted(),
-            flagged: elm.flagged(),
-            id: elm.id(),
-            name: elm.name(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
           },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                completed: elm.completed(),
+                containingProject: elm.containingProject()
+                  ? {
+                      id: elm.containingProject().id(),
+                      name: elm.containingProject().name(),
+                    }
+                  : undefined,
+                effectiveDueDate: elm.effectiveDueDate(),
+                effectivelyCompleted: elm.effectivelyCompleted(),
+                flagged: elm.flagged(),
+                id: elm.id(),
+                name: elm.name(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;
@@ -92,49 +103,55 @@ exports[`query for GetTasksDocument 1`] = `
 const onlyFlagged = true;
 const onlyAvailable = true;
 const withEffectiveDueDate = false;
-({
-  flattenedTasks: (() => {
-    const nodes = parent.flattenedTasks.whose({
-      _and: [
-        { effectivelyCompleted: { _equals: false } },
-        { flagged: { _equals: true } },
-        {
-          _or: [
-            { effectiveDeferDate: { _equals: null } },
-            { effectiveDeferDate: { _lessThan: new Date() } },
-          ],
-        },
-      ],
-    })();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      flattenedTasks: (() => {
+        const nodes = _parent
+          .defaultDocument()
+          .flattenedTasks.whose({
+            _and: [
+              { effectivelyCompleted: { _equals: false } },
+              { flagged: { _equals: true } },
+              {
+                _or: [
+                  { effectiveDeferDate: { _equals: null } },
+                  { effectiveDeferDate: { _lessThan: new Date() } },
+                ],
+              },
+            ],
+          })();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            completed: elm.completed(),
-            containingProject: elm.containingProject()
-              ? {
-                  id: elm.containingProject().id(),
-                  name: elm.containingProject().name(),
-                }
-              : undefined,
-            effectiveDueDate: elm.effectiveDueDate(),
-            effectivelyCompleted: elm.effectivelyCompleted(),
-            flagged: elm.flagged(),
-            id: elm.id(),
-            name: elm.name(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
           },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                completed: elm.completed(),
+                containingProject: elm.containingProject()
+                  ? {
+                      id: elm.containingProject().id(),
+                      name: elm.containingProject().name(),
+                    }
+                  : undefined,
+                effectiveDueDate: elm.effectiveDueDate(),
+                effectivelyCompleted: elm.effectivelyCompleted(),
+                flagged: elm.flagged(),
+                id: elm.id(),
+                name: elm.name(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;
@@ -148,49 +165,55 @@ exports[`query for GetTasksDocument for forecast 1`] = `
 const onlyFlagged = false;
 const onlyAvailable = true;
 const withEffectiveDueDate = true;
-({
-  flattenedTasks: (() => {
-    const nodes = parent.flattenedTasks.whose({
-      _and: [
-        { effectivelyCompleted: { _equals: false } },
-        { _not: [{ effectiveDeferDate: { _equals: null } }] },
-        {
-          _or: [
-            { effectiveDeferDate: { _equals: null } },
-            { effectiveDeferDate: { _lessThan: new Date() } },
-          ],
-        },
-      ],
-    })();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      flattenedTasks: (() => {
+        const nodes = _parent
+          .defaultDocument()
+          .flattenedTasks.whose({
+            _and: [
+              { effectivelyCompleted: { _equals: false } },
+              { _not: [{ effectiveDeferDate: { _equals: null } }] },
+              {
+                _or: [
+                  { effectiveDeferDate: { _equals: null } },
+                  { effectiveDeferDate: { _lessThan: new Date() } },
+                ],
+              },
+            ],
+          })();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            completed: elm.completed(),
-            containingProject: elm.containingProject()
-              ? {
-                  id: elm.containingProject().id(),
-                  name: elm.containingProject().name(),
-                }
-              : undefined,
-            effectiveDueDate: elm.effectiveDueDate(),
-            effectivelyCompleted: elm.effectivelyCompleted(),
-            flagged: elm.flagged(),
-            id: elm.id(),
-            name: elm.name(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
           },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                completed: elm.completed(),
+                containingProject: elm.containingProject()
+                  ? {
+                      id: elm.containingProject().id(),
+                      name: elm.containingProject().name(),
+                    }
+                  : undefined,
+                effectiveDueDate: elm.effectiveDueDate(),
+                effectivelyCompleted: elm.effectivelyCompleted(),
+                flagged: elm.flagged(),
+                id: elm.id(),
+                name: elm.name(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;
@@ -202,67 +225,75 @@ exports[`query for GetTasksInProjectDocument 1`] = `
     .join(\\"\\");
 }
 const projectId = \\"foobar\\";
-({
-  projects: (() => {
-    const nodes = parent.projects();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      projects: (() => {
+        const nodes = _parent.defaultDocument().projects();
         return {
-          cursor: elm.id(),
-        };
-      }),
-      byId: parent.projects.byId(projectId)
-        ? {
-            __typename: pascalCase(
-              parent.projects.byId(projectId).properties().pcls
-            ),
-            rootTask: {
-              tasks: (() => {
-                const nodes = parent.projects
-                  .byId(projectId)
-                  .rootTask()
-                  .tasks();
-                return {
-                  pageInfo: {
-                    hasPreviousPage: false,
-                    hasNextPage: false,
-                    startCursor: \\"\\",
-                    endCursor: \\"\\",
-                  },
-                  edges: nodes.map((elm) => {
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
+          },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+            };
+          }),
+          byId: _parent.defaultDocument().projects.byId(projectId)
+            ? {
+                __typename: pascalCase(
+                  _parent
+                    .defaultDocument()
+                    .projects.byId(projectId)
+                    .properties().pcls
+                ),
+                rootTask: {
+                  tasks: (() => {
+                    const nodes = _parent
+                      .defaultDocument()
+                      .projects.byId(projectId)
+                      .rootTask()
+                      .tasks();
                     return {
-                      cursor: elm.id(),
-                      node: {
-                        __typename: pascalCase(elm.properties().pcls),
-                        __typename: pascalCase(elm.properties().pcls),
-                        completed: elm.completed(),
-                        containingProject: elm.containingProject()
-                          ? {
-                              id: elm.containingProject().id(),
-                              name: elm.containingProject().name(),
-                            }
-                          : undefined,
-                        effectiveDueDate: elm.effectiveDueDate(),
-                        effectivelyCompleted: elm.effectivelyCompleted(),
-                        flagged: elm.flagged(),
-                        id: elm.id(),
-                        name: elm.name(),
+                      pageInfo: {
+                        hasPreviousPage: false,
+                        hasNextPage: false,
+                        startCursor: \\"\\",
+                        endCursor: \\"\\",
                       },
+                      edges: nodes.map((elm) => {
+                        return {
+                          cursor: elm.id(),
+                          node: {
+                            __typename: pascalCase(elm.properties().pcls),
+                            completed: elm.completed(),
+                            containingProject: elm.containingProject()
+                              ? {
+                                  id: elm.containingProject().id(),
+                                  name: elm.containingProject().name(),
+                                }
+                              : undefined,
+                            effectiveDueDate: elm.effectiveDueDate(),
+                            effectivelyCompleted: elm.effectivelyCompleted(),
+                            flagged: elm.flagged(),
+                            id: elm.id(),
+                            name: elm.name(),
+                          },
+                        };
+                      }),
                     };
-                  }),
-                };
-              })(),
-            },
-          }
-        : undefined,
-    };
-  })(),
+                  })(),
+                },
+              }
+            : undefined,
+        };
+      })(),
+    },
+  },
 });
 "
 `;
@@ -273,74 +304,79 @@ exports[`query for GetTopLevelProjects 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
-({
-  folders: (() => {
-    const nodes = parent.folders();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      folders: (() => {
+        const nodes = _parent.defaultDocument().folders();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            id: elm.id(),
-            name: elm.name(),
-            projects: (() => {
-              const nodes = elm.projects();
-              return {
-                pageInfo: {
-                  hasPreviousPage: false,
-                  hasNextPage: false,
-                  startCursor: \\"\\",
-                  endCursor: \\"\\",
-                },
-                edges: nodes.map((elm) => {
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
+          },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                __typename: pascalCase(elm.properties().pcls),
+                id: elm.id(),
+                name: elm.name(),
+                projects: (() => {
+                  const nodes = elm.projects();
                   return {
-                    cursor: elm.id(),
-                    node: {
-                      __typename: pascalCase(elm.properties().pcls),
-                      completed: elm.completed(),
-                      id: elm.id(),
-                      name: elm.name(),
-                      numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+                    pageInfo: {
+                      hasPreviousPage: false,
+                      hasNextPage: false,
+                      startCursor: \\"\\",
+                      endCursor: \\"\\",
                     },
+                    edges: nodes.map((elm) => {
+                      return {
+                        cursor: elm.id(),
+                        node: {
+                          __typename: pascalCase(elm.properties().pcls),
+                          completed: elm.completed(),
+                          id: elm.id(),
+                          name: elm.name(),
+                          numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+                        },
+                      };
+                    }),
                   };
-                }),
-              };
-            })(),
-          },
+                })(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
-  projects: (() => {
-    const nodes = parent.projects();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+      })(),
+      projects: (() => {
+        const nodes = _parent.defaultDocument().projects();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            completed: elm.completed(),
-            id: elm.id(),
-            name: elm.name(),
-            numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
           },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                __typename: pascalCase(elm.properties().pcls),
+                completed: elm.completed(),
+                id: elm.id(),
+                name: elm.name(),
+                numberOfAvailableTasks: elm.numberOfAvailableTasks(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;
@@ -351,64 +387,69 @@ exports[`query with inline fragment 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
-({
-  folders: (() => {
-    const nodes = parent.folders();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      folders: (() => {
+        const nodes = _parent.defaultDocument().folders();
         return {
-          cursor: elm.id(),
-          node: {
-            __typename: pascalCase(elm.properties().pcls),
-            name: elm.name(),
-            sections: (() => {
-              const nodes = elm.sections();
-              return {
-                pageInfo: {
-                  hasPreviousPage: false,
-                  hasNextPage: false,
-                  startCursor: \\"\\",
-                  endCursor: \\"\\",
-                },
-                edges: nodes.map((elm) => {
-                  return {
-                    cursor: elm.id(),
-                    node: {
-                      ...(() => {
-                        return elm.properties().pcls.toLowerCase() ===
-                          \\"Folder\\".toLowerCase()
-                          ? {
-                              name: elm.name(),
-                              __typename: \\"Folder\\",
-                            }
-                          : {};
-                      })(),
-                      ...(() => {
-                        return elm.properties().pcls.toLowerCase() ===
-                          \\"Project\\".toLowerCase()
-                          ? {
-                              completed: elm.completed(),
-                              __typename: \\"Project\\",
-                            }
-                          : {};
-                      })(),
-                      __typename: pascalCase(elm.properties().pcls),
-                    },
-                  };
-                }),
-              };
-            })(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
           },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+              node: {
+                __typename: pascalCase(elm.properties().pcls),
+                name: elm.name(),
+                sections: (() => {
+                  const nodes = elm.sections();
+                  return {
+                    pageInfo: {
+                      hasPreviousPage: false,
+                      hasNextPage: false,
+                      startCursor: \\"\\",
+                      endCursor: \\"\\",
+                    },
+                    edges: nodes.map((elm) => {
+                      return {
+                        cursor: elm.id(),
+                        node: {
+                          ...(() => {
+                            return elm.properties().pcls.toLowerCase() ===
+                              \\"Folder\\".toLowerCase()
+                              ? {
+                                  name: elm.name(),
+                                  __typename: \\"Folder\\",
+                                }
+                              : {};
+                          })(),
+                          ...(() => {
+                            return elm.properties().pcls.toLowerCase() ===
+                              \\"Project\\".toLowerCase()
+                              ? {
+                                  completed: elm.completed(),
+                                  __typename: \\"Project\\",
+                                }
+                              : {};
+                          })(),
+                          __typename: pascalCase(elm.properties().pcls),
+                        },
+                      };
+                    }),
+                  };
+                })(),
+              },
+            };
+          }),
         };
-      }),
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;
@@ -419,33 +460,45 @@ exports[`query with project interface 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
-({
-  projects: (() => {
-    const nodes = parent.projects();
-    return {
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: \\"\\",
-        endCursor: \\"\\",
-      },
-      edges: nodes.map((elm) => {
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      projects: (() => {
+        const nodes = _parent.defaultDocument().projects();
         return {
-          cursor: elm.id(),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
+          },
+          edges: nodes.map((elm) => {
+            return {
+              cursor: elm.id(),
+            };
+          }),
+          byId: _parent.defaultDocument().projects.byId(\\"hZoaSakOnG4\\")
+            ? {
+                __typename: pascalCase(
+                  _parent
+                    .defaultDocument()
+                    .projects.byId(\\"hZoaSakOnG4\\")
+                    .properties().pcls
+                ),
+                rootTask: {
+                  id: _parent
+                    .defaultDocument()
+                    .projects.byId(\\"hZoaSakOnG4\\")
+                    .rootTask()
+                    .id(),
+                },
+              }
+            : undefined,
         };
-      }),
-      byId: parent.projects.byId(\\"hZoaSakOnG4\\")
-        ? {
-            __typename: pascalCase(
-              parent.projects.byId(\\"hZoaSakOnG4\\").properties().pcls
-            ),
-            rootTask: {
-              id: parent.projects.byId(\\"hZoaSakOnG4\\").rootTask().id(),
-            },
-          }
-        : undefined,
-    };
-  })(),
+      })(),
+    },
+  },
 });
 "
 `;

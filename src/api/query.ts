@@ -182,13 +182,15 @@ const renderNonNullObject = (
   return `{ ${renderFields(ctx, object)} }`;
 };
 
-const renderFields = (ctx: CurrentContext, object: RenderableObject): string => {
+const renderFields = (ctx: CurrentContext, object: RenderableObject, withReflection?: boolean): string => {
   const objectDef = mustFindTypeDefinition(ctx, object.typeNode);
   const isRecordType = objectDef.directives?.some((d) => d.name.value === "recordType") ?? false;
 
   const reflectionRequired =
-    objectDef.kind === Kind.INTERFACE_TYPE_DEFINITION &&
-    !object.selectedFields.some((f) => "name" in f && f.name.value === "__typename");
+    withReflection !== undefined
+      ? withReflection
+      : objectDef.kind === Kind.INTERFACE_TYPE_DEFINITION &&
+        !object.selectedFields.some((f) => "name" in f && f.name.value === "__typename");
   const reflection = `__typename:  pascalCase(${ctx.rootName}.properties().pcls),`;
 
   return object.selectedFields
@@ -202,7 +204,7 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
         return `...(() => {
           return ${ctx.rootName}.properties().pcls.toLowerCase() === "${typeNode.name.value}".toLowerCase()
             ? {
-              ${renderFields(ctx, { selectedFields: field.selectionSet.selections, typeNode })}
+              ${renderFields(ctx, { selectedFields: field.selectionSet.selections, typeNode }, false)}
                __typename: "${typeNode.name.value}",
             }
             : {}
@@ -210,7 +212,11 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject): string => 
       }
       if (field.kind === Kind.FRAGMENT_SPREAD) {
         const fs = ctx.fragments[field.name.value];
-        return renderFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition });
+        return renderFields(
+          ctx,
+          { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition },
+          false
+        );
       }
       if (field.name.value === "__typename") {
         return reflection;
@@ -233,8 +239,9 @@ function pascalCase(s: string) {
 }
 
 export const genQuery = (
-  rootName: string,
-  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">
+  appName: string,
+  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">,
+  rootObjName?: string
 ) => {
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
@@ -246,11 +253,31 @@ export const genQuery = (
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
 
-  const fdef = info.schema.getQueryType()?.getFields()[field.name.value].astNode?.type;
+  const fieldGeter = info.operation.operation === "query" ? info.schema.getQueryType() : info.schema.getMutationType();
+
+  const fdef = fieldGeter?.getFields()[field.name.value].astNode?.type;
   if (fdef === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
 
+  const primarySelection = info.operation.selectionSet.selections[0];
+  if (primarySelection.kind !== Kind.FIELD) {
+    throw new Error("Field is expected at top level selection set");
+  }
+
+  if (rootObjName === undefined) {
+    const fs = field.selectionSet.selections;
+    const parent = `_parent`;
+    const convert = `const ${parent} = Application("${appName}");`;
+    return `${lib};${vars};${convert};JSON.stringify({ result: ${renderObject(
+      { ...info, rootName: parent },
+      { selectedFields: fs, typeNode: fdef }
+    )}})`;
+  }
+
   const fs = field.selectionSet.selections;
-  return `${lib};${vars}(${renderObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
+  return `${lib};${vars};JSON.stringify({ result: ${renderObject(
+    { ...info, rootName: rootObjName },
+    { selectedFields: fs, typeNode: fdef }
+  )}})`;
 };

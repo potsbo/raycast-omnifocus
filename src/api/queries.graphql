@@ -10,8 +10,7 @@ fragment TaskViewModel on TaskInterface {
   }
   flagged
 }
-
-fragment ProjectViewModel on Project {
+fragment ProjectViewModel on ProjectInterface {
   name
   completed
   id
@@ -98,32 +97,34 @@ query GetTasks(
   $onlyAvailable: Boolean! = false
   $withEffectiveDueDate: Boolean! = false
 ) {
-  defaultDocument {
-    flattenedTasks
-      @whose(
-        condition: {
-          operator: "and"
-          operands: [
-            { field: "effectivelyCompleted", value: "false" }
-            { field: "flagged", enabled: $onlyFlagged }
-            {
-              operator: "not"
-              operands: [{ field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate }]
-            }
-            {
-              enabled: $onlyAvailable
-              operator: "or"
-              operands: [
-                { field: "effectiveDeferDate", operator: "=", value: "null" }
-                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
-              ]
-            }
-          ]
-        }
-      ) {
-      edges {
-        node {
-          ...TaskViewModel
+  application {
+    defaultDocument {
+      flattenedTasks
+        @whose(
+          condition: {
+            operator: "and"
+            operands: [
+              { field: "effectivelyCompleted", value: "false" }
+              { field: "flagged", enabled: $onlyFlagged }
+              {
+                operator: "not"
+                operands: [{ field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate }]
+              }
+              {
+                enabled: $onlyAvailable
+                operator: "or"
+                operands: [
+                  { field: "effectiveDeferDate", operator: "=", value: "null" }
+                  { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
+                ]
+              }
+            ]
+          }
+        ) {
+        edges {
+          node {
+            ...TaskViewModel
+          }
         }
       }
     }
@@ -131,26 +132,28 @@ query GetTasks(
 }
 
 query GetInboxTasks {
-  defaultDocument {
-    inboxTasks
-      @whose(
-        condition: {
-          operator: "and"
-          operands: [
-            { field: "effectivelyCompleted", value: "false" }
-            {
-              operator: "or"
-              operands: [
-                { field: "effectiveDeferDate", operator: "=", value: "null" }
-                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
-              ]
-            }
-          ]
-        }
-      ) {
-      edges {
-        node {
-          ...TaskViewModel
+  application {
+    defaultDocument {
+      inboxTasks
+        @whose(
+          condition: {
+            operator: "and"
+            operands: [
+              { field: "effectivelyCompleted", value: "false" }
+              {
+                operator: "or"
+                operands: [
+                  { field: "effectiveDeferDate", operator: "=", value: "null" }
+                  { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
+                ]
+              }
+            ]
+          }
+        ) {
+        edges {
+          node {
+            ...TaskViewModel
+          }
         }
       }
     }
@@ -158,10 +161,38 @@ query GetInboxTasks {
 }
 
 query GetTasksInProject($projectId: String!) {
-  defaultDocument {
-    projects {
-      byId(id: $projectId) {
-        rootTask {
+  application {
+    defaultDocument {
+      projects {
+        byId(id: $projectId) {
+          rootTask {
+            tasks {
+              edges {
+                node {
+                  ...TaskViewModel
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetNestedProjects {
+  application {
+    defaultDocument {
+      ...FolderedProjectDepth1
+    }
+  }
+}
+
+query GetTasksWithTag($tagId: String!) {
+  application {
+    defaultDocument {
+      tags {
+        byId(id: $tagId) {
           tasks {
             edges {
               node {
@@ -175,71 +206,57 @@ query GetTasksInProject($projectId: String!) {
   }
 }
 
-query GetNestedProjects {
-  defaultDocument {
-    ...FolderedProjectDepth1
-  }
-}
-
-query GetTasksWithTag($tagId: String!) {
-  defaultDocument {
-    tags {
-      byId(id: $tagId) {
-        tasks {
-          edges {
-            node {
-              ...TaskViewModel
-            }
-          }
-        }
-      }
+query GetTopLevelProjects {
+  application {
+    defaultDocument {
+      ...FolderedProjectDepth1
+      ...TopLevelProjects
     }
   }
 }
 
-query GetTopLevelProjects {
-  defaultDocument {
-    ...FolderedProjectDepth1
-    ...TopLevelProjects
-  }
-}
-
 query GetTaskCreationSupportInfo {
-  defaultDocument {
-    ...FolderedProjectDepth1
-    ...TopLevelProjects
-    ...FolderedTagDepth1
+  application {
+    defaultDocument {
+      ...FolderedProjectDepth1
+      ...TopLevelProjects
+      ...FolderedTagDepth1
+    }
   }
 }
 
 query GetNestedTags {
-  defaultDocument {
-    ...FolderedTagDepth2
+  application {
+    defaultDocument {
+      ...FolderedTagDepth2
+    }
   }
 }
 
 query GetNestedTagsFrom($tagId: String!) {
-  defaultDocument {
-    tags {
-      byId(id: $tagId) {
-        id
-        name # title
-        tags {
-          edges {
-            node {
-              name # folder
-              id
-              availableTaskCount
-              tags {
-                edges {
-                  node {
-                    name # item
-                    id
-                    availableTaskCount
-                    tags {
-                      edges {
-                        node {
-                          id # for children count
+  application {
+    defaultDocument {
+      tags {
+        byId(id: $tagId) {
+          id
+          name # title
+          tags {
+            edges {
+              node {
+                name # folder
+                id
+                availableTaskCount
+                tags {
+                  edges {
+                    node {
+                      name # item
+                      id
+                      availableTaskCount
+                      tags {
+                        edges {
+                          node {
+                            id # for children count
+                          }
                         }
                       }
                     }
@@ -253,9 +270,10 @@ query GetNestedTagsFrom($tagId: String!) {
     }
   }
 }
-
 query GetPerspectiveNames {
-  defaultDocument {
-    perspectiveNames
+  application {
+    defaultDocument {
+      perspectiveNames
+    }
   }
 }
