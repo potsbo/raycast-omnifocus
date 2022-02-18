@@ -10,7 +10,7 @@ fragment TaskViewModel on TaskInterface {
   }
   flagged
 }
-fragment ProjectViewModel on Project {
+fragment ProjectViewModel on ProjectInterface {
   name
   completed
   id
