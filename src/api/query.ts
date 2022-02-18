@@ -233,8 +233,9 @@ function pascalCase(s: string) {
 }
 
 export const genQuery = (
-  rootName: string,
-  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">
+  appName: string,
+  info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">,
+  rootObjName?: string
 ) => {
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
@@ -246,11 +247,31 @@ export const genQuery = (
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
 
-  const fdef = info.schema.getQueryType()?.getFields()[field.name.value].astNode?.type;
+  const fieldGeter = info.operation.operation === "query" ? info.schema.getQueryType() : info.schema.getMutationType();
+
+  const fdef = fieldGeter?.getFields()[field.name.value].astNode?.type;
   if (fdef === undefined) {
     throw new Error(`unsupported node type or undefined selectionSet`);
   }
 
+  const primarySelection = info.operation.selectionSet.selections[0];
+  if (primarySelection.kind !== Kind.FIELD) {
+    throw new Error("Field is expected at top level selection set");
+  }
+
+  if (rootObjName === undefined) {
+    const fs = field.selectionSet.selections;
+    const parent = `_parent`;
+    const convert = `const ${parent} = Application("${appName}");`;
+    return `${lib};${vars};${convert};JSON.stringify({ result: ${renderObject(
+      { ...info, rootName: parent },
+      { selectedFields: fs, typeNode: fdef }
+    )}})`;
+  }
+
   const fs = field.selectionSet.selections;
-  return `${lib};${vars}(${renderObject({ ...info, rootName }, { selectedFields: fs, typeNode: fdef })})`;
+  return `${lib};${vars};JSON.stringify({ result: ${renderObject(
+    { ...info, rootName: rootObjName },
+    { selectedFields: fs, typeNode: fdef }
+  )}})`;
 };

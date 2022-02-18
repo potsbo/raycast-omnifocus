@@ -2,152 +2,154 @@
 
 exports[`Resolve Connection Related Query 1`] = `
 Object {
-  "defaultDocument": Object {
-    "projects": Object {
-      "edges": Array [
-        Object {
-          "cursor": "project-id-0",
-          "node": Object {
-            "name": "project-name-0",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-0",
-                "name": "project-name-0",
+  "application": Object {
+    "defaultDocument": Object {
+      "projects": Object {
+        "edges": Array [
+          Object {
+            "cursor": "project-id-0",
+            "node": Object {
+              "name": "project-name-0",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-0",
+                  "name": "project-name-0",
+                },
+                "id": "rootTask-for-project-id-0",
+                "name": "rootTask-for-project-name-0",
               },
-              "id": "rootTask-for-project-id-0",
-              "name": "rootTask-for-project-name-0",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-1",
-          "node": Object {
-            "name": "project-name-1",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-1",
-                "name": "project-name-1",
+          Object {
+            "cursor": "project-id-1",
+            "node": Object {
+              "name": "project-name-1",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-1",
+                  "name": "project-name-1",
+                },
+                "id": "rootTask-for-project-id-1",
+                "name": "rootTask-for-project-name-1",
               },
-              "id": "rootTask-for-project-id-1",
-              "name": "rootTask-for-project-name-1",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-2",
-          "node": Object {
-            "name": "project-name-2",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-2",
-                "name": "project-name-2",
+          Object {
+            "cursor": "project-id-2",
+            "node": Object {
+              "name": "project-name-2",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-2",
+                  "name": "project-name-2",
+                },
+                "id": "rootTask-for-project-id-2",
+                "name": "rootTask-for-project-name-2",
               },
-              "id": "rootTask-for-project-id-2",
-              "name": "rootTask-for-project-name-2",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-3",
-          "node": Object {
-            "name": "project-name-3",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-3",
-                "name": "project-name-3",
+          Object {
+            "cursor": "project-id-3",
+            "node": Object {
+              "name": "project-name-3",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-3",
+                  "name": "project-name-3",
+                },
+                "id": "rootTask-for-project-id-3",
+                "name": "rootTask-for-project-name-3",
               },
-              "id": "rootTask-for-project-id-3",
-              "name": "rootTask-for-project-name-3",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-4",
-          "node": Object {
-            "name": "project-name-4",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-4",
-                "name": "project-name-4",
+          Object {
+            "cursor": "project-id-4",
+            "node": Object {
+              "name": "project-name-4",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-4",
+                  "name": "project-name-4",
+                },
+                "id": "rootTask-for-project-id-4",
+                "name": "rootTask-for-project-name-4",
               },
-              "id": "rootTask-for-project-id-4",
-              "name": "rootTask-for-project-name-4",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-5",
-          "node": Object {
-            "name": "project-name-5",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-5",
-                "name": "project-name-5",
+          Object {
+            "cursor": "project-id-5",
+            "node": Object {
+              "name": "project-name-5",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-5",
+                  "name": "project-name-5",
+                },
+                "id": "rootTask-for-project-id-5",
+                "name": "rootTask-for-project-name-5",
               },
-              "id": "rootTask-for-project-id-5",
-              "name": "rootTask-for-project-name-5",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-6",
-          "node": Object {
-            "name": "project-name-6",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-6",
-                "name": "project-name-6",
+          Object {
+            "cursor": "project-id-6",
+            "node": Object {
+              "name": "project-name-6",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-6",
+                  "name": "project-name-6",
+                },
+                "id": "rootTask-for-project-id-6",
+                "name": "rootTask-for-project-name-6",
               },
-              "id": "rootTask-for-project-id-6",
-              "name": "rootTask-for-project-name-6",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-7",
-          "node": Object {
-            "name": "project-name-7",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-7",
-                "name": "project-name-7",
+          Object {
+            "cursor": "project-id-7",
+            "node": Object {
+              "name": "project-name-7",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-7",
+                  "name": "project-name-7",
+                },
+                "id": "rootTask-for-project-id-7",
+                "name": "rootTask-for-project-name-7",
               },
-              "id": "rootTask-for-project-id-7",
-              "name": "rootTask-for-project-name-7",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-8",
-          "node": Object {
-            "name": "project-name-8",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-8",
-                "name": "project-name-8",
+          Object {
+            "cursor": "project-id-8",
+            "node": Object {
+              "name": "project-name-8",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-8",
+                  "name": "project-name-8",
+                },
+                "id": "rootTask-for-project-id-8",
+                "name": "rootTask-for-project-name-8",
               },
-              "id": "rootTask-for-project-id-8",
-              "name": "rootTask-for-project-name-8",
             },
           },
-        },
-        Object {
-          "cursor": "project-id-9",
-          "node": Object {
-            "name": "project-name-9",
-            "rootTask": Object {
-              "containingProject": Object {
-                "id": "project-id-9",
-                "name": "project-name-9",
+          Object {
+            "cursor": "project-id-9",
+            "node": Object {
+              "name": "project-name-9",
+              "rootTask": Object {
+                "containingProject": Object {
+                  "id": "project-id-9",
+                  "name": "project-name-9",
+                },
+                "id": "rootTask-for-project-id-9",
+                "name": "rootTask-for-project-name-9",
               },
-              "id": "rootTask-for-project-id-9",
-              "name": "rootTask-for-project-name-9",
             },
           },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": false,
         },
-      ],
-      "pageInfo": Object {
-        "hasNextPage": false,
       },
     },
   },
@@ -156,31 +158,41 @@ Object {
 
 exports[`run for GetTasksInProjectDocument 1`] = `
 Object {
-  "defaultDocument": Object {
-    "projects": Object {
-      "byId": Object {
-        "rootTask": Object {
-          "tasks": Object {
-            "edges": Array [
-              Object {
-                "node": Object {
-                  "completed": false,
-                  "containingProject": Object {
-                    "id": "some-project-id",
-                    "name": "projectName",
+  "application": Object {
+    "defaultDocument": Object {
+      "projects": Object {
+        "byId": Object {
+          "rootTask": Object {
+            "tasks": Object {
+              "edges": Array [
+                Object {
+                  "node": Object {
+                    "completed": false,
+                    "containingProject": Object {
+                      "id": "some-project-id",
+                      "name": "projectName",
+                    },
+                    "effectiveDueDate": null,
+                    "effectivelyCompleted": false,
+                    "flagged": false,
+                    "id": "bar",
+                    "name": "foo",
                   },
-                  "effectiveDueDate": null,
-                  "effectivelyCompleted": false,
-                  "flagged": false,
-                  "id": "bar",
-                  "name": "foo",
                 },
-              },
-            ],
+              ],
+            },
           },
         },
       },
     },
+  },
+}
+`;
+
+exports[`simple mutation 1`] = `
+Object {
+  "pushInboxTask": Object {
+    "name": "SomeTask",
   },
 }
 `;

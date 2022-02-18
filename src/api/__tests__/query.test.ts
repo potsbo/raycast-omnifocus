@@ -29,7 +29,7 @@ test("query for GetTasksDocument", () => {
     variableValues: { onlyFlagged: true, onlyAvailable: true },
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTasksDocument for forecast", () => {
@@ -40,7 +40,7 @@ test("query for GetTasksDocument for forecast", () => {
     variableValues: { withEffectiveDueDate: true, onlyAvailable: true },
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetInboxTasksDocument", () => {
@@ -50,7 +50,7 @@ test("query for GetInboxTasksDocument", () => {
     document: document,
   }) as ExecutionContext;
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTasksInProjectDocument", () => {
@@ -64,7 +64,7 @@ test("query for GetTasksInProjectDocument", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for GetTopLevelProjects", () => {
@@ -78,21 +78,23 @@ test("query for GetTopLevelProjects", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query for Connection", () => {
   const document = gql`
     query Hoge {
-      defaultDocument {
-        projects {
-          pageInfo {
-            hasNextPage
-          }
-          edges {
-            cursor
-            node {
-              name
+      application {
+        defaultDocument {
+          projects {
+            pageInfo {
+              hasNextPage
+            }
+            edges {
+              cursor
+              node {
+                name
+              }
             }
           }
         }
@@ -107,25 +109,27 @@ test("query for Connection", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query with inline fragment", () => {
   const document = gql`
     query {
-      defaultDocument {
-        folders {
-          edges {
-            node {
-              name
-              sections {
-                edges {
-                  node {
-                    ... on Project {
-                      completed
-                    }
-                    ... on Folder {
-                      name
+      application {
+        defaultDocument {
+          folders {
+            edges {
+              node {
+                name
+                sections {
+                  edges {
+                    node {
+                      ... on Project {
+                        completed
+                      }
+                      ... on Folder {
+                        name
+                      }
                     }
                   }
                 }
@@ -144,17 +148,19 @@ test("query with inline fragment", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
 test("query with project interface", () => {
   const document = gql`
     query {
-      defaultDocument {
-        projects {
-          byId(id: "hZoaSakOnG4") {
-            rootTask {
-              id
+      application {
+        defaultDocument {
+          projects {
+            byId(id: "hZoaSakOnG4") {
+              rootTask {
+                id
+              }
             }
           }
         }
@@ -169,5 +175,5 @@ test("query with project interface", () => {
     fail();
   }
 
-  expect(prettier.format(genQuery("parent", exeContext), { parser: "babel" })).toMatchSnapshot();
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });

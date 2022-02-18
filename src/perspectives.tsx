@@ -37,7 +37,7 @@ export default function Command() {
 
   return (
     <List isLoading={isLoading}>
-      {value?.defaultDocument.perspectiveNames
+      {value?.application.defaultDocument.perspectiveNames
         .filter((p) => p !== "")
         .map((p) => (
           <List.Item

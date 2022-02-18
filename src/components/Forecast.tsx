@@ -13,7 +13,7 @@ export const Forecast = () => {
     }
 
     const groups: Record<string, ForecastableTask[]> = {};
-    tasks.value.defaultDocument.flattenedTasks.edges.forEach(({ node: t }) => {
+    tasks.value.application.defaultDocument.flattenedTasks.edges.forEach(({ node: t }) => {
       if (t.effectiveDueDate === null || t.effectiveDueDate === undefined || t.effectivelyCompleted) {
         return;
       }
