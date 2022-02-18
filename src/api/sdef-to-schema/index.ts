@@ -17,7 +17,15 @@ import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
-import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./constants";
+import {
+  ConnectionInterface,
+  CONNECTION_TYPE_NAME,
+  EdgeInterface,
+  EDGE_TYPE_NAME,
+  INTERFACE_SUFFIX,
+  NodeInterface,
+  NODE_TYPE_NAME,
+} from "./constants";
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
 import { RecordTypeRenderer } from "./recordType";
@@ -51,6 +59,9 @@ const AllowedTypes = [
   "Setting",
   "BuiltinPerspective",
   "CustomPerspective",
+  CONNECTION_TYPE_NAME,
+  EDGE_TYPE_NAME,
+  NODE_TYPE_NAME,
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -106,7 +117,7 @@ const renderSuite = (
   return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
 };
 
-const interfaces: InterfaceTypeDefinitionNode[] = [];
+const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
 
 (async () => {
   const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
@@ -179,30 +190,12 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
   ${render(recordTypes)}
   ${enums.map(print)}
 
-  # https://relay.dev/graphql/connections.htm#sec-Connection-Types
-interface ${CONNECTION_TYPE_NAME} {
-  edges: [Edge!]!
-  pageInfo: PageInfo!
-
-  # https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
-  byId(id: String!): Node
-}
-
-# https://relay.dev/graphql/connections.htm#sec-Edge-Types
-interface Edge {
-  node: Node!
-  cursor: String!
-}
 # https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
 type PageInfo {
   hasPreviousPage: Boolean!
   hasNextPage: Boolean!
   startCursor: String!
   endCursor: String!
-}
-
-interface Node {
-  id: String!
 }
 
 type Query {
@@ -223,8 +216,6 @@ input Condition {
 type Mutation {
   pushInboxTask(name: String!): InboxTask!
 }
-
-
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
