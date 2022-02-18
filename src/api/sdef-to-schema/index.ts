@@ -48,6 +48,9 @@ const AllowedTypes = [
   "RichText",
   "FlattenedProject",
   "FlattenedFolder",
+  "Setting",
+  "BuiltinPerspective",
+  "CustomPerspective",
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {

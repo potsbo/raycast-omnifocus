@@ -198,6 +198,26 @@ type AvailableTaskEdge implements Edge {
   node: AvailableTask!
 }
 
+"""A built-in perspective."""
+type BuiltinPerspective implements Node & PerspectiveInterface {
+  """The identifier of the perspective."""
+  id: String!
+
+  """The name of the perspective."""
+  name: String!
+}
+
+type BuiltinPerspectiveConnection implements Connection {
+  byId(id: String!): BuiltinPerspective
+  edges: [BuiltinPerspectiveEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BuiltinPerspectiveEdge implements Edge {
+  cursor: String!
+  node: BuiltinPerspective!
+}
+
 input Condition {
   enabled: Boolean! = true
   field: String
@@ -210,6 +230,26 @@ interface Connection {
   byId(id: String!): Node
   edges: [Edge!]!
   pageInfo: PageInfo!
+}
+
+"""A user created perspective."""
+type CustomPerspective implements Node & PerspectiveInterface {
+  """The identifier of the perspective."""
+  id: String!
+
+  """The name of the perspective."""
+  name: String!
+}
+
+type CustomPerspectiveConnection implements Connection {
+  byId(id: String!): CustomPerspective
+  edges: [CustomPerspectiveEdge!]!
+  pageInfo: PageInfo!
+}
+
+type CustomPerspectiveEdge implements Edge {
+  cursor: String!
+  node: CustomPerspective!
 }
 
 """A document."""
@@ -272,6 +312,7 @@ type Document implements Node {
 
   """The projects and folders contained by no folder."""
   sections: SectionConnection!
+  settings: SettingConnection!
 
   """True if the document is currently syncing, false otherwise."""
   syncing: Boolean!
@@ -1676,6 +1717,28 @@ interface SectionInterface implements Node {
 
   """The name of the project or folder."""
   name: String!
+}
+
+"""Document setting"""
+type Setting implements Node {
+  """The identifier of the setting."""
+  id: String!
+}
+
+type SettingConnection implements Connection {
+  byId(id: String!): Setting
+  edges: [SettingEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SettingEdge implements Edge {
+  cursor: String!
+  node: Setting!
+}
+
+interface SettingInterface implements Node {
+  """The identifier of the setting."""
+  id: String!
 }
 
 """A tag."""

@@ -134,6 +134,33 @@ export type AvailableTaskEdge = Edge & {
   node: AvailableTask;
 };
 
+/** A built-in perspective. */
+export type BuiltinPerspective = Node & PerspectiveInterface & {
+  __typename?: 'BuiltinPerspective';
+  /** The identifier of the perspective. */
+  id: Scalars['String'];
+  /** The name of the perspective. */
+  name: Scalars['String'];
+};
+
+export type BuiltinPerspectiveConnection = Connection & {
+  __typename?: 'BuiltinPerspectiveConnection';
+  byId?: Maybe<BuiltinPerspective>;
+  edges: Array<BuiltinPerspectiveEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type BuiltinPerspectiveConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type BuiltinPerspectiveEdge = Edge & {
+  __typename?: 'BuiltinPerspectiveEdge';
+  cursor: Scalars['String'];
+  node: BuiltinPerspective;
+};
+
 export type Condition = {
   enabled?: Scalars['Boolean'];
   field?: InputMaybe<Scalars['String']>;
@@ -151,6 +178,33 @@ export type Connection = {
 
 export type ConnectionByIdArgs = {
   id: Scalars['String'];
+};
+
+/** A user created perspective. */
+export type CustomPerspective = Node & PerspectiveInterface & {
+  __typename?: 'CustomPerspective';
+  /** The identifier of the perspective. */
+  id: Scalars['String'];
+  /** The name of the perspective. */
+  name: Scalars['String'];
+};
+
+export type CustomPerspectiveConnection = Connection & {
+  __typename?: 'CustomPerspectiveConnection';
+  byId?: Maybe<CustomPerspective>;
+  edges: Array<CustomPerspectiveEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type CustomPerspectiveConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type CustomPerspectiveEdge = Edge & {
+  __typename?: 'CustomPerspectiveEdge';
+  cursor: Scalars['String'];
+  node: CustomPerspective;
 };
 
 /** A document. */
@@ -192,6 +246,7 @@ export type Document = Node & {
   projects: ProjectConnection;
   /** The projects and folders contained by no folder. */
   sections: SectionConnection;
+  settings: SettingConnection;
   /** True if the document is currently syncing, false otherwise. */
   syncing: Scalars['Boolean'];
   /** The top-level tags of the document. */
@@ -1153,6 +1208,36 @@ export type SectionInterface = {
   name: Scalars['String'];
 };
 
+/** Document setting */
+export type Setting = Node & {
+  __typename?: 'Setting';
+  /** The identifier of the setting. */
+  id: Scalars['String'];
+};
+
+export type SettingConnection = Connection & {
+  __typename?: 'SettingConnection';
+  byId?: Maybe<Setting>;
+  edges: Array<SettingEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type SettingConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type SettingEdge = Edge & {
+  __typename?: 'SettingEdge';
+  cursor: Scalars['String'];
+  node: Setting;
+};
+
+export type SettingInterface = {
+  /** The identifier of the setting. */
+  id: Scalars['String'];
+};
+
 /** A tag. */
 export type Tag = Node & TagInterface & {
   __typename?: 'Tag';
@@ -1565,12 +1650,18 @@ export type ResolversTypes = {
   AvailableTaskConnection: ResolverTypeWrapper<AvailableTaskConnection>;
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  BuiltinPerspective: ResolverTypeWrapper<BuiltinPerspective>;
+  BuiltinPerspectiveConnection: ResolverTypeWrapper<BuiltinPerspectiveConnection>;
+  BuiltinPerspectiveEdge: ResolverTypeWrapper<BuiltinPerspectiveEdge>;
   Condition: Condition;
-  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['BuiltinPerspectiveConnection'] | ResolversTypes['CustomPerspectiveConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['SettingConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  CustomPerspective: ResolverTypeWrapper<CustomPerspective>;
+  CustomPerspectiveConnection: ResolverTypeWrapper<CustomPerspectiveConnection>;
+  CustomPerspectiveEdge: ResolverTypeWrapper<CustomPerspectiveEdge>;
   Document: ResolverTypeWrapper<Document>;
   DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
   DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
-  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['BuiltinPerspectiveEdge'] | ResolversTypes['CustomPerspectiveEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['SettingEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
   FlattenedFolder: ResolverTypeWrapper<FlattenedFolder>;
   FlattenedFolderConnection: ResolverTypeWrapper<FlattenedFolderConnection>;
   FlattenedFolderEdge: ResolverTypeWrapper<FlattenedFolderEdge>;
@@ -1596,12 +1687,12 @@ export type ResolversTypes = {
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
   LocationTrigger: LocationTrigger;
   Mutation: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['AvailableTask'] | ResolversTypes['Document'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  Node: ResolversTypes['AvailableTask'] | ResolversTypes['BuiltinPerspective'] | ResolversTypes['CustomPerspective'] | ResolversTypes['Document'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Setting'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
   PerspectiveEdge: ResolverTypeWrapper<PerspectiveEdge>;
-  PerspectiveInterface: ResolversTypes['Perspective'];
+  PerspectiveInterface: ResolversTypes['BuiltinPerspective'] | ResolversTypes['CustomPerspective'] | ResolversTypes['Perspective'];
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   ProjectEdge: ResolverTypeWrapper<ProjectEdge>;
@@ -1620,6 +1711,10 @@ export type ResolversTypes = {
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
   SectionInterface: ResolversTypes['Folder'] | ResolversTypes['Project'] | ResolversTypes['Section'];
+  Setting: ResolverTypeWrapper<Setting>;
+  SettingConnection: ResolverTypeWrapper<SettingConnection>;
+  SettingEdge: ResolverTypeWrapper<SettingEdge>;
+  SettingInterface: never;
   String: ResolverTypeWrapper<Scalars['String']>;
   Tag: ResolverTypeWrapper<Tag>;
   TagConnection: ResolverTypeWrapper<TagConnection>;
@@ -1639,12 +1734,18 @@ export type ResolversParentTypes = {
   AvailableTaskConnection: AvailableTaskConnection;
   AvailableTaskEdge: AvailableTaskEdge;
   Boolean: Scalars['Boolean'];
+  BuiltinPerspective: BuiltinPerspective;
+  BuiltinPerspectiveConnection: BuiltinPerspectiveConnection;
+  BuiltinPerspectiveEdge: BuiltinPerspectiveEdge;
   Condition: Condition;
-  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['BuiltinPerspectiveConnection'] | ResolversParentTypes['CustomPerspectiveConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['SettingConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  CustomPerspective: CustomPerspective;
+  CustomPerspectiveConnection: CustomPerspectiveConnection;
+  CustomPerspectiveEdge: CustomPerspectiveEdge;
   Document: Document;
   DocumentConnection: DocumentConnection;
   DocumentEdge: DocumentEdge;
-  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['BuiltinPerspectiveEdge'] | ResolversParentTypes['CustomPerspectiveEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['SettingEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
   FlattenedFolder: FlattenedFolder;
   FlattenedFolderConnection: FlattenedFolderConnection;
   FlattenedFolderEdge: FlattenedFolderEdge;
@@ -1668,12 +1769,12 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'];
   LocationInformation: LocationInformation;
   Mutation: {};
-  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Setting'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
   PageInfo: PageInfo;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
   PerspectiveEdge: PerspectiveEdge;
-  PerspectiveInterface: ResolversParentTypes['Perspective'];
+  PerspectiveInterface: ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['Perspective'];
   Project: Project;
   ProjectConnection: ProjectConnection;
   ProjectEdge: ProjectEdge;
@@ -1690,6 +1791,10 @@ export type ResolversParentTypes = {
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
   SectionInterface: ResolversParentTypes['Folder'] | ResolversParentTypes['Project'] | ResolversParentTypes['Section'];
+  Setting: Setting;
+  SettingConnection: SettingConnection;
+  SettingEdge: SettingEdge;
+  SettingInterface: never;
   String: Scalars['String'];
   Tag: Tag;
   TagConnection: TagConnection;
@@ -1778,11 +1883,49 @@ export type AvailableTaskEdgeResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type BuiltinPerspectiveResolvers<ContextType = any, ParentType extends ResolversParentTypes['BuiltinPerspective'] = ResolversParentTypes['BuiltinPerspective']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BuiltinPerspectiveConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BuiltinPerspectiveConnection'] = ResolversParentTypes['BuiltinPerspectiveConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['BuiltinPerspective']>, ParentType, ContextType, RequireFields<BuiltinPerspectiveConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['BuiltinPerspectiveEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BuiltinPerspectiveEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['BuiltinPerspectiveEdge'] = ResolversParentTypes['BuiltinPerspectiveEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['BuiltinPerspective'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'DocumentConnection' | 'FlattenedFolderConnection' | 'FlattenedProjectConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'BuiltinPerspectiveConnection' | 'CustomPerspectiveConnection' | 'DocumentConnection' | 'FlattenedFolderConnection' | 'FlattenedProjectConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'SettingConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+};
+
+export type CustomPerspectiveResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomPerspective'] = ResolversParentTypes['CustomPerspective']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CustomPerspectiveConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomPerspectiveConnection'] = ResolversParentTypes['CustomPerspectiveConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['CustomPerspective']>, ParentType, ContextType, RequireFields<CustomPerspectiveConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['CustomPerspectiveEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CustomPerspectiveEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomPerspectiveEdge'] = ResolversParentTypes['CustomPerspectiveEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['CustomPerspective'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
@@ -1807,6 +1950,7 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
   sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
+  settings?: Resolver<ResolversTypes['SettingConnection'], ParentType, ContextType>;
   syncing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
   tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
@@ -1828,7 +1972,7 @@ export type DocumentEdgeResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'DocumentEdge' | 'FlattenedFolderEdge' | 'FlattenedProjectEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'BuiltinPerspectiveEdge' | 'CustomPerspectiveEdge' | 'DocumentEdge' | 'FlattenedFolderEdge' | 'FlattenedProjectEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'SettingEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 };
@@ -2116,7 +2260,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'AvailableTask' | 'Document' | 'FlattenedFolder' | 'FlattenedProject' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AvailableTask' | 'BuiltinPerspective' | 'CustomPerspective' | 'Document' | 'FlattenedFolder' | 'FlattenedProject' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Setting' | 'Tag' | 'Task', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -2148,7 +2292,7 @@ export type PerspectiveEdgeResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type PerspectiveInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['PerspectiveInterface'] = ResolversParentTypes['PerspectiveInterface']> = {
-  __resolveType: TypeResolveFn<'Perspective', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'BuiltinPerspective' | 'CustomPerspective' | 'Perspective', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
@@ -2365,6 +2509,29 @@ export type SectionInterfaceResolvers<ContextType = any, ParentType extends Reso
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type SettingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Setting'] = ResolversParentTypes['Setting']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SettingConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SettingConnection'] = ResolversParentTypes['SettingConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Setting']>, ParentType, ContextType, RequireFields<SettingConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['SettingEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SettingEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SettingEdge'] = ResolversParentTypes['SettingEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Setting'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SettingInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['SettingInterface'] = ResolversParentTypes['SettingInterface']> = {
+  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -2514,7 +2681,13 @@ export type Resolvers<ContextType = any> = {
   AvailableTask?: AvailableTaskResolvers<ContextType>;
   AvailableTaskConnection?: AvailableTaskConnectionResolvers<ContextType>;
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
+  BuiltinPerspective?: BuiltinPerspectiveResolvers<ContextType>;
+  BuiltinPerspectiveConnection?: BuiltinPerspectiveConnectionResolvers<ContextType>;
+  BuiltinPerspectiveEdge?: BuiltinPerspectiveEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
+  CustomPerspective?: CustomPerspectiveResolvers<ContextType>;
+  CustomPerspectiveConnection?: CustomPerspectiveConnectionResolvers<ContextType>;
+  CustomPerspectiveEdge?: CustomPerspectiveEdgeResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
   DocumentConnection?: DocumentConnectionResolvers<ContextType>;
   DocumentEdge?: DocumentEdgeResolvers<ContextType>;
@@ -2562,6 +2735,10 @@ export type Resolvers<ContextType = any> = {
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;
   SectionInterface?: SectionInterfaceResolvers<ContextType>;
+  Setting?: SettingResolvers<ContextType>;
+  SettingConnection?: SettingConnectionResolvers<ContextType>;
+  SettingEdge?: SettingEdgeResolvers<ContextType>;
+  SettingInterface?: SettingInterfaceResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   TagConnection?: TagConnectionResolvers<ContextType>;
   TagEdge?: TagEdgeResolvers<ContextType>;
