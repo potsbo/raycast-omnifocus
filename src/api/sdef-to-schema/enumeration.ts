@@ -17,12 +17,13 @@ export class EnumRenderer {
             block: true,
           }
         : undefined;
+
       return {
         kind: Kind.ENUM_VALUE_DEFINITION,
         description: desc,
         name: {
           kind: Kind.NAME,
-          value: e.$.name.replaceAll(" ", "_").toUpperCase(),
+          value: e.$.name.replace(/ /g, "_").toUpperCase(),
         },
       };
     });
