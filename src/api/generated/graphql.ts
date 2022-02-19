@@ -151,6 +151,45 @@ export type ApplicationPreferencesArgs = {
   whose?: InputMaybe<Condition>;
 };
 
+/** Represents an inline text attachment. */
+export type Attachment = RichTextInterface & {
+  __typename?: 'Attachment';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
+/** An attribute of a style. */
+export type Attribute = {
+  __typename?: 'Attribute';
+  /** The style responsible for the effective value in this attributes's style.  This processes the local values, inherited styles and cascade chain. */
+  definingStyle: Style;
+  /** If true, the containing style defines a local value for this attribute. */
+  hasLocalValue: Scalars['Boolean'];
+  /** The name of the attribute. */
+  name: Scalars['String'];
+  /** The style to which the attribute refers. */
+  style: Style;
+};
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRun = RichTextInterface & {
+  __typename?: 'AttributeRun';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type AvailableTask = Node & TaskInterface & {
   __typename?: 'AvailableTask';
@@ -288,6 +327,19 @@ export type BuiltinPerspectiveEdge = Edge & {
   __typename?: 'BuiltinPerspectiveEdge';
   cursor: Scalars['String'];
   node: BuiltinPerspective;
+};
+
+/** This subdivides the text into characters. */
+export type Character = RichTextInterface & {
+  __typename?: 'Character';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
 };
 
 export type Condition = {
@@ -769,6 +821,39 @@ export type DocumentEdge = {
   __typename?: 'DocumentEdge';
   cursor: Scalars['String'];
   node: Document;
+};
+
+/** A window of an OmniFocus document. */
+export type DocumentWindow = WindowInterface & {
+  __typename?: 'DocumentWindow';
+  /** Does the window have a close button? */
+  closeable: Scalars['Boolean'];
+  /** The tree of objects in the main window content. */
+  content: ContentTree;
+  /** The document whose contents are displayed in the window. */
+  document: Document;
+  /** The unique identifier of the window. */
+  id: Scalars['Int'];
+  /** The index of the window, ordered front to back. */
+  index: Scalars['Int'];
+  /** Does the window have a minimize button? */
+  miniaturizable: Scalars['Boolean'];
+  /** Is the window minimized right now? */
+  miniaturized: Scalars['Boolean'];
+  /** The title of the window. */
+  name: Scalars['String'];
+  /** The name of a perspective. */
+  perspectiveName: Scalars['String'];
+  /** Can the window be resized? */
+  resizable: Scalars['Boolean'];
+  /** The search term in the toolbar.  If there is no search toolbar item, this will return missing value instead of an empty string and setting it will cause an error. */
+  searchTerm: Scalars['String'];
+  /** Is the window visible right now? */
+  visible: Scalars['Boolean'];
+  /** Does the window have a zoom button? */
+  zoomable: Scalars['Boolean'];
+  /** Is the window zoomed right now? */
+  zoomed: Scalars['Boolean'];
 };
 
 export type Edge = {
@@ -1843,7 +1928,218 @@ export enum LocationTrigger {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  pushAncestorTree: AncestorTree;
+  pushAttachment: Attachment;
+  pushAttribute: Attribute;
+  pushAttributeRun: AttributeRun;
+  pushAvailableTask: AvailableTask;
+  pushBuiltinPerspective: BuiltinPerspective;
+  pushCharacter: Character;
+  pushContentTree: ContentTree;
+  pushCustomPerspective: CustomPerspective;
+  pushDeprecatedContext: DeprecatedContext;
+  pushDescendantTree: DescendantTree;
+  pushDocumentWindow: DocumentWindow;
+  pushFlattenedFolder: FlattenedFolder;
+  pushFlattenedProject: FlattenedProject;
+  pushFlattenedTag: FlattenedTag;
+  pushFlattenedTask: FlattenedTask;
+  pushFolder: Folder;
+  pushFollowingSibling: FollowingSibling;
+  pushForecastDay: ForecastDay;
+  pushForecastSidebarTree: ForecastSidebarTree;
   pushInboxTask: InboxTask;
+  pushInboxTree: InboxTree;
+  pushLeaf: Leaf;
+  pushLibraryTree: LibraryTree;
+  pushNamedStyle: NamedStyle;
+  pushParagraph: Paragraph;
+  pushPerspective: Perspective;
+  pushPrecedingSibling: PrecedingSibling;
+  pushPreference: Preference;
+  pushProject: Project;
+  pushQuickEntryTree: QuickEntryTree;
+  pushRemainingTask: RemainingTask;
+  pushRichText: Scalars['RichText'];
+  pushSection: Section;
+  pushSelectedTree: SelectedTree;
+  pushSetting: Setting;
+  pushSidebarTree: SidebarTree;
+  pushStyle: Style;
+  pushTag: Tag;
+  pushTask: Task;
+  pushTree: Tree;
+  pushWindow: Window;
+  pushWord: Word;
+};
+
+
+export type MutationPushAncestorTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushAttachmentArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  size?: InputMaybe<Scalars['Int']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushAttributeRunArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  size?: InputMaybe<Scalars['Int']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushAvailableTaskArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
+  completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushBuiltinPerspectiveArgs = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushCharacterArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  size?: InputMaybe<Scalars['Int']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushContentTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+  selectedGroupingIdentifier?: InputMaybe<Scalars['String']>;
+  selectedSortingIdentifier?: InputMaybe<Scalars['String']>;
+  selectedTaskDurationFilterIdentifier?: InputMaybe<Scalars['String']>;
+  selectedTaskFlaggedFilterIdentifier?: InputMaybe<Scalars['String']>;
+  selectedTaskStateFilterIdentifier?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushCustomPerspectiveArgs = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushDeprecatedContextArgs = {
+  allowsNextAction?: InputMaybe<Scalars['Boolean']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushDescendantTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushDocumentWindowArgs = {
+  index?: InputMaybe<Scalars['Int']>;
+  miniaturized?: InputMaybe<Scalars['Boolean']>;
+  perspectiveName?: InputMaybe<Scalars['String']>;
+  searchTerm?: InputMaybe<Scalars['String']>;
+  visible?: InputMaybe<Scalars['Boolean']>;
+  zoomed?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushFlattenedFolderArgs = {
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushFlattenedProjectArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
+  completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
+  defaultSingletonActionHolder?: InputMaybe<Scalars['Boolean']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  lastReviewDate?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  nextReviewDate?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+  singletonActionHolder?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushFlattenedTagArgs = {
+  allowsNextAction?: InputMaybe<Scalars['Boolean']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushFlattenedTaskArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
+  completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushFolderArgs = {
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushFollowingSiblingArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushForecastDayArgs = {
+  badgeCount?: InputMaybe<Scalars['Int']>;
+  empty?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushForecastSidebarTreeArgs = {
+  selectedSmartGroupIdentifier?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1860,6 +2156,174 @@ export type MutationPushInboxTaskArgs = {
   name?: InputMaybe<Scalars['String']>;
   sequential?: InputMaybe<Scalars['Boolean']>;
   shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushInboxTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushLeafArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushLibraryTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushNamedStyleArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushParagraphArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  size?: InputMaybe<Scalars['Int']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushPerspectiveArgs = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushPrecedingSiblingArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushProjectArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
+  completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
+  defaultSingletonActionHolder?: InputMaybe<Scalars['Boolean']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  lastReviewDate?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  nextReviewDate?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+  singletonActionHolder?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushQuickEntryTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushRemainingTaskArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
+  completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushRichTextArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  size?: InputMaybe<Scalars['Int']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushSectionArgs = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushSelectedTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushSidebarTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+  selectedSmartGroupIdentifier?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushStyleArgs = {
+  font?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushTagArgs = {
+  allowsNextAction?: InputMaybe<Scalars['Boolean']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationPushTaskArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
+  completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushTreeArgs = {
+  expanded?: InputMaybe<Scalars['Boolean']>;
+  noteExpanded?: InputMaybe<Scalars['Boolean']>;
+  selected?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushWindowArgs = {
+  index?: InputMaybe<Scalars['Int']>;
+  miniaturized?: InputMaybe<Scalars['Boolean']>;
+  visible?: InputMaybe<Scalars['Boolean']>;
+  zoomed?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPushWordArgs = {
+  font?: InputMaybe<Scalars['String']>;
+  size?: InputMaybe<Scalars['Int']>;
+  text?: InputMaybe<Scalars['String']>;
 };
 
 /** A named style object. */
@@ -1915,6 +2379,19 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor: Scalars['String'];
+};
+
+/** This subdivides the text into paragraphs. */
+export type Paragraph = RichTextInterface & {
+  __typename?: 'Paragraph';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
 };
 
 /** A perspective. */
@@ -2532,6 +3009,17 @@ export type RepetitionRule = {
   recurrence: Scalars['String'];
   /** The repetition method. If fixed, the next repetition will be relative to a fixed calendar.  If sliding, the next repetition will be calculated when the action or inbox item is resolved. */
   repetitionMethod: RepetitionMethod;
+};
+
+export type RichTextInterface = {
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
 };
 
 /** A portion of a folder or document; either a project or a folder. */
@@ -3296,6 +3784,71 @@ export type TreeInterfaceTreesArgs = {
   whose?: InputMaybe<Condition>;
 };
 
+/** A window. */
+export type Window = WindowInterface & {
+  __typename?: 'Window';
+  /** Does the window have a close button? */
+  closeable: Scalars['Boolean'];
+  /** The document whose contents are displayed in the window. */
+  document: Document;
+  /** The unique identifier of the window. */
+  id: Scalars['Int'];
+  /** The index of the window, ordered front to back. */
+  index: Scalars['Int'];
+  /** Does the window have a minimize button? */
+  miniaturizable: Scalars['Boolean'];
+  /** Is the window minimized right now? */
+  miniaturized: Scalars['Boolean'];
+  /** The title of the window. */
+  name: Scalars['String'];
+  /** Can the window be resized? */
+  resizable: Scalars['Boolean'];
+  /** Is the window visible right now? */
+  visible: Scalars['Boolean'];
+  /** Does the window have a zoom button? */
+  zoomable: Scalars['Boolean'];
+  /** Is the window zoomed right now? */
+  zoomed: Scalars['Boolean'];
+};
+
+export type WindowInterface = {
+  /** Does the window have a close button? */
+  closeable: Scalars['Boolean'];
+  /** The document whose contents are displayed in the window. */
+  document: Document;
+  /** The unique identifier of the window. */
+  id: Scalars['Int'];
+  /** The index of the window, ordered front to back. */
+  index: Scalars['Int'];
+  /** Does the window have a minimize button? */
+  miniaturizable: Scalars['Boolean'];
+  /** Is the window minimized right now? */
+  miniaturized: Scalars['Boolean'];
+  /** The title of the window. */
+  name: Scalars['String'];
+  /** Can the window be resized? */
+  resizable: Scalars['Boolean'];
+  /** Is the window visible right now? */
+  visible: Scalars['Boolean'];
+  /** Does the window have a zoom button? */
+  zoomable: Scalars['Boolean'];
+  /** Is the window zoomed right now? */
+  zoomed: Scalars['Boolean'];
+};
+
+/** This subdivides the text into words. */
+export type Word = RichTextInterface & {
+  __typename?: 'Word';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
 type TaskViewModel_AvailableTask_Fragment = { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
 
 type TaskViewModel_FlattenedTask_Fragment = { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
@@ -3455,6 +4008,9 @@ export type ResolversTypes = {
   AncestorTreeConnection: ResolverTypeWrapper<AncestorTreeConnection>;
   AncestorTreeEdge: ResolverTypeWrapper<AncestorTreeEdge>;
   Application: ResolverTypeWrapper<Application>;
+  Attachment: ResolverTypeWrapper<Attachment>;
+  Attribute: ResolverTypeWrapper<Attribute>;
+  AttributeRun: ResolverTypeWrapper<AttributeRun>;
   AvailableTask: ResolverTypeWrapper<AvailableTask>;
   AvailableTaskConnection: ResolverTypeWrapper<AvailableTaskConnection>;
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
@@ -3462,6 +4018,7 @@ export type ResolversTypes = {
   BuiltinPerspective: ResolverTypeWrapper<BuiltinPerspective>;
   BuiltinPerspectiveConnection: ResolverTypeWrapper<BuiltinPerspectiveConnection>;
   BuiltinPerspectiveEdge: ResolverTypeWrapper<BuiltinPerspectiveEdge>;
+  Character: ResolverTypeWrapper<Character>;
   Condition: Condition;
   Connection: ResolversTypes['AncestorTreeConnection'] | ResolversTypes['AvailableTaskConnection'] | ResolversTypes['BuiltinPerspectiveConnection'] | ResolversTypes['ContentTreeConnection'] | ResolversTypes['CustomPerspectiveConnection'] | ResolversTypes['DeprecatedContextConnection'] | ResolversTypes['DescendantTreeConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['FollowingSiblingConnection'] | ResolversTypes['ForecastDayConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['InboxTreeConnection'] | ResolversTypes['LeafConnection'] | ResolversTypes['LibraryTreeConnection'] | ResolversTypes['NamedStyleConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['PrecedingSiblingConnection'] | ResolversTypes['PreferenceConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['QuickEntryTreeConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['SelectedTreeConnection'] | ResolversTypes['SettingConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'] | ResolversTypes['TreeConnection'];
   ContentTree: ResolverTypeWrapper<ContentTree>;
@@ -3479,6 +4036,7 @@ export type ResolversTypes = {
   Document: ResolverTypeWrapper<Document>;
   DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
   DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
+  DocumentWindow: ResolverTypeWrapper<DocumentWindow>;
   Edge: ResolversTypes['AncestorTreeEdge'] | ResolversTypes['AvailableTaskEdge'] | ResolversTypes['BuiltinPerspectiveEdge'] | ResolversTypes['ContentTreeEdge'] | ResolversTypes['CustomPerspectiveEdge'] | ResolversTypes['DeprecatedContextEdge'] | ResolversTypes['DescendantTreeEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['FollowingSiblingEdge'] | ResolversTypes['ForecastDayEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['InboxTreeEdge'] | ResolversTypes['LeafEdge'] | ResolversTypes['LibraryTreeEdge'] | ResolversTypes['NamedStyleEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['PrecedingSiblingEdge'] | ResolversTypes['PreferenceEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['QuickEntryTreeEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['SelectedTreeEdge'] | ResolversTypes['SettingEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'] | ResolversTypes['TreeEdge'];
   FlattenedFolder: ResolverTypeWrapper<FlattenedFolder>;
   FlattenedFolderConnection: ResolverTypeWrapper<FlattenedFolderConnection>;
@@ -3528,6 +4086,7 @@ export type ResolversTypes = {
   NamedStyleInterface: never;
   Node: ResolversTypes['AncestorTree'] | ResolversTypes['AvailableTask'] | ResolversTypes['BuiltinPerspective'] | ResolversTypes['ContentTree'] | ResolversTypes['CustomPerspective'] | ResolversTypes['DeprecatedContext'] | ResolversTypes['DescendantTree'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['FollowingSibling'] | ResolversTypes['ForecastDay'] | ResolversTypes['InboxTask'] | ResolversTypes['InboxTree'] | ResolversTypes['Leaf'] | ResolversTypes['LibraryTree'] | ResolversTypes['NamedStyle'] | ResolversTypes['Perspective'] | ResolversTypes['PrecedingSibling'] | ResolversTypes['Preference'] | ResolversTypes['Project'] | ResolversTypes['QuickEntryTree'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['SelectedTree'] | ResolversTypes['Setting'] | ResolversTypes['SidebarTree'] | ResolversTypes['Tag'] | ResolversTypes['Task'] | ResolversTypes['Tree'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
+  Paragraph: ResolverTypeWrapper<Paragraph>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
   PerspectiveEdge: ResolverTypeWrapper<PerspectiveEdge>;
@@ -3555,6 +4114,7 @@ export type ResolversTypes = {
   RepetitionMethod: RepetitionMethod;
   RepetitionRule: ResolverTypeWrapper<RepetitionRule>;
   RichText: ResolverTypeWrapper<Scalars['RichText']>;
+  RichTextInterface: ResolversTypes['Attachment'] | ResolversTypes['AttributeRun'] | ResolversTypes['Character'] | ResolversTypes['Paragraph'] | ResolversTypes['Word'];
   Section: ResolverTypeWrapper<Section>;
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
@@ -3583,6 +4143,9 @@ export type ResolversTypes = {
   TreeConnection: ResolverTypeWrapper<TreeConnection>;
   TreeEdge: ResolverTypeWrapper<TreeEdge>;
   TreeInterface: ResolversTypes['AncestorTree'] | ResolversTypes['ContentTree'] | ResolversTypes['DescendantTree'] | ResolversTypes['FollowingSibling'] | ResolversTypes['InboxTree'] | ResolversTypes['Leaf'] | ResolversTypes['LibraryTree'] | ResolversTypes['PrecedingSibling'] | ResolversTypes['QuickEntryTree'] | ResolversTypes['SelectedTree'] | ResolversTypes['SidebarTree'] | ResolversTypes['Tree'];
+  Window: ResolverTypeWrapper<Window>;
+  WindowInterface: ResolversTypes['DocumentWindow'] | ResolversTypes['Window'];
+  Word: ResolverTypeWrapper<Word>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -3591,6 +4154,9 @@ export type ResolversParentTypes = {
   AncestorTreeConnection: AncestorTreeConnection;
   AncestorTreeEdge: AncestorTreeEdge;
   Application: Application;
+  Attachment: Attachment;
+  Attribute: Attribute;
+  AttributeRun: AttributeRun;
   AvailableTask: AvailableTask;
   AvailableTaskConnection: AvailableTaskConnection;
   AvailableTaskEdge: AvailableTaskEdge;
@@ -3598,6 +4164,7 @@ export type ResolversParentTypes = {
   BuiltinPerspective: BuiltinPerspective;
   BuiltinPerspectiveConnection: BuiltinPerspectiveConnection;
   BuiltinPerspectiveEdge: BuiltinPerspectiveEdge;
+  Character: Character;
   Condition: Condition;
   Connection: ResolversParentTypes['AncestorTreeConnection'] | ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['BuiltinPerspectiveConnection'] | ResolversParentTypes['ContentTreeConnection'] | ResolversParentTypes['CustomPerspectiveConnection'] | ResolversParentTypes['DeprecatedContextConnection'] | ResolversParentTypes['DescendantTreeConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['FollowingSiblingConnection'] | ResolversParentTypes['ForecastDayConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['InboxTreeConnection'] | ResolversParentTypes['LeafConnection'] | ResolversParentTypes['LibraryTreeConnection'] | ResolversParentTypes['NamedStyleConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['PrecedingSiblingConnection'] | ResolversParentTypes['PreferenceConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['QuickEntryTreeConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['SelectedTreeConnection'] | ResolversParentTypes['SettingConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'] | ResolversParentTypes['TreeConnection'];
   ContentTree: ContentTree;
@@ -3615,6 +4182,7 @@ export type ResolversParentTypes = {
   Document: Document;
   DocumentConnection: DocumentConnection;
   DocumentEdge: DocumentEdge;
+  DocumentWindow: DocumentWindow;
   Edge: ResolversParentTypes['AncestorTreeEdge'] | ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['BuiltinPerspectiveEdge'] | ResolversParentTypes['ContentTreeEdge'] | ResolversParentTypes['CustomPerspectiveEdge'] | ResolversParentTypes['DeprecatedContextEdge'] | ResolversParentTypes['DescendantTreeEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['FollowingSiblingEdge'] | ResolversParentTypes['ForecastDayEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['InboxTreeEdge'] | ResolversParentTypes['LeafEdge'] | ResolversParentTypes['LibraryTreeEdge'] | ResolversParentTypes['NamedStyleEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['PrecedingSiblingEdge'] | ResolversParentTypes['PreferenceEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['QuickEntryTreeEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['SelectedTreeEdge'] | ResolversParentTypes['SettingEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'] | ResolversParentTypes['TreeEdge'];
   FlattenedFolder: FlattenedFolder;
   FlattenedFolderConnection: FlattenedFolderConnection;
@@ -3662,6 +4230,7 @@ export type ResolversParentTypes = {
   NamedStyleInterface: never;
   Node: ResolversParentTypes['AncestorTree'] | ResolversParentTypes['AvailableTask'] | ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['ContentTree'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['DeprecatedContext'] | ResolversParentTypes['DescendantTree'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['FollowingSibling'] | ResolversParentTypes['ForecastDay'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['InboxTree'] | ResolversParentTypes['Leaf'] | ResolversParentTypes['LibraryTree'] | ResolversParentTypes['NamedStyle'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['PrecedingSibling'] | ResolversParentTypes['Preference'] | ResolversParentTypes['Project'] | ResolversParentTypes['QuickEntryTree'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['SelectedTree'] | ResolversParentTypes['Setting'] | ResolversParentTypes['SidebarTree'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'] | ResolversParentTypes['Tree'];
   PageInfo: PageInfo;
+  Paragraph: Paragraph;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
   PerspectiveEdge: PerspectiveEdge;
@@ -3687,6 +4256,7 @@ export type ResolversParentTypes = {
   RepetitionInterval: RepetitionInterval;
   RepetitionRule: RepetitionRule;
   RichText: Scalars['RichText'];
+  RichTextInterface: ResolversParentTypes['Attachment'] | ResolversParentTypes['AttributeRun'] | ResolversParentTypes['Character'] | ResolversParentTypes['Paragraph'] | ResolversParentTypes['Word'];
   Section: Section;
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
@@ -3715,6 +4285,9 @@ export type ResolversParentTypes = {
   TreeConnection: TreeConnection;
   TreeEdge: TreeEdge;
   TreeInterface: ResolversParentTypes['AncestorTree'] | ResolversParentTypes['ContentTree'] | ResolversParentTypes['DescendantTree'] | ResolversParentTypes['FollowingSibling'] | ResolversParentTypes['InboxTree'] | ResolversParentTypes['Leaf'] | ResolversParentTypes['LibraryTree'] | ResolversParentTypes['PrecedingSibling'] | ResolversParentTypes['QuickEntryTree'] | ResolversParentTypes['SelectedTree'] | ResolversParentTypes['SidebarTree'] | ResolversParentTypes['Tree'];
+  Window: Window;
+  WindowInterface: ResolversParentTypes['DocumentWindow'] | ResolversParentTypes['Window'];
+  Word: Word;
 };
 
 export type RecordTypeDirectiveArgs = { };
@@ -3763,6 +4336,30 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   quickEntry?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
   referenceDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Attachment'] = ResolversParentTypes['Attachment']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttributeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Attribute'] = ResolversParentTypes['Attribute']> = {
+  definingStyle?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  hasLocalValue?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttributeRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeRun'] = ResolversParentTypes['AttributeRun']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3835,6 +4432,14 @@ export type BuiltinPerspectiveConnectionResolvers<ContextType = any, ParentType 
 export type BuiltinPerspectiveEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['BuiltinPerspectiveEdge'] = ResolversParentTypes['BuiltinPerspectiveEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['BuiltinPerspective'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CharacterResolvers<ContextType = any, ParentType extends ResolversParentTypes['Character'] = ResolversParentTypes['Character']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4007,6 +4612,24 @@ export type DocumentConnectionResolvers<ContextType = any, ParentType extends Re
 export type DocumentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentEdge'] = ResolversParentTypes['DocumentEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentWindowResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentWindow'] = ResolversParentTypes['DocumentWindow']> = {
+  closeable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['ContentTree'], ParentType, ContextType>;
+  document?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  miniaturizable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  miniaturized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  perspectiveName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resizable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  searchTerm?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  visible?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  zoomable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  zoomed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4448,7 +5071,49 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  pushAncestorTree?: Resolver<ResolversTypes['AncestorTree'], ParentType, ContextType, Partial<MutationPushAncestorTreeArgs>>;
+  pushAttachment?: Resolver<ResolversTypes['Attachment'], ParentType, ContextType, Partial<MutationPushAttachmentArgs>>;
+  pushAttribute?: Resolver<ResolversTypes['Attribute'], ParentType, ContextType>;
+  pushAttributeRun?: Resolver<ResolversTypes['AttributeRun'], ParentType, ContextType, Partial<MutationPushAttributeRunArgs>>;
+  pushAvailableTask?: Resolver<ResolversTypes['AvailableTask'], ParentType, ContextType, Partial<MutationPushAvailableTaskArgs>>;
+  pushBuiltinPerspective?: Resolver<ResolversTypes['BuiltinPerspective'], ParentType, ContextType, Partial<MutationPushBuiltinPerspectiveArgs>>;
+  pushCharacter?: Resolver<ResolversTypes['Character'], ParentType, ContextType, Partial<MutationPushCharacterArgs>>;
+  pushContentTree?: Resolver<ResolversTypes['ContentTree'], ParentType, ContextType, Partial<MutationPushContentTreeArgs>>;
+  pushCustomPerspective?: Resolver<ResolversTypes['CustomPerspective'], ParentType, ContextType, Partial<MutationPushCustomPerspectiveArgs>>;
+  pushDeprecatedContext?: Resolver<ResolversTypes['DeprecatedContext'], ParentType, ContextType, Partial<MutationPushDeprecatedContextArgs>>;
+  pushDescendantTree?: Resolver<ResolversTypes['DescendantTree'], ParentType, ContextType, Partial<MutationPushDescendantTreeArgs>>;
+  pushDocumentWindow?: Resolver<ResolversTypes['DocumentWindow'], ParentType, ContextType, Partial<MutationPushDocumentWindowArgs>>;
+  pushFlattenedFolder?: Resolver<ResolversTypes['FlattenedFolder'], ParentType, ContextType, Partial<MutationPushFlattenedFolderArgs>>;
+  pushFlattenedProject?: Resolver<ResolversTypes['FlattenedProject'], ParentType, ContextType, Partial<MutationPushFlattenedProjectArgs>>;
+  pushFlattenedTag?: Resolver<ResolversTypes['FlattenedTag'], ParentType, ContextType, Partial<MutationPushFlattenedTagArgs>>;
+  pushFlattenedTask?: Resolver<ResolversTypes['FlattenedTask'], ParentType, ContextType, Partial<MutationPushFlattenedTaskArgs>>;
+  pushFolder?: Resolver<ResolversTypes['Folder'], ParentType, ContextType, Partial<MutationPushFolderArgs>>;
+  pushFollowingSibling?: Resolver<ResolversTypes['FollowingSibling'], ParentType, ContextType, Partial<MutationPushFollowingSiblingArgs>>;
+  pushForecastDay?: Resolver<ResolversTypes['ForecastDay'], ParentType, ContextType, Partial<MutationPushForecastDayArgs>>;
+  pushForecastSidebarTree?: Resolver<ResolversTypes['ForecastSidebarTree'], ParentType, ContextType, Partial<MutationPushForecastSidebarTreeArgs>>;
   pushInboxTask?: Resolver<ResolversTypes['InboxTask'], ParentType, ContextType, Partial<MutationPushInboxTaskArgs>>;
+  pushInboxTree?: Resolver<ResolversTypes['InboxTree'], ParentType, ContextType, Partial<MutationPushInboxTreeArgs>>;
+  pushLeaf?: Resolver<ResolversTypes['Leaf'], ParentType, ContextType, Partial<MutationPushLeafArgs>>;
+  pushLibraryTree?: Resolver<ResolversTypes['LibraryTree'], ParentType, ContextType, Partial<MutationPushLibraryTreeArgs>>;
+  pushNamedStyle?: Resolver<ResolversTypes['NamedStyle'], ParentType, ContextType, Partial<MutationPushNamedStyleArgs>>;
+  pushParagraph?: Resolver<ResolversTypes['Paragraph'], ParentType, ContextType, Partial<MutationPushParagraphArgs>>;
+  pushPerspective?: Resolver<ResolversTypes['Perspective'], ParentType, ContextType, Partial<MutationPushPerspectiveArgs>>;
+  pushPrecedingSibling?: Resolver<ResolversTypes['PrecedingSibling'], ParentType, ContextType, Partial<MutationPushPrecedingSiblingArgs>>;
+  pushPreference?: Resolver<ResolversTypes['Preference'], ParentType, ContextType>;
+  pushProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, Partial<MutationPushProjectArgs>>;
+  pushQuickEntryTree?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType, Partial<MutationPushQuickEntryTreeArgs>>;
+  pushRemainingTask?: Resolver<ResolversTypes['RemainingTask'], ParentType, ContextType, Partial<MutationPushRemainingTaskArgs>>;
+  pushRichText?: Resolver<ResolversTypes['RichText'], ParentType, ContextType, Partial<MutationPushRichTextArgs>>;
+  pushSection?: Resolver<ResolversTypes['Section'], ParentType, ContextType, Partial<MutationPushSectionArgs>>;
+  pushSelectedTree?: Resolver<ResolversTypes['SelectedTree'], ParentType, ContextType, Partial<MutationPushSelectedTreeArgs>>;
+  pushSetting?: Resolver<ResolversTypes['Setting'], ParentType, ContextType>;
+  pushSidebarTree?: Resolver<ResolversTypes['SidebarTree'], ParentType, ContextType, Partial<MutationPushSidebarTreeArgs>>;
+  pushStyle?: Resolver<ResolversTypes['Style'], ParentType, ContextType, Partial<MutationPushStyleArgs>>;
+  pushTag?: Resolver<ResolversTypes['Tag'], ParentType, ContextType, Partial<MutationPushTagArgs>>;
+  pushTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, Partial<MutationPushTaskArgs>>;
+  pushTree?: Resolver<ResolversTypes['Tree'], ParentType, ContextType, Partial<MutationPushTreeArgs>>;
+  pushWindow?: Resolver<ResolversTypes['Window'], ParentType, ContextType, Partial<MutationPushWindowArgs>>;
+  pushWord?: Resolver<ResolversTypes['Word'], ParentType, ContextType, Partial<MutationPushWordArgs>>;
 };
 
 export type NamedStyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyle'] = ResolversParentTypes['NamedStyle']> = {
@@ -4488,6 +5153,14 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
   hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   startCursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParagraphResolvers<ContextType = any, ParentType extends ResolversParentTypes['Paragraph'] = ResolversParentTypes['Paragraph']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4775,6 +5448,14 @@ export type RepetitionRuleResolvers<ContextType = any, ParentType extends Resolv
 export interface RichTextScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RichText'], any> {
   name: 'RichText';
 }
+
+export type RichTextInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['RichTextInterface'] = ResolversParentTypes['RichTextInterface']> = {
+  __resolveType: TypeResolveFn<'Attachment' | 'AttributeRun' | 'Character' | 'Paragraph' | 'Word', ParentType, ContextType>;
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
 
 export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -5080,17 +5761,59 @@ export type TreeInterfaceResolvers<ContextType = any, ParentType extends Resolve
   trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<TreeInterfaceTreesArgs>>;
 };
 
+export type WindowResolvers<ContextType = any, ParentType extends ResolversParentTypes['Window'] = ResolversParentTypes['Window']> = {
+  closeable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  document?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  miniaturizable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  miniaturized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resizable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  visible?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  zoomable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  zoomed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type WindowInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['WindowInterface'] = ResolversParentTypes['WindowInterface']> = {
+  __resolveType: TypeResolveFn<'DocumentWindow' | 'Window', ParentType, ContextType>;
+  closeable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  document?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  miniaturizable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  miniaturized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resizable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  visible?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  zoomable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  zoomed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+};
+
+export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   AncestorTree?: AncestorTreeResolvers<ContextType>;
   AncestorTreeConnection?: AncestorTreeConnectionResolvers<ContextType>;
   AncestorTreeEdge?: AncestorTreeEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
+  Attachment?: AttachmentResolvers<ContextType>;
+  Attribute?: AttributeResolvers<ContextType>;
+  AttributeRun?: AttributeRunResolvers<ContextType>;
   AvailableTask?: AvailableTaskResolvers<ContextType>;
   AvailableTaskConnection?: AvailableTaskConnectionResolvers<ContextType>;
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
   BuiltinPerspective?: BuiltinPerspectiveResolvers<ContextType>;
   BuiltinPerspectiveConnection?: BuiltinPerspectiveConnectionResolvers<ContextType>;
   BuiltinPerspectiveEdge?: BuiltinPerspectiveEdgeResolvers<ContextType>;
+  Character?: CharacterResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
   ContentTree?: ContentTreeResolvers<ContextType>;
   ContentTreeConnection?: ContentTreeConnectionResolvers<ContextType>;
@@ -5107,6 +5830,7 @@ export type Resolvers<ContextType = any> = {
   Document?: DocumentResolvers<ContextType>;
   DocumentConnection?: DocumentConnectionResolvers<ContextType>;
   DocumentEdge?: DocumentEdgeResolvers<ContextType>;
+  DocumentWindow?: DocumentWindowResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
   FlattenedFolder?: FlattenedFolderResolvers<ContextType>;
   FlattenedFolderConnection?: FlattenedFolderConnectionResolvers<ContextType>;
@@ -5152,6 +5876,7 @@ export type Resolvers<ContextType = any> = {
   NamedStyleInterface?: NamedStyleInterfaceResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
+  Paragraph?: ParagraphResolvers<ContextType>;
   Perspective?: PerspectiveResolvers<ContextType>;
   PerspectiveConnection?: PerspectiveConnectionResolvers<ContextType>;
   PerspectiveEdge?: PerspectiveEdgeResolvers<ContextType>;
@@ -5177,6 +5902,7 @@ export type Resolvers<ContextType = any> = {
   RepetitionInterval?: RepetitionIntervalResolvers<ContextType>;
   RepetitionRule?: RepetitionRuleResolvers<ContextType>;
   RichText?: GraphQLScalarType;
+  RichTextInterface?: RichTextInterfaceResolvers<ContextType>;
   Section?: SectionResolvers<ContextType>;
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;
@@ -5204,6 +5930,9 @@ export type Resolvers<ContextType = any> = {
   TreeConnection?: TreeConnectionResolvers<ContextType>;
   TreeEdge?: TreeEdgeResolvers<ContextType>;
   TreeInterface?: TreeInterfaceResolvers<ContextType>;
+  Window?: WindowResolvers<ContextType>;
+  WindowInterface?: WindowInterfaceResolvers<ContextType>;
+  Word?: WordResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {

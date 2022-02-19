@@ -333,3 +333,44 @@ test("object as input", () => {
 
   expect(print(prune(input))).toEqual(print(output));
 });
+
+test("multiple definition", () => {
+  const input = gql`
+    type SomeType {
+      someField: String
+      someField: String
+    }
+
+    extend type SomeType {
+      someField: String
+    }
+    extend type SomeType {
+      someField: String
+    }
+  `;
+
+  const output = gql`
+    type SomeType {
+      someField: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("multiple definition or args", () => {
+  const input = gql`
+    type SomeType {
+      someField(foo: String, foo: String): String
+    }
+  `;
+
+  const output = gql`
+    type SomeType {
+      someField(foo: String): String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+

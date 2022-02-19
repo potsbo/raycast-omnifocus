@@ -147,7 +147,13 @@ class Pruner {
   };
 
   private pruneArgs = <T extends { arguments?: readonly InputValueDefinitionNode[] }>(def: T): T => {
-    const args = def.arguments?.filter(this.definedInputType);
+    const args = def.arguments?.filter(this.definedInputType).reduce((acum: InputValueDefinitionNode[], cur) => {
+      if (acum.some((a) => a.name.value === cur.name.value)) {
+        return acum;
+      }
+      return [...acum, cur];
+    }, []);
+
     return { ...def, arguments: args };
   };
 

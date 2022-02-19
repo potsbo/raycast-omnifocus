@@ -55,14 +55,11 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       })
     );
 
-    // TODO: less hard code
-    if (cdef.getClassName() === "inbox task") {
-      const m = cdef.getMutationExtension("push", parent);
-      if (m === null) {
-        return;
-      }
-      extensions.push(m);
+    const m = cdef.getMutationExtension("push", parent);
+    if (m === null) {
+      return;
     }
+    extensions.push(m);
   });
 
   const enums = enumRenderers.map((e) => e.getType());
