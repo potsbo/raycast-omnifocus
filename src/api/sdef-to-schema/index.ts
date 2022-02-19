@@ -85,7 +85,28 @@ const isAllowedType = (type: TypeNode | string): boolean => {
 };
 
 const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
-  return { ...def, arguments: def.arguments?.filter((a) => isAllowedType(a.type)) };
+  return {
+    ...def,
+    arguments: def.arguments?.filter((a) => {
+      // TODO: not to hard code
+      if (a.name.value === "id" && def.name.value !== "byId") {
+        return false;
+      }
+      if (
+        ["completedByChildren", "creationDate", "flagged", "sequential", "shouldUseFloatingTimeZone"].includes(
+          a.name.value
+        )
+      ) {
+        return false;
+      }
+      const denyList = ["RichText", "Tag", "RepetitionInterval", "RepetitionRule"];
+      const typename = unwrapType(a.type).name.value;
+      if (denyList.includes(typename)) {
+        return false;
+      }
+      return isAllowedType(a.type);
+    }),
+  };
 };
 
 const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(
