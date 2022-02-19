@@ -11,6 +11,7 @@ import {
   ObjectTypeExtensionNode,
   printSchema,
   buildASTSchema,
+  EnumTypeDefinitionNode,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
@@ -104,18 +105,23 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
   const enums = enumRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
-  const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
+  const render = (
+    ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode | EnumTypeDefinitionNode)[]
+  ) => {
     return ns.map(print).join("\n");
   };
 
   const schema = gql`
+    type Query {
+      application: Application!
+    }
     type Mutation
 
     ${render(definitions)}
     ${render(extensions)}
     ${render(interfaces)}
     ${render(recordTypes)}
-    ${enums.map(print)}
+    ${render(enums)}
 
     # https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
     type PageInfo {
@@ -123,10 +129,6 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       hasNextPage: Boolean!
       startCursor: String!
       endCursor: String!
-    }
-
-    type Query {
-      application: Application!
     }
 
     directive @recordType on OBJECT
