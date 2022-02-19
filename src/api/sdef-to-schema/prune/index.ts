@@ -38,7 +38,7 @@ class Pruner {
     if (print(new Pruner(doc).prune(0)) === print(doc)) {
       return doc;
     }
-    // TODO: may need to introduce max depth
+
     return new Pruner(doc).prune(depth - 1);
   };
 
