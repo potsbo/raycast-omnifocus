@@ -4,37 +4,42 @@ import { ListType, NameType, NonNullType } from "./types";
 
 export const CONNECTION_TYPE_NAME = "Connection";
 export const EDGE_TYPE_NAME = "Edge";
+export const NODE_TYPE_NAME = "Node";
 export const INTERFACE_SUFFIX = "Interface";
 
 export const NodeInterface: InterfaceTypeDefinitionNode = {
   kind: Kind.INTERFACE_TYPE_DEFINITION,
   name: {
     kind: Kind.NAME,
-    value: "Node",
+    value: NODE_TYPE_NAME,
   },
   fields: [FieldDefinition("id", NonNullType(NameType("String")))],
 };
 
+// https://relay.dev/graphql/connections.htm#sec-Edge-Types
 export const EdgeInterface: InterfaceTypeDefinitionNode = {
-  kind: Kind.INTERFACE_TYPE_DEFINITION,
-  name: {
-    kind: Kind.NAME,
-    value: "Edge",
-  },
-  fields: [
-    FieldDefinition("node", NonNullType(NameType("Node"))),
-    FieldDefinition("cursor", NonNullType(NameType("String"))),
-  ],
-};
-export const ConnectionInterface: InterfaceTypeDefinitionNode = {
   kind: Kind.INTERFACE_TYPE_DEFINITION,
   name: {
     kind: Kind.NAME,
     value: EDGE_TYPE_NAME,
   },
   fields: [
+    FieldDefinition("node", NonNullType(NameType("Node"))),
+    FieldDefinition("cursor", NonNullType(NameType("String"))),
+  ],
+};
+
+// https://relay.dev/graphql/connections.htm#sec-Connection-Types
+export const ConnectionInterface: InterfaceTypeDefinitionNode = {
+  kind: Kind.INTERFACE_TYPE_DEFINITION,
+  name: {
+    kind: Kind.NAME,
+    value: CONNECTION_TYPE_NAME,
+  },
+  fields: [
     FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(EDGE_TYPE_NAME))))),
     FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),
+    // https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
     {
       ...FieldDefinition("byId", NameType("Node")),
       arguments: [

@@ -17,7 +17,15 @@ import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
-import { CONNECTION_TYPE_NAME, EDGE_TYPE_NAME, INTERFACE_SUFFIX } from "./constants";
+import {
+  ConnectionInterface,
+  CONNECTION_TYPE_NAME,
+  EdgeInterface,
+  EDGE_TYPE_NAME,
+  INTERFACE_SUFFIX,
+  NodeInterface,
+  NODE_TYPE_NAME,
+} from "./constants";
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
 import { RecordTypeRenderer } from "./recordType";
@@ -52,6 +60,10 @@ const AllowedTypes = [
   "Setting",
   "BuiltinPerspective",
   "CustomPerspective",
+  "Mutation",
+  CONNECTION_TYPE_NAME,
+  EDGE_TYPE_NAME,
+  NODE_TYPE_NAME,
 ];
 
 const isAllowedType = (type: TypeNode | string): boolean => {
@@ -69,8 +81,32 @@ const isAllowedType = (type: TypeNode | string): boolean => {
     return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
   }
 
-  console.log(typeName);
   return false;
+};
+
+const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
+  return {
+    ...def,
+    arguments: def.arguments?.filter((a) => {
+      // TODO: not to hard code
+      if (a.name.value === "id" && def.name.value !== "byId") {
+        return false;
+      }
+      if (
+        ["completedByChildren", "creationDate", "flagged", "sequential", "shouldUseFloatingTimeZone"].includes(
+          a.name.value
+        )
+      ) {
+        return false;
+      }
+      const denyList = ["RichText", "Tag", "RepetitionInterval", "RepetitionRule"];
+      const typename = unwrapType(a.type).name.value;
+      if (denyList.includes(typename)) {
+        return false;
+      }
+      return isAllowedType(a.type);
+    }),
+  };
 };
 
 const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(
@@ -85,7 +121,8 @@ const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode
       acum.push(cur);
       return acum;
     }, [])
-    .filter((f) => knownTypes.has(unwrapType(f.type).name.value) || isAllowedType(f.type));
+    .filter((f) => knownTypes.has(unwrapType(f.type).name.value) || isAllowedType(f.type))
+    .map(reduceArgs);
   return {
     ...obj,
     fields,
@@ -107,7 +144,7 @@ const renderSuite = (
   return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
 };
 
-const interfaces: InterfaceTypeDefinitionNode[] = [];
+const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
 
 (async () => {
   const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
@@ -137,6 +174,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
       { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
     );
 
+  const extensions = extensionRenderers.map((e) => e.getType());
   const inheritedClasses = new Set(
     classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
   );
@@ -156,10 +194,17 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
         extensions: extensionRenderers.filter((e) => e.extends === cdef.getClassName()),
       })
     );
+
+    if (cdef.getClassName() === "inbox task") {
+      const m = cdef.getMutationExtension("push", parent);
+      if (m === null) {
+        return;
+      }
+      extensions.push(m);
+    }
   });
 
   const enums = enumRenderers.map((e) => e.getType());
-  const extensions = extensionRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
   // TODO: Add class definitions
@@ -174,36 +219,20 @@ const interfaces: InterfaceTypeDefinitionNode[] = [];
   };
 
   const schema = `
+  type Mutation
+
   ${render(definitions)}
   ${render(extensions)}
   ${render(interfaces)}
   ${render(recordTypes)}
   ${enums.map(print)}
 
-  # https://relay.dev/graphql/connections.htm#sec-Connection-Types
-interface ${CONNECTION_TYPE_NAME} {
-  edges: [Edge!]!
-  pageInfo: PageInfo!
-
-  # https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
-  byId(id: String!): Node
-}
-
-# https://relay.dev/graphql/connections.htm#sec-Edge-Types
-interface Edge {
-  node: Node!
-  cursor: String!
-}
 # https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
 type PageInfo {
   hasPreviousPage: Boolean!
   hasNextPage: Boolean!
   startCursor: String!
   endCursor: String!
-}
-
-interface Node {
-  id: String!
 }
 
 type Query {
@@ -220,12 +249,6 @@ input Condition {
   operator: String! = "="
   value: String! = "true"
 }
-
-type Mutation {
-  pushInboxTask(name: String!): InboxTask!
-}
-
-
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");

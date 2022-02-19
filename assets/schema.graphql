@@ -1368,7 +1368,14 @@ enum LocationTrigger {
 }
 
 type Mutation {
-  pushInboxTask(name: String!): InboxTask!
+  pushInboxTask(
+    completionDate: String
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    name: String!
+  ): InboxTask!
 }
 
 interface Node {

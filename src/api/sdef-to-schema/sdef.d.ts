@@ -9,7 +9,7 @@ export interface Suite {
   "record-type": RecordTypeDefinition[];
   "value-type": unknown[];
   "class-extension": ClassExtensionDefinition[];
-  "enumeration"?: EnumDefinition[]
+  enumeration?: EnumDefinition[];
 }
 
 export interface ClassDefinition {
@@ -57,6 +57,7 @@ export type PropertyDefinition =
         name: string;
         type: string;
         optional?: "yes";
+        access?: "r";
       };
     }
   | {
