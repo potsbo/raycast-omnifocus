@@ -5,7 +5,7 @@ import { prune } from "../index";
 test("valid schema", () => {
   const input = gql`
     type Something {
-      str: String
+      string: String
       nonNullString: String!
     }
   `;
@@ -13,10 +13,10 @@ test("valid schema", () => {
   expect(print(prune(input))).toEqual(print(input));
 });
 
-test("valid schema", () => {
+test("one invalid field", () => {
   const input = gql`
     type Something {
-      str: String
+        string: String
       nonNullString: String!
       unKnownType: UnKnownType
     }
@@ -24,7 +24,7 @@ test("valid schema", () => {
 
   const output = gql`
     type Something {
-      str: String
+      string: String
       nonNullString: String!
     }
   `;
