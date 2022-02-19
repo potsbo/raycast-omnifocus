@@ -4,6 +4,82 @@ directive @recordType on OBJECT
 directive @whose(condition: [Condition!]!) on FIELD
 
 """
+The ancestor trees of this tree.
+"""
+type AncestorTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type AncestorTreeConnection implements Connection {
+  byId(id: String!): AncestorTree
+  edges: [AncestorTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AncestorTreeEdge implements Edge {
+  cursor: String!
+  node: AncestorTree!
+}
+
+"""
 The application's top-level scripting object.
 """
 type Application {
@@ -38,6 +114,12 @@ type Application {
   """
   perspectiveNames: [String!]!
   perspectives: PerspectiveConnection!
+  preferences: PreferenceConnection!
+
+  """
+  The Quick Entry panel for the default document.
+  """
+  quickEntry: QuickEntryTree!
 
   """
   The date on from which the date collated smart groups are based.  When set, the reference date will be rounded to the first instant of the day of the specified date.
@@ -48,6 +130,56 @@ type Application {
   The version number of the application.
   """
   version: String!
+}
+
+"""
+Represents an inline text attachment.
+"""
+type Attachment implements RichTextInterface {
+  """
+  The name of the font of the first character.
+  """
+  font: String!
+
+  """
+  The size in points of the first character.
+  """
+  size: Int!
+
+  """
+  The style of the text.
+  """
+  style: Style!
+
+  """
+  The plain text contents of the rich text.
+  """
+  text: String!
+}
+
+"""
+This subdivides the text into chunks that all have the same attributes.
+"""
+type AttributeRun implements RichTextInterface {
+  """
+  The name of the font of the first character.
+  """
+  font: String!
+
+  """
+  The size in points of the first character.
+  """
+  size: Int!
+
+  """
+  The style of the text.
+  """
+  style: Style!
+
+  """
+  The plain text contents of the rich text.
+  """
+  text: String!
 }
 
 """
@@ -268,6 +400,31 @@ type BuiltinPerspectiveEdge implements Edge {
   node: BuiltinPerspective!
 }
 
+"""
+This subdivides the text into characters.
+"""
+type Character implements RichTextInterface {
+  """
+  The name of the font of the first character.
+  """
+  font: String!
+
+  """
+  The size in points of the first character.
+  """
+  size: Int!
+
+  """
+  The style of the text.
+  """
+  style: Style!
+
+  """
+  The plain text contents of the rich text.
+  """
+  text: String!
+}
+
 input Condition {
   enabled: Boolean! = true
   field: String
@@ -280,6 +437,132 @@ interface Connection {
   byId(id: String!): Node
   edges: [Edge!]!
   pageInfo: PageInfo!
+}
+
+"""
+The tree of objects in the main window content.
+"""
+type ContentTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  The list of possible identifiers that can be set as the selected grouping identifier.
+  """
+  availableGroupingIdentifiers: [String!]!
+
+  """
+  The list of possible identifiers that can be set as the selected sorting identifier.
+  """
+  availableSortingIdentifiers: [String!]!
+
+  """
+  The list of possible identifiers that can be set as the selected task duration filter identifier.
+  """
+  availableTaskDurationFilterIdentifiers: [String!]!
+
+  """
+  The list of possible identifiers that can be set as the selected task flagged filter identifier.
+  """
+  availableTaskFlaggedFilterIdentifiers: [String!]!
+
+  """
+  The list of possible identifiers that can be set as the selected task state filter identifier.
+  """
+  availableTaskStateFilterIdentifiers: [String!]!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The currently selected grouping identifier, controlling how the results shown in the content area are grouped.
+  """
+  selectedGroupingIdentifier: String!
+
+  """
+  The currently selected sorting identifier, controlling how the results shown in the content area are ordered.
+  """
+  selectedSortingIdentifier: String!
+
+  """
+  The currently selected task duration filter identifier.
+  """
+  selectedTaskDurationFilterIdentifier: String!
+
+  """
+  The currently selected task flagged filter identifier.
+  """
+  selectedTaskFlaggedFilterIdentifier: String!
+
+  """
+  The currently selected task state filter identifier.
+  """
+  selectedTaskStateFilterIdentifier: String!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type ContentTreeConnection implements Connection {
+  byId(id: String!): ContentTree
+  edges: [ContentTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ContentTreeEdge implements Edge {
+  cursor: String!
+  node: ContentTree!
 }
 
 """
@@ -309,6 +592,166 @@ type CustomPerspectiveEdge implements Edge {
 }
 
 """
+Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now.
+"""
+type DeprecatedContext implements Node & TagInterface {
+  """
+  If false, tasks associated with this tag will be skipped when determining the next action for a project.
+  """
+  allowsNextAction: Boolean!
+
+  """
+  A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags.
+  """
+  availableTaskCount: Int!
+  availableTasks: AvailableTaskConnection!
+
+  """
+  The containing tag.
+  """
+  container: Tag!
+
+  """
+  Deprecated; use tags.
+  """
+  deprecatedContexts: DeprecatedContextConnection!
+
+  """
+  Set if the tag is currently hidden or any of its container tags are hidden.
+  """
+  effectivelyHidden: Boolean!
+  flattenedTags: FlattenedTagConnection!
+
+  """
+  Set if the tag is currently hidden.
+  """
+  hidden: Boolean!
+
+  """
+  The identifier of the tag.
+  """
+  id: String!
+
+  """
+  The physical location associated with the tag.
+  """
+  location: LocationInformation
+
+  """
+  The name of the tag.
+  """
+  name: String!
+
+  """
+  The note of the tag.
+  """
+  note: RichText!
+
+  """
+  A count of the number of incomplete tasks of this tag and all its active descendent tags.
+  """
+  remainingTaskCount: Int!
+  remainingTasks: RemainingTaskConnection!
+
+  """
+  The tags having this tag as their container.
+  """
+  tags: TagConnection!
+
+  """
+  The tasks having this tag.
+  """
+  tasks: TaskConnection!
+}
+
+type DeprecatedContextConnection implements Connection {
+  byId(id: String!): DeprecatedContext
+  edges: [DeprecatedContextEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DeprecatedContextEdge implements Edge {
+  cursor: String!
+  node: DeprecatedContext!
+}
+
+"""
+All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+"""
+type DescendantTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type DescendantTreeConnection implements Connection {
+  byId(id: String!): DescendantTree
+  edges: [DescendantTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DescendantTreeEdge implements Edge {
+  cursor: String!
+  node: DescendantTree!
+}
+
+"""
 A document.
 """
 type Document implements Node {
@@ -326,6 +769,11 @@ type Document implements Node {
   Whether the document will write compressed transactions to disk; defaults to true.
   """
   compressesTransactions: Boolean!
+
+  """
+  Deprecated; use tags.
+  """
+  deprecatedContexts: DeprecatedContextConnection!
 
   """
   If set, automatic cleanup of inbox items won't happen.
@@ -387,6 +835,11 @@ type Document implements Node {
   The subset of the sections that are projects; projects having this folder as their container.
   """
   projects: ProjectConnection!
+
+  """
+  The Quick Entry panel for the document.
+  """
+  quickEntry: QuickEntryTree!
 
   """
   The projects and folders contained by no folder.
@@ -725,6 +1178,11 @@ type FlattenedTag implements Node & TagInterface {
   The containing tag.
   """
   container: Tag!
+
+  """
+  Deprecated; use tags.
+  """
+  deprecatedContexts: DeprecatedContextConnection!
 
   """
   Set if the tag is currently hidden or any of its container tags are hidden.
@@ -1100,6 +1558,156 @@ interface FolderInterface implements Node {
 }
 
 """
+The sibling trees of this tree after it in the user-specified sort ordering.
+"""
+type FollowingSibling implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type FollowingSiblingConnection implements Connection {
+  byId(id: String!): FollowingSibling
+  edges: [FollowingSiblingEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FollowingSiblingEdge implements Edge {
+  cursor: String!
+  node: FollowingSibling!
+}
+
+"""
+A day in the forecast sidebar tree.
+"""
+type ForecastDay implements Node {
+  """
+  The count shown in the sidebar for this forecast day, or zero if there is no count shown.
+  """
+  badgeCount: Int!
+
+  """
+  True if the forecast day has no content at all. Note that some content will not cause a badge to be shown in the sidebar, and some content is controlled by user preferences.
+  """
+  empty: Boolean!
+
+  """
+  The identifier of the task.
+  """
+  id: String!
+
+  """
+  A display name for the forecast day.
+  """
+  name: String!
+}
+
+type ForecastDayConnection implements Connection {
+  byId(id: String!): ForecastDay
+  edges: [ForecastDayEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ForecastDayEdge implements Edge {
+  cursor: String!
+  node: ForecastDay!
+}
+
+interface ForecastDayInterface implements Node {
+  """
+  The count shown in the sidebar for this forecast day, or zero if there is no count shown.
+  """
+  badgeCount: Int!
+
+  """
+  True if the forecast day has no content at all. Note that some content will not cause a badge to be shown in the sidebar, and some content is controlled by user preferences.
+  """
+  empty: Boolean!
+
+  """
+  The identifier of the task.
+  """
+  id: String!
+
+  """
+  A display name for the forecast day.
+  """
+  name: String!
+}
+
+"""
+The sidebar tree used when the window's sidebar tab property is set to forecast tab.
+"""
+type ForecastSidebarTree implements SidebarTreeInterface {
+  """
+  The list of possible smart group identifiers that can be set as the selected smart group identifier.
+  """
+  availableSmartGroupIdentifiers: [String!]!
+  forecastDays: ForecastDayConnection!
+
+  """
+  The currently selected smart group identifier.
+  """
+  selectedSmartGroupIdentifier: String
+}
+
+"""
 A task that is in the document's inbox
 """
 type InboxTask implements Node & TaskInterface {
@@ -1291,6 +1899,82 @@ type InboxTaskEdge implements Edge {
   node: InboxTask!
 }
 
+"""
+The tree in the sidebar representing the Inbox.
+"""
+type InboxTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type InboxTreeConnection implements Connection {
+  byId(id: String!): InboxTree
+  edges: [InboxTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type InboxTreeEdge implements Edge {
+  cursor: String!
+  node: InboxTree!
+}
+
 enum IntervalUnit {
   """
   Days
@@ -1321,6 +2005,158 @@ enum IntervalUnit {
   Years
   """
   YEAR
+}
+
+"""
+The descendants of a tree that have no children themselves.
+"""
+type Leaf implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type LeafConnection implements Connection {
+  byId(id: String!): Leaf
+  edges: [LeafEdge!]!
+  pageInfo: PageInfo!
+}
+
+type LeafEdge implements Edge {
+  cursor: String!
+  node: Leaf!
+}
+
+"""
+The tree in the sidebar representing the top level library of objects.
+"""
+type LibraryTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type LibraryTreeConnection implements Connection {
+  byId(id: String!): LibraryTree
+  edges: [LibraryTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type LibraryTreeEdge implements Edge {
+  cursor: String!
+  node: LibraryTree!
 }
 
 type LocationInformation @recordType {
@@ -1378,6 +2214,50 @@ type Mutation {
   ): InboxTask!
 }
 
+"""
+A named style object.
+"""
+type NamedStyle implements Node & StyleInterface {
+  """
+  The name of the font of the style.
+  """
+  font: String!
+
+  """
+  An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document.
+  """
+  id: String!
+
+  """
+  The name of the style.  Must be unique within the containing document.
+  """
+  name: String!
+  namedStyles: NamedStyleConnection!
+}
+
+type NamedStyleConnection implements Connection {
+  byId(id: String!): NamedStyle
+  edges: [NamedStyleEdge!]!
+  pageInfo: PageInfo!
+}
+
+type NamedStyleEdge implements Edge {
+  cursor: String!
+  node: NamedStyle!
+}
+
+interface NamedStyleInterface implements Node {
+  """
+  An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document.
+  """
+  id: String!
+
+  """
+  The name of the style.  Must be unique within the containing document.
+  """
+  name: String!
+}
+
 interface Node {
   id: String!
 }
@@ -1387,6 +2267,31 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String!
+}
+
+"""
+This subdivides the text into paragraphs.
+"""
+type Paragraph implements RichTextInterface {
+  """
+  The name of the font of the first character.
+  """
+  font: String!
+
+  """
+  The size in points of the first character.
+  """
+  size: Int!
+
+  """
+  The style of the text.
+  """
+  style: Style!
+
+  """
+  The plain text contents of the rich text.
+  """
+  text: String!
 }
 
 """
@@ -1425,6 +2330,110 @@ interface PerspectiveInterface implements Node {
   The name of the perspective.
   """
   name: String!
+}
+
+"""
+The sibling trees of this tree before it in the user-specified sort ordering.
+"""
+type PrecedingSibling implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type PrecedingSiblingConnection implements Connection {
+  byId(id: String!): PrecedingSibling
+  edges: [PrecedingSiblingEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PrecedingSiblingEdge implements Edge {
+  cursor: String!
+  node: PrecedingSibling!
+}
+
+"""
+Application preference
+"""
+type Preference implements Node {
+  """
+  The identifier of the preference.
+  """
+  id: String!
+}
+
+type PreferenceConnection implements Connection {
+  byId(id: String!): Preference
+  edges: [PreferenceEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PreferenceEdge implements Edge {
+  cursor: String!
+  node: Preference!
+}
+
+interface PreferenceInterface implements Node {
+  """
+  The identifier of the preference.
+  """
+  id: String!
 }
 
 """
@@ -1862,6 +2871,96 @@ type Query {
 }
 
 """
+The Quick Entry panel.
+"""
+type QuickEntryTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  Deprecated; use tags.
+  """
+  deprecatedContexts: DeprecatedContextConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+  folders: FolderConnection!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+  inboxTasks: InboxTaskConnection!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+  projects: ProjectConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+  tags: TagConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+
+  """
+  Whether the quick entry panel is currently visible.
+  """
+  visible: Boolean!
+}
+
+type QuickEntryTreeConnection implements Connection {
+  byId(id: String!): QuickEntryTree
+  edges: [QuickEntryTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type QuickEntryTreeEdge implements Edge {
+  cursor: String!
+  node: QuickEntryTree!
+}
+
+"""
 A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task.
 """
 type RemainingTask implements Node & TaskInterface {
@@ -2124,6 +3223,11 @@ type RichText implements RichTextInterface {
   size: Int!
 
   """
+  The style of the text.
+  """
+  style: Style!
+
+  """
   The superscript level of the text.
   """
   superscript: Int!
@@ -2149,6 +3253,11 @@ interface RichTextInterface {
   The size in points of the first character.
   """
   size: Int!
+
+  """
+  The style of the text.
+  """
+  style: Style!
 
   """
   The plain text contents of the rich text.
@@ -2195,6 +3304,82 @@ interface SectionInterface implements Node {
 }
 
 """
+The trees of this tree that are selected in the user interface, possibly including this tree.
+"""
+type SelectedTree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type SelectedTreeConnection implements Connection {
+  byId(id: String!): SelectedTree
+  edges: [SelectedTreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SelectedTreeEdge implements Edge {
+  cursor: String!
+  node: SelectedTree!
+}
+
+"""
 Document setting
 """
 type Setting implements Node {
@@ -2223,6 +3408,112 @@ interface SettingInterface implements Node {
 }
 
 """
+The tree of objects in the window sidebar.
+"""
+type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  The list of possible smart group identifiers that can be set as the selected smart group identifier.
+  """
+  availableSmartGroupIdentifiers: [String!]!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The currently selected smart group identifier.
+  """
+  selectedSmartGroupIdentifier: String
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+interface SidebarTreeInterface {
+  """
+  The list of possible smart group identifiers that can be set as the selected smart group identifier.
+  """
+  availableSmartGroupIdentifiers: [String!]!
+
+  """
+  The currently selected smart group identifier.
+  """
+  selectedSmartGroupIdentifier: String
+}
+
+"""
+A style object.
+"""
+type Style implements StyleInterface {
+  """
+  The name of the font of the style.
+  """
+  font: String!
+  namedStyles: NamedStyleConnection!
+}
+
+interface StyleInterface {
+  """
+  The name of the font of the style.
+  """
+  font: String!
+  namedStyles: NamedStyleConnection!
+}
+
+"""
 A tag.
 """
 type Tag implements Node & TagInterface {
@@ -2241,6 +3532,11 @@ type Tag implements Node & TagInterface {
   The containing tag.
   """
   container: Tag!
+
+  """
+  Deprecated; use tags.
+  """
+  deprecatedContexts: DeprecatedContextConnection!
 
   """
   Set if the tag is currently hidden or any of its container tags are hidden.
@@ -2317,6 +3613,11 @@ interface TagInterface implements Node {
   The containing tag.
   """
   container: Tag!
+
+  """
+  Deprecated; use tags.
+  """
+  deprecatedContexts: DeprecatedContextConnection!
 
   """
   Set if the tag is currently hidden or any of its container tags are hidden.
@@ -2742,4 +4043,167 @@ enum TextAlignment {
   LEFT
   NATURAL
   RIGHT
+}
+
+"""
+A tree representing an object, along with its sub-trees.
+"""
+type Tree implements Node & TreeInterface {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+type TreeConnection implements Connection {
+  byId(id: String!): TreeInterface
+  edges: [TreeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TreeEdge implements Edge {
+  cursor: String!
+  node: TreeInterface!
+}
+
+interface TreeInterface implements Node {
+  """
+  The ancestor trees of this tree.
+  """
+  ancestorTrees: AncestorTreeConnection!
+
+  """
+  All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
+  """
+  descendantTrees: DescendantTreeConnection!
+
+  """
+  This is true if the node is expanded.
+  """
+  expanded: Boolean!
+
+  """
+  The sibling trees of this tree after it in the user-specified sort ordering.
+  """
+  followingSiblings: FollowingSiblingConnection!
+
+  """
+  The identifier of object being represented by this tree.
+  """
+  id: String!
+
+  """
+  The descendants of this tree that have no children themselves.
+  """
+  leafs: LeafConnection!
+
+  """
+  The name of the object being represented by this tree.
+  """
+  name: String!
+
+  """
+  This is true if the node note is expanded.
+  """
+  noteExpanded: Boolean!
+
+  """
+  The sibling trees of this tree before it in the user-specified sort ordering.
+  """
+  precedingSiblings: PrecedingSiblingConnection!
+
+  """
+  This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
+  """
+  selected: Boolean!
+
+  """
+  The trees of this tree that are selected in the user interface.
+  """
+  selectedTrees: SelectedTreeConnection!
+
+  """
+  The immediate child trees of this tree in the user-specified sort ordering.
+  """
+  trees: TreeConnection!
+}
+
+"""
+This subdivides the text into words.
+"""
+type Word implements RichTextInterface {
+  """
+  The name of the font of the first character.
+  """
+  font: String!
+
+  """
+  The size in points of the first character.
+  """
+  size: Int!
+
+  """
+  The style of the text.
+  """
+  style: Style!
+
+  """
+  The plain text contents of the rich text.
+  """
+  text: String!
 }

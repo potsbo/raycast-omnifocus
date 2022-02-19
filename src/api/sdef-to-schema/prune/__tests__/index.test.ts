@@ -1,4 +1,4 @@
-import { buildSchema, print, validateSchema } from "graphql";
+import { print } from "graphql";
 import gql from "graphql-tag";
 import { prune } from "../index";
 
@@ -8,9 +8,21 @@ test("valid schema", () => {
       string: String
       nonNullString: String!
     }
+
+    extend type Something {
+      int: Int!
+    }
   `;
 
-  expect(print(prune(input))).toEqual(print(input));
+  const output = gql`
+    type Something {
+      string: String
+      nonNullString: String!
+      int: Int!
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
 });
 
 test("one invalid field", () => {
@@ -65,6 +77,100 @@ test("depending on invalid type", () => {
     type Something {
       string: String
       nonNullString: String!
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("fields with interface", () => {
+  const input = gql`
+    type Something {
+      someInterface: SomeInterface
+    }
+
+    interface SomeInterface {
+      str: String
+    }
+  `;
+
+  const output = gql`
+    type Something {
+      someInterface: SomeInterface
+    }
+
+    interface SomeInterface {
+      str: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("fields with enum", () => {
+  const input = gql`
+    type Something {
+      someEnum: SomeEnum
+    }
+
+    enum SomeEnum {
+      VALUE1
+      VALUE2
+    }
+  `;
+
+  const output = gql`
+    type Something {
+      someEnum: SomeEnum
+    }
+
+    enum SomeEnum {
+      VALUE1
+      VALUE2
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("args", () => {
+  const input = gql`
+    type Something {
+      str: String
+      fieldWithValidArgs(id: String!, input: SomeInput): Boolean
+      fieldWithInvalidArgs(id: UnknownType!): Int
+    }
+
+    input SomeInput {
+      str: String
+    }
+  `;
+
+  const output = gql`
+    type Something {
+      str: String
+      fieldWithValidArgs(id: String!, input: SomeInput): Boolean
+      fieldWithInvalidArgs: Int
+    }
+
+    input SomeInput {
+      str: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("input only", () => {
+  const input = gql`
+    input SomeInput {
+      str: String
+    }
+  `;
+
+  const output = gql`
+    input SomeInput {
+      str: String
     }
   `;
 
