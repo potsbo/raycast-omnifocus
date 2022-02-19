@@ -17,6 +17,53 @@ export type Scalars = {
   Float: number;
 };
 
+/** The ancestor trees of this tree. */
+export type AncestorTree = Node & TreeInterface & {
+  __typename?: 'AncestorTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type AncestorTreeConnection = Connection & {
+  __typename?: 'AncestorTreeConnection';
+  byId?: Maybe<AncestorTree>;
+  edges: Array<AncestorTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type AncestorTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type AncestorTreeEdge = Edge & {
+  __typename?: 'AncestorTreeEdge';
+  cursor: Scalars['String'];
+  node: AncestorTree;
+};
+
 /** The application's top-level scripting object. */
 export type Application = {
   __typename?: 'Application';
@@ -34,10 +81,39 @@ export type Application = {
   /** The names of all available perspectives in the default document. */
   perspectiveNames: Array<Scalars['String']>;
   perspectives: PerspectiveConnection;
+  preferences: PreferenceConnection;
+  /** The Quick Entry panel for the default document. */
+  quickEntry: QuickEntryTree;
   /** The date on from which the date collated smart groups are based.  When set, the reference date will be rounded to the first instant of the day of the specified date. */
   referenceDate: Scalars['String'];
   /** The version number of the application. */
   version: Scalars['String'];
+};
+
+/** Represents an inline text attachment. */
+export type Attachment = RichTextInterface & {
+  __typename?: 'Attachment';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRun = RichTextInterface & {
+  __typename?: 'AttributeRun';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
 };
 
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
@@ -161,6 +237,19 @@ export type BuiltinPerspectiveEdge = Edge & {
   node: BuiltinPerspective;
 };
 
+/** This subdivides the text into characters. */
+export type Character = RichTextInterface & {
+  __typename?: 'Character';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
 export type Condition = {
   enabled?: Scalars['Boolean'];
   field?: InputMaybe<Scalars['String']>;
@@ -178,6 +267,73 @@ export type Connection = {
 
 export type ConnectionByIdArgs = {
   id: Scalars['String'];
+};
+
+/** The tree of objects in the main window content. */
+export type ContentTree = Node & TreeInterface & {
+  __typename?: 'ContentTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** The list of possible identifiers that can be set as the selected grouping identifier. */
+  availableGroupingIdentifiers: Array<Scalars['String']>;
+  /** The list of possible identifiers that can be set as the selected sorting identifier. */
+  availableSortingIdentifiers: Array<Scalars['String']>;
+  /** The list of possible identifiers that can be set as the selected task duration filter identifier. */
+  availableTaskDurationFilterIdentifiers: Array<Scalars['String']>;
+  /** The list of possible identifiers that can be set as the selected task flagged filter identifier. */
+  availableTaskFlaggedFilterIdentifiers: Array<Scalars['String']>;
+  /** The list of possible identifiers that can be set as the selected task state filter identifier. */
+  availableTaskStateFilterIdentifiers: Array<Scalars['String']>;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The currently selected grouping identifier, controlling how the results shown in the content area are grouped. */
+  selectedGroupingIdentifier: Scalars['String'];
+  /** The currently selected sorting identifier, controlling how the results shown in the content area are ordered. */
+  selectedSortingIdentifier: Scalars['String'];
+  /** The currently selected task duration filter identifier. */
+  selectedTaskDurationFilterIdentifier: Scalars['String'];
+  /** The currently selected task flagged filter identifier. */
+  selectedTaskFlaggedFilterIdentifier: Scalars['String'];
+  /** The currently selected task state filter identifier. */
+  selectedTaskStateFilterIdentifier: Scalars['String'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type ContentTreeConnection = Connection & {
+  __typename?: 'ContentTreeConnection';
+  byId?: Maybe<ContentTree>;
+  edges: Array<ContentTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type ContentTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type ContentTreeEdge = Edge & {
+  __typename?: 'ContentTreeEdge';
+  cursor: Scalars['String'];
+  node: ContentTree;
 };
 
 /** A user created perspective. */
@@ -207,8 +363,107 @@ export type CustomPerspectiveEdge = Edge & {
   node: CustomPerspective;
 };
 
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContext = Node & TagInterface & {
+  __typename?: 'DeprecatedContext';
+  /** If false, tasks associated with this tag will be skipped when determining the next action for a project. */
+  allowsNextAction: Scalars['Boolean'];
+  /** A count of the number of unblocked and incomplete tasks of this tag and all its active descendent tags. */
+  availableTaskCount: Scalars['Int'];
+  availableTasks: AvailableTaskConnection;
+  /** The containing tag. */
+  container: Tag;
+  /** Deprecated; use tags. */
+  deprecatedContexts: DeprecatedContextConnection;
+  /** Set if the tag is currently hidden or any of its container tags are hidden. */
+  effectivelyHidden: Scalars['Boolean'];
+  flattenedTags: FlattenedTagConnection;
+  /** Set if the tag is currently hidden. */
+  hidden: Scalars['Boolean'];
+  /** The identifier of the tag. */
+  id: Scalars['String'];
+  /** The physical location associated with the tag. */
+  location?: Maybe<LocationInformation>;
+  /** The name of the tag. */
+  name: Scalars['String'];
+  /** The note of the tag. */
+  note: RichText;
+  /** A count of the number of incomplete tasks of this tag and all its active descendent tags. */
+  remainingTaskCount: Scalars['Int'];
+  remainingTasks: RemainingTaskConnection;
+  /** The tags having this tag as their container. */
+  tags: TagConnection;
+  /** The tasks having this tag. */
+  tasks: TaskConnection;
+};
+
+export type DeprecatedContextConnection = Connection & {
+  __typename?: 'DeprecatedContextConnection';
+  byId?: Maybe<DeprecatedContext>;
+  edges: Array<DeprecatedContextEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type DeprecatedContextConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type DeprecatedContextEdge = Edge & {
+  __typename?: 'DeprecatedContextEdge';
+  cursor: Scalars['String'];
+  node: DeprecatedContext;
+};
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTree = Node & TreeInterface & {
+  __typename?: 'DescendantTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type DescendantTreeConnection = Connection & {
+  __typename?: 'DescendantTreeConnection';
+  byId?: Maybe<DescendantTree>;
+  edges: Array<DescendantTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type DescendantTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type DescendantTreeEdge = Edge & {
+  __typename?: 'DescendantTreeEdge';
+  cursor: Scalars['String'];
+  node: DescendantTree;
+};
+
 /** A document. */
-export type Document = Node & {
+export type Document = {
   __typename?: 'Document';
   /** Whether the document can redo the most recently undone command. */
   canRedo: Scalars['Boolean'];
@@ -216,6 +471,8 @@ export type Document = Node & {
   canUndo: Scalars['Boolean'];
   /** Whether the document will write compressed transactions to disk; defaults to true. */
   compressesTransactions: Scalars['Boolean'];
+  /** Deprecated; use tags. */
+  deprecatedContexts: DeprecatedContextConnection;
   /** If set, automatic cleanup of inbox items won't happen. */
   disableAutomaticInboxCleanup: Scalars['Boolean'];
   flattenedFolders: FlattenedFolderConnection;
@@ -244,6 +501,8 @@ export type Document = Node & {
   perspectives: PerspectiveConnection;
   /** The subset of the sections that are projects; projects having this folder as their container. */
   projects: ProjectConnection;
+  /** The Quick Entry panel for the document. */
+  quickEntry: QuickEntryTree;
   /** The projects and folders contained by no folder. */
   sections: SectionConnection;
   settings: SettingConnection;
@@ -256,7 +515,7 @@ export type Document = Node & {
   willAutosave: Scalars['Boolean'];
 };
 
-export type DocumentConnection = Connection & {
+export type DocumentConnection = {
   __typename?: 'DocumentConnection';
   byId?: Maybe<Document>;
   edges: Array<DocumentEdge>;
@@ -268,7 +527,7 @@ export type DocumentConnectionByIdArgs = {
   id: Scalars['String'];
 };
 
-export type DocumentEdge = Edge & {
+export type DocumentEdge = {
   __typename?: 'DocumentEdge';
   cursor: Scalars['String'];
   node: Document;
@@ -435,6 +694,8 @@ export type FlattenedTag = Node & TagInterface & {
   availableTasks: AvailableTaskConnection;
   /** The containing tag. */
   container: Tag;
+  /** Deprecated; use tags. */
+  deprecatedContexts: DeprecatedContextConnection;
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
   flattenedTags: FlattenedTagConnection;
@@ -639,6 +900,105 @@ export type FolderInterface = {
   sections: SectionConnection;
 };
 
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSibling = Node & TreeInterface & {
+  __typename?: 'FollowingSibling';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type FollowingSiblingConnection = Connection & {
+  __typename?: 'FollowingSiblingConnection';
+  byId?: Maybe<FollowingSibling>;
+  edges: Array<FollowingSiblingEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type FollowingSiblingConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type FollowingSiblingEdge = Edge & {
+  __typename?: 'FollowingSiblingEdge';
+  cursor: Scalars['String'];
+  node: FollowingSibling;
+};
+
+/** A day in the forecast sidebar tree. */
+export type ForecastDay = Node & {
+  __typename?: 'ForecastDay';
+  /** The count shown in the sidebar for this forecast day, or zero if there is no count shown. */
+  badgeCount: Scalars['Int'];
+  /** True if the forecast day has no content at all. Note that some content will not cause a badge to be shown in the sidebar, and some content is controlled by user preferences. */
+  empty: Scalars['Boolean'];
+  /** The identifier of the task. */
+  id: Scalars['String'];
+  /** A display name for the forecast day. */
+  name: Scalars['String'];
+};
+
+export type ForecastDayConnection = Connection & {
+  __typename?: 'ForecastDayConnection';
+  byId?: Maybe<ForecastDay>;
+  edges: Array<ForecastDayEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type ForecastDayConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type ForecastDayEdge = Edge & {
+  __typename?: 'ForecastDayEdge';
+  cursor: Scalars['String'];
+  node: ForecastDay;
+};
+
+export type ForecastDayInterface = {
+  /** The count shown in the sidebar for this forecast day, or zero if there is no count shown. */
+  badgeCount: Scalars['Int'];
+  /** True if the forecast day has no content at all. Note that some content will not cause a badge to be shown in the sidebar, and some content is controlled by user preferences. */
+  empty: Scalars['Boolean'];
+  /** The identifier of the task. */
+  id: Scalars['String'];
+  /** A display name for the forecast day. */
+  name: Scalars['String'];
+};
+
+/** The sidebar tree used when the window's sidebar tab property is set to forecast tab. */
+export type ForecastSidebarTree = SidebarTreeInterface & {
+  __typename?: 'ForecastSidebarTree';
+  /** The list of possible smart group identifiers that can be set as the selected smart group identifier. */
+  availableSmartGroupIdentifiers: Array<Scalars['String']>;
+  forecastDays: ForecastDayConnection;
+  /** The currently selected smart group identifier. */
+  selectedSmartGroupIdentifier?: Maybe<Scalars['String']>;
+};
+
 /** A task that is in the document's inbox */
 export type InboxTask = Node & TaskInterface & {
   __typename?: 'InboxTask';
@@ -733,6 +1093,53 @@ export type InboxTaskEdge = Edge & {
   node: InboxTask;
 };
 
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTree = Node & TreeInterface & {
+  __typename?: 'InboxTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type InboxTreeConnection = Connection & {
+  __typename?: 'InboxTreeConnection';
+  byId?: Maybe<InboxTree>;
+  edges: Array<InboxTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type InboxTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type InboxTreeEdge = Edge & {
+  __typename?: 'InboxTreeEdge';
+  cursor: Scalars['String'];
+  node: InboxTree;
+};
+
 export enum IntervalUnit {
   /** Days */
   Day = 'DAY',
@@ -747,6 +1154,100 @@ export enum IntervalUnit {
   /** Years */
   Year = 'YEAR'
 }
+
+/** The descendants of a tree that have no children themselves. */
+export type Leaf = Node & TreeInterface & {
+  __typename?: 'Leaf';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type LeafConnection = Connection & {
+  __typename?: 'LeafConnection';
+  byId?: Maybe<Leaf>;
+  edges: Array<LeafEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type LeafConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type LeafEdge = Edge & {
+  __typename?: 'LeafEdge';
+  cursor: Scalars['String'];
+  node: Leaf;
+};
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTree = Node & TreeInterface & {
+  __typename?: 'LibraryTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type LibraryTreeConnection = Connection & {
+  __typename?: 'LibraryTreeConnection';
+  byId?: Maybe<LibraryTree>;
+  edges: Array<LibraryTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type LibraryTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type LibraryTreeEdge = Edge & {
+  __typename?: 'LibraryTreeEdge';
+  cursor: Scalars['String'];
+  node: LibraryTree;
+};
 
 export type LocationInformation = {
   __typename?: 'LocationInformation';
@@ -778,6 +1279,48 @@ export type Mutation = {
 
 
 export type MutationPushInboxTaskArgs = {
+  completionDate?: InputMaybe<Scalars['String']>;
+  deferDate?: InputMaybe<Scalars['String']>;
+  droppedDate?: InputMaybe<Scalars['String']>;
+  dueDate?: InputMaybe<Scalars['String']>;
+  estimatedMinutes?: InputMaybe<Scalars['Int']>;
+  name: Scalars['String'];
+};
+
+/** A named style object. */
+export type NamedStyle = Node & StyleInterface & {
+  __typename?: 'NamedStyle';
+  /** The name of the font of the style. */
+  font: Scalars['String'];
+  /** An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document. */
+  id: Scalars['String'];
+  /** The name of the style.  Must be unique within the containing document. */
+  name: Scalars['String'];
+  namedStyles: NamedStyleConnection;
+};
+
+export type NamedStyleConnection = Connection & {
+  __typename?: 'NamedStyleConnection';
+  byId?: Maybe<NamedStyle>;
+  edges: Array<NamedStyleEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type NamedStyleConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type NamedStyleEdge = Edge & {
+  __typename?: 'NamedStyleEdge';
+  cursor: Scalars['String'];
+  node: NamedStyle;
+};
+
+export type NamedStyleInterface = {
+  /** An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document. */
+  id: Scalars['String'];
+  /** The name of the style.  Must be unique within the containing document. */
   name: Scalars['String'];
 };
 
@@ -791,6 +1334,19 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor: Scalars['String'];
+};
+
+/** This subdivides the text into paragraphs. */
+export type Paragraph = RichTextInterface & {
+  __typename?: 'Paragraph';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
 };
 
 /** A perspective. */
@@ -825,6 +1381,83 @@ export type PerspectiveInterface = {
   id: Scalars['String'];
   /** The name of the perspective. */
   name: Scalars['String'];
+};
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSibling = Node & TreeInterface & {
+  __typename?: 'PrecedingSibling';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type PrecedingSiblingConnection = Connection & {
+  __typename?: 'PrecedingSiblingConnection';
+  byId?: Maybe<PrecedingSibling>;
+  edges: Array<PrecedingSiblingEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type PrecedingSiblingConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type PrecedingSiblingEdge = Edge & {
+  __typename?: 'PrecedingSiblingEdge';
+  cursor: Scalars['String'];
+  node: PrecedingSibling;
+};
+
+/** Application preference */
+export type Preference = Node & {
+  __typename?: 'Preference';
+  /** The identifier of the preference. */
+  id: Scalars['String'];
+};
+
+export type PreferenceConnection = Connection & {
+  __typename?: 'PreferenceConnection';
+  byId?: Maybe<Preference>;
+  edges: Array<PreferenceEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type PreferenceConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type PreferenceEdge = Edge & {
+  __typename?: 'PreferenceEdge';
+  cursor: Scalars['String'];
+  node: Preference;
+};
+
+export type PreferenceInterface = {
+  /** The identifier of the preference. */
+  id: Scalars['String'];
 };
 
 /** A project. */
@@ -1025,6 +1658,61 @@ export type Query = {
   application: Application;
 };
 
+/** The Quick Entry panel. */
+export type QuickEntryTree = Node & TreeInterface & {
+  __typename?: 'QuickEntryTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** Deprecated; use tags. */
+  deprecatedContexts: DeprecatedContextConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  folders: FolderConnection;
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  inboxTasks: InboxTaskConnection;
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  projects: ProjectConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  tags: TagConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+  /** Whether the quick entry panel is currently visible. */
+  visible: Scalars['Boolean'];
+};
+
+export type QuickEntryTreeConnection = Connection & {
+  __typename?: 'QuickEntryTreeConnection';
+  byId?: Maybe<QuickEntryTree>;
+  edges: Array<QuickEntryTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type QuickEntryTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QuickEntryTreeEdge = Edge & {
+  __typename?: 'QuickEntryTreeEdge';
+  cursor: Scalars['String'];
+  node: QuickEntryTree;
+};
+
 /** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type RemainingTask = Node & TaskInterface & {
   __typename?: 'RemainingTask';
@@ -1157,6 +1845,8 @@ export type RichText = RichTextInterface & {
   font: Scalars['String'];
   /** The size in points of the first character. */
   size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
   /** The superscript level of the text. */
   superscript: Scalars['Int'];
   /** The plain text contents of the rich text. */
@@ -1170,6 +1860,8 @@ export type RichTextInterface = {
   font: Scalars['String'];
   /** The size in points of the first character. */
   size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
 };
@@ -1208,6 +1900,53 @@ export type SectionInterface = {
   name: Scalars['String'];
 };
 
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTree = Node & TreeInterface & {
+  __typename?: 'SelectedTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type SelectedTreeConnection = Connection & {
+  __typename?: 'SelectedTreeConnection';
+  byId?: Maybe<SelectedTree>;
+  edges: Array<SelectedTreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type SelectedTreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type SelectedTreeEdge = Edge & {
+  __typename?: 'SelectedTreeEdge';
+  cursor: Scalars['String'];
+  node: SelectedTree;
+};
+
 /** Document setting */
 export type Setting = Node & {
   __typename?: 'Setting';
@@ -1238,6 +1977,60 @@ export type SettingInterface = {
   id: Scalars['String'];
 };
 
+/** The tree of objects in the window sidebar. */
+export type SidebarTree = Node & SidebarTreeInterface & TreeInterface & {
+  __typename?: 'SidebarTree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** The list of possible smart group identifiers that can be set as the selected smart group identifier. */
+  availableSmartGroupIdentifiers: Array<Scalars['String']>;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The currently selected smart group identifier. */
+  selectedSmartGroupIdentifier?: Maybe<Scalars['String']>;
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type SidebarTreeInterface = {
+  /** The list of possible smart group identifiers that can be set as the selected smart group identifier. */
+  availableSmartGroupIdentifiers: Array<Scalars['String']>;
+  /** The currently selected smart group identifier. */
+  selectedSmartGroupIdentifier?: Maybe<Scalars['String']>;
+};
+
+/** A style object. */
+export type Style = StyleInterface & {
+  __typename?: 'Style';
+  /** The name of the font of the style. */
+  font: Scalars['String'];
+  namedStyles: NamedStyleConnection;
+};
+
+export type StyleInterface = {
+  /** The name of the font of the style. */
+  font: Scalars['String'];
+  namedStyles: NamedStyleConnection;
+};
+
 /** A tag. */
 export type Tag = Node & TagInterface & {
   __typename?: 'Tag';
@@ -1248,6 +2041,8 @@ export type Tag = Node & TagInterface & {
   availableTasks: AvailableTaskConnection;
   /** The containing tag. */
   container: Tag;
+  /** Deprecated; use tags. */
+  deprecatedContexts: DeprecatedContextConnection;
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
   flattenedTags: FlattenedTagConnection;
@@ -1296,6 +2091,8 @@ export type TagInterface = {
   availableTasks: AvailableTaskConnection;
   /** The containing tag. */
   container: Tag;
+  /** Deprecated; use tags. */
+  deprecatedContexts: DeprecatedContextConnection;
   /** Set if the tag is currently hidden or any of its container tags are hidden. */
   effectivelyHidden: Scalars['Boolean'];
   flattenedTags: FlattenedTagConnection;
@@ -1494,6 +2291,93 @@ export enum TextAlignment {
   Right = 'RIGHT'
 }
 
+/** A tree representing an object, along with its sub-trees. */
+export type Tree = Node & TreeInterface & {
+  __typename?: 'Tree';
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+export type TreeConnection = Connection & {
+  __typename?: 'TreeConnection';
+  byId?: Maybe<TreeInterface>;
+  edges: Array<TreeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type TreeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type TreeEdge = Edge & {
+  __typename?: 'TreeEdge';
+  cursor: Scalars['String'];
+  node: TreeInterface;
+};
+
+export type TreeInterface = {
+  /** The ancestor trees of this tree. */
+  ancestorTrees: AncestorTreeConnection;
+  /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+  descendantTrees: DescendantTreeConnection;
+  /** This is true if the node is expanded. */
+  expanded: Scalars['Boolean'];
+  /** The sibling trees of this tree after it in the user-specified sort ordering. */
+  followingSiblings: FollowingSiblingConnection;
+  /** The identifier of object being represented by this tree. */
+  id: Scalars['String'];
+  /** The descendants of this tree that have no children themselves. */
+  leafs: LeafConnection;
+  /** The name of the object being represented by this tree. */
+  name: Scalars['String'];
+  /** This is true if the node note is expanded. */
+  noteExpanded: Scalars['Boolean'];
+  /** The sibling trees of this tree before it in the user-specified sort ordering. */
+  precedingSiblings: PrecedingSiblingConnection;
+  /** This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing. */
+  selected: Scalars['Boolean'];
+  /** The trees of this tree that are selected in the user interface. */
+  selectedTrees: SelectedTreeConnection;
+  /** The immediate child trees of this tree in the user-specified sort ordering. */
+  trees: TreeConnection;
+};
+
+/** This subdivides the text into words. */
+export type Word = RichTextInterface & {
+  __typename?: 'Word';
+  /** The name of the font of the first character. */
+  font: Scalars['String'];
+  /** The size in points of the first character. */
+  size: Scalars['Int'];
+  /** The style of the text. */
+  style: Style;
+  /** The plain text contents of the rich text. */
+  text: Scalars['String'];
+};
+
 type TaskViewModel_AvailableTask_Fragment = { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
 
 type TaskViewModel_FlattenedTask_Fragment = { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
@@ -1516,9 +2400,9 @@ export type TopLevelProjectsFragment = { __typename?: 'Document', projects: { __
 
 export type FolderedProjectDepth1Fragment = { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> } };
 
-export type FolderedTagDepth1Fragment = { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } };
+export type FolderedTagDepth1Fragment = { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string } | { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string } | { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string } | { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } };
 
-export type FolderedTagDepth2Fragment = { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } };
+export type FolderedTagDepth2Fragment = { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } };
 
 export type GetTasksQueryVariables = Exact<{
   onlyFlagged?: Scalars['Boolean'];
@@ -1551,7 +2435,7 @@ export type GetTasksWithTagQueryVariables = Exact<{
 }>;
 
 
-export type GetTasksWithTagQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'FlattenedTag', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | { __typename?: 'Tag', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | null } } } };
+export type GetTasksWithTagQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'DeprecatedContext', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | { __typename?: 'FlattenedTag', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | { __typename?: 'Tag', tasks: { __typename?: 'TaskConnection', edges: Array<{ __typename?: 'TaskEdge', node: { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'FlattenedTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'InboxTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'RemainingTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } | { __typename?: 'Task', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null } }> } } | null } } } };
 
 export type GetTopLevelProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1561,19 +2445,19 @@ export type GetTopLevelProjectsQuery = { __typename?: 'Query', application: { __
 export type GetTaskCreationSupportInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTaskCreationSupportInfoQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> }, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } } } };
+export type GetTaskCreationSupportInfoQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', folders: { __typename?: 'FolderConnection', edges: Array<{ __typename?: 'FolderEdge', node: { __typename?: 'FlattenedFolder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } | { __typename?: 'Folder', name: string, id: string, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> } } }> }, projects: { __typename?: 'ProjectConnection', edges: Array<{ __typename?: 'ProjectEdge', node: { __typename?: 'FlattenedProject', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } | { __typename?: 'Project', name: string, completed: boolean, id: string, numberOfAvailableTasks: number } }> }, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string } | { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string } | { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } | { __typename?: 'Tag', name: string, id: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string } | { __typename?: 'FlattenedTag', name: string, id: string } | { __typename?: 'Tag', name: string, id: string } }> } } }> } } } };
 
 export type GetNestedTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNestedTagsQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } } };
+export type GetNestedTagsQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } } };
 
 export type GetNestedTagsFromQueryVariables = Exact<{
   tagId: Scalars['String'];
 }>;
 
 
-export type GetNestedTagsFromQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'FlattenedTag', id: string, name: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } | { __typename?: 'Tag', id: string, name: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } | null } } } };
+export type GetNestedTagsFromQuery = { __typename?: 'Query', application: { __typename?: 'Application', defaultDocument: { __typename?: 'Document', tags: { __typename?: 'TagConnection', byId?: { __typename?: 'DeprecatedContext', id: string, name: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } | { __typename?: 'FlattenedTag', id: string, name: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } | { __typename?: 'Tag', id: string, name: string, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'FlattenedTag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } | { __typename?: 'Tag', name: string, id: string, availableTaskCount: number, tags: { __typename?: 'TagConnection', edges: Array<{ __typename?: 'TagEdge', node: { __typename?: 'DeprecatedContext', id: string } | { __typename?: 'FlattenedTag', id: string } | { __typename?: 'Tag', id: string } }> } } }> } } }> } } | null } } } };
 
 export type GetPerspectiveNamesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1649,7 +2533,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AncestorTree: ResolverTypeWrapper<AncestorTree>;
+  AncestorTreeConnection: ResolverTypeWrapper<AncestorTreeConnection>;
+  AncestorTreeEdge: ResolverTypeWrapper<AncestorTreeEdge>;
   Application: ResolverTypeWrapper<Application>;
+  Attachment: ResolverTypeWrapper<Attachment>;
+  AttributeRun: ResolverTypeWrapper<AttributeRun>;
   AvailableTask: ResolverTypeWrapper<AvailableTask>;
   AvailableTaskConnection: ResolverTypeWrapper<AvailableTaskConnection>;
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
@@ -1657,15 +2546,25 @@ export type ResolversTypes = {
   BuiltinPerspective: ResolverTypeWrapper<BuiltinPerspective>;
   BuiltinPerspectiveConnection: ResolverTypeWrapper<BuiltinPerspectiveConnection>;
   BuiltinPerspectiveEdge: ResolverTypeWrapper<BuiltinPerspectiveEdge>;
+  Character: ResolverTypeWrapper<Character>;
   Condition: Condition;
-  Connection: ResolversTypes['AvailableTaskConnection'] | ResolversTypes['BuiltinPerspectiveConnection'] | ResolversTypes['CustomPerspectiveConnection'] | ResolversTypes['DocumentConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['SettingConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'];
+  Connection: ResolversTypes['AncestorTreeConnection'] | ResolversTypes['AvailableTaskConnection'] | ResolversTypes['BuiltinPerspectiveConnection'] | ResolversTypes['ContentTreeConnection'] | ResolversTypes['CustomPerspectiveConnection'] | ResolversTypes['DeprecatedContextConnection'] | ResolversTypes['DescendantTreeConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['FollowingSiblingConnection'] | ResolversTypes['ForecastDayConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['InboxTreeConnection'] | ResolversTypes['LeafConnection'] | ResolversTypes['LibraryTreeConnection'] | ResolversTypes['NamedStyleConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['PrecedingSiblingConnection'] | ResolversTypes['PreferenceConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['QuickEntryTreeConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['SelectedTreeConnection'] | ResolversTypes['SettingConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'] | ResolversTypes['TreeConnection'];
+  ContentTree: ResolverTypeWrapper<ContentTree>;
+  ContentTreeConnection: ResolverTypeWrapper<ContentTreeConnection>;
+  ContentTreeEdge: ResolverTypeWrapper<ContentTreeEdge>;
   CustomPerspective: ResolverTypeWrapper<CustomPerspective>;
   CustomPerspectiveConnection: ResolverTypeWrapper<CustomPerspectiveConnection>;
   CustomPerspectiveEdge: ResolverTypeWrapper<CustomPerspectiveEdge>;
+  DeprecatedContext: ResolverTypeWrapper<DeprecatedContext>;
+  DeprecatedContextConnection: ResolverTypeWrapper<DeprecatedContextConnection>;
+  DeprecatedContextEdge: ResolverTypeWrapper<DeprecatedContextEdge>;
+  DescendantTree: ResolverTypeWrapper<DescendantTree>;
+  DescendantTreeConnection: ResolverTypeWrapper<DescendantTreeConnection>;
+  DescendantTreeEdge: ResolverTypeWrapper<DescendantTreeEdge>;
   Document: ResolverTypeWrapper<Document>;
   DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
   DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
-  Edge: ResolversTypes['AvailableTaskEdge'] | ResolversTypes['BuiltinPerspectiveEdge'] | ResolversTypes['CustomPerspectiveEdge'] | ResolversTypes['DocumentEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['SettingEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'];
+  Edge: ResolversTypes['AncestorTreeEdge'] | ResolversTypes['AvailableTaskEdge'] | ResolversTypes['BuiltinPerspectiveEdge'] | ResolversTypes['ContentTreeEdge'] | ResolversTypes['CustomPerspectiveEdge'] | ResolversTypes['DeprecatedContextEdge'] | ResolversTypes['DescendantTreeEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['FollowingSiblingEdge'] | ResolversTypes['ForecastDayEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['InboxTreeEdge'] | ResolversTypes['LeafEdge'] | ResolversTypes['LibraryTreeEdge'] | ResolversTypes['NamedStyleEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['PrecedingSiblingEdge'] | ResolversTypes['PreferenceEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['QuickEntryTreeEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['SelectedTreeEdge'] | ResolversTypes['SettingEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'] | ResolversTypes['TreeEdge'];
   FlattenedFolder: ResolverTypeWrapper<FlattenedFolder>;
   FlattenedFolderConnection: ResolverTypeWrapper<FlattenedFolderConnection>;
   FlattenedFolderEdge: ResolverTypeWrapper<FlattenedFolderEdge>;
@@ -1683,26 +2582,58 @@ export type ResolversTypes = {
   FolderConnection: ResolverTypeWrapper<FolderConnection>;
   FolderEdge: ResolverTypeWrapper<FolderEdge>;
   FolderInterface: ResolversTypes['FlattenedFolder'] | ResolversTypes['Folder'];
+  FollowingSibling: ResolverTypeWrapper<FollowingSibling>;
+  FollowingSiblingConnection: ResolverTypeWrapper<FollowingSiblingConnection>;
+  FollowingSiblingEdge: ResolverTypeWrapper<FollowingSiblingEdge>;
+  ForecastDay: ResolverTypeWrapper<ForecastDay>;
+  ForecastDayConnection: ResolverTypeWrapper<ForecastDayConnection>;
+  ForecastDayEdge: ResolverTypeWrapper<ForecastDayEdge>;
+  ForecastDayInterface: never;
+  ForecastSidebarTree: ResolverTypeWrapper<ForecastSidebarTree>;
   InboxTask: ResolverTypeWrapper<InboxTask>;
   InboxTaskConnection: ResolverTypeWrapper<InboxTaskConnection>;
   InboxTaskEdge: ResolverTypeWrapper<InboxTaskEdge>;
+  InboxTree: ResolverTypeWrapper<InboxTree>;
+  InboxTreeConnection: ResolverTypeWrapper<InboxTreeConnection>;
+  InboxTreeEdge: ResolverTypeWrapper<InboxTreeEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   IntervalUnit: IntervalUnit;
+  Leaf: ResolverTypeWrapper<Leaf>;
+  LeafConnection: ResolverTypeWrapper<LeafConnection>;
+  LeafEdge: ResolverTypeWrapper<LeafEdge>;
+  LibraryTree: ResolverTypeWrapper<LibraryTree>;
+  LibraryTreeConnection: ResolverTypeWrapper<LibraryTreeConnection>;
+  LibraryTreeEdge: ResolverTypeWrapper<LibraryTreeEdge>;
   LocationInformation: ResolverTypeWrapper<LocationInformation>;
   LocationTrigger: LocationTrigger;
   Mutation: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['AvailableTask'] | ResolversTypes['BuiltinPerspective'] | ResolversTypes['CustomPerspective'] | ResolversTypes['Document'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['InboxTask'] | ResolversTypes['Perspective'] | ResolversTypes['Project'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['Setting'] | ResolversTypes['Tag'] | ResolversTypes['Task'];
+  NamedStyle: ResolverTypeWrapper<NamedStyle>;
+  NamedStyleConnection: ResolverTypeWrapper<NamedStyleConnection>;
+  NamedStyleEdge: ResolverTypeWrapper<NamedStyleEdge>;
+  NamedStyleInterface: never;
+  Node: ResolversTypes['AncestorTree'] | ResolversTypes['AvailableTask'] | ResolversTypes['BuiltinPerspective'] | ResolversTypes['ContentTree'] | ResolversTypes['CustomPerspective'] | ResolversTypes['DeprecatedContext'] | ResolversTypes['DescendantTree'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['FollowingSibling'] | ResolversTypes['ForecastDay'] | ResolversTypes['InboxTask'] | ResolversTypes['InboxTree'] | ResolversTypes['Leaf'] | ResolversTypes['LibraryTree'] | ResolversTypes['NamedStyle'] | ResolversTypes['Perspective'] | ResolversTypes['PrecedingSibling'] | ResolversTypes['Preference'] | ResolversTypes['Project'] | ResolversTypes['QuickEntryTree'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['SelectedTree'] | ResolversTypes['Setting'] | ResolversTypes['SidebarTree'] | ResolversTypes['Tag'] | ResolversTypes['Task'] | ResolversTypes['Tree'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
+  Paragraph: ResolverTypeWrapper<Paragraph>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
   PerspectiveEdge: ResolverTypeWrapper<PerspectiveEdge>;
   PerspectiveInterface: ResolversTypes['BuiltinPerspective'] | ResolversTypes['CustomPerspective'] | ResolversTypes['Perspective'];
+  PrecedingSibling: ResolverTypeWrapper<PrecedingSibling>;
+  PrecedingSiblingConnection: ResolverTypeWrapper<PrecedingSiblingConnection>;
+  PrecedingSiblingEdge: ResolverTypeWrapper<PrecedingSiblingEdge>;
+  Preference: ResolverTypeWrapper<Preference>;
+  PreferenceConnection: ResolverTypeWrapper<PreferenceConnection>;
+  PreferenceEdge: ResolverTypeWrapper<PreferenceEdge>;
+  PreferenceInterface: never;
   Project: ResolverTypeWrapper<Project>;
   ProjectConnection: ResolverTypeWrapper<ProjectConnection>;
   ProjectEdge: ResolverTypeWrapper<ProjectEdge>;
   ProjectInterface: ResolversTypes['FlattenedProject'] | ResolversTypes['Project'];
   ProjectStatus: ProjectStatus;
   Query: ResolverTypeWrapper<{}>;
+  QuickEntryTree: ResolverTypeWrapper<QuickEntryTree>;
+  QuickEntryTreeConnection: ResolverTypeWrapper<QuickEntryTreeConnection>;
+  QuickEntryTreeEdge: ResolverTypeWrapper<QuickEntryTreeEdge>;
   RemainingTask: ResolverTypeWrapper<RemainingTask>;
   RemainingTaskConnection: ResolverTypeWrapper<RemainingTaskConnection>;
   RemainingTaskEdge: ResolverTypeWrapper<RemainingTaskEdge>;
@@ -1710,30 +2641,47 @@ export type ResolversTypes = {
   RepetitionMethod: RepetitionMethod;
   RepetitionRule: ResolverTypeWrapper<RepetitionRule>;
   RichText: ResolverTypeWrapper<RichText>;
-  RichTextInterface: ResolversTypes['RichText'];
+  RichTextInterface: ResolversTypes['Attachment'] | ResolversTypes['AttributeRun'] | ResolversTypes['Character'] | ResolversTypes['Paragraph'] | ResolversTypes['RichText'] | ResolversTypes['Word'];
   Section: ResolverTypeWrapper<Section>;
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
   SectionInterface: ResolversTypes['Folder'] | ResolversTypes['Project'] | ResolversTypes['Section'];
+  SelectedTree: ResolverTypeWrapper<SelectedTree>;
+  SelectedTreeConnection: ResolverTypeWrapper<SelectedTreeConnection>;
+  SelectedTreeEdge: ResolverTypeWrapper<SelectedTreeEdge>;
   Setting: ResolverTypeWrapper<Setting>;
   SettingConnection: ResolverTypeWrapper<SettingConnection>;
   SettingEdge: ResolverTypeWrapper<SettingEdge>;
   SettingInterface: never;
+  SidebarTree: ResolverTypeWrapper<SidebarTree>;
+  SidebarTreeInterface: ResolversTypes['ForecastSidebarTree'] | ResolversTypes['SidebarTree'];
   String: ResolverTypeWrapper<Scalars['String']>;
+  Style: ResolverTypeWrapper<Style>;
+  StyleInterface: ResolversTypes['NamedStyle'] | ResolversTypes['Style'];
   Tag: ResolverTypeWrapper<Tag>;
   TagConnection: ResolverTypeWrapper<TagConnection>;
   TagEdge: ResolverTypeWrapper<TagEdge>;
-  TagInterface: ResolversTypes['FlattenedTag'] | ResolversTypes['Tag'];
+  TagInterface: ResolversTypes['DeprecatedContext'] | ResolversTypes['FlattenedTag'] | ResolversTypes['Tag'];
   Task: ResolverTypeWrapper<Task>;
   TaskConnection: ResolverTypeWrapper<TaskConnection>;
   TaskEdge: ResolverTypeWrapper<TaskEdge>;
   TaskInterface: ResolversTypes['AvailableTask'] | ResolversTypes['FlattenedTask'] | ResolversTypes['InboxTask'] | ResolversTypes['RemainingTask'] | ResolversTypes['Task'];
   TextAlignment: TextAlignment;
+  Tree: ResolverTypeWrapper<Tree>;
+  TreeConnection: ResolverTypeWrapper<TreeConnection>;
+  TreeEdge: ResolverTypeWrapper<TreeEdge>;
+  TreeInterface: ResolversTypes['AncestorTree'] | ResolversTypes['ContentTree'] | ResolversTypes['DescendantTree'] | ResolversTypes['FollowingSibling'] | ResolversTypes['InboxTree'] | ResolversTypes['Leaf'] | ResolversTypes['LibraryTree'] | ResolversTypes['PrecedingSibling'] | ResolversTypes['QuickEntryTree'] | ResolversTypes['SelectedTree'] | ResolversTypes['SidebarTree'] | ResolversTypes['Tree'];
+  Word: ResolverTypeWrapper<Word>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AncestorTree: AncestorTree;
+  AncestorTreeConnection: AncestorTreeConnection;
+  AncestorTreeEdge: AncestorTreeEdge;
   Application: Application;
+  Attachment: Attachment;
+  AttributeRun: AttributeRun;
   AvailableTask: AvailableTask;
   AvailableTaskConnection: AvailableTaskConnection;
   AvailableTaskEdge: AvailableTaskEdge;
@@ -1741,15 +2689,25 @@ export type ResolversParentTypes = {
   BuiltinPerspective: BuiltinPerspective;
   BuiltinPerspectiveConnection: BuiltinPerspectiveConnection;
   BuiltinPerspectiveEdge: BuiltinPerspectiveEdge;
+  Character: Character;
   Condition: Condition;
-  Connection: ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['BuiltinPerspectiveConnection'] | ResolversParentTypes['CustomPerspectiveConnection'] | ResolversParentTypes['DocumentConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['SettingConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'];
+  Connection: ResolversParentTypes['AncestorTreeConnection'] | ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['BuiltinPerspectiveConnection'] | ResolversParentTypes['ContentTreeConnection'] | ResolversParentTypes['CustomPerspectiveConnection'] | ResolversParentTypes['DeprecatedContextConnection'] | ResolversParentTypes['DescendantTreeConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['FollowingSiblingConnection'] | ResolversParentTypes['ForecastDayConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['InboxTreeConnection'] | ResolversParentTypes['LeafConnection'] | ResolversParentTypes['LibraryTreeConnection'] | ResolversParentTypes['NamedStyleConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['PrecedingSiblingConnection'] | ResolversParentTypes['PreferenceConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['QuickEntryTreeConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['SelectedTreeConnection'] | ResolversParentTypes['SettingConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'] | ResolversParentTypes['TreeConnection'];
+  ContentTree: ContentTree;
+  ContentTreeConnection: ContentTreeConnection;
+  ContentTreeEdge: ContentTreeEdge;
   CustomPerspective: CustomPerspective;
   CustomPerspectiveConnection: CustomPerspectiveConnection;
   CustomPerspectiveEdge: CustomPerspectiveEdge;
+  DeprecatedContext: DeprecatedContext;
+  DeprecatedContextConnection: DeprecatedContextConnection;
+  DeprecatedContextEdge: DeprecatedContextEdge;
+  DescendantTree: DescendantTree;
+  DescendantTreeConnection: DescendantTreeConnection;
+  DescendantTreeEdge: DescendantTreeEdge;
   Document: Document;
   DocumentConnection: DocumentConnection;
   DocumentEdge: DocumentEdge;
-  Edge: ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['BuiltinPerspectiveEdge'] | ResolversParentTypes['CustomPerspectiveEdge'] | ResolversParentTypes['DocumentEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['SettingEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'];
+  Edge: ResolversParentTypes['AncestorTreeEdge'] | ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['BuiltinPerspectiveEdge'] | ResolversParentTypes['ContentTreeEdge'] | ResolversParentTypes['CustomPerspectiveEdge'] | ResolversParentTypes['DeprecatedContextEdge'] | ResolversParentTypes['DescendantTreeEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['FollowingSiblingEdge'] | ResolversParentTypes['ForecastDayEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['InboxTreeEdge'] | ResolversParentTypes['LeafEdge'] | ResolversParentTypes['LibraryTreeEdge'] | ResolversParentTypes['NamedStyleEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['PrecedingSiblingEdge'] | ResolversParentTypes['PreferenceEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['QuickEntryTreeEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['SelectedTreeEdge'] | ResolversParentTypes['SettingEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'] | ResolversParentTypes['TreeEdge'];
   FlattenedFolder: FlattenedFolder;
   FlattenedFolderConnection: FlattenedFolderConnection;
   FlattenedFolderEdge: FlattenedFolderEdge;
@@ -1767,47 +2725,91 @@ export type ResolversParentTypes = {
   FolderConnection: FolderConnection;
   FolderEdge: FolderEdge;
   FolderInterface: ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['Folder'];
+  FollowingSibling: FollowingSibling;
+  FollowingSiblingConnection: FollowingSiblingConnection;
+  FollowingSiblingEdge: FollowingSiblingEdge;
+  ForecastDay: ForecastDay;
+  ForecastDayConnection: ForecastDayConnection;
+  ForecastDayEdge: ForecastDayEdge;
+  ForecastDayInterface: never;
+  ForecastSidebarTree: ForecastSidebarTree;
   InboxTask: InboxTask;
   InboxTaskConnection: InboxTaskConnection;
   InboxTaskEdge: InboxTaskEdge;
+  InboxTree: InboxTree;
+  InboxTreeConnection: InboxTreeConnection;
+  InboxTreeEdge: InboxTreeEdge;
   Int: Scalars['Int'];
+  Leaf: Leaf;
+  LeafConnection: LeafConnection;
+  LeafEdge: LeafEdge;
+  LibraryTree: LibraryTree;
+  LibraryTreeConnection: LibraryTreeConnection;
+  LibraryTreeEdge: LibraryTreeEdge;
   LocationInformation: LocationInformation;
   Mutation: {};
-  Node: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['Document'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['Project'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['Setting'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'];
+  NamedStyle: NamedStyle;
+  NamedStyleConnection: NamedStyleConnection;
+  NamedStyleEdge: NamedStyleEdge;
+  NamedStyleInterface: never;
+  Node: ResolversParentTypes['AncestorTree'] | ResolversParentTypes['AvailableTask'] | ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['ContentTree'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['DeprecatedContext'] | ResolversParentTypes['DescendantTree'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['FollowingSibling'] | ResolversParentTypes['ForecastDay'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['InboxTree'] | ResolversParentTypes['Leaf'] | ResolversParentTypes['LibraryTree'] | ResolversParentTypes['NamedStyle'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['PrecedingSibling'] | ResolversParentTypes['Preference'] | ResolversParentTypes['Project'] | ResolversParentTypes['QuickEntryTree'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['SelectedTree'] | ResolversParentTypes['Setting'] | ResolversParentTypes['SidebarTree'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'] | ResolversParentTypes['Tree'];
   PageInfo: PageInfo;
+  Paragraph: Paragraph;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
   PerspectiveEdge: PerspectiveEdge;
   PerspectiveInterface: ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['Perspective'];
+  PrecedingSibling: PrecedingSibling;
+  PrecedingSiblingConnection: PrecedingSiblingConnection;
+  PrecedingSiblingEdge: PrecedingSiblingEdge;
+  Preference: Preference;
+  PreferenceConnection: PreferenceConnection;
+  PreferenceEdge: PreferenceEdge;
+  PreferenceInterface: never;
   Project: Project;
   ProjectConnection: ProjectConnection;
   ProjectEdge: ProjectEdge;
   ProjectInterface: ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['Project'];
   Query: {};
+  QuickEntryTree: QuickEntryTree;
+  QuickEntryTreeConnection: QuickEntryTreeConnection;
+  QuickEntryTreeEdge: QuickEntryTreeEdge;
   RemainingTask: RemainingTask;
   RemainingTaskConnection: RemainingTaskConnection;
   RemainingTaskEdge: RemainingTaskEdge;
   RepetitionInterval: RepetitionInterval;
   RepetitionRule: RepetitionRule;
   RichText: RichText;
-  RichTextInterface: ResolversParentTypes['RichText'];
+  RichTextInterface: ResolversParentTypes['Attachment'] | ResolversParentTypes['AttributeRun'] | ResolversParentTypes['Character'] | ResolversParentTypes['Paragraph'] | ResolversParentTypes['RichText'] | ResolversParentTypes['Word'];
   Section: Section;
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
   SectionInterface: ResolversParentTypes['Folder'] | ResolversParentTypes['Project'] | ResolversParentTypes['Section'];
+  SelectedTree: SelectedTree;
+  SelectedTreeConnection: SelectedTreeConnection;
+  SelectedTreeEdge: SelectedTreeEdge;
   Setting: Setting;
   SettingConnection: SettingConnection;
   SettingEdge: SettingEdge;
   SettingInterface: never;
+  SidebarTree: SidebarTree;
+  SidebarTreeInterface: ResolversParentTypes['ForecastSidebarTree'] | ResolversParentTypes['SidebarTree'];
   String: Scalars['String'];
+  Style: Style;
+  StyleInterface: ResolversParentTypes['NamedStyle'] | ResolversParentTypes['Style'];
   Tag: Tag;
   TagConnection: TagConnection;
   TagEdge: TagEdge;
-  TagInterface: ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['Tag'];
+  TagInterface: ResolversParentTypes['DeprecatedContext'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['Tag'];
   Task: Task;
   TaskConnection: TaskConnection;
   TaskEdge: TaskEdge;
   TaskInterface: ResolversParentTypes['AvailableTask'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Task'];
+  Tree: Tree;
+  TreeConnection: TreeConnection;
+  TreeEdge: TreeEdge;
+  TreeInterface: ResolversParentTypes['AncestorTree'] | ResolversParentTypes['ContentTree'] | ResolversParentTypes['DescendantTree'] | ResolversParentTypes['FollowingSibling'] | ResolversParentTypes['InboxTree'] | ResolversParentTypes['Leaf'] | ResolversParentTypes['LibraryTree'] | ResolversParentTypes['PrecedingSibling'] | ResolversParentTypes['QuickEntryTree'] | ResolversParentTypes['SelectedTree'] | ResolversParentTypes['SidebarTree'] | ResolversParentTypes['Tree'];
+  Word: Word;
 };
 
 export type RecordTypeDirectiveArgs = { };
@@ -1820,6 +2822,35 @@ export type WhoseDirectiveArgs = {
 
 export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type AncestorTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AncestorTree'] = ResolversParentTypes['AncestorTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AncestorTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AncestorTreeConnection'] = ResolversParentTypes['AncestorTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['AncestorTree']>, ParentType, ContextType, RequireFields<AncestorTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['AncestorTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AncestorTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AncestorTreeEdge'] = ResolversParentTypes['AncestorTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['AncestorTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   buildNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   currentTimeOffset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -1829,8 +2860,26 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType>;
+  preferences?: Resolver<ResolversTypes['PreferenceConnection'], ParentType, ContextType>;
+  quickEntry?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
   referenceDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Attachment'] = ResolversParentTypes['Attachment']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttributeRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeRun'] = ResolversParentTypes['AttributeRun']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1906,11 +2955,58 @@ export type BuiltinPerspectiveEdgeResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CharacterResolvers<ContextType = any, ParentType extends ResolversParentTypes['Character'] = ResolversParentTypes['Character']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Connection'] = ResolversParentTypes['Connection']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskConnection' | 'BuiltinPerspectiveConnection' | 'CustomPerspectiveConnection' | 'DocumentConnection' | 'FlattenedFolderConnection' | 'FlattenedProjectConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'InboxTaskConnection' | 'PerspectiveConnection' | 'ProjectConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'SettingConnection' | 'TagConnection' | 'TaskConnection', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AncestorTreeConnection' | 'AvailableTaskConnection' | 'BuiltinPerspectiveConnection' | 'ContentTreeConnection' | 'CustomPerspectiveConnection' | 'DeprecatedContextConnection' | 'DescendantTreeConnection' | 'FlattenedFolderConnection' | 'FlattenedProjectConnection' | 'FlattenedTagConnection' | 'FlattenedTaskConnection' | 'FolderConnection' | 'FollowingSiblingConnection' | 'ForecastDayConnection' | 'InboxTaskConnection' | 'InboxTreeConnection' | 'LeafConnection' | 'LibraryTreeConnection' | 'NamedStyleConnection' | 'PerspectiveConnection' | 'PrecedingSiblingConnection' | 'PreferenceConnection' | 'ProjectConnection' | 'QuickEntryTreeConnection' | 'RemainingTaskConnection' | 'SectionConnection' | 'SelectedTreeConnection' | 'SettingConnection' | 'TagConnection' | 'TaskConnection' | 'TreeConnection', ParentType, ContextType>;
   byId?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<ConnectionByIdArgs, 'id'>>;
   edges?: Resolver<Array<ResolversTypes['Edge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+};
+
+export type ContentTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentTree'] = ResolversParentTypes['ContentTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  availableGroupingIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  availableSortingIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  availableTaskDurationFilterIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  availableTaskFlaggedFilterIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  availableTaskStateFilterIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedGroupingIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selectedSortingIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selectedTaskDurationFilterIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selectedTaskFlaggedFilterIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selectedTaskStateFilterIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ContentTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentTreeConnection'] = ResolversParentTypes['ContentTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['ContentTree']>, ParentType, ContextType, RequireFields<ContentTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['ContentTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ContentTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentTreeEdge'] = ResolversParentTypes['ContentTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ContentTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CustomPerspectiveResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomPerspective'] = ResolversParentTypes['CustomPerspective']> = {
@@ -1932,10 +3028,73 @@ export type CustomPerspectiveEdgeResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeprecatedContextResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeprecatedContext'] = ResolversParentTypes['DeprecatedContext']> = {
+  allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
+  container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
+  hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
+  remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeprecatedContextConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeprecatedContextConnection'] = ResolversParentTypes['DeprecatedContextConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['DeprecatedContext']>, ParentType, ContextType, RequireFields<DeprecatedContextConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['DeprecatedContextEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeprecatedContextEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeprecatedContextEdge'] = ResolversParentTypes['DeprecatedContextEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['DeprecatedContext'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DescendantTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DescendantTree'] = ResolversParentTypes['DescendantTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DescendantTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DescendantTreeConnection'] = ResolversParentTypes['DescendantTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['DescendantTree']>, ParentType, ContextType, RequireFields<DescendantTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['DescendantTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DescendantTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DescendantTreeEdge'] = ResolversParentTypes['DescendantTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['DescendantTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
   canRedo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   canUndo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   compressesTransactions?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
   disableAutomaticInboxCleanup?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
   flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
@@ -1953,6 +3112,7 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType>;
   projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  quickEntry?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
   sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
   settings?: Resolver<ResolversTypes['SettingConnection'], ParentType, ContextType>;
   syncing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1976,7 +3136,7 @@ export type DocumentEdgeResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
-  __resolveType: TypeResolveFn<'AvailableTaskEdge' | 'BuiltinPerspectiveEdge' | 'CustomPerspectiveEdge' | 'DocumentEdge' | 'FlattenedFolderEdge' | 'FlattenedProjectEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'InboxTaskEdge' | 'PerspectiveEdge' | 'ProjectEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'SettingEdge' | 'TagEdge' | 'TaskEdge', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AncestorTreeEdge' | 'AvailableTaskEdge' | 'BuiltinPerspectiveEdge' | 'ContentTreeEdge' | 'CustomPerspectiveEdge' | 'DeprecatedContextEdge' | 'DescendantTreeEdge' | 'FlattenedFolderEdge' | 'FlattenedProjectEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'FollowingSiblingEdge' | 'ForecastDayEdge' | 'InboxTaskEdge' | 'InboxTreeEdge' | 'LeafEdge' | 'LibraryTreeEdge' | 'NamedStyleEdge' | 'PerspectiveEdge' | 'PrecedingSiblingEdge' | 'PreferenceEdge' | 'ProjectEdge' | 'QuickEntryTreeEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'SelectedTreeEdge' | 'SettingEdge' | 'TagEdge' | 'TaskEdge' | 'TreeEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 };
@@ -2071,6 +3231,7 @@ export type FlattenedTagResolvers<ContextType = any, ParentType extends Resolver
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2196,6 +3357,71 @@ export type FolderInterfaceResolvers<ContextType = any, ParentType extends Resol
   sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
 };
 
+export type FollowingSiblingResolvers<ContextType = any, ParentType extends ResolversParentTypes['FollowingSibling'] = ResolversParentTypes['FollowingSibling']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FollowingSiblingConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FollowingSiblingConnection'] = ResolversParentTypes['FollowingSiblingConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['FollowingSibling']>, ParentType, ContextType, RequireFields<FollowingSiblingConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['FollowingSiblingEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FollowingSiblingEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FollowingSiblingEdge'] = ResolversParentTypes['FollowingSiblingEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['FollowingSibling'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ForecastDayResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForecastDay'] = ResolversParentTypes['ForecastDay']> = {
+  badgeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  empty?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ForecastDayConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForecastDayConnection'] = ResolversParentTypes['ForecastDayConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['ForecastDay']>, ParentType, ContextType, RequireFields<ForecastDayConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['ForecastDayEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ForecastDayEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForecastDayEdge'] = ResolversParentTypes['ForecastDayEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ForecastDay'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ForecastDayInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForecastDayInterface'] = ResolversParentTypes['ForecastDayInterface']> = {
+  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  badgeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  empty?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type ForecastSidebarTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForecastSidebarTree'] = ResolversParentTypes['ForecastSidebarTree']> = {
+  availableSmartGroupIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  forecastDays?: Resolver<ResolversTypes['ForecastDayConnection'], ParentType, ContextType>;
+  selectedSmartGroupIdentifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type InboxTaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['InboxTask'] = ResolversParentTypes['InboxTask']> = {
   blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2249,6 +3475,93 @@ export type InboxTaskEdgeResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type InboxTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['InboxTree'] = ResolversParentTypes['InboxTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InboxTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['InboxTreeConnection'] = ResolversParentTypes['InboxTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['InboxTree']>, ParentType, ContextType, RequireFields<InboxTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['InboxTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InboxTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['InboxTreeEdge'] = ResolversParentTypes['InboxTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['InboxTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeafResolvers<ContextType = any, ParentType extends ResolversParentTypes['Leaf'] = ResolversParentTypes['Leaf']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeafConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeafConnection'] = ResolversParentTypes['LeafConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Leaf']>, ParentType, ContextType, RequireFields<LeafConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['LeafEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeafEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeafEdge'] = ResolversParentTypes['LeafEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Leaf'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LibraryTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LibraryTree'] = ResolversParentTypes['LibraryTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LibraryTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LibraryTreeConnection'] = ResolversParentTypes['LibraryTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['LibraryTree']>, ParentType, ContextType, RequireFields<LibraryTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['LibraryTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LibraryTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LibraryTreeEdge'] = ResolversParentTypes['LibraryTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['LibraryTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LocationInformationResolvers<ContextType = any, ParentType extends ResolversParentTypes['LocationInformation'] = ResolversParentTypes['LocationInformation']> = {
   altitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -2263,8 +3576,35 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   pushInboxTask?: Resolver<ResolversTypes['InboxTask'], ParentType, ContextType, RequireFields<MutationPushInboxTaskArgs, 'name'>>;
 };
 
+export type NamedStyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyle'] = ResolversParentTypes['NamedStyle']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NamedStyleConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyleConnection'] = ResolversParentTypes['NamedStyleConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['NamedStyle']>, ParentType, ContextType, RequireFields<NamedStyleConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['NamedStyleEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NamedStyleEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyleEdge'] = ResolversParentTypes['NamedStyleEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['NamedStyle'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NamedStyleInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyleInterface'] = ResolversParentTypes['NamedStyleInterface']> = {
+  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'AvailableTask' | 'BuiltinPerspective' | 'CustomPerspective' | 'Document' | 'FlattenedFolder' | 'FlattenedProject' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'InboxTask' | 'Perspective' | 'Project' | 'RemainingTask' | 'Section' | 'Setting' | 'Tag' | 'Task', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AncestorTree' | 'AvailableTask' | 'BuiltinPerspective' | 'ContentTree' | 'CustomPerspective' | 'DeprecatedContext' | 'DescendantTree' | 'FlattenedFolder' | 'FlattenedProject' | 'FlattenedTag' | 'FlattenedTask' | 'Folder' | 'FollowingSibling' | 'ForecastDay' | 'InboxTask' | 'InboxTree' | 'Leaf' | 'LibraryTree' | 'NamedStyle' | 'Perspective' | 'PrecedingSibling' | 'Preference' | 'Project' | 'QuickEntryTree' | 'RemainingTask' | 'Section' | 'SelectedTree' | 'Setting' | 'SidebarTree' | 'Tag' | 'Task' | 'Tree', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -2273,6 +3613,14 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
   hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   startCursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParagraphResolvers<ContextType = any, ParentType extends ResolversParentTypes['Paragraph'] = ResolversParentTypes['Paragraph']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -2299,6 +3647,58 @@ export type PerspectiveInterfaceResolvers<ContextType = any, ParentType extends 
   __resolveType: TypeResolveFn<'BuiltinPerspective' | 'CustomPerspective' | 'Perspective', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type PrecedingSiblingResolvers<ContextType = any, ParentType extends ResolversParentTypes['PrecedingSibling'] = ResolversParentTypes['PrecedingSibling']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PrecedingSiblingConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['PrecedingSiblingConnection'] = ResolversParentTypes['PrecedingSiblingConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['PrecedingSibling']>, ParentType, ContextType, RequireFields<PrecedingSiblingConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['PrecedingSiblingEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PrecedingSiblingEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['PrecedingSiblingEdge'] = ResolversParentTypes['PrecedingSiblingEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['PrecedingSibling'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PreferenceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Preference'] = ResolversParentTypes['Preference']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PreferenceConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['PreferenceConnection'] = ResolversParentTypes['PreferenceConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Preference']>, ParentType, ContextType, RequireFields<PreferenceConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['PreferenceEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PreferenceEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['PreferenceEdge'] = ResolversParentTypes['PreferenceEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Preference'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PreferenceInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['PreferenceInterface'] = ResolversParentTypes['PreferenceInterface']> = {
+  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
@@ -2404,6 +3804,41 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   application?: Resolver<ResolversTypes['Application'], ParentType, ContextType>;
 };
 
+export type QuickEntryTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['QuickEntryTree'] = ResolversParentTypes['QuickEntryTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  inboxTasks?: Resolver<ResolversTypes['InboxTaskConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  visible?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type QuickEntryTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['QuickEntryTreeConnection'] = ResolversParentTypes['QuickEntryTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['QuickEntryTree']>, ParentType, ContextType, RequireFields<QuickEntryTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['QuickEntryTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type QuickEntryTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['QuickEntryTreeEdge'] = ResolversParentTypes['QuickEntryTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type RemainingTaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['RemainingTask'] = ResolversParentTypes['RemainingTask']> = {
   blocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2475,6 +3910,7 @@ export type RichTextResolvers<ContextType = any, ParentType extends ResolversPar
   baselineOffset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   superscript?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   underlined?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2482,9 +3918,10 @@ export type RichTextResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type RichTextInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['RichTextInterface'] = ResolversParentTypes['RichTextInterface']> = {
-  __resolveType: TypeResolveFn<'RichText', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Attachment' | 'AttributeRun' | 'Character' | 'Paragraph' | 'RichText' | 'Word', ParentType, ContextType>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -2513,6 +3950,35 @@ export type SectionInterfaceResolvers<ContextType = any, ParentType extends Reso
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type SelectedTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectedTree'] = ResolversParentTypes['SelectedTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SelectedTreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectedTreeConnection'] = ResolversParentTypes['SelectedTreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['SelectedTree']>, ParentType, ContextType, RequireFields<SelectedTreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['SelectedTreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SelectedTreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectedTreeEdge'] = ResolversParentTypes['SelectedTreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['SelectedTree'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type SettingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Setting'] = ResolversParentTypes['Setting']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -2536,11 +4002,48 @@ export type SettingInterfaceResolvers<ContextType = any, ParentType extends Reso
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type SidebarTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SidebarTree'] = ResolversParentTypes['SidebarTree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  availableSmartGroupIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedSmartGroupIdentifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SidebarTreeInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['SidebarTreeInterface'] = ResolversParentTypes['SidebarTreeInterface']> = {
+  __resolveType: TypeResolveFn<'ForecastSidebarTree' | 'SidebarTree', ParentType, ContextType>;
+  availableSmartGroupIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  selectedSmartGroupIdentifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
+export type StyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Style'] = ResolversParentTypes['Style']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type StyleInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['StyleInterface'] = ResolversParentTypes['StyleInterface']> = {
+  __resolveType: TypeResolveFn<'NamedStyle' | 'Style', ParentType, ContextType>;
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType>;
+};
+
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2569,11 +4072,12 @@ export type TagEdgeResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type TagInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagInterface'] = ResolversParentTypes['TagInterface']> = {
-  __resolveType: TypeResolveFn<'FlattenedTag' | 'Tag', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'DeprecatedContext' | 'FlattenedTag' | 'Tag', ParentType, ContextType>;
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2680,18 +4184,86 @@ export type TaskInterfaceResolvers<ContextType = any, ParentType extends Resolve
   tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
 };
 
+export type TreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tree'] = ResolversParentTypes['Tree']> = {
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TreeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TreeConnection'] = ResolversParentTypes['TreeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['TreeInterface']>, ParentType, ContextType, RequireFields<TreeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['TreeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TreeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TreeEdge'] = ResolversParentTypes['TreeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['TreeInterface'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TreeInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['TreeInterface'] = ResolversParentTypes['TreeInterface']> = {
+  __resolveType: TypeResolveFn<'AncestorTree' | 'ContentTree' | 'DescendantTree' | 'FollowingSibling' | 'InboxTree' | 'Leaf' | 'LibraryTree' | 'PrecedingSibling' | 'QuickEntryTree' | 'SelectedTree' | 'SidebarTree' | 'Tree', ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+};
+
+export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = {
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
+  AncestorTree?: AncestorTreeResolvers<ContextType>;
+  AncestorTreeConnection?: AncestorTreeConnectionResolvers<ContextType>;
+  AncestorTreeEdge?: AncestorTreeEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
+  Attachment?: AttachmentResolvers<ContextType>;
+  AttributeRun?: AttributeRunResolvers<ContextType>;
   AvailableTask?: AvailableTaskResolvers<ContextType>;
   AvailableTaskConnection?: AvailableTaskConnectionResolvers<ContextType>;
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
   BuiltinPerspective?: BuiltinPerspectiveResolvers<ContextType>;
   BuiltinPerspectiveConnection?: BuiltinPerspectiveConnectionResolvers<ContextType>;
   BuiltinPerspectiveEdge?: BuiltinPerspectiveEdgeResolvers<ContextType>;
+  Character?: CharacterResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
+  ContentTree?: ContentTreeResolvers<ContextType>;
+  ContentTreeConnection?: ContentTreeConnectionResolvers<ContextType>;
+  ContentTreeEdge?: ContentTreeEdgeResolvers<ContextType>;
   CustomPerspective?: CustomPerspectiveResolvers<ContextType>;
   CustomPerspectiveConnection?: CustomPerspectiveConnectionResolvers<ContextType>;
   CustomPerspectiveEdge?: CustomPerspectiveEdgeResolvers<ContextType>;
+  DeprecatedContext?: DeprecatedContextResolvers<ContextType>;
+  DeprecatedContextConnection?: DeprecatedContextConnectionResolvers<ContextType>;
+  DeprecatedContextEdge?: DeprecatedContextEdgeResolvers<ContextType>;
+  DescendantTree?: DescendantTreeResolvers<ContextType>;
+  DescendantTreeConnection?: DescendantTreeConnectionResolvers<ContextType>;
+  DescendantTreeEdge?: DescendantTreeEdgeResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
   DocumentConnection?: DocumentConnectionResolvers<ContextType>;
   DocumentEdge?: DocumentEdgeResolvers<ContextType>;
@@ -2712,22 +4284,54 @@ export type Resolvers<ContextType = any> = {
   FolderConnection?: FolderConnectionResolvers<ContextType>;
   FolderEdge?: FolderEdgeResolvers<ContextType>;
   FolderInterface?: FolderInterfaceResolvers<ContextType>;
+  FollowingSibling?: FollowingSiblingResolvers<ContextType>;
+  FollowingSiblingConnection?: FollowingSiblingConnectionResolvers<ContextType>;
+  FollowingSiblingEdge?: FollowingSiblingEdgeResolvers<ContextType>;
+  ForecastDay?: ForecastDayResolvers<ContextType>;
+  ForecastDayConnection?: ForecastDayConnectionResolvers<ContextType>;
+  ForecastDayEdge?: ForecastDayEdgeResolvers<ContextType>;
+  ForecastDayInterface?: ForecastDayInterfaceResolvers<ContextType>;
+  ForecastSidebarTree?: ForecastSidebarTreeResolvers<ContextType>;
   InboxTask?: InboxTaskResolvers<ContextType>;
   InboxTaskConnection?: InboxTaskConnectionResolvers<ContextType>;
   InboxTaskEdge?: InboxTaskEdgeResolvers<ContextType>;
+  InboxTree?: InboxTreeResolvers<ContextType>;
+  InboxTreeConnection?: InboxTreeConnectionResolvers<ContextType>;
+  InboxTreeEdge?: InboxTreeEdgeResolvers<ContextType>;
+  Leaf?: LeafResolvers<ContextType>;
+  LeafConnection?: LeafConnectionResolvers<ContextType>;
+  LeafEdge?: LeafEdgeResolvers<ContextType>;
+  LibraryTree?: LibraryTreeResolvers<ContextType>;
+  LibraryTreeConnection?: LibraryTreeConnectionResolvers<ContextType>;
+  LibraryTreeEdge?: LibraryTreeEdgeResolvers<ContextType>;
   LocationInformation?: LocationInformationResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  NamedStyle?: NamedStyleResolvers<ContextType>;
+  NamedStyleConnection?: NamedStyleConnectionResolvers<ContextType>;
+  NamedStyleEdge?: NamedStyleEdgeResolvers<ContextType>;
+  NamedStyleInterface?: NamedStyleInterfaceResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
+  Paragraph?: ParagraphResolvers<ContextType>;
   Perspective?: PerspectiveResolvers<ContextType>;
   PerspectiveConnection?: PerspectiveConnectionResolvers<ContextType>;
   PerspectiveEdge?: PerspectiveEdgeResolvers<ContextType>;
   PerspectiveInterface?: PerspectiveInterfaceResolvers<ContextType>;
+  PrecedingSibling?: PrecedingSiblingResolvers<ContextType>;
+  PrecedingSiblingConnection?: PrecedingSiblingConnectionResolvers<ContextType>;
+  PrecedingSiblingEdge?: PrecedingSiblingEdgeResolvers<ContextType>;
+  Preference?: PreferenceResolvers<ContextType>;
+  PreferenceConnection?: PreferenceConnectionResolvers<ContextType>;
+  PreferenceEdge?: PreferenceEdgeResolvers<ContextType>;
+  PreferenceInterface?: PreferenceInterfaceResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   ProjectConnection?: ProjectConnectionResolvers<ContextType>;
   ProjectEdge?: ProjectEdgeResolvers<ContextType>;
   ProjectInterface?: ProjectInterfaceResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  QuickEntryTree?: QuickEntryTreeResolvers<ContextType>;
+  QuickEntryTreeConnection?: QuickEntryTreeConnectionResolvers<ContextType>;
+  QuickEntryTreeEdge?: QuickEntryTreeEdgeResolvers<ContextType>;
   RemainingTask?: RemainingTaskResolvers<ContextType>;
   RemainingTaskConnection?: RemainingTaskConnectionResolvers<ContextType>;
   RemainingTaskEdge?: RemainingTaskEdgeResolvers<ContextType>;
@@ -2739,10 +4343,17 @@ export type Resolvers<ContextType = any> = {
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;
   SectionInterface?: SectionInterfaceResolvers<ContextType>;
+  SelectedTree?: SelectedTreeResolvers<ContextType>;
+  SelectedTreeConnection?: SelectedTreeConnectionResolvers<ContextType>;
+  SelectedTreeEdge?: SelectedTreeEdgeResolvers<ContextType>;
   Setting?: SettingResolvers<ContextType>;
   SettingConnection?: SettingConnectionResolvers<ContextType>;
   SettingEdge?: SettingEdgeResolvers<ContextType>;
   SettingInterface?: SettingInterfaceResolvers<ContextType>;
+  SidebarTree?: SidebarTreeResolvers<ContextType>;
+  SidebarTreeInterface?: SidebarTreeInterfaceResolvers<ContextType>;
+  Style?: StyleResolvers<ContextType>;
+  StyleInterface?: StyleInterfaceResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   TagConnection?: TagConnectionResolvers<ContextType>;
   TagEdge?: TagEdgeResolvers<ContextType>;
@@ -2751,6 +4362,11 @@ export type Resolvers<ContextType = any> = {
   TaskConnection?: TaskConnectionResolvers<ContextType>;
   TaskEdge?: TaskEdgeResolvers<ContextType>;
   TaskInterface?: TaskInterfaceResolvers<ContextType>;
+  Tree?: TreeResolvers<ContextType>;
+  TreeConnection?: TreeConnectionResolvers<ContextType>;
+  TreeEdge?: TreeEdgeResolvers<ContextType>;
+  TreeInterface?: TreeInterfaceResolvers<ContextType>;
+  Word?: WordResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {

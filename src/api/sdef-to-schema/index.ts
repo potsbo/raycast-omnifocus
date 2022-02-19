@@ -3,86 +3,27 @@ import { promisify } from "util";
 import { parseStringPromise } from "xml2js";
 import fs from "fs";
 import {
-  TypeNode,
   print,
   FieldDefinitionNode,
   lexicographicSortSchema,
-  buildSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
   ObjectTypeExtensionNode,
   printSchema,
+  buildASTSchema,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
-import {
-  ConnectionInterface,
-  CONNECTION_TYPE_NAME,
-  EdgeInterface,
-  EDGE_TYPE_NAME,
-  INTERFACE_SUFFIX,
-  NodeInterface,
-  NODE_TYPE_NAME,
-} from "./constants";
+import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
 import { ClassRenderer } from "./class";
 import { ExtensionRenderer } from "./extension";
 import { RecordTypeRenderer } from "./recordType";
 import { EnumRenderer } from "./enumeration";
 import prettier from "prettier";
-
-const AllowedTypes = [
-  "Task",
-  "InboxTask",
-  "FlattenedTask",
-  "Project",
-  "Section",
-  "Folder",
-  "FlattenedTag",
-  "Tag",
-  "Application",
-  "Document",
-  "PageInfo",
-  "Int",
-  "String",
-  "Boolean",
-  "Float",
-  "RepetitionInterval",
-  "LocationInformation",
-  "AvailableTask",
-  "RepetitionRule",
-  "Perspective",
-  "RemainingTask",
-  "RichText",
-  "FlattenedProject",
-  "FlattenedFolder",
-  "Setting",
-  "BuiltinPerspective",
-  "CustomPerspective",
-  "Mutation",
-  CONNECTION_TYPE_NAME,
-  EDGE_TYPE_NAME,
-  NODE_TYPE_NAME,
-];
-
-const isAllowedType = (type: TypeNode | string): boolean => {
-  const typeName = typeof type === "string" ? type : unwrapType(type).name.value;
-  if (AllowedTypes.includes(typeName)) {
-    return true;
-  }
-  if (typeName.endsWith(CONNECTION_TYPE_NAME)) {
-    return isAllowedType(typeName.slice(0, -CONNECTION_TYPE_NAME.length));
-  }
-  if (typeName.endsWith(EDGE_TYPE_NAME)) {
-    return isAllowedType(typeName.slice(0, -EDGE_TYPE_NAME.length));
-  }
-  if (typeName.endsWith(INTERFACE_SUFFIX)) {
-    return isAllowedType(typeName.slice(0, -INTERFACE_SUFFIX.length));
-  }
-
-  return false;
-};
+import gql from "graphql-tag";
+import { prune } from "./prune";
 
 const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
   return {
@@ -99,20 +40,17 @@ const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
       ) {
         return false;
       }
-      const denyList = ["RichText", "Tag", "RepetitionInterval", "RepetitionRule"];
+      const denyList = ["RichText"];
       const typename = unwrapType(a.type).name.value;
       if (denyList.includes(typename)) {
         return false;
       }
-      return isAllowedType(a.type);
+      return true;
     }),
   };
 };
 
-const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(
-  obj: T,
-  knownTypes: Set<string>
-): T => {
+const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
   const fields = obj.fields
     ?.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
       if (acum.some((a) => a.name.value === cur.name.value)) {
@@ -121,7 +59,6 @@ const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode
       acum.push(cur);
       return acum;
     }, [])
-    .filter((f) => knownTypes.has(unwrapType(f.type).name.value) || isAllowedType(f.type))
     .map(reduceArgs);
   return {
     ...obj,
@@ -195,6 +132,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       })
     );
 
+    // TODO: less hard code
     if (cdef.getClassName() === "inbox task") {
       const m = cdef.getMutationExtension("push", parent);
       if (m === null) {
@@ -207,53 +145,49 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
   const enums = enumRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
-  // TODO: Add class definitions
-  const knownTypes = new Set(enums.map((e) => e.name.value).concat(recordTypes.map((r) => r.name.value)));
-
   const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
     return ns
-      .map((n) => reduceFieldDefinition(n, knownTypes))
-      .filter((n) => isAllowedType(n.name.value))
+      .map((n) => reduceFieldDefinition(n))
       .map(print)
       .join("\n");
   };
 
-  const schema = `
-  type Mutation
+  const schema = gql`
+    type Mutation
 
-  ${render(definitions)}
-  ${render(extensions)}
-  ${render(interfaces)}
-  ${render(recordTypes)}
-  ${enums.map(print)}
+    ${render(definitions)}
+    ${render(extensions)}
+    ${render(interfaces)}
+    ${render(recordTypes)}
+    ${enums.map(print)}
 
-# https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
-type PageInfo {
-  hasPreviousPage: Boolean!
-  hasNextPage: Boolean!
-  startCursor: String!
-  endCursor: String!
-}
+    # https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
+    type PageInfo {
+      hasPreviousPage: Boolean!
+      hasNextPage: Boolean!
+      startCursor: String!
+      endCursor: String!
+    }
 
-type Query {
-  application: Application!
-}
-  
-  directive @whose(condition: [Condition!]!) on FIELD
-  directive @recordType on OBJECT
+    type Query {
+      application: Application!
+    }
 
-input Condition {
-  enabled: Boolean! = true
-  field: String
-  operands: [Condition!]
-  operator: String! = "="
-  value: String! = "true"
-}
+    directive @whose(condition: [Condition!]!) on FIELD
+    directive @recordType on OBJECT
+
+    input Condition {
+      enabled: Boolean! = true
+      field: String
+      operands: [Condition!]
+      operator: String! = "="
+      value: String! = "true"
+    }
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
 
-  const sorted = lexicographicSortSchema(pruneSchema(buildSchema(schema)));
+  const sorted = lexicographicSortSchema(pruneSchema(buildASTSchema(prune(schema))));
   const sortedSchema = printSchema(sorted);
   const comment = `# Code generated by "sdef-to-schema"; DO NOT EDIT.\n`;
 
