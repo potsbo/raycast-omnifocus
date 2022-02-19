@@ -1,7 +1,6 @@
 import { FieldNode, GraphQLResolveInfo, Kind, ObjectValueNode, ValueNode } from "graphql";
 
-// TODO: rename to arg name
-const WHOSE_DIRECTIVE_NAME = "whose";
+const WHOSE_ARG_NAME = "whose";
 const OPERANDS_KEY = "operands";
 
 const MATCH_OPERATORS = [
@@ -175,7 +174,7 @@ const extractConditionFromValueNode = (
 };
 
 export const extractCondition = (ctx: Pick<GraphQLResolveInfo, "variableValues">, f: FieldNode): Condition | null => {
-  const condition = f.arguments?.find((a) => a.name.value === WHOSE_DIRECTIVE_NAME)?.value;
+  const condition = f.arguments?.find((a) => a.name.value === WHOSE_ARG_NAME)?.value;
   if (!condition) {
     return null;
   }
