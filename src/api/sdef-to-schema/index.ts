@@ -173,7 +173,6 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       application: Application!
     }
 
-    directive @whose(condition: [Condition!]!) on FIELD
     directive @recordType on OBJECT
 
     input Condition {

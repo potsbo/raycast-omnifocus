@@ -1,4 +1,4 @@
-import { FieldDefinitionNode, Kind, StringValueNode, TypeNode } from "graphql";
+import { FieldDefinitionNode, InputValueDefinitionNode, Kind, StringValueNode, TypeNode } from "graphql";
 import camelCase from "camelcase";
 import { ContentDefinition, ElementDefinition, PropertyDefinition } from "./sdef";
 import { getGraphQLType, NameType, NonNullType } from "./types";
@@ -11,25 +11,41 @@ export const collectFieldsDefinitions = (c: {
   contents?: ContentDefinition[];
 }) => {
   const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
-    return FieldDefinition(t.$.name, getGraphQLType(t), t.$.description);
+    return FieldDefinition(t.$.name, getGraphQLType(t), { description: t.$.description });
   });
 
   const elements: FieldDefinitionNode[] = (c.element ?? []).map((e) => {
-    return FieldDefinition(`${e.$.type}s`, NonNullType(NameType(e.$.type, CONNECTION_TYPE_NAME)), e.$.description);
+    return FieldDefinition(`${e.$.type}s`, NonNullType(NameType(e.$.type, CONNECTION_TYPE_NAME)), {
+      description: e.$.description,
+      arguments: [
+        {
+          kind: Kind.INPUT_VALUE_DEFINITION,
+          name: {
+            kind: Kind.NAME,
+            value: "whose",
+          },
+          type: NameType("Condition"),
+        },
+      ],
+    });
   });
 
   const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode => {
-    return FieldDefinition(ctnt.$.name, NonNullType(NameType(ctnt.$.type)), ctnt.$.description);
+    return FieldDefinition(ctnt.$.name, NonNullType(NameType(ctnt.$.type)), { description: ctnt.$.description });
   });
   // TODO: respond-to
   return properties.concat(elements).concat(contents);
 };
 
-export const FieldDefinition = (name: string, type: TypeNode, description?: string): FieldDefinitionNode => {
-  const desc: StringValueNode | undefined = description
+export const FieldDefinition = (
+  name: string,
+  type: TypeNode,
+  opts?: { description?: string; arguments?: InputValueDefinitionNode[] }
+): FieldDefinitionNode => {
+  const desc: StringValueNode | undefined = opts?.description
     ? {
         kind: Kind.STRING,
-        value: description,
+        value: opts?.description,
         block: true,
       }
     : undefined;
@@ -41,5 +57,6 @@ export const FieldDefinition = (name: string, type: TypeNode, description?: stri
     },
     type,
     description: desc,
+    arguments: opts?.arguments,
   };
 };

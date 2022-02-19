@@ -44,6 +44,10 @@ const renderField = (
   if (f.field.selectionSet) {
     const args: string[] = [];
     f.field.arguments?.forEach((a) => {
+      // TODO: not to hard code
+      if (a.name.value === "whose") {
+        return;
+      }
       if (a.value.kind === Kind.VARIABLE) {
         args.push(a.value.name.value);
         return;
@@ -52,7 +56,7 @@ const renderField = (
         args.push(`"${a.value.value}"`);
         return;
       }
-      throw `Non variable argument found ${JSON.stringify(a)}`;
+      throw `Non variable argument found ${a.kind}`;
     });
 
     const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
@@ -212,11 +216,7 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject, withReflect
       }
       if (field.kind === Kind.FRAGMENT_SPREAD) {
         const fs = ctx.fragments[field.name.value];
-        return renderFields(
-          ctx,
-          { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition },
-          false
-        );
+        return renderFields(ctx, { selectedFields: fs.selectionSet.selections, typeNode: fs.typeCondition }, false);
       }
       if (field.name.value === "__typename") {
         return reflection;

@@ -1,5 +1,6 @@
 import { FieldNode, GraphQLResolveInfo, Kind, ObjectValueNode, ValueNode } from "graphql";
 
+// TODO: rename to arg name
 const WHOSE_DIRECTIVE_NAME = "whose";
 const OPERANDS_KEY = "operands";
 
@@ -132,7 +133,7 @@ const extractConditionFromValueNode = (
   condition: ValueNode
 ): Condition => {
   if (condition.kind !== Kind.OBJECT) {
-    throw new Error("malformed conditions");
+    throw new Error(`malformed conditions ${condition.kind}`);
   }
 
   const enabled = mustExtractBoolArg(ctx, condition, "enabled", true);
@@ -154,7 +155,7 @@ const extractConditionFromValueNode = (
   if (logicalOp) {
     const childrenNode = condition.fields.find((f) => f.name.value === OPERANDS_KEY)?.value;
     if (!childrenNode || childrenNode.kind !== Kind.LIST) {
-      throw new Error("malformed conditions");
+      throw new Error(`malformed conditions ${condition}`);
     }
 
     return {
@@ -162,7 +163,7 @@ const extractConditionFromValueNode = (
       operator: logicalOp,
       children: childrenNode.values.map((f) => {
         if (f.kind !== Kind.OBJECT) {
-          throw new Error("malformed conditions");
+          throw new Error(`malformed conditions ${f.kind}`);
         }
         return extractConditionFromValueNode(ctx, f);
       }),
@@ -174,13 +175,9 @@ const extractConditionFromValueNode = (
 };
 
 export const extractCondition = (ctx: Pick<GraphQLResolveInfo, "variableValues">, f: FieldNode): Condition | null => {
-  const d = f.directives?.find((d) => d.name.value === WHOSE_DIRECTIVE_NAME);
-  if (!d) {
-    return null;
-  }
-  const condition = d.arguments?.find((a) => a.name.value === "condition")?.value;
+  const condition = f.arguments?.find((a) => a.name.value === WHOSE_DIRECTIVE_NAME)?.value;
   if (!condition) {
-    throw new Error("malformed conditions");
+    return null;
   }
 
   return extractConditionFromValueNode(ctx, condition);
