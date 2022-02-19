@@ -147,7 +147,7 @@ class Pruner {
   };
 
   private pruneArgs = <T extends { arguments?: readonly InputValueDefinitionNode[] }>(def: T): T => {
-    const args = def.arguments?.filter(this.definedType);
+    const args = def.arguments?.filter(this.definedInputType);
     return { ...def, arguments: args };
   };
 
@@ -163,6 +163,17 @@ class Pruner {
         (def.kind === Kind.INTERFACE_TYPE_DEFINITION && def.name.value === typeName) ||
         (def.kind === Kind.ENUM_TYPE_DEFINITION && def.name.value === typeName) ||
         (def.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && def.name.value === typeName)
+    );
+  };
+
+  private definedInputType = (field: { type: TypeNode } | TypeNode): boolean => {
+    const typeName = "type" in field ? unwrapType(field.type).name.value : field.name.value;
+    if (SCALARS.includes(typeName)) {
+      return true;
+    }
+
+    return this.doc.definitions.some(
+      (def) => def.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && def.name.value === typeName
     );
   };
 }

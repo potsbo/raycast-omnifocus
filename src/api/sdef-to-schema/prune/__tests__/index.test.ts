@@ -303,3 +303,27 @@ test("invalid child interface", () => {
 
   expect(print(prune(input))).toEqual(print(output));
 });
+
+test("object as input", () => {
+  const input = gql`
+    type Mutation {
+      doSomething(input: NonInputObject): String
+    }
+
+    type NonInputObject {
+      someField: String
+    }
+  `;
+
+  const output = gql`
+    type Mutation {
+      doSomething: String
+    }
+
+    type NonInputObject {
+      someField: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});

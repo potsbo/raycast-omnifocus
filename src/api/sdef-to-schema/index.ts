@@ -40,7 +40,7 @@ const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
       ) {
         return false;
       }
-      const denyList = ["RichText", "Tag", "RepetitionInterval", "RepetitionRule"];
+      const denyList = ["RichText"];
       const typename = unwrapType(a.type).name.value;
       if (denyList.includes(typename)) {
         return false;
@@ -147,8 +147,6 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
   const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
     return ns
       .map((n) => reduceFieldDefinition(n))
-      .filter((n) => n.name.value !== "SidebarTreeConnection")
-      .filter((n) => n.name.value !== "SidebarTreeEdge")
       .map(print)
       .join("\n");
   };
