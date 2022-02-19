@@ -162,7 +162,8 @@ class Pruner {
         (def.kind === Kind.OBJECT_TYPE_DEFINITION && def.name.value === typeName) ||
         (def.kind === Kind.INTERFACE_TYPE_DEFINITION && def.name.value === typeName) ||
         (def.kind === Kind.ENUM_TYPE_DEFINITION && def.name.value === typeName) ||
-        (def.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && def.name.value === typeName)
+        (def.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && def.name.value === typeName) ||
+        (def.kind === Kind.SCALAR_TYPE_DEFINITION && def.name.value === typeName)
     );
   };
 

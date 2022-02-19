@@ -4,7 +4,6 @@ import { parseStringPromise } from "xml2js";
 import fs from "fs";
 import {
   print,
-  FieldDefinitionNode,
   lexicographicSortSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
@@ -15,7 +14,6 @@ import {
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
-import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
 import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
 import { ClassRenderer } from "./class";
@@ -116,6 +114,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       application: Application!
     }
     type Mutation
+    scalar RichText
 
     ${render(definitions)}
     ${render(extensions)}

@@ -7,19 +7,25 @@ test("valid schema", () => {
     type Something {
       string: String
       nonNullString: String!
+      someScalar: SomeScalar
     }
 
     extend type Something {
       int: Int!
     }
+
+    scalar SomeScalar
   `;
 
   const output = gql`
     type Something {
       string: String
       nonNullString: String!
+      someScalar: SomeScalar
       int: Int!
     }
+
+    scalar SomeScalar
   `;
 
   expect(print(prune(input))).toEqual(print(output));
