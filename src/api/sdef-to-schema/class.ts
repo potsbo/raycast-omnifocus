@@ -1,4 +1,5 @@
 import {
+  DocumentNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
   Kind,
@@ -63,12 +64,17 @@ export class ClassRenderer {
     inherits,
     inherited,
     extensions,
+    override,
   }: {
     inherits: ClassRenderer | undefined;
     inherited: boolean;
     extensions: ExtensionRenderer[];
+    override?: DocumentNode;
   }) => {
     const className = camelCase(this.c.$.name, { pascalCase: true });
+    if (override?.definitions.some((d) => "name" in d && d.name?.value === className)) {
+      return [];
+    }
 
     const toObjectDef = (
       name: string,

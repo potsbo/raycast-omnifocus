@@ -7,67 +7,31 @@ import {
   lexicographicSortSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
-  ObjectTypeExtensionNode,
   printSchema,
   buildASTSchema,
-  EnumTypeDefinitionNode,
+  ASTNode,
+  DocumentNode,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
 import { Suite } from "./sdef";
 import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
-import { ClassRenderer } from "./class";
-import { ExtensionRenderer } from "./extension";
-import { RecordTypeRenderer } from "./recordType";
-import { EnumRenderer } from "./enumeration";
 import prettier from "prettier";
 import gql from "graphql-tag";
 import { prune } from "./prune";
-
-const renderSuite = (
-  s: Suite
-): {
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
-} => {
-  const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
-  const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
-  const enumRenderers = (s.enumeration ?? []).map((e) => new EnumRenderer(e));
-  return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
-};
+import { parseSuites } from "./suite";
 
 const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
 
-(async () => {
-  const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
+(async (appPath: string, override?: DocumentNode) => {
+  const sdef = await promisify(exec)(`sdef ${appPath}`);
   const parsed = (await parseStringPromise(sdef.stdout)) as {
     dictionary: { suite: Suite[] };
   };
 
-  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parsed.dictionary.suite
-    .map(renderSuite)
-    .reduce(
-      (
-        acum: {
-          classRenderers: ClassRenderer[];
-          extensionRenderers: ExtensionRenderer[];
-          recordTypeRenderers: RecordTypeRenderer[];
-          enumRenderers: EnumRenderer[];
-        },
-        cur
-      ) => {
-        return {
-          classRenderers: acum.classRenderers.concat(cur.classRenderers),
-          extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
-          recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
-          enumRenderers: acum.enumRenderers.concat(cur.enumRenderers),
-        };
-      },
-      { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
-    );
+  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parseSuites(
+    parsed.dictionary.suite
+  );
 
   const extensions = extensionRenderers.map((e) => e.getType());
   const inheritedClasses = new Set(
@@ -87,6 +51,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
         inherits: parent,
         inherited: inheritedClasses.has(cdef.getClassName()),
         extensions: extensionRenderers.filter((e) => e.extends === cdef.getClassName()),
+        override,
       })
     );
 
@@ -103,9 +68,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
   const enums = enumRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
-  const render = (
-    ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode | EnumTypeDefinitionNode)[]
-  ) => {
+  const render = (ns: ASTNode[]) => {
     return ns.map(print).join("\n");
   };
 
@@ -114,7 +77,6 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       application: Application!
     }
     type Mutation
-    scalar RichText
 
     ${render(definitions)}
     ${render(extensions)}
@@ -139,6 +101,8 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       operator: String! = "="
       value: String! = "true"
     }
+
+    ${override ? print(override) : ""}
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
@@ -153,6 +117,11 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
     }
     console.log(`✅ Schemad generated`);
   });
-})().catch((err) => {
+})(
+  "/Applications/OmniFocus.app",
+  gql`
+    scalar RichText
+  `
+).catch((err) => {
   console.error(err);
 });
