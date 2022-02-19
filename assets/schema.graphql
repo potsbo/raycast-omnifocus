@@ -156,6 +156,31 @@ type Attachment implements RichTextInterface {
 }
 
 """
+An attribute of a style.
+"""
+type Attribute {
+  """
+  The style responsible for the effective value in this attributes's style.  This processes the local values, inherited styles and cascade chain.
+  """
+  definingStyle: Style!
+
+  """
+  If true, the containing style defines a local value for this attribute.
+  """
+  hasLocalValue: Boolean!
+
+  """
+  The name of the attribute.
+  """
+  name: String!
+
+  """
+  The style to which the attribute refers.
+  """
+  style: Style!
+}
+
+"""
 This subdivides the text into chunks that all have the same attributes.
 """
 type AttributeRun implements RichTextInterface {
@@ -871,6 +896,81 @@ type DocumentConnection {
 type DocumentEdge {
   cursor: String!
   node: Document!
+}
+
+"""
+A window of an OmniFocus document.
+"""
+type DocumentWindow implements WindowInterface {
+  """
+  Does the window have a close button?
+  """
+  closeable: Boolean!
+
+  """
+  The tree of objects in the main window content.
+  """
+  content: ContentTree!
+
+  """
+  The document whose contents are displayed in the window.
+  """
+  document: Document!
+
+  """
+  The unique identifier of the window.
+  """
+  id: Int!
+
+  """
+  The index of the window, ordered front to back.
+  """
+  index: Int!
+
+  """
+  Does the window have a minimize button?
+  """
+  miniaturizable: Boolean!
+
+  """
+  Is the window minimized right now?
+  """
+  miniaturized: Boolean!
+
+  """
+  The title of the window.
+  """
+  name: String!
+
+  """
+  The name of a perspective.
+  """
+  perspectiveName: String!
+
+  """
+  Can the window be resized?
+  """
+  resizable: Boolean!
+
+  """
+  The search term in the toolbar.  If there is no search toolbar item, this will return missing value instead of an empty string and setting it will cause an error.
+  """
+  searchTerm: String!
+
+  """
+  Is the window visible right now?
+  """
+  visible: Boolean!
+
+  """
+  Does the window have a zoom button?
+  """
+  zoomable: Boolean!
+
+  """
+  Is the window zoomed right now?
+  """
+  zoomed: Boolean!
 }
 
 interface Edge {
@@ -2202,14 +2302,228 @@ enum LocationTrigger {
 }
 
 type Mutation {
-  pushInboxTask(
+  pushAncestorTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): AncestorTree!
+  pushAttachment(font: String, size: Int, text: String): Attachment!
+  pushAttribute: Attribute!
+  pushAttributeRun(font: String, size: Int, text: String): AttributeRun!
+  pushAvailableTask(
+    completedByChildren: Boolean
     completionDate: String
+    creationDate: String
     deferDate: String
     droppedDate: String
     dueDate: String
     estimatedMinutes: Int
-    name: String!
+    flagged: Boolean
+    id: String
+    name: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
+  ): AvailableTask!
+  pushBuiltinPerspective(id: String, name: String): BuiltinPerspective!
+  pushCharacter(font: String, size: Int, text: String): Character!
+  pushContentTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+    selectedGroupingIdentifier: String
+    selectedSortingIdentifier: String
+    selectedTaskDurationFilterIdentifier: String
+    selectedTaskFlaggedFilterIdentifier: String
+    selectedTaskStateFilterIdentifier: String
+  ): ContentTree!
+  pushCustomPerspective(id: String, name: String): CustomPerspective!
+  pushDeprecatedContext(
+    allowsNextAction: Boolean
+    hidden: Boolean
+    id: String
+    name: String
+  ): DeprecatedContext!
+  pushDescendantTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): DescendantTree!
+  pushDocumentWindow(
+    index: Int
+    miniaturized: Boolean
+    perspectiveName: String
+    searchTerm: String
+    visible: Boolean
+    zoomed: Boolean
+  ): DocumentWindow!
+  pushFlattenedFolder(hidden: Boolean, name: String): FlattenedFolder!
+  pushFlattenedProject(
+    completedByChildren: Boolean
+    completionDate: String
+    creationDate: String
+    defaultSingletonActionHolder: Boolean
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean
+    id: String
+    lastReviewDate: String
+    name: String
+    nextReviewDate: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
+    singletonActionHolder: Boolean
+  ): FlattenedProject!
+  pushFlattenedTag(
+    allowsNextAction: Boolean
+    hidden: Boolean
+    id: String
+    name: String
+  ): FlattenedTag!
+  pushFlattenedTask(
+    completedByChildren: Boolean
+    completionDate: String
+    creationDate: String
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean
+    id: String
+    name: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
+  ): FlattenedTask!
+  pushFolder(hidden: Boolean, name: String): Folder!
+  pushFollowingSibling(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): FollowingSibling!
+  pushForecastDay(
+    badgeCount: Int
+    empty: Boolean
+    id: String
+    name: String
+  ): ForecastDay!
+  pushForecastSidebarTree(
+    selectedSmartGroupIdentifier: String
+  ): ForecastSidebarTree!
+  pushInboxTask(
+    completedByChildren: Boolean
+    completionDate: String
+    creationDate: String
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean
+    id: String
+    name: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
   ): InboxTask!
+  pushInboxTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): InboxTree!
+  pushLeaf(expanded: Boolean, noteExpanded: Boolean, selected: Boolean): Leaf!
+  pushLibraryTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): LibraryTree!
+  pushNamedStyle(font: String, name: String): NamedStyle!
+  pushParagraph(font: String, size: Int, text: String): Paragraph!
+  pushPerspective(id: String, name: String): Perspective!
+  pushPrecedingSibling(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): PrecedingSibling!
+  pushPreference: Preference!
+  pushProject(
+    completedByChildren: Boolean
+    completionDate: String
+    creationDate: String
+    defaultSingletonActionHolder: Boolean
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean
+    id: String
+    lastReviewDate: String
+    name: String
+    nextReviewDate: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
+    singletonActionHolder: Boolean
+  ): Project!
+  pushQuickEntryTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): QuickEntryTree!
+  pushRemainingTask(
+    completedByChildren: Boolean
+    completionDate: String
+    creationDate: String
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean
+    id: String
+    name: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
+  ): RemainingTask!
+  pushRichText(font: String, size: Int, text: String): RichText!
+  pushSection(name: String): Section!
+  pushSelectedTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+  ): SelectedTree!
+  pushSetting: Setting!
+  pushSidebarTree(
+    expanded: Boolean
+    noteExpanded: Boolean
+    selected: Boolean
+    selectedSmartGroupIdentifier: String
+  ): SidebarTree!
+  pushStyle(font: String): Style!
+  pushTag(
+    allowsNextAction: Boolean
+    hidden: Boolean
+    id: String
+    name: String
+  ): Tag!
+  pushTask(
+    completedByChildren: Boolean
+    completionDate: String
+    creationDate: String
+    deferDate: String
+    droppedDate: String
+    dueDate: String
+    estimatedMinutes: Int
+    flagged: Boolean
+    id: String
+    name: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
+  ): Task!
+  pushTree(expanded: Boolean, noteExpanded: Boolean, selected: Boolean): Tree!
+  pushWindow(
+    index: Int
+    miniaturized: Boolean
+    visible: Boolean
+    zoomed: Boolean
+  ): Window!
+  pushWord(font: String, size: Int, text: String): Word!
 }
 
 """
@@ -3196,50 +3510,7 @@ type RepetitionRule @recordType {
   repetitionMethod: RepetitionMethod!
 }
 
-"""
-Rich (styled) text
-"""
-type RichText implements RichTextInterface {
-  """
-  Alignment of the text.
-  """
-  alignment: TextAlignment!
-
-  """
-  Number of pixels shifted above or below the normal baseline.
-  """
-  baselineOffset: Float!
-
-  """
-  The name of the font of the first character.
-  """
-  font: String!
-
-  """
-  The size in points of the first character.
-  """
-  size: Int!
-
-  """
-  The style of the text.
-  """
-  style: Style!
-
-  """
-  The superscript level of the text.
-  """
-  superscript: Int!
-
-  """
-  The plain text contents of the rich text.
-  """
-  text: String!
-
-  """
-  Is the first character underlined?
-  """
-  underlined: Boolean!
-}
+scalar RichText
 
 interface RichTextInterface {
   """
@@ -4035,14 +4306,6 @@ interface TaskInterface implements Node {
   tasks(whose: Condition): TaskConnection!
 }
 
-enum TextAlignment {
-  CENTER
-  JUSTIFIED
-  LEFT
-  NATURAL
-  RIGHT
-}
-
 """
 A tree representing an object, along with its sub-trees.
 """
@@ -4179,6 +4442,123 @@ interface TreeInterface implements Node {
   The immediate child trees of this tree in the user-specified sort ordering.
   """
   trees(whose: Condition): TreeConnection!
+}
+
+"""
+A window.
+"""
+type Window implements WindowInterface {
+  """
+  Does the window have a close button?
+  """
+  closeable: Boolean!
+
+  """
+  The document whose contents are displayed in the window.
+  """
+  document: Document!
+
+  """
+  The unique identifier of the window.
+  """
+  id: Int!
+
+  """
+  The index of the window, ordered front to back.
+  """
+  index: Int!
+
+  """
+  Does the window have a minimize button?
+  """
+  miniaturizable: Boolean!
+
+  """
+  Is the window minimized right now?
+  """
+  miniaturized: Boolean!
+
+  """
+  The title of the window.
+  """
+  name: String!
+
+  """
+  Can the window be resized?
+  """
+  resizable: Boolean!
+
+  """
+  Is the window visible right now?
+  """
+  visible: Boolean!
+
+  """
+  Does the window have a zoom button?
+  """
+  zoomable: Boolean!
+
+  """
+  Is the window zoomed right now?
+  """
+  zoomed: Boolean!
+}
+
+interface WindowInterface {
+  """
+  Does the window have a close button?
+  """
+  closeable: Boolean!
+
+  """
+  The document whose contents are displayed in the window.
+  """
+  document: Document!
+
+  """
+  The unique identifier of the window.
+  """
+  id: Int!
+
+  """
+  The index of the window, ordered front to back.
+  """
+  index: Int!
+
+  """
+  Does the window have a minimize button?
+  """
+  miniaturizable: Boolean!
+
+  """
+  Is the window minimized right now?
+  """
+  miniaturized: Boolean!
+
+  """
+  The title of the window.
+  """
+  name: String!
+
+  """
+  Can the window be resized?
+  """
+  resizable: Boolean!
+
+  """
+  Is the window visible right now?
+  """
+  visible: Boolean!
+
+  """
+  Does the window have a zoom button?
+  """
+  zoomable: Boolean!
+
+  """
+  Is the window zoomed right now?
+  """
+  zoomed: Boolean!
 }
 
 """

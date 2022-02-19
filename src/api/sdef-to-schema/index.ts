@@ -4,112 +4,34 @@ import { parseStringPromise } from "xml2js";
 import fs from "fs";
 import {
   print,
-  FieldDefinitionNode,
   lexicographicSortSchema,
   ObjectTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
-  ObjectTypeExtensionNode,
   printSchema,
   buildASTSchema,
+  ASTNode,
+  DocumentNode,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
-import { unwrapType } from "../graphql-utils";
 import { Suite } from "./sdef";
 import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
-import { ClassRenderer } from "./class";
-import { ExtensionRenderer } from "./extension";
-import { RecordTypeRenderer } from "./recordType";
-import { EnumRenderer } from "./enumeration";
 import prettier from "prettier";
 import gql from "graphql-tag";
 import { prune } from "./prune";
-
-const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
-  return {
-    ...def,
-    arguments: def.arguments?.filter((a) => {
-      // TODO: not to hard code
-      if (a.name.value === "id" && def.name.value !== "byId") {
-        return false;
-      }
-      if (
-        ["completedByChildren", "creationDate", "flagged", "sequential", "shouldUseFloatingTimeZone"].includes(
-          a.name.value
-        )
-      ) {
-        return false;
-      }
-      const denyList = ["RichText"];
-      const typename = unwrapType(a.type).name.value;
-      if (denyList.includes(typename)) {
-        return false;
-      }
-      return true;
-    }),
-  };
-};
-
-const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
-  const fields = obj.fields
-    ?.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
-      if (acum.some((a) => a.name.value === cur.name.value)) {
-        return acum;
-      }
-      acum.push(cur);
-      return acum;
-    }, [])
-    .map(reduceArgs);
-  return {
-    ...obj,
-    fields,
-  };
-};
-
-const renderSuite = (
-  s: Suite
-): {
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
-} => {
-  const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
-  const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
-  const enumRenderers = (s.enumeration ?? []).map((e) => new EnumRenderer(e));
-  return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
-};
+import { parseSuites } from "./suite";
 
 const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
 
-(async () => {
-  const sdef = await promisify(exec)("sdef /Applications/OmniFocus.app");
+(async (appPath: string, override?: DocumentNode) => {
+  const sdef = await promisify(exec)(`sdef ${appPath}`);
   const parsed = (await parseStringPromise(sdef.stdout)) as {
     dictionary: { suite: Suite[] };
   };
 
-  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parsed.dictionary.suite
-    .map(renderSuite)
-    .reduce(
-      (
-        acum: {
-          classRenderers: ClassRenderer[];
-          extensionRenderers: ExtensionRenderer[];
-          recordTypeRenderers: RecordTypeRenderer[];
-          enumRenderers: EnumRenderer[];
-        },
-        cur
-      ) => {
-        return {
-          classRenderers: acum.classRenderers.concat(cur.classRenderers),
-          extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
-          recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
-          enumRenderers: acum.enumRenderers.concat(cur.enumRenderers),
-        };
-      },
-      { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
-    );
+  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parseSuites(
+    parsed.dictionary.suite
+  );
 
   const extensions = extensionRenderers.map((e) => e.getType());
   const inheritedClasses = new Set(
@@ -129,37 +51,35 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
         inherits: parent,
         inherited: inheritedClasses.has(cdef.getClassName()),
         extensions: extensionRenderers.filter((e) => e.extends === cdef.getClassName()),
+        override,
       })
     );
 
-    // TODO: less hard code
-    if (cdef.getClassName() === "inbox task") {
-      const m = cdef.getMutationExtension("push", parent);
-      if (m === null) {
-        return;
-      }
-      extensions.push(m);
+    const m = cdef.getMutationExtension("push", parent);
+    if (m === null) {
+      return;
     }
+    extensions.push(m);
   });
 
   const enums = enumRenderers.map((e) => e.getType());
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
-  const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
-    return ns
-      .map((n) => reduceFieldDefinition(n))
-      .map(print)
-      .join("\n");
+  const render = (ns: ASTNode[]) => {
+    return ns.map(print).join("\n");
   };
 
   const schema = gql`
+    type Query {
+      application: Application!
+    }
     type Mutation
 
     ${render(definitions)}
     ${render(extensions)}
     ${render(interfaces)}
     ${render(recordTypes)}
-    ${enums.map(print)}
+    ${render(enums)}
 
     # https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
     type PageInfo {
@@ -167,10 +87,6 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       hasNextPage: Boolean!
       startCursor: String!
       endCursor: String!
-    }
-
-    type Query {
-      application: Application!
     }
 
     directive @recordType on OBJECT
@@ -182,6 +98,8 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
       operator: String! = "="
       value: String! = "true"
     }
+
+    ${override ? print(override) : ""}
   `;
 
   const path = join(__dirname, "..", "..", "..", "assets", "schema.graphql");
@@ -192,9 +110,15 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
 
   fs.writeFile(path, prettier.format(comment + sortedSchema, { parser: "graphql" }), (err) => {
     if (err) {
-      console.error(err);
-      return;
+      throw err;
     }
     console.log(`✅ Schemad generated`);
   });
-})();
+})(
+  "/Applications/OmniFocus.app",
+  gql`
+    scalar RichText
+  `
+).catch((err) => {
+  console.error(err);
+});
