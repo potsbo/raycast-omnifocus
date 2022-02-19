@@ -1886,12 +1886,18 @@ export type Mutation = {
 
 
 export type MutationPushInboxTaskArgs = {
+  completedByChildren?: InputMaybe<Scalars['Boolean']>;
   completionDate?: InputMaybe<Scalars['String']>;
+  creationDate?: InputMaybe<Scalars['String']>;
   deferDate?: InputMaybe<Scalars['String']>;
   droppedDate?: InputMaybe<Scalars['String']>;
   dueDate?: InputMaybe<Scalars['String']>;
   estimatedMinutes?: InputMaybe<Scalars['Int']>;
-  name: Scalars['String'];
+  flagged?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  sequential?: InputMaybe<Scalars['Boolean']>;
+  shouldUseFloatingTimeZone?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** A named style object. */
@@ -4583,7 +4589,7 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  pushInboxTask?: Resolver<ResolversTypes['InboxTask'], ParentType, ContextType, RequireFields<MutationPushInboxTaskArgs, 'name'>>;
+  pushInboxTask?: Resolver<ResolversTypes['InboxTask'], ParentType, ContextType, Partial<MutationPushInboxTaskArgs>>;
 };
 
 export type NamedStyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyle'] = ResolversParentTypes['NamedStyle']> = {

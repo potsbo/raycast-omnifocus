@@ -2203,12 +2203,18 @@ enum LocationTrigger {
 
 type Mutation {
   pushInboxTask(
+    completedByChildren: Boolean
     completionDate: String
+    creationDate: String
     deferDate: String
     droppedDate: String
     dueDate: String
     estimatedMinutes: Int
-    name: String!
+    flagged: Boolean
+    id: String
+    name: String
+    sequential: Boolean
+    shouldUseFloatingTimeZone: Boolean
   ): InboxTask!
 }
 

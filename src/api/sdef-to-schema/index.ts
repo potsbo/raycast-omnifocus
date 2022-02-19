@@ -25,47 +25,6 @@ import prettier from "prettier";
 import gql from "graphql-tag";
 import { prune } from "./prune";
 
-const reduceArgs = (def: FieldDefinitionNode): FieldDefinitionNode => {
-  return {
-    ...def,
-    arguments: def.arguments?.filter((a) => {
-      // TODO: not to hard code
-      if (a.name.value === "id" && def.name.value !== "byId") {
-        return false;
-      }
-      if (
-        ["completedByChildren", "creationDate", "flagged", "sequential", "shouldUseFloatingTimeZone"].includes(
-          a.name.value
-        )
-      ) {
-        return false;
-      }
-      const denyList = ["RichText"];
-      const typename = unwrapType(a.type).name.value;
-      if (denyList.includes(typename)) {
-        return false;
-      }
-      return true;
-    }),
-  };
-};
-
-const reduceFieldDefinition = <T extends { fields?: readonly FieldDefinitionNode[] }>(obj: T): T => {
-  const fields = obj.fields
-    ?.reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
-      if (acum.some((a) => a.name.value === cur.name.value)) {
-        return acum;
-      }
-      acum.push(cur);
-      return acum;
-    }, [])
-    .map(reduceArgs);
-  return {
-    ...obj,
-    fields,
-  };
-};
-
 const renderSuite = (
   s: Suite
 ): {
@@ -146,10 +105,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
   const recordTypes = recordTypeRenderers.map((e) => e.getType());
 
   const render = (ns: (ObjectTypeDefinitionNode | ObjectTypeExtensionNode | InterfaceTypeDefinitionNode)[]) => {
-    return ns
-      .map((n) => reduceFieldDefinition(n))
-      .map(print)
-      .join("\n");
+    return ns.map(print).join("\n");
   };
 
   const schema = gql`
