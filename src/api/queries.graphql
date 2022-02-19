@@ -99,28 +99,27 @@ query GetTasks(
 ) {
   application {
     defaultDocument {
-      flattenedTasks
-        @whose(
-          condition: {
-            operator: "and"
-            operands: [
-              { field: "effectivelyCompleted", value: "false" }
-              { field: "flagged", enabled: $onlyFlagged }
-              {
-                operator: "not"
-                operands: [{ field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate }]
-              }
-              {
-                enabled: $onlyAvailable
-                operator: "or"
-                operands: [
-                  { field: "effectiveDeferDate", operator: "=", value: "null" }
-                  { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
-                ]
-              }
-            ]
-          }
-        ) {
+      flattenedTasks(
+        whose: {
+          operator: "and"
+          operands: [
+            { field: "effectivelyCompleted", value: "false" }
+            { field: "flagged", enabled: $onlyFlagged }
+            {
+              operator: "not"
+              operands: [{ field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate }]
+            }
+            {
+              enabled: $onlyAvailable
+              operator: "or"
+              operands: [
+                { field: "effectiveDeferDate", operator: "=", value: "null" }
+                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
+              ]
+            }
+          ]
+        }
+      ) {
         edges {
           node {
             ...TaskViewModel
@@ -134,22 +133,21 @@ query GetTasks(
 query GetInboxTasks {
   application {
     defaultDocument {
-      inboxTasks
-        @whose(
-          condition: {
-            operator: "and"
-            operands: [
-              { field: "effectivelyCompleted", value: "false" }
-              {
-                operator: "or"
-                operands: [
-                  { field: "effectiveDeferDate", operator: "=", value: "null" }
-                  { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
-                ]
-              }
-            ]
-          }
-        ) {
+      inboxTasks(
+        whose: {
+          operator: "and"
+          operands: [
+            { field: "effectivelyCompleted", value: "false" }
+            {
+              operator: "or"
+              operands: [
+                { field: "effectiveDeferDate", operator: "=", value: "null" }
+                { field: "effectiveDeferDate", operator: "<", value: "new Date()" }
+              ]
+            }
+          ]
+        }
+      ) {
         edges {
           node {
             ...TaskViewModel

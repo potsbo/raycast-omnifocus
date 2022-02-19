@@ -46,6 +46,48 @@ export type AncestorTree = Node & TreeInterface & {
   trees: TreeConnection;
 };
 
+
+/** The ancestor trees of this tree. */
+export type AncestorTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The ancestor trees of this tree. */
+export type AncestorTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The ancestor trees of this tree. */
+export type AncestorTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The ancestor trees of this tree. */
+export type AncestorTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The ancestor trees of this tree. */
+export type AncestorTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The ancestor trees of this tree. */
+export type AncestorTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The ancestor trees of this tree. */
+export type AncestorTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type AncestorTreeConnection = Connection & {
   __typename?: 'AncestorTreeConnection';
   byId?: Maybe<AncestorTree>;
@@ -88,6 +130,24 @@ export type Application = {
   referenceDate: Scalars['String'];
   /** The version number of the application. */
   version: Scalars['String'];
+};
+
+
+/** The application's top-level scripting object. */
+export type ApplicationDocumentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The application's top-level scripting object. */
+export type ApplicationPerspectivesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The application's top-level scripting object. */
+export type ApplicationPreferencesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 /** Represents an inline text attachment. */
@@ -190,6 +250,24 @@ export type AvailableTask = Node & TaskInterface & {
   tags: TagConnection;
   /** The tasks having this task as their container. */
   tasks: TaskConnection;
+};
+
+
+/** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
+export type AvailableTaskFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
+export type AvailableTaskTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
+export type AvailableTaskTasksArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type AvailableTaskConnection = Connection & {
@@ -318,6 +396,48 @@ export type ContentTree = Node & TreeInterface & {
   trees: TreeConnection;
 };
 
+
+/** The tree of objects in the main window content. */
+export type ContentTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the main window content. */
+export type ContentTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the main window content. */
+export type ContentTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the main window content. */
+export type ContentTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the main window content. */
+export type ContentTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the main window content. */
+export type ContentTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the main window content. */
+export type ContentTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type ContentTreeConnection = Connection & {
   __typename?: 'ContentTreeConnection';
   byId?: Maybe<ContentTree>;
@@ -397,6 +517,42 @@ export type DeprecatedContext = Node & TagInterface & {
   tasks: TaskConnection;
 };
 
+
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContextAvailableTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContextDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContextFlattenedTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContextRemainingTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContextTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
+export type DeprecatedContextTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type DeprecatedContextConnection = Connection & {
   __typename?: 'DeprecatedContextConnection';
   byId?: Maybe<DeprecatedContext>;
@@ -442,6 +598,48 @@ export type DescendantTree = Node & TreeInterface & {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
+export type DescendantTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type DescendantTreeConnection = Connection & {
@@ -515,6 +713,84 @@ export type Document = {
   willAutosave: Scalars['Boolean'];
 };
 
+
+/** A document. */
+export type DocumentDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentFlattenedFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentFlattenedProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentFlattenedTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentInboxTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentPerspectivesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentSectionsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentSettingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type DocumentConnection = {
   __typename?: 'DocumentConnection';
   byId?: Maybe<Document>;
@@ -563,6 +839,36 @@ export type FlattenedFolder = FolderInterface & Node & {
   projects: ProjectConnection;
   /** The projects and folders having this folder as their container. */
   sections: SectionConnection;
+};
+
+
+/** A flattened list of folders in a document. */
+export type FlattenedFolderFlattenedFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of folders in a document. */
+export type FlattenedFolderFlattenedProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of folders in a document. */
+export type FlattenedFolderFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of folders in a document. */
+export type FlattenedFolderProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of folders in a document. */
+export type FlattenedFolderSectionsArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type FlattenedFolderConnection = Connection & {
@@ -718,6 +1024,42 @@ export type FlattenedTag = Node & TagInterface & {
   tasks: TaskConnection;
 };
 
+
+/** A flattened list of tags in a document. */
+export type FlattenedTagAvailableTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tags in a document. */
+export type FlattenedTagDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tags in a document. */
+export type FlattenedTagFlattenedTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tags in a document. */
+export type FlattenedTagRemainingTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tags in a document. */
+export type FlattenedTagTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tags in a document. */
+export type FlattenedTagTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type FlattenedTagConnection = Connection & {
   __typename?: 'FlattenedTagConnection';
   byId?: Maybe<FlattenedTag>;
@@ -812,6 +1154,24 @@ export type FlattenedTask = Node & TaskInterface & {
   tasks: TaskConnection;
 };
 
+
+/** A flattened list of tasks under a task or document. */
+export type FlattenedTaskFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tasks under a task or document. */
+export type FlattenedTaskTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A flattened list of tasks under a task or document. */
+export type FlattenedTaskTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type FlattenedTaskConnection = Connection & {
   __typename?: 'FlattenedTaskConnection';
   byId?: Maybe<FlattenedTask>;
@@ -857,6 +1217,36 @@ export type Folder = FolderInterface & Node & SectionInterface & {
   sections: SectionConnection;
 };
 
+
+/** A group of projects and sub-folders representing an area of responsibility. */
+export type FolderFlattenedFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A group of projects and sub-folders representing an area of responsibility. */
+export type FolderFlattenedProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A group of projects and sub-folders representing an area of responsibility. */
+export type FolderFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A group of projects and sub-folders representing an area of responsibility. */
+export type FolderProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A group of projects and sub-folders representing an area of responsibility. */
+export type FolderSectionsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type FolderConnection = Connection & {
   __typename?: 'FolderConnection';
   byId?: Maybe<FolderInterface>;
@@ -900,6 +1290,31 @@ export type FolderInterface = {
   sections: SectionConnection;
 };
 
+
+export type FolderInterfaceFlattenedFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type FolderInterfaceFlattenedProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type FolderInterfaceFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type FolderInterfaceProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type FolderInterfaceSectionsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSibling = Node & TreeInterface & {
   __typename?: 'FollowingSibling';
@@ -927,6 +1342,48 @@ export type FollowingSibling = Node & TreeInterface & {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingPrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree after it in the user-specified sort ordering. */
+export type FollowingSiblingTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type FollowingSiblingConnection = Connection & {
@@ -997,6 +1454,12 @@ export type ForecastSidebarTree = SidebarTreeInterface & {
   forecastDays: ForecastDayConnection;
   /** The currently selected smart group identifier. */
   selectedSmartGroupIdentifier?: Maybe<Scalars['String']>;
+};
+
+
+/** The sidebar tree used when the window's sidebar tab property is set to forecast tab. */
+export type ForecastSidebarTreeForecastDaysArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 /** A task that is in the document's inbox */
@@ -1075,6 +1538,24 @@ export type InboxTask = Node & TaskInterface & {
   tasks: TaskConnection;
 };
 
+
+/** A task that is in the document's inbox */
+export type InboxTaskFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task that is in the document's inbox */
+export type InboxTaskTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task that is in the document's inbox */
+export type InboxTaskTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type InboxTaskConnection = Connection & {
   __typename?: 'InboxTaskConnection';
   byId?: Maybe<InboxTask>;
@@ -1120,6 +1601,48 @@ export type InboxTree = Node & TreeInterface & {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the Inbox. */
+export type InboxTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type InboxTreeConnection = Connection & {
@@ -1184,6 +1707,48 @@ export type Leaf = Node & TreeInterface & {
   trees: TreeConnection;
 };
 
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafPrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The descendants of a tree that have no children themselves. */
+export type LeafTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type LeafConnection = Connection & {
   __typename?: 'LeafConnection';
   byId?: Maybe<Leaf>;
@@ -1229,6 +1794,48 @@ export type LibraryTree = Node & TreeInterface & {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree in the sidebar representing the top level library of objects. */
+export type LibraryTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type LibraryTreeConnection = Connection & {
@@ -1297,6 +1904,12 @@ export type NamedStyle = Node & StyleInterface & {
   /** The name of the style.  Must be unique within the containing document. */
   name: Scalars['String'];
   namedStyles: NamedStyleConnection;
+};
+
+
+/** A named style object. */
+export type NamedStyleNamedStylesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type NamedStyleConnection = Connection & {
@@ -1410,6 +2023,48 @@ export type PrecedingSibling = Node & TreeInterface & {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingPrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The sibling trees of this tree before it in the user-specified sort ordering. */
+export type PrecedingSiblingTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type PrecedingSiblingConnection = Connection & {
@@ -1695,6 +2350,78 @@ export type QuickEntryTree = Node & TreeInterface & {
   visible: Scalars['Boolean'];
 };
 
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeFoldersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeInboxTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeProjectsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The Quick Entry panel. */
+export type QuickEntryTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type QuickEntryTreeConnection = Connection & {
   __typename?: 'QuickEntryTreeConnection';
   byId?: Maybe<QuickEntryTree>;
@@ -1787,6 +2514,24 @@ export type RemainingTask = Node & TaskInterface & {
   tags: TagConnection;
   /** The tasks having this task as their container. */
   tasks: TaskConnection;
+};
+
+
+/** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
+export type RemainingTaskFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
+export type RemainingTaskTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
+export type RemainingTaskTasksArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type RemainingTaskConnection = Connection & {
@@ -1929,6 +2674,48 @@ export type SelectedTree = Node & TreeInterface & {
   trees: TreeConnection;
 };
 
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The trees of this tree that are selected in the user interface, possibly including this tree. */
+export type SelectedTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type SelectedTreeConnection = Connection & {
   __typename?: 'SelectedTreeConnection';
   byId?: Maybe<SelectedTree>;
@@ -2010,6 +2797,48 @@ export type SidebarTree = Node & SidebarTreeInterface & TreeInterface & {
   trees: TreeConnection;
 };
 
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** The tree of objects in the window sidebar. */
+export type SidebarTreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type SidebarTreeInterface = {
   /** The list of possible smart group identifiers that can be set as the selected smart group identifier. */
   availableSmartGroupIdentifiers: Array<Scalars['String']>;
@@ -2025,10 +2854,21 @@ export type Style = StyleInterface & {
   namedStyles: NamedStyleConnection;
 };
 
+
+/** A style object. */
+export type StyleNamedStylesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export type StyleInterface = {
   /** The name of the font of the style. */
   font: Scalars['String'];
   namedStyles: NamedStyleConnection;
+};
+
+
+export type StyleInterfaceNamedStylesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 /** A tag. */
@@ -2063,6 +2903,42 @@ export type Tag = Node & TagInterface & {
   tags: TagConnection;
   /** The tasks having this tag. */
   tasks: TaskConnection;
+};
+
+
+/** A tag. */
+export type TagAvailableTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tag. */
+export type TagDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tag. */
+export type TagFlattenedTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tag. */
+export type TagRemainingTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tag. */
+export type TagTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tag. */
+export type TagTasksArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type TagConnection = Connection & {
@@ -2113,6 +2989,36 @@ export type TagInterface = {
   tags: TagConnection;
   /** The tasks having this tag. */
   tasks: TaskConnection;
+};
+
+
+export type TagInterfaceAvailableTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TagInterfaceDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TagInterfaceFlattenedTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TagInterfaceRemainingTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TagInterfaceTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TagInterfaceTasksArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 /** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
@@ -2189,6 +3095,24 @@ export type Task = Node & TaskInterface & {
   tags: TagConnection;
   /** The tasks having this task as their container. */
   tasks: TaskConnection;
+};
+
+
+/** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
+export type TaskFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
+export type TaskTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
+export type TaskTasksArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type TaskConnection = Connection & {
@@ -2283,6 +3207,21 @@ export type TaskInterface = {
   tasks: TaskConnection;
 };
 
+
+export type TaskInterfaceFlattenedTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TaskInterfaceTagsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TaskInterfaceTasksArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 export enum TextAlignment {
   Center = 'CENTER',
   Justified = 'JUSTIFIED',
@@ -2318,6 +3257,48 @@ export type Tree = Node & TreeInterface & {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreeAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreeDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreeFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreeLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreeSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A tree representing an object, along with its sub-trees. */
+export type TreeTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 export type TreeConnection = Connection & {
@@ -2363,6 +3344,41 @@ export type TreeInterface = {
   selectedTrees: SelectedTreeConnection;
   /** The immediate child trees of this tree in the user-specified sort ordering. */
   trees: TreeConnection;
+};
+
+
+export type TreeInterfaceAncestorTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TreeInterfaceDescendantTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TreeInterfaceFollowingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TreeInterfaceLeafsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TreeInterfacePrecedingSiblingsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TreeInterfaceSelectedTreesArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type TreeInterfaceTreesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 /** This subdivides the text into words. */
@@ -2816,25 +3832,19 @@ export type RecordTypeDirectiveArgs = { };
 
 export type RecordTypeDirectiveResolver<Result, Parent, ContextType = any, Args = RecordTypeDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type WhoseDirectiveArgs = {
-  condition: Array<Condition>;
-};
-
-export type WhoseDirectiveResolver<Result, Parent, ContextType = any, Args = WhoseDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type AncestorTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AncestorTree'] = ResolversParentTypes['AncestorTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<AncestorTreeAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<AncestorTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<AncestorTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<AncestorTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<AncestorTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<AncestorTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<AncestorTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -2855,12 +3865,12 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   buildNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   currentTimeOffset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   defaultDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
-  documents?: Resolver<ResolversTypes['DocumentConnection'], ParentType, ContextType>;
+  documents?: Resolver<ResolversTypes['DocumentConnection'], ParentType, ContextType, Partial<ApplicationDocumentsArgs>>;
   frontmost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType>;
-  preferences?: Resolver<ResolversTypes['PreferenceConnection'], ParentType, ContextType>;
+  perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType, Partial<ApplicationPerspectivesArgs>>;
+  preferences?: Resolver<ResolversTypes['PreferenceConnection'], ParentType, ContextType, Partial<ApplicationPreferencesArgs>>;
   quickEntry?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
   referenceDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -2900,7 +3910,7 @@ export type AvailableTaskResolvers<ContextType = any, ParentType extends Resolve
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<AvailableTaskFlattenedTasksArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -2918,8 +3928,8 @@ export type AvailableTaskResolvers<ContextType = any, ParentType extends Resolve
   repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<AvailableTaskTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<AvailableTaskTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -2971,28 +3981,28 @@ export type ConnectionResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type ContentTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentTree'] = ResolversParentTypes['ContentTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<ContentTreeAncestorTreesArgs>>;
   availableGroupingIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   availableSortingIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   availableTaskDurationFilterIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   availableTaskFlaggedFilterIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   availableTaskStateFilterIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<ContentTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<ContentTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<ContentTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<ContentTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   selectedGroupingIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   selectedSortingIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   selectedTaskDurationFilterIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   selectedTaskFlaggedFilterIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   selectedTaskStateFilterIdentifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<ContentTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<ContentTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3031,20 +4041,20 @@ export type CustomPerspectiveEdgeResolvers<ContextType = any, ParentType extends
 export type DeprecatedContextResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeprecatedContext'] = ResolversParentTypes['DeprecatedContext']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
+  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType, Partial<DeprecatedContextAvailableTasksArgs>>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
-  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<DeprecatedContextDeprecatedContextsArgs>>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType, Partial<DeprecatedContextFlattenedTagsArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType, Partial<DeprecatedContextRemainingTasksArgs>>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<DeprecatedContextTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<DeprecatedContextTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3062,18 +4072,18 @@ export type DeprecatedContextEdgeResolvers<ContextType = any, ParentType extends
 };
 
 export type DescendantTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DescendantTree'] = ResolversParentTypes['DescendantTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<DescendantTreeAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<DescendantTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<DescendantTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<DescendantTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<DescendantTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<DescendantTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<DescendantTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3094,15 +4104,15 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   canRedo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   canUndo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   compressesTransactions?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<DocumentDeprecatedContextsArgs>>;
   disableAutomaticInboxCleanup?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
-  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
-  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
-  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType, Partial<DocumentFlattenedFoldersArgs>>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType, Partial<DocumentFlattenedProjectsArgs>>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType, Partial<DocumentFlattenedTagsArgs>>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<DocumentFlattenedTasksArgs>>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType, Partial<DocumentFoldersArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  inboxTasks?: Resolver<ResolversTypes['InboxTaskConnection'], ParentType, ContextType>;
+  inboxTasks?: Resolver<ResolversTypes['InboxTaskConnection'], ParentType, ContextType, Partial<DocumentInboxTasksArgs>>;
   includesSummaries?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastSyncDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   lastSyncError?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -3110,14 +4120,14 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   perspectiveNames?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType>;
-  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  perspectives?: Resolver<ResolversTypes['PerspectiveConnection'], ParentType, ContextType, Partial<DocumentPerspectivesArgs>>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType, Partial<DocumentProjectsArgs>>;
   quickEntry?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
-  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
-  settings?: Resolver<ResolversTypes['SettingConnection'], ParentType, ContextType>;
+  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType, Partial<DocumentSectionsArgs>>;
+  settings?: Resolver<ResolversTypes['SettingConnection'], ParentType, ContextType, Partial<DocumentSettingsArgs>>;
   syncing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<DocumentTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<DocumentTasksArgs>>;
   willAutosave?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -3144,16 +4154,16 @@ export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentT
 export type FlattenedFolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedFolder'] = ResolversParentTypes['FlattenedFolder']> = {
   creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
-  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
-  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType, Partial<FlattenedFolderFlattenedFoldersArgs>>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType, Partial<FlattenedFolderFlattenedProjectsArgs>>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType, Partial<FlattenedFolderFoldersArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
-  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
-  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType, Partial<FlattenedFolderProjectsArgs>>;
+  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType, Partial<FlattenedFolderSectionsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3229,20 +4239,20 @@ export type FlattenedProjectEdgeResolvers<ContextType = any, ParentType extends 
 export type FlattenedTagResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedTag'] = ResolversParentTypes['FlattenedTag']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
+  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType, Partial<FlattenedTagAvailableTasksArgs>>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
-  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<FlattenedTagDeprecatedContextsArgs>>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType, Partial<FlattenedTagFlattenedTagsArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType, Partial<FlattenedTagRemainingTasksArgs>>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<FlattenedTagTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<FlattenedTagTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3276,7 +4286,7 @@ export type FlattenedTaskResolvers<ContextType = any, ParentType extends Resolve
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<FlattenedTaskFlattenedTasksArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -3294,8 +4304,8 @@ export type FlattenedTaskResolvers<ContextType = any, ParentType extends Resolve
   repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<FlattenedTaskTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<FlattenedTaskTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3315,16 +4325,16 @@ export type FlattenedTaskEdgeResolvers<ContextType = any, ParentType extends Res
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
   creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
-  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
-  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType, Partial<FolderFlattenedFoldersArgs>>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType, Partial<FolderFlattenedProjectsArgs>>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType, Partial<FolderFoldersArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
-  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
-  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType, Partial<FolderProjectsArgs>>;
+  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType, Partial<FolderSectionsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3345,31 +4355,31 @@ export type FolderInterfaceResolvers<ContextType = any, ParentType extends Resol
   __resolveType: TypeResolveFn<'FlattenedFolder' | 'Folder', ParentType, ContextType>;
   creationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType>;
-  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType>;
-  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
+  flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType, Partial<FolderInterfaceFlattenedFoldersArgs>>;
+  flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType, Partial<FolderInterfaceFlattenedProjectsArgs>>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType, Partial<FolderInterfaceFoldersArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
-  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
-  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType, Partial<FolderInterfaceProjectsArgs>>;
+  sections?: Resolver<ResolversTypes['SectionConnection'], ParentType, ContextType, Partial<FolderInterfaceSectionsArgs>>;
 };
 
 export type FollowingSiblingResolvers<ContextType = any, ParentType extends ResolversParentTypes['FollowingSibling'] = ResolversParentTypes['FollowingSibling']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<FollowingSiblingAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<FollowingSiblingDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<FollowingSiblingFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<FollowingSiblingLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<FollowingSiblingPrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<FollowingSiblingSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<FollowingSiblingTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3417,7 +4427,7 @@ export type ForecastDayInterfaceResolvers<ContextType = any, ParentType extends 
 
 export type ForecastSidebarTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ForecastSidebarTree'] = ResolversParentTypes['ForecastSidebarTree']> = {
   availableSmartGroupIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  forecastDays?: Resolver<ResolversTypes['ForecastDayConnection'], ParentType, ContextType>;
+  forecastDays?: Resolver<ResolversTypes['ForecastDayConnection'], ParentType, ContextType, Partial<ForecastSidebarTreeForecastDaysArgs>>;
   selectedSmartGroupIdentifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -3439,7 +4449,7 @@ export type InboxTaskResolvers<ContextType = any, ParentType extends ResolversPa
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<InboxTaskFlattenedTasksArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -3457,8 +4467,8 @@ export type InboxTaskResolvers<ContextType = any, ParentType extends ResolversPa
   repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<InboxTaskTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<InboxTaskTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3476,18 +4486,18 @@ export type InboxTaskEdgeResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type InboxTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['InboxTree'] = ResolversParentTypes['InboxTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<InboxTreeAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<InboxTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<InboxTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<InboxTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<InboxTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<InboxTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<InboxTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3505,18 +4515,18 @@ export type InboxTreeEdgeResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type LeafResolvers<ContextType = any, ParentType extends ResolversParentTypes['Leaf'] = ResolversParentTypes['Leaf']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<LeafAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<LeafDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<LeafFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<LeafLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<LeafPrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<LeafSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<LeafTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3534,18 +4544,18 @@ export type LeafEdgeResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type LibraryTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LibraryTree'] = ResolversParentTypes['LibraryTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<LibraryTreeAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<LibraryTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<LibraryTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<LibraryTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<LibraryTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<LibraryTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<LibraryTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3580,7 +4590,7 @@ export type NamedStyleResolvers<ContextType = any, ParentType extends ResolversP
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType>;
+  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType, Partial<NamedStyleNamedStylesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3650,18 +4660,18 @@ export type PerspectiveInterfaceResolvers<ContextType = any, ParentType extends 
 };
 
 export type PrecedingSiblingResolvers<ContextType = any, ParentType extends ResolversParentTypes['PrecedingSibling'] = ResolversParentTypes['PrecedingSibling']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<PrecedingSiblingAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<PrecedingSiblingDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<PrecedingSiblingFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<PrecedingSiblingLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<PrecedingSiblingPrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<PrecedingSiblingSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<PrecedingSiblingTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3805,23 +4815,23 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type QuickEntryTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['QuickEntryTree'] = ResolversParentTypes['QuickEntryTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<QuickEntryTreeAncestorTreesArgs>>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<QuickEntryTreeDeprecatedContextsArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<QuickEntryTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  folders?: Resolver<ResolversTypes['FolderConnection'], ParentType, ContextType, Partial<QuickEntryTreeFoldersArgs>>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<QuickEntryTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  inboxTasks?: Resolver<ResolversTypes['InboxTaskConnection'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  inboxTasks?: Resolver<ResolversTypes['InboxTaskConnection'], ParentType, ContextType, Partial<QuickEntryTreeInboxTasksArgs>>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<QuickEntryTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
-  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<QuickEntryTreePrecedingSiblingsArgs>>;
+  projects?: Resolver<ResolversTypes['ProjectConnection'], ParentType, ContextType, Partial<QuickEntryTreeProjectsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<QuickEntryTreeSelectedTreesArgs>>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<QuickEntryTreeTagsArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<QuickEntryTreeTreesArgs>>;
   visible?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -3856,7 +4866,7 @@ export type RemainingTaskResolvers<ContextType = any, ParentType extends Resolve
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<RemainingTaskFlattenedTasksArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -3874,8 +4884,8 @@ export type RemainingTaskResolvers<ContextType = any, ParentType extends Resolve
   repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<RemainingTaskTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<RemainingTaskTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3951,18 +4961,18 @@ export type SectionInterfaceResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type SelectedTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectedTree'] = ResolversParentTypes['SelectedTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<SelectedTreeAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<SelectedTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<SelectedTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<SelectedTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<SelectedTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<SelectedTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<SelectedTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4003,20 +5013,20 @@ export type SettingInterfaceResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type SidebarTreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SidebarTree'] = ResolversParentTypes['SidebarTree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<SidebarTreeAncestorTreesArgs>>;
   availableSmartGroupIdentifiers?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<SidebarTreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<SidebarTreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<SidebarTreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<SidebarTreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   selectedSmartGroupIdentifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<SidebarTreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<SidebarTreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4028,33 +5038,33 @@ export type SidebarTreeInterfaceResolvers<ContextType = any, ParentType extends 
 
 export type StyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Style'] = ResolversParentTypes['Style']> = {
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType>;
+  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType, Partial<StyleNamedStylesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StyleInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['StyleInterface'] = ResolversParentTypes['StyleInterface']> = {
   __resolveType: TypeResolveFn<'NamedStyle' | 'Style', ParentType, ContextType>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType>;
+  namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType, Partial<StyleInterfaceNamedStylesArgs>>;
 };
 
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
+  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType, Partial<TagAvailableTasksArgs>>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
-  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<TagDeprecatedContextsArgs>>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType, Partial<TagFlattenedTagsArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType, Partial<TagRemainingTasksArgs>>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<TagTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<TagTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4075,20 +5085,20 @@ export type TagInterfaceResolvers<ContextType = any, ParentType extends Resolver
   __resolveType: TypeResolveFn<'DeprecatedContext' | 'FlattenedTag' | 'Tag', ParentType, ContextType>;
   allowsNextAction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   availableTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType>;
+  availableTasks?: Resolver<ResolversTypes['AvailableTaskConnection'], ParentType, ContextType, Partial<TagInterfaceAvailableTasksArgs>>;
   container?: Resolver<ResolversTypes['Tag'], ParentType, ContextType>;
-  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType>;
+  deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<TagInterfaceDeprecatedContextsArgs>>;
   effectivelyHidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType>;
+  flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType, Partial<TagInterfaceFlattenedTagsArgs>>;
   hidden?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['LocationInformation']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['RichText'], ParentType, ContextType>;
   remainingTaskCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  remainingTasks?: Resolver<ResolversTypes['RemainingTaskConnection'], ParentType, ContextType, Partial<TagInterfaceRemainingTasksArgs>>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<TagInterfaceTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<TagInterfaceTasksArgs>>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -4108,7 +5118,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<TaskFlattenedTasksArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -4126,8 +5136,8 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<TaskTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<TaskTasksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4162,7 +5172,7 @@ export type TaskInterfaceResolvers<ContextType = any, ParentType extends Resolve
   effectivelyDropped?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   estimatedMinutes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   flagged?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType>;
+  flattenedTasks?: Resolver<ResolversTypes['FlattenedTaskConnection'], ParentType, ContextType, Partial<TaskInterfaceFlattenedTasksArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   inInbox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   modificationDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -4180,23 +5190,23 @@ export type TaskInterfaceResolvers<ContextType = any, ParentType extends Resolve
   repetitionRule?: Resolver<Maybe<ResolversTypes['RepetitionRule']>, ParentType, ContextType>;
   sequential?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   shouldUseFloatingTimeZone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType>;
-  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType>;
+  tags?: Resolver<ResolversTypes['TagConnection'], ParentType, ContextType, Partial<TaskInterfaceTagsArgs>>;
+  tasks?: Resolver<ResolversTypes['TaskConnection'], ParentType, ContextType, Partial<TaskInterfaceTasksArgs>>;
 };
 
 export type TreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tree'] = ResolversParentTypes['Tree']> = {
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<TreeAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<TreeDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<TreeFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<TreeLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<TreePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<TreeSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<TreeTreesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4215,18 +5225,18 @@ export type TreeEdgeResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type TreeInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['TreeInterface'] = ResolversParentTypes['TreeInterface']> = {
   __resolveType: TypeResolveFn<'AncestorTree' | 'ContentTree' | 'DescendantTree' | 'FollowingSibling' | 'InboxTree' | 'Leaf' | 'LibraryTree' | 'PrecedingSibling' | 'QuickEntryTree' | 'SelectedTree' | 'SidebarTree' | 'Tree', ParentType, ContextType>;
-  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType>;
-  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType>;
+  ancestorTrees?: Resolver<ResolversTypes['AncestorTreeConnection'], ParentType, ContextType, Partial<TreeInterfaceAncestorTreesArgs>>;
+  descendantTrees?: Resolver<ResolversTypes['DescendantTreeConnection'], ParentType, ContextType, Partial<TreeInterfaceDescendantTreesArgs>>;
   expanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType>;
+  followingSiblings?: Resolver<ResolversTypes['FollowingSiblingConnection'], ParentType, ContextType, Partial<TreeInterfaceFollowingSiblingsArgs>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType>;
+  leafs?: Resolver<ResolversTypes['LeafConnection'], ParentType, ContextType, Partial<TreeInterfaceLeafsArgs>>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   noteExpanded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType>;
+  precedingSiblings?: Resolver<ResolversTypes['PrecedingSiblingConnection'], ParentType, ContextType, Partial<TreeInterfacePrecedingSiblingsArgs>>;
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType>;
-  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType>;
+  selectedTrees?: Resolver<ResolversTypes['SelectedTreeConnection'], ParentType, ContextType, Partial<TreeInterfaceSelectedTreesArgs>>;
+  trees?: Resolver<ResolversTypes['TreeConnection'], ParentType, ContextType, Partial<TreeInterfaceTreesArgs>>;
 };
 
 export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = {
@@ -4371,7 +5381,6 @@ export type Resolvers<ContextType = any> = {
 
 export type DirectiveResolvers<ContextType = any> = {
   recordType?: RecordTypeDirectiveResolver<any, any, ContextType>;
-  whose?: WhoseDirectiveResolver<any, any, ContextType>;
 };
 
 export const TaskViewModelFragmentDoc = gql`
@@ -4479,7 +5488,9 @@ export const GetTasksDocument = gql`
     query GetTasks($onlyFlagged: Boolean! = false, $onlyAvailable: Boolean! = false, $withEffectiveDueDate: Boolean! = false) {
   application {
     defaultDocument {
-      flattenedTasks @whose(condition: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {field: "flagged", enabled: $onlyFlagged}, {operator: "not", operands: [{field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate}]}, {enabled: $onlyAvailable, operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}) {
+      flattenedTasks(
+        whose: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {field: "flagged", enabled: $onlyFlagged}, {operator: "not", operands: [{field: "effectiveDeferDate", value: "null", enabled: $withEffectiveDueDate}]}, {enabled: $onlyAvailable, operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}
+      ) {
         edges {
           node {
             ...TaskViewModel
@@ -4494,7 +5505,9 @@ export const GetInboxTasksDocument = gql`
     query GetInboxTasks {
   application {
     defaultDocument {
-      inboxTasks @whose(condition: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}) {
+      inboxTasks(
+        whose: {operator: "and", operands: [{field: "effectivelyCompleted", value: "false"}, {operator: "or", operands: [{field: "effectiveDeferDate", operator: "=", value: "null"}, {field: "effectiveDeferDate", operator: "<", value: "new Date()"}]}]}
+      ) {
         edges {
           node {
             ...TaskViewModel
