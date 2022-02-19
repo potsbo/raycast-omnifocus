@@ -149,9 +149,10 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
 
   fs.writeFile(path, prettier.format(comment + sortedSchema, { parser: "graphql" }), (err) => {
     if (err) {
-      console.error(err);
-      return;
+      throw err;
     }
     console.log(`✅ Schemad generated`);
   });
-})();
+})().catch((err) => {
+  console.error(err);
+});
