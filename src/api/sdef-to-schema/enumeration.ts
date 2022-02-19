@@ -22,7 +22,7 @@ export class EnumRenderer {
         description: desc,
         name: {
           kind: Kind.NAME,
-          value: e.$.name.replaceAll(" ", "_").toUpperCase(),
+          value: e.$.name.replace(/ /g, "_").toUpperCase(),
         },
       };
     });
