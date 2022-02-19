@@ -5,10 +5,11 @@ import {
   InputValueDefinitionNode,
   Kind,
   NameNode,
+  print,
   TypeNode,
 } from "graphql";
 import { validateSDL } from "graphql/validation/validate";
-import { unwrapType } from "../../graphql-utils";
+import { compatibleType, identicalyNamed, implementsInterface, unwrapType } from "../../graphql-utils";
 
 const SCALARS = ["Int", "Float", "String", "Boolean", "ID"];
 
@@ -16,6 +17,7 @@ const isNonNull = <T>(t: T | null): t is T => {
   return t !== null;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type NamedWithFields = DefinitionNode & { fields?: any; name: NameNode };
 class Pruner {
   private readonly doc: DocumentNode;
@@ -26,10 +28,14 @@ class Pruner {
   prune = (depth = 100): DocumentNode => {
     const doc = { ...this.doc, definitions: this.doc.definitions.map(this.pruneDefinition).filter(isNonNull) };
     const errors = validateSDL(doc);
-    if (errors.length === 0) {
+    if (depth === 0) {
+      if (errors.length > 0) {
+        throw errors;
+      }
       return doc;
     }
-    if (depth === 0) {
+
+    if (print(new Pruner(doc).prune(0)) === print(doc)) {
       return doc;
     }
     // TODO: may need to introduce max depth
@@ -41,13 +47,44 @@ class Pruner {
       return null;
     }
     if ("interfaces" in def) {
-      return { ...def, interfaces: def.interfaces?.filter(this.definedType) };
+      return {
+        ...def,
+        interfaces: def.interfaces?.filter(this.definedType).filter((i) => {
+          if (!("fields" in def)) {
+            return false;
+          }
+          return implementsInterface(
+            def,
+            {
+              kind: Kind.INTERFACE_TYPE_DEFINITION,
+              fields: this.collectExtendedFields(i.name.value),
+              name: {
+                kind: Kind.NAME,
+                value: "",
+              },
+            },
+            { knownTypes: this.doc.definitions }
+          );
+        }),
+      };
     }
     return def;
   };
 
   private pruneDefinition = (def: DefinitionNode): DefinitionNode | null => {
-    const fs = [this.pruneInterfaces, this.pruneFields];
+    const fs = [
+      this.pruneInterfaces,
+      this.pruneFields,
+      <T extends DefinitionNode>(def: T | null): T | null => {
+        if (def === null) {
+          return null;
+        }
+        if (def.kind === Kind.OBJECT_TYPE_EXTENSION) {
+          return null;
+        }
+        return def;
+      },
+    ];
 
     let ret: DefinitionNode | null = def;
     fs.forEach((f) => {
@@ -56,40 +93,12 @@ class Pruner {
     return ret;
   };
 
-  private collectExtendedFields = (def: NamedWithFields): readonly FieldDefinitionNode[] => {
-    if (def.kind === Kind.OBJECT_TYPE_DEFINITION) {
-      return this.doc.definitions
-        .filter(
-          (d): d is NamedWithFields =>
-            (d.kind === Kind.OBJECT_TYPE_EXTENSION && d.name.value === def.name.value) ||
-            (d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value)
-        )
-        .map((d) => d.fields ?? [])
-        .reduce((acum, cur) => [...acum, ...cur]);
-    }
-
-    if (def.kind === Kind.INTERFACE_TYPE_DEFINITION) {
-      return this.doc.definitions
-        .filter(
-          (d): d is NamedWithFields =>
-            (d.kind === Kind.INTERFACE_TYPE_DEFINITION && d.name.value === def.name.value) ||
-            (d.kind === Kind.OBJECT_TYPE_EXTENSION && d.name.value === def.name.value)
-        )
-        .map((d) => d.fields ?? [])
-        .reduce((acum, cur) => [...acum, ...cur]);
-    }
-
-    if (def.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION) {
-      return this.doc.definitions
-        .filter(
-          (d): d is NamedWithFields =>
-            (d.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION && d.name.value === def.name.value) ||
-            (d.kind === Kind.INPUT_OBJECT_TYPE_EXTENSION && d.name.value === def.name.value)
-        )
-        .map((d) => d.fields ?? [])
-        .reduce((acum, cur) => [...acum, ...cur]);
-    }
-    return [];
+  private collectExtendedFields = (def: NamedWithFields | string): readonly FieldDefinitionNode[] => {
+    const typeName = typeof def === "string" ? def : def.name.value;
+    return this.doc.definitions
+      .filter((d): d is NamedWithFields => "name" in d && "fields" in d && d.name?.value === typeName)
+      .map((d) => d.fields ?? [])
+      .reduce((acum, cur) => [...acum, ...cur]);
   };
 
   private pruneFields = <T extends DefinitionNode>(def: T | null): T | null => {
@@ -102,7 +111,34 @@ class Pruner {
     if (!("fields" in def)) {
       return def;
     }
-    const fields = this.collectExtendedFields(def).filter(this.definedType).map(this.pruneArgs);
+    const fields = this.collectExtendedFields(def)
+      .filter(this.definedType)
+      .filter((f) => {
+        if (!("interfaces" in def) || def.interfaces === undefined) {
+          return true;
+        }
+
+        for (const i of def.interfaces) {
+          const requiredFields = this.collectExtendedFields(i.name.value);
+          for (const rf of requiredFields) {
+            if (!identicalyNamed(rf, f)) {
+              continue;
+            }
+
+            if (!compatibleType(rf.type, f.type, { knownTypes: this.doc.definitions })) {
+              return false;
+            }
+          }
+        }
+        return true;
+      })
+      .map(this.pruneArgs)
+      .reduce((acum: FieldDefinitionNode[], cur: FieldDefinitionNode) => {
+        if (acum.some((f) => f.name.value == cur.name.value)) {
+          return acum;
+        }
+        return [...acum, cur];
+      }, []);
     if (fields.length === 0) {
       return null;
     }

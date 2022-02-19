@@ -176,3 +176,130 @@ test("input only", () => {
 
   expect(print(prune(input))).toEqual(print(output));
 });
+
+test("valid interface", () => {
+  const input = gql`
+    interface SomeInterface {
+      someField: String
+    }
+    type SomeType implements SomeInterface {
+      someField: String
+    }
+  `;
+
+  const output = gql`
+    interface SomeInterface {
+      someField: String
+    }
+    type SomeType implements SomeInterface {
+      someField: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("valid child interface", () => {
+  const input = gql`
+    interface ParentInterface {
+      childInterface: ChildInterface
+    }
+
+    interface ChildInterface {
+      someField: String
+    }
+
+    type SomeType implements ParentInterface {
+      childInterface: ValidChild
+      validField: String
+    }
+
+    type ValidChild implements ChildInterface {
+      someField: String
+    }
+  `;
+
+  const output = gql`
+    interface ParentInterface {
+      childInterface: ChildInterface
+    }
+
+    interface ChildInterface {
+      someField: String
+    }
+
+    type SomeType implements ParentInterface {
+      childInterface: ValidChild
+      validField: String
+    }
+
+    type ValidChild implements ChildInterface {
+      someField: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+test("invalid interface", () => {
+  const input = gql`
+    interface SomeInterface {
+      someField: String
+    }
+    type SomeType implements SomeInterface {
+      validField: String
+    }
+  `;
+
+  const output = gql`
+    interface SomeInterface {
+      someField: String
+    }
+    type SomeType {
+      validField: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});
+
+test("invalid child interface", () => {
+  const input = gql`
+    interface ParentInterface {
+      childInterface: ChildInterface
+    }
+
+    interface ChildInterface {
+      someField: String
+    }
+
+    type SomeType implements ParentInterface {
+      childInterface: InvalidChild
+      validField: String
+    }
+
+    type InvalidChild implements ChildInterface {
+      anotherField: String
+    }
+  `;
+
+  const output = gql`
+    interface ParentInterface {
+      childInterface: ChildInterface
+    }
+
+    interface ChildInterface {
+      someField: String
+    }
+
+    type SomeType {
+      childInterface: InvalidChild
+      validField: String
+    }
+
+    type InvalidChild {
+      anotherField: String
+    }
+  `;
+
+  expect(print(prune(input))).toEqual(print(output));
+});

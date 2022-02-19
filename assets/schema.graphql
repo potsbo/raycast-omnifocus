@@ -754,7 +754,7 @@ type DescendantTreeEdge implements Edge {
 """
 A document.
 """
-type Document implements Node {
+type Document {
   """
   Whether the document can redo the most recently undone command.
   """
@@ -864,13 +864,13 @@ type Document implements Node {
   willAutosave: Boolean!
 }
 
-type DocumentConnection implements Connection {
+type DocumentConnection {
   byId(id: String!): Document
   edges: [DocumentEdge!]!
   pageInfo: PageInfo!
 }
 
-type DocumentEdge implements Edge {
+type DocumentEdge {
   cursor: String!
   node: Document!
 }
