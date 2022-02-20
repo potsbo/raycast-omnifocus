@@ -131,6 +131,7 @@ export type Application = {
   referenceDate: Scalars['String'];
   /** The version number of the application. */
   version: Scalars['String'];
+  windows: WindowConnection;
 };
 
 
@@ -151,17 +152,76 @@ export type ApplicationPreferencesArgs = {
   whose?: InputMaybe<Condition>;
 };
 
+
+/** The application's top-level scripting object. */
+export type ApplicationWindowsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
 /** Represents an inline text attachment. */
 export type Attachment = RichTextInterface & {
   __typename?: 'Attachment';
+  attachments: AttachmentConnection;
+  attributeRuns: AttributeRunConnection;
+  characters: CharacterConnection;
+  fileAttachments: FileAttachmentConnection;
   /** The name of the font of the first character. */
   font: Scalars['String'];
+  paragraphs: ParagraphConnection;
   /** The size in points of the first character. */
   size: Scalars['Int'];
   /** The style of the text. */
   style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
+  words: WordConnection;
+};
+
+
+/** Represents an inline text attachment. */
+export type AttachmentAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Represents an inline text attachment. */
+export type AttachmentAttributeRunsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Represents an inline text attachment. */
+export type AttachmentCharactersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Represents an inline text attachment. */
+export type AttachmentFileAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Represents an inline text attachment. */
+export type AttachmentParagraphsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** Represents an inline text attachment. */
+export type AttachmentWordsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+export type AttachmentConnection = {
+  __typename?: 'AttachmentConnection';
+  edges: Array<AttachmentEdge>;
+  pageInfo: PageInfo;
+};
+
+export type AttachmentEdge = {
+  __typename?: 'AttachmentEdge';
+  cursor: Scalars['String'];
 };
 
 /** An attribute of a style. */
@@ -177,17 +237,95 @@ export type Attribute = {
   style: Style;
 };
 
+export type AttributeConnection = {
+  __typename?: 'AttributeConnection';
+  byId?: Maybe<Attribute>;
+  edges: Array<AttributeEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type AttributeConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type AttributeEdge = {
+  __typename?: 'AttributeEdge';
+  cursor: Scalars['String'];
+  node: Attribute;
+};
+
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRun = RichTextInterface & {
   __typename?: 'AttributeRun';
+  attachments: AttachmentConnection;
+  attributeRuns: AttributeRunConnection;
+  characters: CharacterConnection;
+  fileAttachments: FileAttachmentConnection;
   /** The name of the font of the first character. */
   font: Scalars['String'];
+  paragraphs: ParagraphConnection;
   /** The size in points of the first character. */
   size: Scalars['Int'];
   /** The style of the text. */
   style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
+  words: WordConnection;
+};
+
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRunAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRunAttributeRunsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRunCharactersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRunFileAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRunParagraphsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into chunks that all have the same attributes. */
+export type AttributeRunWordsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+export type AttributeRunConnection = {
+  __typename?: 'AttributeRunConnection';
+  byId?: Maybe<AttributeRun>;
+  edges: Array<AttributeRunEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type AttributeRunConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type AttributeRunEdge = {
+  __typename?: 'AttributeRunEdge';
+  cursor: Scalars['String'];
+  node: AttributeRun;
 };
 
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
@@ -332,14 +470,74 @@ export type BuiltinPerspectiveEdge = Edge & {
 /** This subdivides the text into characters. */
 export type Character = RichTextInterface & {
   __typename?: 'Character';
+  attachments: AttachmentConnection;
+  attributeRuns: AttributeRunConnection;
+  characters: CharacterConnection;
+  fileAttachments: FileAttachmentConnection;
   /** The name of the font of the first character. */
   font: Scalars['String'];
+  paragraphs: ParagraphConnection;
   /** The size in points of the first character. */
   size: Scalars['Int'];
   /** The style of the text. */
   style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
+  words: WordConnection;
+};
+
+
+/** This subdivides the text into characters. */
+export type CharacterAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into characters. */
+export type CharacterAttributeRunsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into characters. */
+export type CharacterCharactersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into characters. */
+export type CharacterFileAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into characters. */
+export type CharacterParagraphsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into characters. */
+export type CharacterWordsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+export type CharacterConnection = {
+  __typename?: 'CharacterConnection';
+  byId?: Maybe<Character>;
+  edges: Array<CharacterEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type CharacterConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type CharacterEdge = {
+  __typename?: 'CharacterEdge';
+  cursor: Scalars['String'];
+  node: Character;
 };
 
 export type Condition = {
@@ -687,6 +885,8 @@ export type Document = {
   deprecatedContexts: DeprecatedContextConnection;
   /** If set, automatic cleanup of inbox items won't happen. */
   disableAutomaticInboxCleanup: Scalars['Boolean'];
+  /** The windows of this document. */
+  documentWindows: DocumentWindowConnection;
   flattenedFolders: FlattenedFolderConnection;
   flattenedProjects: FlattenedProjectConnection;
   flattenedTags: FlattenedTagConnection;
@@ -730,6 +930,12 @@ export type Document = {
 
 /** A document. */
 export type DocumentDeprecatedContextsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** A document. */
+export type DocumentDocumentWindowsArgs = {
   whose?: InputMaybe<Condition>;
 };
 
@@ -856,9 +1062,52 @@ export type DocumentWindow = WindowInterface & {
   zoomed: Scalars['Boolean'];
 };
 
+export type DocumentWindowConnection = {
+  __typename?: 'DocumentWindowConnection';
+  byId?: Maybe<DocumentWindow>;
+  edges: Array<DocumentWindowEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type DocumentWindowConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type DocumentWindowEdge = {
+  __typename?: 'DocumentWindowEdge';
+  cursor: Scalars['String'];
+  node: DocumentWindow;
+};
+
 export type Edge = {
   cursor: Scalars['String'];
   node: Node;
+};
+
+/** A text attachment refering to a plain file. */
+export type FileAttachment = {
+  __typename?: 'FileAttachment';
+  /** If true, the attached file will reside inside the document on the next save. */
+  embedded: Scalars['Boolean'];
+};
+
+export type FileAttachmentConnection = {
+  __typename?: 'FileAttachmentConnection';
+  byId?: Maybe<FileAttachment>;
+  edges: Array<FileAttachmentEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type FileAttachmentConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type FileAttachmentEdge = {
+  __typename?: 'FileAttachmentEdge';
+  cursor: Scalars['String'];
+  node: FileAttachment;
 };
 
 /** A flattened list of folders in a document. */
@@ -2329,6 +2578,7 @@ export type MutationPushWordArgs = {
 /** A named style object. */
 export type NamedStyle = Node & StyleInterface & {
   __typename?: 'NamedStyle';
+  attributes: AttributeConnection;
   /** The name of the font of the style. */
   font: Scalars['String'];
   /** An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document. */
@@ -2336,6 +2586,12 @@ export type NamedStyle = Node & StyleInterface & {
   /** The name of the style.  Must be unique within the containing document. */
   name: Scalars['String'];
   namedStyles: NamedStyleConnection;
+};
+
+
+/** A named style object. */
+export type NamedStyleAttributesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 
@@ -2384,14 +2640,74 @@ export type PageInfo = {
 /** This subdivides the text into paragraphs. */
 export type Paragraph = RichTextInterface & {
   __typename?: 'Paragraph';
+  attachments: AttachmentConnection;
+  attributeRuns: AttributeRunConnection;
+  characters: CharacterConnection;
+  fileAttachments: FileAttachmentConnection;
   /** The name of the font of the first character. */
   font: Scalars['String'];
+  paragraphs: ParagraphConnection;
   /** The size in points of the first character. */
   size: Scalars['Int'];
   /** The style of the text. */
   style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
+  words: WordConnection;
+};
+
+
+/** This subdivides the text into paragraphs. */
+export type ParagraphAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into paragraphs. */
+export type ParagraphAttributeRunsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into paragraphs. */
+export type ParagraphCharactersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into paragraphs. */
+export type ParagraphFileAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into paragraphs. */
+export type ParagraphParagraphsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into paragraphs. */
+export type ParagraphWordsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+export type ParagraphConnection = {
+  __typename?: 'ParagraphConnection';
+  byId?: Maybe<Paragraph>;
+  edges: Array<ParagraphEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type ParagraphConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type ParagraphEdge = {
+  __typename?: 'ParagraphEdge';
+  cursor: Scalars['String'];
+  node: Paragraph;
 };
 
 /** A perspective. */
@@ -3012,14 +3328,50 @@ export type RepetitionRule = {
 };
 
 export type RichTextInterface = {
+  attachments: AttachmentConnection;
+  attributeRuns: AttributeRunConnection;
+  characters: CharacterConnection;
+  fileAttachments: FileAttachmentConnection;
   /** The name of the font of the first character. */
   font: Scalars['String'];
+  paragraphs: ParagraphConnection;
   /** The size in points of the first character. */
   size: Scalars['Int'];
   /** The style of the text. */
   style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
+  words: WordConnection;
+};
+
+
+export type RichTextInterfaceAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type RichTextInterfaceAttributeRunsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type RichTextInterfaceCharactersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type RichTextInterfaceFileAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type RichTextInterfaceParagraphsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+export type RichTextInterfaceWordsArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 /** A portion of a folder or document; either a project or a folder. */
@@ -3260,9 +3612,16 @@ export type SidebarTreeInterface = {
 /** A style object. */
 export type Style = StyleInterface & {
   __typename?: 'Style';
+  attributes: AttributeConnection;
   /** The name of the font of the style. */
   font: Scalars['String'];
   namedStyles: NamedStyleConnection;
+};
+
+
+/** A style object. */
+export type StyleAttributesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 
@@ -3272,9 +3631,15 @@ export type StyleNamedStylesArgs = {
 };
 
 export type StyleInterface = {
+  attributes: AttributeConnection;
   /** The name of the font of the style. */
   font: Scalars['String'];
   namedStyles: NamedStyleConnection;
+};
+
+
+export type StyleInterfaceAttributesArgs = {
+  whose?: InputMaybe<Condition>;
 };
 
 
@@ -3811,6 +4176,24 @@ export type Window = WindowInterface & {
   zoomed: Scalars['Boolean'];
 };
 
+export type WindowConnection = {
+  __typename?: 'WindowConnection';
+  byId?: Maybe<WindowInterface>;
+  edges: Array<WindowEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type WindowConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type WindowEdge = {
+  __typename?: 'WindowEdge';
+  cursor: Scalars['String'];
+  node: WindowInterface;
+};
+
 export type WindowInterface = {
   /** Does the window have a close button? */
   closeable: Scalars['Boolean'];
@@ -3839,14 +4222,74 @@ export type WindowInterface = {
 /** This subdivides the text into words. */
 export type Word = RichTextInterface & {
   __typename?: 'Word';
+  attachments: AttachmentConnection;
+  attributeRuns: AttributeRunConnection;
+  characters: CharacterConnection;
+  fileAttachments: FileAttachmentConnection;
   /** The name of the font of the first character. */
   font: Scalars['String'];
+  paragraphs: ParagraphConnection;
   /** The size in points of the first character. */
   size: Scalars['Int'];
   /** The style of the text. */
   style: Style;
   /** The plain text contents of the rich text. */
   text: Scalars['String'];
+  words: WordConnection;
+};
+
+
+/** This subdivides the text into words. */
+export type WordAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into words. */
+export type WordAttributeRunsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into words. */
+export type WordCharactersArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into words. */
+export type WordFileAttachmentsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into words. */
+export type WordParagraphsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+
+/** This subdivides the text into words. */
+export type WordWordsArgs = {
+  whose?: InputMaybe<Condition>;
+};
+
+export type WordConnection = {
+  __typename?: 'WordConnection';
+  byId?: Maybe<Word>;
+  edges: Array<WordEdge>;
+  pageInfo: PageInfo;
+};
+
+
+export type WordConnectionByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type WordEdge = {
+  __typename?: 'WordEdge';
+  cursor: Scalars['String'];
+  node: Word;
 };
 
 type TaskViewModel_AvailableTask_Fragment = { __typename?: 'AvailableTask', name: string, id: string, effectiveDueDate?: string | null, completed: boolean, effectivelyCompleted: boolean, flagged: boolean, containingProject?: { __typename?: 'Project', id: string, name: string } | null };
@@ -4009,8 +4452,14 @@ export type ResolversTypes = {
   AncestorTreeEdge: ResolverTypeWrapper<AncestorTreeEdge>;
   Application: ResolverTypeWrapper<Application>;
   Attachment: ResolverTypeWrapper<Attachment>;
+  AttachmentConnection: ResolverTypeWrapper<AttachmentConnection>;
+  AttachmentEdge: ResolverTypeWrapper<AttachmentEdge>;
   Attribute: ResolverTypeWrapper<Attribute>;
+  AttributeConnection: ResolverTypeWrapper<AttributeConnection>;
+  AttributeEdge: ResolverTypeWrapper<AttributeEdge>;
   AttributeRun: ResolverTypeWrapper<AttributeRun>;
+  AttributeRunConnection: ResolverTypeWrapper<AttributeRunConnection>;
+  AttributeRunEdge: ResolverTypeWrapper<AttributeRunEdge>;
   AvailableTask: ResolverTypeWrapper<AvailableTask>;
   AvailableTaskConnection: ResolverTypeWrapper<AvailableTaskConnection>;
   AvailableTaskEdge: ResolverTypeWrapper<AvailableTaskEdge>;
@@ -4019,6 +4468,8 @@ export type ResolversTypes = {
   BuiltinPerspectiveConnection: ResolverTypeWrapper<BuiltinPerspectiveConnection>;
   BuiltinPerspectiveEdge: ResolverTypeWrapper<BuiltinPerspectiveEdge>;
   Character: ResolverTypeWrapper<Character>;
+  CharacterConnection: ResolverTypeWrapper<CharacterConnection>;
+  CharacterEdge: ResolverTypeWrapper<CharacterEdge>;
   Condition: Condition;
   Connection: ResolversTypes['AncestorTreeConnection'] | ResolversTypes['AvailableTaskConnection'] | ResolversTypes['BuiltinPerspectiveConnection'] | ResolversTypes['ContentTreeConnection'] | ResolversTypes['CustomPerspectiveConnection'] | ResolversTypes['DeprecatedContextConnection'] | ResolversTypes['DescendantTreeConnection'] | ResolversTypes['FlattenedFolderConnection'] | ResolversTypes['FlattenedProjectConnection'] | ResolversTypes['FlattenedTagConnection'] | ResolversTypes['FlattenedTaskConnection'] | ResolversTypes['FolderConnection'] | ResolversTypes['FollowingSiblingConnection'] | ResolversTypes['ForecastDayConnection'] | ResolversTypes['InboxTaskConnection'] | ResolversTypes['InboxTreeConnection'] | ResolversTypes['LeafConnection'] | ResolversTypes['LibraryTreeConnection'] | ResolversTypes['NamedStyleConnection'] | ResolversTypes['PerspectiveConnection'] | ResolversTypes['PrecedingSiblingConnection'] | ResolversTypes['PreferenceConnection'] | ResolversTypes['ProjectConnection'] | ResolversTypes['QuickEntryTreeConnection'] | ResolversTypes['RemainingTaskConnection'] | ResolversTypes['SectionConnection'] | ResolversTypes['SelectedTreeConnection'] | ResolversTypes['SettingConnection'] | ResolversTypes['TagConnection'] | ResolversTypes['TaskConnection'] | ResolversTypes['TreeConnection'];
   ContentTree: ResolverTypeWrapper<ContentTree>;
@@ -4037,7 +4488,12 @@ export type ResolversTypes = {
   DocumentConnection: ResolverTypeWrapper<DocumentConnection>;
   DocumentEdge: ResolverTypeWrapper<DocumentEdge>;
   DocumentWindow: ResolverTypeWrapper<DocumentWindow>;
+  DocumentWindowConnection: ResolverTypeWrapper<DocumentWindowConnection>;
+  DocumentWindowEdge: ResolverTypeWrapper<DocumentWindowEdge>;
   Edge: ResolversTypes['AncestorTreeEdge'] | ResolversTypes['AvailableTaskEdge'] | ResolversTypes['BuiltinPerspectiveEdge'] | ResolversTypes['ContentTreeEdge'] | ResolversTypes['CustomPerspectiveEdge'] | ResolversTypes['DeprecatedContextEdge'] | ResolversTypes['DescendantTreeEdge'] | ResolversTypes['FlattenedFolderEdge'] | ResolversTypes['FlattenedProjectEdge'] | ResolversTypes['FlattenedTagEdge'] | ResolversTypes['FlattenedTaskEdge'] | ResolversTypes['FolderEdge'] | ResolversTypes['FollowingSiblingEdge'] | ResolversTypes['ForecastDayEdge'] | ResolversTypes['InboxTaskEdge'] | ResolversTypes['InboxTreeEdge'] | ResolversTypes['LeafEdge'] | ResolversTypes['LibraryTreeEdge'] | ResolversTypes['NamedStyleEdge'] | ResolversTypes['PerspectiveEdge'] | ResolversTypes['PrecedingSiblingEdge'] | ResolversTypes['PreferenceEdge'] | ResolversTypes['ProjectEdge'] | ResolversTypes['QuickEntryTreeEdge'] | ResolversTypes['RemainingTaskEdge'] | ResolversTypes['SectionEdge'] | ResolversTypes['SelectedTreeEdge'] | ResolversTypes['SettingEdge'] | ResolversTypes['TagEdge'] | ResolversTypes['TaskEdge'] | ResolversTypes['TreeEdge'];
+  FileAttachment: ResolverTypeWrapper<FileAttachment>;
+  FileAttachmentConnection: ResolverTypeWrapper<FileAttachmentConnection>;
+  FileAttachmentEdge: ResolverTypeWrapper<FileAttachmentEdge>;
   FlattenedFolder: ResolverTypeWrapper<FlattenedFolder>;
   FlattenedFolderConnection: ResolverTypeWrapper<FlattenedFolderConnection>;
   FlattenedFolderEdge: ResolverTypeWrapper<FlattenedFolderEdge>;
@@ -4087,6 +4543,8 @@ export type ResolversTypes = {
   Node: ResolversTypes['AncestorTree'] | ResolversTypes['AvailableTask'] | ResolversTypes['BuiltinPerspective'] | ResolversTypes['ContentTree'] | ResolversTypes['CustomPerspective'] | ResolversTypes['DeprecatedContext'] | ResolversTypes['DescendantTree'] | ResolversTypes['FlattenedFolder'] | ResolversTypes['FlattenedProject'] | ResolversTypes['FlattenedTag'] | ResolversTypes['FlattenedTask'] | ResolversTypes['Folder'] | ResolversTypes['FollowingSibling'] | ResolversTypes['ForecastDay'] | ResolversTypes['InboxTask'] | ResolversTypes['InboxTree'] | ResolversTypes['Leaf'] | ResolversTypes['LibraryTree'] | ResolversTypes['NamedStyle'] | ResolversTypes['Perspective'] | ResolversTypes['PrecedingSibling'] | ResolversTypes['Preference'] | ResolversTypes['Project'] | ResolversTypes['QuickEntryTree'] | ResolversTypes['RemainingTask'] | ResolversTypes['Section'] | ResolversTypes['SelectedTree'] | ResolversTypes['Setting'] | ResolversTypes['SidebarTree'] | ResolversTypes['Tag'] | ResolversTypes['Task'] | ResolversTypes['Tree'];
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Paragraph: ResolverTypeWrapper<Paragraph>;
+  ParagraphConnection: ResolverTypeWrapper<ParagraphConnection>;
+  ParagraphEdge: ResolverTypeWrapper<ParagraphEdge>;
   Perspective: ResolverTypeWrapper<Perspective>;
   PerspectiveConnection: ResolverTypeWrapper<PerspectiveConnection>;
   PerspectiveEdge: ResolverTypeWrapper<PerspectiveEdge>;
@@ -4144,8 +4602,12 @@ export type ResolversTypes = {
   TreeEdge: ResolverTypeWrapper<TreeEdge>;
   TreeInterface: ResolversTypes['AncestorTree'] | ResolversTypes['ContentTree'] | ResolversTypes['DescendantTree'] | ResolversTypes['FollowingSibling'] | ResolversTypes['InboxTree'] | ResolversTypes['Leaf'] | ResolversTypes['LibraryTree'] | ResolversTypes['PrecedingSibling'] | ResolversTypes['QuickEntryTree'] | ResolversTypes['SelectedTree'] | ResolversTypes['SidebarTree'] | ResolversTypes['Tree'];
   Window: ResolverTypeWrapper<Window>;
+  WindowConnection: ResolverTypeWrapper<WindowConnection>;
+  WindowEdge: ResolverTypeWrapper<WindowEdge>;
   WindowInterface: ResolversTypes['DocumentWindow'] | ResolversTypes['Window'];
   Word: ResolverTypeWrapper<Word>;
+  WordConnection: ResolverTypeWrapper<WordConnection>;
+  WordEdge: ResolverTypeWrapper<WordEdge>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -4155,8 +4617,14 @@ export type ResolversParentTypes = {
   AncestorTreeEdge: AncestorTreeEdge;
   Application: Application;
   Attachment: Attachment;
+  AttachmentConnection: AttachmentConnection;
+  AttachmentEdge: AttachmentEdge;
   Attribute: Attribute;
+  AttributeConnection: AttributeConnection;
+  AttributeEdge: AttributeEdge;
   AttributeRun: AttributeRun;
+  AttributeRunConnection: AttributeRunConnection;
+  AttributeRunEdge: AttributeRunEdge;
   AvailableTask: AvailableTask;
   AvailableTaskConnection: AvailableTaskConnection;
   AvailableTaskEdge: AvailableTaskEdge;
@@ -4165,6 +4633,8 @@ export type ResolversParentTypes = {
   BuiltinPerspectiveConnection: BuiltinPerspectiveConnection;
   BuiltinPerspectiveEdge: BuiltinPerspectiveEdge;
   Character: Character;
+  CharacterConnection: CharacterConnection;
+  CharacterEdge: CharacterEdge;
   Condition: Condition;
   Connection: ResolversParentTypes['AncestorTreeConnection'] | ResolversParentTypes['AvailableTaskConnection'] | ResolversParentTypes['BuiltinPerspectiveConnection'] | ResolversParentTypes['ContentTreeConnection'] | ResolversParentTypes['CustomPerspectiveConnection'] | ResolversParentTypes['DeprecatedContextConnection'] | ResolversParentTypes['DescendantTreeConnection'] | ResolversParentTypes['FlattenedFolderConnection'] | ResolversParentTypes['FlattenedProjectConnection'] | ResolversParentTypes['FlattenedTagConnection'] | ResolversParentTypes['FlattenedTaskConnection'] | ResolversParentTypes['FolderConnection'] | ResolversParentTypes['FollowingSiblingConnection'] | ResolversParentTypes['ForecastDayConnection'] | ResolversParentTypes['InboxTaskConnection'] | ResolversParentTypes['InboxTreeConnection'] | ResolversParentTypes['LeafConnection'] | ResolversParentTypes['LibraryTreeConnection'] | ResolversParentTypes['NamedStyleConnection'] | ResolversParentTypes['PerspectiveConnection'] | ResolversParentTypes['PrecedingSiblingConnection'] | ResolversParentTypes['PreferenceConnection'] | ResolversParentTypes['ProjectConnection'] | ResolversParentTypes['QuickEntryTreeConnection'] | ResolversParentTypes['RemainingTaskConnection'] | ResolversParentTypes['SectionConnection'] | ResolversParentTypes['SelectedTreeConnection'] | ResolversParentTypes['SettingConnection'] | ResolversParentTypes['TagConnection'] | ResolversParentTypes['TaskConnection'] | ResolversParentTypes['TreeConnection'];
   ContentTree: ContentTree;
@@ -4183,7 +4653,12 @@ export type ResolversParentTypes = {
   DocumentConnection: DocumentConnection;
   DocumentEdge: DocumentEdge;
   DocumentWindow: DocumentWindow;
+  DocumentWindowConnection: DocumentWindowConnection;
+  DocumentWindowEdge: DocumentWindowEdge;
   Edge: ResolversParentTypes['AncestorTreeEdge'] | ResolversParentTypes['AvailableTaskEdge'] | ResolversParentTypes['BuiltinPerspectiveEdge'] | ResolversParentTypes['ContentTreeEdge'] | ResolversParentTypes['CustomPerspectiveEdge'] | ResolversParentTypes['DeprecatedContextEdge'] | ResolversParentTypes['DescendantTreeEdge'] | ResolversParentTypes['FlattenedFolderEdge'] | ResolversParentTypes['FlattenedProjectEdge'] | ResolversParentTypes['FlattenedTagEdge'] | ResolversParentTypes['FlattenedTaskEdge'] | ResolversParentTypes['FolderEdge'] | ResolversParentTypes['FollowingSiblingEdge'] | ResolversParentTypes['ForecastDayEdge'] | ResolversParentTypes['InboxTaskEdge'] | ResolversParentTypes['InboxTreeEdge'] | ResolversParentTypes['LeafEdge'] | ResolversParentTypes['LibraryTreeEdge'] | ResolversParentTypes['NamedStyleEdge'] | ResolversParentTypes['PerspectiveEdge'] | ResolversParentTypes['PrecedingSiblingEdge'] | ResolversParentTypes['PreferenceEdge'] | ResolversParentTypes['ProjectEdge'] | ResolversParentTypes['QuickEntryTreeEdge'] | ResolversParentTypes['RemainingTaskEdge'] | ResolversParentTypes['SectionEdge'] | ResolversParentTypes['SelectedTreeEdge'] | ResolversParentTypes['SettingEdge'] | ResolversParentTypes['TagEdge'] | ResolversParentTypes['TaskEdge'] | ResolversParentTypes['TreeEdge'];
+  FileAttachment: FileAttachment;
+  FileAttachmentConnection: FileAttachmentConnection;
+  FileAttachmentEdge: FileAttachmentEdge;
   FlattenedFolder: FlattenedFolder;
   FlattenedFolderConnection: FlattenedFolderConnection;
   FlattenedFolderEdge: FlattenedFolderEdge;
@@ -4231,6 +4706,8 @@ export type ResolversParentTypes = {
   Node: ResolversParentTypes['AncestorTree'] | ResolversParentTypes['AvailableTask'] | ResolversParentTypes['BuiltinPerspective'] | ResolversParentTypes['ContentTree'] | ResolversParentTypes['CustomPerspective'] | ResolversParentTypes['DeprecatedContext'] | ResolversParentTypes['DescendantTree'] | ResolversParentTypes['FlattenedFolder'] | ResolversParentTypes['FlattenedProject'] | ResolversParentTypes['FlattenedTag'] | ResolversParentTypes['FlattenedTask'] | ResolversParentTypes['Folder'] | ResolversParentTypes['FollowingSibling'] | ResolversParentTypes['ForecastDay'] | ResolversParentTypes['InboxTask'] | ResolversParentTypes['InboxTree'] | ResolversParentTypes['Leaf'] | ResolversParentTypes['LibraryTree'] | ResolversParentTypes['NamedStyle'] | ResolversParentTypes['Perspective'] | ResolversParentTypes['PrecedingSibling'] | ResolversParentTypes['Preference'] | ResolversParentTypes['Project'] | ResolversParentTypes['QuickEntryTree'] | ResolversParentTypes['RemainingTask'] | ResolversParentTypes['Section'] | ResolversParentTypes['SelectedTree'] | ResolversParentTypes['Setting'] | ResolversParentTypes['SidebarTree'] | ResolversParentTypes['Tag'] | ResolversParentTypes['Task'] | ResolversParentTypes['Tree'];
   PageInfo: PageInfo;
   Paragraph: Paragraph;
+  ParagraphConnection: ParagraphConnection;
+  ParagraphEdge: ParagraphEdge;
   Perspective: Perspective;
   PerspectiveConnection: PerspectiveConnection;
   PerspectiveEdge: PerspectiveEdge;
@@ -4286,8 +4763,12 @@ export type ResolversParentTypes = {
   TreeEdge: TreeEdge;
   TreeInterface: ResolversParentTypes['AncestorTree'] | ResolversParentTypes['ContentTree'] | ResolversParentTypes['DescendantTree'] | ResolversParentTypes['FollowingSibling'] | ResolversParentTypes['InboxTree'] | ResolversParentTypes['Leaf'] | ResolversParentTypes['LibraryTree'] | ResolversParentTypes['PrecedingSibling'] | ResolversParentTypes['QuickEntryTree'] | ResolversParentTypes['SelectedTree'] | ResolversParentTypes['SidebarTree'] | ResolversParentTypes['Tree'];
   Window: Window;
+  WindowConnection: WindowConnection;
+  WindowEdge: WindowEdge;
   WindowInterface: ResolversParentTypes['DocumentWindow'] | ResolversParentTypes['Window'];
   Word: Word;
+  WordConnection: WordConnection;
+  WordEdge: WordEdge;
 };
 
 export type RecordTypeDirectiveArgs = { };
@@ -4336,14 +4817,32 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   quickEntry?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType>;
   referenceDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  windows?: Resolver<ResolversTypes['WindowConnection'], ParentType, ContextType, Partial<ApplicationWindowsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Attachment'] = ResolversParentTypes['Attachment']> = {
+  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<AttachmentAttachmentsArgs>>;
+  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<AttachmentAttributeRunsArgs>>;
+  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<AttachmentCharactersArgs>>;
+  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<AttachmentFileAttachmentsArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<AttachmentParagraphsArgs>>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<AttachmentWordsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttachmentConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttachmentConnection'] = ResolversParentTypes['AttachmentConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['AttachmentEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttachmentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttachmentEdge'] = ResolversParentTypes['AttachmentEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4355,11 +4854,43 @@ export type AttributeResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AttributeConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeConnection'] = ResolversParentTypes['AttributeConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Attribute']>, ParentType, ContextType, RequireFields<AttributeConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['AttributeEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttributeEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeEdge'] = ResolversParentTypes['AttributeEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Attribute'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type AttributeRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeRun'] = ResolversParentTypes['AttributeRun']> = {
+  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<AttributeRunAttachmentsArgs>>;
+  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<AttributeRunAttributeRunsArgs>>;
+  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<AttributeRunCharactersArgs>>;
+  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<AttributeRunFileAttachmentsArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<AttributeRunParagraphsArgs>>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<AttributeRunWordsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttributeRunConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeRunConnection'] = ResolversParentTypes['AttributeRunConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['AttributeRun']>, ParentType, ContextType, RequireFields<AttributeRunConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['AttributeRunEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AttributeRunEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeRunEdge'] = ResolversParentTypes['AttributeRunEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['AttributeRun'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4436,10 +4967,29 @@ export type BuiltinPerspectiveEdgeResolvers<ContextType = any, ParentType extend
 };
 
 export type CharacterResolvers<ContextType = any, ParentType extends ResolversParentTypes['Character'] = ResolversParentTypes['Character']> = {
+  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<CharacterAttachmentsArgs>>;
+  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<CharacterAttributeRunsArgs>>;
+  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<CharacterCharactersArgs>>;
+  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<CharacterFileAttachmentsArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<CharacterParagraphsArgs>>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<CharacterWordsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CharacterConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CharacterConnection'] = ResolversParentTypes['CharacterConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType, RequireFields<CharacterConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['CharacterEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CharacterEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CharacterEdge'] = ResolversParentTypes['CharacterEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Character'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4576,6 +5126,7 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   compressesTransactions?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   deprecatedContexts?: Resolver<ResolversTypes['DeprecatedContextConnection'], ParentType, ContextType, Partial<DocumentDeprecatedContextsArgs>>;
   disableAutomaticInboxCleanup?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  documentWindows?: Resolver<ResolversTypes['DocumentWindowConnection'], ParentType, ContextType, Partial<DocumentDocumentWindowsArgs>>;
   flattenedFolders?: Resolver<ResolversTypes['FlattenedFolderConnection'], ParentType, ContextType, Partial<DocumentFlattenedFoldersArgs>>;
   flattenedProjects?: Resolver<ResolversTypes['FlattenedProjectConnection'], ParentType, ContextType, Partial<DocumentFlattenedProjectsArgs>>;
   flattenedTags?: Resolver<ResolversTypes['FlattenedTagConnection'], ParentType, ContextType, Partial<DocumentFlattenedTagsArgs>>;
@@ -4633,10 +5184,41 @@ export type DocumentWindowResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DocumentWindowConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentWindowConnection'] = ResolversParentTypes['DocumentWindowConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['DocumentWindow']>, ParentType, ContextType, RequireFields<DocumentWindowConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['DocumentWindowEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentWindowEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentWindowEdge'] = ResolversParentTypes['DocumentWindowEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['DocumentWindow'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = {
   __resolveType: TypeResolveFn<'AncestorTreeEdge' | 'AvailableTaskEdge' | 'BuiltinPerspectiveEdge' | 'ContentTreeEdge' | 'CustomPerspectiveEdge' | 'DeprecatedContextEdge' | 'DescendantTreeEdge' | 'FlattenedFolderEdge' | 'FlattenedProjectEdge' | 'FlattenedTagEdge' | 'FlattenedTaskEdge' | 'FolderEdge' | 'FollowingSiblingEdge' | 'ForecastDayEdge' | 'InboxTaskEdge' | 'InboxTreeEdge' | 'LeafEdge' | 'LibraryTreeEdge' | 'NamedStyleEdge' | 'PerspectiveEdge' | 'PrecedingSiblingEdge' | 'PreferenceEdge' | 'ProjectEdge' | 'QuickEntryTreeEdge' | 'RemainingTaskEdge' | 'SectionEdge' | 'SelectedTreeEdge' | 'SettingEdge' | 'TagEdge' | 'TaskEdge' | 'TreeEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
+};
+
+export type FileAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['FileAttachment'] = ResolversParentTypes['FileAttachment']> = {
+  embedded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FileAttachmentConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FileAttachmentConnection'] = ResolversParentTypes['FileAttachmentConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['FileAttachment']>, ParentType, ContextType, RequireFields<FileAttachmentConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['FileAttachmentEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FileAttachmentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FileAttachmentEdge'] = ResolversParentTypes['FileAttachmentEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['FileAttachment'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type FlattenedFolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlattenedFolder'] = ResolversParentTypes['FlattenedFolder']> = {
@@ -5117,6 +5699,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NamedStyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['NamedStyle'] = ResolversParentTypes['NamedStyle']> = {
+  attributes?: Resolver<ResolversTypes['AttributeConnection'], ParentType, ContextType, Partial<NamedStyleAttributesArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -5157,10 +5740,29 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type ParagraphResolvers<ContextType = any, ParentType extends ResolversParentTypes['Paragraph'] = ResolversParentTypes['Paragraph']> = {
+  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<ParagraphAttachmentsArgs>>;
+  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<ParagraphAttributeRunsArgs>>;
+  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<ParagraphCharactersArgs>>;
+  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<ParagraphFileAttachmentsArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<ParagraphParagraphsArgs>>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<ParagraphWordsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParagraphConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParagraphConnection'] = ResolversParentTypes['ParagraphConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Paragraph']>, ParentType, ContextType, RequireFields<ParagraphConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['ParagraphEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParagraphEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParagraphEdge'] = ResolversParentTypes['ParagraphEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Paragraph'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5451,10 +6053,16 @@ export interface RichTextScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type RichTextInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['RichTextInterface'] = ResolversParentTypes['RichTextInterface']> = {
   __resolveType: TypeResolveFn<'Attachment' | 'AttributeRun' | 'Character' | 'Paragraph' | 'Word', ParentType, ContextType>;
+  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<RichTextInterfaceAttachmentsArgs>>;
+  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<RichTextInterfaceAttributeRunsArgs>>;
+  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<RichTextInterfaceCharactersArgs>>;
+  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<RichTextInterfaceFileAttachmentsArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<RichTextInterfaceParagraphsArgs>>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<RichTextInterfaceWordsArgs>>;
 };
 
 export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
@@ -5559,6 +6167,7 @@ export type SidebarTreeInterfaceResolvers<ContextType = any, ParentType extends 
 };
 
 export type StyleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Style'] = ResolversParentTypes['Style']> = {
+  attributes?: Resolver<ResolversTypes['AttributeConnection'], ParentType, ContextType, Partial<StyleAttributesArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType, Partial<StyleNamedStylesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -5566,6 +6175,7 @@ export type StyleResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type StyleInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['StyleInterface'] = ResolversParentTypes['StyleInterface']> = {
   __resolveType: TypeResolveFn<'NamedStyle' | 'Style', ParentType, ContextType>;
+  attributes?: Resolver<ResolversTypes['AttributeConnection'], ParentType, ContextType, Partial<StyleInterfaceAttributesArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   namedStyles?: Resolver<ResolversTypes['NamedStyleConnection'], ParentType, ContextType, Partial<StyleInterfaceNamedStylesArgs>>;
 };
@@ -5776,6 +6386,19 @@ export type WindowResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type WindowConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['WindowConnection'] = ResolversParentTypes['WindowConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['WindowInterface']>, ParentType, ContextType, RequireFields<WindowConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['WindowEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type WindowEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['WindowEdge'] = ResolversParentTypes['WindowEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['WindowInterface'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type WindowInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['WindowInterface'] = ResolversParentTypes['WindowInterface']> = {
   __resolveType: TypeResolveFn<'DocumentWindow' | 'Window', ParentType, ContextType>;
   closeable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -5792,10 +6415,29 @@ export type WindowInterfaceResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = {
+  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<WordAttachmentsArgs>>;
+  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<WordAttributeRunsArgs>>;
+  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<WordCharactersArgs>>;
+  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<WordFileAttachmentsArgs>>;
   font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<WordParagraphsArgs>>;
   size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<WordWordsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type WordConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['WordConnection'] = ResolversParentTypes['WordConnection']> = {
+  byId?: Resolver<Maybe<ResolversTypes['Word']>, ParentType, ContextType, RequireFields<WordConnectionByIdArgs, 'id'>>;
+  edges?: Resolver<Array<ResolversTypes['WordEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type WordEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['WordEdge'] = ResolversParentTypes['WordEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Word'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5805,8 +6447,14 @@ export type Resolvers<ContextType = any> = {
   AncestorTreeEdge?: AncestorTreeEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
   Attachment?: AttachmentResolvers<ContextType>;
+  AttachmentConnection?: AttachmentConnectionResolvers<ContextType>;
+  AttachmentEdge?: AttachmentEdgeResolvers<ContextType>;
   Attribute?: AttributeResolvers<ContextType>;
+  AttributeConnection?: AttributeConnectionResolvers<ContextType>;
+  AttributeEdge?: AttributeEdgeResolvers<ContextType>;
   AttributeRun?: AttributeRunResolvers<ContextType>;
+  AttributeRunConnection?: AttributeRunConnectionResolvers<ContextType>;
+  AttributeRunEdge?: AttributeRunEdgeResolvers<ContextType>;
   AvailableTask?: AvailableTaskResolvers<ContextType>;
   AvailableTaskConnection?: AvailableTaskConnectionResolvers<ContextType>;
   AvailableTaskEdge?: AvailableTaskEdgeResolvers<ContextType>;
@@ -5814,6 +6462,8 @@ export type Resolvers<ContextType = any> = {
   BuiltinPerspectiveConnection?: BuiltinPerspectiveConnectionResolvers<ContextType>;
   BuiltinPerspectiveEdge?: BuiltinPerspectiveEdgeResolvers<ContextType>;
   Character?: CharacterResolvers<ContextType>;
+  CharacterConnection?: CharacterConnectionResolvers<ContextType>;
+  CharacterEdge?: CharacterEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
   ContentTree?: ContentTreeResolvers<ContextType>;
   ContentTreeConnection?: ContentTreeConnectionResolvers<ContextType>;
@@ -5831,7 +6481,12 @@ export type Resolvers<ContextType = any> = {
   DocumentConnection?: DocumentConnectionResolvers<ContextType>;
   DocumentEdge?: DocumentEdgeResolvers<ContextType>;
   DocumentWindow?: DocumentWindowResolvers<ContextType>;
+  DocumentWindowConnection?: DocumentWindowConnectionResolvers<ContextType>;
+  DocumentWindowEdge?: DocumentWindowEdgeResolvers<ContextType>;
   Edge?: EdgeResolvers<ContextType>;
+  FileAttachment?: FileAttachmentResolvers<ContextType>;
+  FileAttachmentConnection?: FileAttachmentConnectionResolvers<ContextType>;
+  FileAttachmentEdge?: FileAttachmentEdgeResolvers<ContextType>;
   FlattenedFolder?: FlattenedFolderResolvers<ContextType>;
   FlattenedFolderConnection?: FlattenedFolderConnectionResolvers<ContextType>;
   FlattenedFolderEdge?: FlattenedFolderEdgeResolvers<ContextType>;
@@ -5877,6 +6532,8 @@ export type Resolvers<ContextType = any> = {
   Node?: NodeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Paragraph?: ParagraphResolvers<ContextType>;
+  ParagraphConnection?: ParagraphConnectionResolvers<ContextType>;
+  ParagraphEdge?: ParagraphEdgeResolvers<ContextType>;
   Perspective?: PerspectiveResolvers<ContextType>;
   PerspectiveConnection?: PerspectiveConnectionResolvers<ContextType>;
   PerspectiveEdge?: PerspectiveEdgeResolvers<ContextType>;
@@ -5931,8 +6588,12 @@ export type Resolvers<ContextType = any> = {
   TreeEdge?: TreeEdgeResolvers<ContextType>;
   TreeInterface?: TreeInterfaceResolvers<ContextType>;
   Window?: WindowResolvers<ContextType>;
+  WindowConnection?: WindowConnectionResolvers<ContextType>;
+  WindowEdge?: WindowEdgeResolvers<ContextType>;
   WindowInterface?: WindowInterfaceResolvers<ContextType>;
   Word?: WordResolvers<ContextType>;
+  WordConnection?: WordConnectionResolvers<ContextType>;
+  WordEdge?: WordEdgeResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {

@@ -128,16 +128,23 @@ type Application {
   The version number of the application.
   """
   version: String!
+  windows(whose: Condition): WindowConnection!
 }
 
 """
 Represents an inline text attachment.
 """
 type Attachment implements RichTextInterface {
+  attachments(whose: Condition): AttachmentConnection!
+  attributeRuns(whose: Condition): AttributeRunConnection!
+  characters(whose: Condition): CharacterConnection!
+  fileAttachments(whose: Condition): FileAttachmentConnection!
+
   """
   The name of the font of the first character.
   """
   font: String!
+  paragraphs(whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -153,6 +160,16 @@ type Attachment implements RichTextInterface {
   The plain text contents of the rich text.
   """
   text: String!
+  words(whose: Condition): WordConnection!
+}
+
+type AttachmentConnection {
+  edges: [AttachmentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AttachmentEdge {
+  cursor: String!
 }
 
 """
@@ -180,14 +197,31 @@ type Attribute {
   style: Style!
 }
 
+type AttributeConnection {
+  byId(id: String!): Attribute
+  edges: [AttributeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AttributeEdge {
+  cursor: String!
+  node: Attribute!
+}
+
 """
 This subdivides the text into chunks that all have the same attributes.
 """
 type AttributeRun implements RichTextInterface {
+  attachments(whose: Condition): AttachmentConnection!
+  attributeRuns(whose: Condition): AttributeRunConnection!
+  characters(whose: Condition): CharacterConnection!
+  fileAttachments(whose: Condition): FileAttachmentConnection!
+
   """
   The name of the font of the first character.
   """
   font: String!
+  paragraphs(whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -203,6 +237,18 @@ type AttributeRun implements RichTextInterface {
   The plain text contents of the rich text.
   """
   text: String!
+  words(whose: Condition): WordConnection!
+}
+
+type AttributeRunConnection {
+  byId(id: String!): AttributeRun
+  edges: [AttributeRunEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AttributeRunEdge {
+  cursor: String!
+  node: AttributeRun!
 }
 
 """
@@ -427,10 +473,16 @@ type BuiltinPerspectiveEdge implements Edge {
 This subdivides the text into characters.
 """
 type Character implements RichTextInterface {
+  attachments(whose: Condition): AttachmentConnection!
+  attributeRuns(whose: Condition): AttributeRunConnection!
+  characters(whose: Condition): CharacterConnection!
+  fileAttachments(whose: Condition): FileAttachmentConnection!
+
   """
   The name of the font of the first character.
   """
   font: String!
+  paragraphs(whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -446,6 +498,18 @@ type Character implements RichTextInterface {
   The plain text contents of the rich text.
   """
   text: String!
+  words(whose: Condition): WordConnection!
+}
+
+type CharacterConnection {
+  byId(id: String!): Character
+  edges: [CharacterEdge!]!
+  pageInfo: PageInfo!
+}
+
+type CharacterEdge {
+  cursor: String!
+  node: Character!
 }
 
 input Condition {
@@ -802,6 +866,11 @@ type Document {
   If set, automatic cleanup of inbox items won't happen.
   """
   disableAutomaticInboxCleanup: Boolean!
+
+  """
+  The windows of this document.
+  """
+  documentWindows(whose: Condition): DocumentWindowConnection!
   flattenedFolders(whose: Condition): FlattenedFolderConnection!
   flattenedProjects(whose: Condition): FlattenedProjectConnection!
   flattenedTags(whose: Condition): FlattenedTagConnection!
@@ -973,9 +1042,41 @@ type DocumentWindow implements WindowInterface {
   zoomed: Boolean!
 }
 
+type DocumentWindowConnection {
+  byId(id: String!): DocumentWindow
+  edges: [DocumentWindowEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DocumentWindowEdge {
+  cursor: String!
+  node: DocumentWindow!
+}
+
 interface Edge {
   cursor: String!
   node: Node!
+}
+
+"""
+A text attachment refering to a plain file.
+"""
+type FileAttachment {
+  """
+  If true, the attached file will reside inside the document on the next save.
+  """
+  embedded: Boolean!
+}
+
+type FileAttachmentConnection {
+  byId(id: String!): FileAttachment
+  edges: [FileAttachmentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FileAttachmentEdge {
+  cursor: String!
+  node: FileAttachment!
 }
 
 """
@@ -2530,6 +2631,8 @@ type Mutation {
 A named style object.
 """
 type NamedStyle implements Node & StyleInterface {
+  attributes(whose: Condition): AttributeConnection!
+
   """
   The name of the font of the style.
   """
@@ -2585,10 +2688,16 @@ type PageInfo {
 This subdivides the text into paragraphs.
 """
 type Paragraph implements RichTextInterface {
+  attachments(whose: Condition): AttachmentConnection!
+  attributeRuns(whose: Condition): AttributeRunConnection!
+  characters(whose: Condition): CharacterConnection!
+  fileAttachments(whose: Condition): FileAttachmentConnection!
+
   """
   The name of the font of the first character.
   """
   font: String!
+  paragraphs(whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -2604,6 +2713,18 @@ type Paragraph implements RichTextInterface {
   The plain text contents of the rich text.
   """
   text: String!
+  words(whose: Condition): WordConnection!
+}
+
+type ParagraphConnection {
+  byId(id: String!): Paragraph
+  edges: [ParagraphEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ParagraphEdge {
+  cursor: String!
+  node: Paragraph!
 }
 
 """
@@ -3513,10 +3634,16 @@ type RepetitionRule @recordType {
 scalar RichText
 
 interface RichTextInterface {
+  attachments(whose: Condition): AttachmentConnection!
+  attributeRuns(whose: Condition): AttributeRunConnection!
+  characters(whose: Condition): CharacterConnection!
+  fileAttachments(whose: Condition): FileAttachmentConnection!
+
   """
   The name of the font of the first character.
   """
   font: String!
+  paragraphs(whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -3532,6 +3659,7 @@ interface RichTextInterface {
   The plain text contents of the rich text.
   """
   text: String!
+  words(whose: Condition): WordConnection!
 }
 
 """
@@ -3767,6 +3895,8 @@ interface SidebarTreeInterface {
 A style object.
 """
 type Style implements StyleInterface {
+  attributes(whose: Condition): AttributeConnection!
+
   """
   The name of the font of the style.
   """
@@ -3775,6 +3905,8 @@ type Style implements StyleInterface {
 }
 
 interface StyleInterface {
+  attributes(whose: Condition): AttributeConnection!
+
   """
   The name of the font of the style.
   """
@@ -4504,6 +4636,17 @@ type Window implements WindowInterface {
   zoomed: Boolean!
 }
 
+type WindowConnection {
+  byId(id: String!): WindowInterface
+  edges: [WindowEdge!]!
+  pageInfo: PageInfo!
+}
+
+type WindowEdge {
+  cursor: String!
+  node: WindowInterface!
+}
+
 interface WindowInterface {
   """
   Does the window have a close button?
@@ -4565,10 +4708,16 @@ interface WindowInterface {
 This subdivides the text into words.
 """
 type Word implements RichTextInterface {
+  attachments(whose: Condition): AttachmentConnection!
+  attributeRuns(whose: Condition): AttributeRunConnection!
+  characters(whose: Condition): CharacterConnection!
+  fileAttachments(whose: Condition): FileAttachmentConnection!
+
   """
   The name of the font of the first character.
   """
   font: String!
+  paragraphs(whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -4584,4 +4733,16 @@ type Word implements RichTextInterface {
   The plain text contents of the rich text.
   """
   text: String!
+  words(whose: Condition): WordConnection!
+}
+
+type WordConnection {
+  byId(id: String!): Word
+  edges: [WordEdge!]!
+  pageInfo: PageInfo!
+}
+
+type WordEdge {
+  cursor: String!
+  node: Word!
 }

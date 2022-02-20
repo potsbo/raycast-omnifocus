@@ -122,9 +122,6 @@ export class ClassRenderer {
     }
 
     const classDef = toObjectDef(className, interfaces, fields, this.c.$.description);
-    if (!isNode) {
-      return [classDef];
-    }
     const edgeDef = toObjectDef(
       `${className}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],
