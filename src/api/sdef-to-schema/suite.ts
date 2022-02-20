@@ -2,7 +2,7 @@ import { ClassRenderer } from "./class";
 import { EnumRenderer } from "./enumeration";
 import { ExtensionRenderer } from "./extension";
 import { RecordTypeRenderer } from "./recordType";
-import { Suite } from "./sdef";
+import { Sdef, Suite } from "./sdef";
 
 const parseSuite = (
   s: Suite
@@ -20,13 +20,14 @@ const parseSuite = (
 };
 
 export const parseSuites = (
-  ss: Suite[]
-): {
+  sdef: Sdef
+): Readonly<{
   classRenderers: ClassRenderer[];
   extensionRenderers: ExtensionRenderer[];
   recordTypeRenderers: RecordTypeRenderer[];
   enumRenderers: EnumRenderer[];
-} => {
+}> => {
+  const ss = sdef.dictionary.suite;
   return ss.map(parseSuite).reduce(
     (
       acum: {

@@ -159,7 +159,7 @@ export type ApplicationWindowsArgs = {
 };
 
 /** Represents an inline text attachment. */
-export type Attachment = RichTextInterface & {
+export type Attachment = {
   __typename?: 'Attachment';
   attachments: AttachmentConnection;
   attributeRuns: AttributeRunConnection;
@@ -256,7 +256,7 @@ export type AttributeEdge = {
 };
 
 /** This subdivides the text into chunks that all have the same attributes. */
-export type AttributeRun = RichTextInterface & {
+export type AttributeRun = {
   __typename?: 'AttributeRun';
   attachments: AttachmentConnection;
   attributeRuns: AttributeRunConnection;
@@ -468,7 +468,7 @@ export type BuiltinPerspectiveEdge = Edge & {
 };
 
 /** This subdivides the text into characters. */
-export type Character = RichTextInterface & {
+export type Character = {
   __typename?: 'Character';
   attachments: AttachmentConnection;
   attributeRuns: AttributeRunConnection;
@@ -2209,7 +2209,6 @@ export type Mutation = {
   pushProject: Project;
   pushQuickEntryTree: QuickEntryTree;
   pushRemainingTask: RemainingTask;
-  pushRichText: Scalars['RichText'];
   pushSection: Section;
   pushSelectedTree: SelectedTree;
   pushSetting: Setting;
@@ -2498,13 +2497,6 @@ export type MutationPushRemainingTaskArgs = {
 };
 
 
-export type MutationPushRichTextArgs = {
-  font?: InputMaybe<Scalars['String']>;
-  size?: InputMaybe<Scalars['Int']>;
-  text?: InputMaybe<Scalars['String']>;
-};
-
-
 export type MutationPushSectionArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
@@ -2638,7 +2630,7 @@ export type PageInfo = {
 };
 
 /** This subdivides the text into paragraphs. */
-export type Paragraph = RichTextInterface & {
+export type Paragraph = {
   __typename?: 'Paragraph';
   attachments: AttachmentConnection;
   attributeRuns: AttributeRunConnection;
@@ -3325,53 +3317,6 @@ export type RepetitionRule = {
   recurrence: Scalars['String'];
   /** The repetition method. If fixed, the next repetition will be relative to a fixed calendar.  If sliding, the next repetition will be calculated when the action or inbox item is resolved. */
   repetitionMethod: RepetitionMethod;
-};
-
-export type RichTextInterface = {
-  attachments: AttachmentConnection;
-  attributeRuns: AttributeRunConnection;
-  characters: CharacterConnection;
-  fileAttachments: FileAttachmentConnection;
-  /** The name of the font of the first character. */
-  font: Scalars['String'];
-  paragraphs: ParagraphConnection;
-  /** The size in points of the first character. */
-  size: Scalars['Int'];
-  /** The style of the text. */
-  style: Style;
-  /** The plain text contents of the rich text. */
-  text: Scalars['String'];
-  words: WordConnection;
-};
-
-
-export type RichTextInterfaceAttachmentsArgs = {
-  whose?: InputMaybe<Condition>;
-};
-
-
-export type RichTextInterfaceAttributeRunsArgs = {
-  whose?: InputMaybe<Condition>;
-};
-
-
-export type RichTextInterfaceCharactersArgs = {
-  whose?: InputMaybe<Condition>;
-};
-
-
-export type RichTextInterfaceFileAttachmentsArgs = {
-  whose?: InputMaybe<Condition>;
-};
-
-
-export type RichTextInterfaceParagraphsArgs = {
-  whose?: InputMaybe<Condition>;
-};
-
-
-export type RichTextInterfaceWordsArgs = {
-  whose?: InputMaybe<Condition>;
 };
 
 /** A portion of a folder or document; either a project or a folder. */
@@ -4220,7 +4165,7 @@ export type WindowInterface = {
 };
 
 /** This subdivides the text into words. */
-export type Word = RichTextInterface & {
+export type Word = {
   __typename?: 'Word';
   attachments: AttachmentConnection;
   attributeRuns: AttributeRunConnection;
@@ -4572,7 +4517,6 @@ export type ResolversTypes = {
   RepetitionMethod: RepetitionMethod;
   RepetitionRule: ResolverTypeWrapper<RepetitionRule>;
   RichText: ResolverTypeWrapper<Scalars['RichText']>;
-  RichTextInterface: ResolversTypes['Attachment'] | ResolversTypes['AttributeRun'] | ResolversTypes['Character'] | ResolversTypes['Paragraph'] | ResolversTypes['Word'];
   Section: ResolverTypeWrapper<Section>;
   SectionConnection: ResolverTypeWrapper<SectionConnection>;
   SectionEdge: ResolverTypeWrapper<SectionEdge>;
@@ -4733,7 +4677,6 @@ export type ResolversParentTypes = {
   RepetitionInterval: RepetitionInterval;
   RepetitionRule: RepetitionRule;
   RichText: Scalars['RichText'];
-  RichTextInterface: ResolversParentTypes['Attachment'] | ResolversParentTypes['AttributeRun'] | ResolversParentTypes['Character'] | ResolversParentTypes['Paragraph'] | ResolversParentTypes['Word'];
   Section: Section;
   SectionConnection: SectionConnection;
   SectionEdge: SectionEdge;
@@ -5685,7 +5628,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   pushProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, Partial<MutationPushProjectArgs>>;
   pushQuickEntryTree?: Resolver<ResolversTypes['QuickEntryTree'], ParentType, ContextType, Partial<MutationPushQuickEntryTreeArgs>>;
   pushRemainingTask?: Resolver<ResolversTypes['RemainingTask'], ParentType, ContextType, Partial<MutationPushRemainingTaskArgs>>;
-  pushRichText?: Resolver<ResolversTypes['RichText'], ParentType, ContextType, Partial<MutationPushRichTextArgs>>;
   pushSection?: Resolver<ResolversTypes['Section'], ParentType, ContextType, Partial<MutationPushSectionArgs>>;
   pushSelectedTree?: Resolver<ResolversTypes['SelectedTree'], ParentType, ContextType, Partial<MutationPushSelectedTreeArgs>>;
   pushSetting?: Resolver<ResolversTypes['Setting'], ParentType, ContextType>;
@@ -6050,20 +5992,6 @@ export type RepetitionRuleResolvers<ContextType = any, ParentType extends Resolv
 export interface RichTextScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RichText'], any> {
   name: 'RichText';
 }
-
-export type RichTextInterfaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['RichTextInterface'] = ResolversParentTypes['RichTextInterface']> = {
-  __resolveType: TypeResolveFn<'Attachment' | 'AttributeRun' | 'Character' | 'Paragraph' | 'Word', ParentType, ContextType>;
-  attachments?: Resolver<ResolversTypes['AttachmentConnection'], ParentType, ContextType, Partial<RichTextInterfaceAttachmentsArgs>>;
-  attributeRuns?: Resolver<ResolversTypes['AttributeRunConnection'], ParentType, ContextType, Partial<RichTextInterfaceAttributeRunsArgs>>;
-  characters?: Resolver<ResolversTypes['CharacterConnection'], ParentType, ContextType, Partial<RichTextInterfaceCharactersArgs>>;
-  fileAttachments?: Resolver<ResolversTypes['FileAttachmentConnection'], ParentType, ContextType, Partial<RichTextInterfaceFileAttachmentsArgs>>;
-  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  paragraphs?: Resolver<ResolversTypes['ParagraphConnection'], ParentType, ContextType, Partial<RichTextInterfaceParagraphsArgs>>;
-  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  style?: Resolver<ResolversTypes['Style'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  words?: Resolver<ResolversTypes['WordConnection'], ParentType, ContextType, Partial<RichTextInterfaceWordsArgs>>;
-};
 
 export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -6559,7 +6487,6 @@ export type Resolvers<ContextType = any> = {
   RepetitionInterval?: RepetitionIntervalResolvers<ContextType>;
   RepetitionRule?: RepetitionRuleResolvers<ContextType>;
   RichText?: GraphQLScalarType;
-  RichTextInterface?: RichTextInterfaceResolvers<ContextType>;
   Section?: SectionResolvers<ContextType>;
   SectionConnection?: SectionConnectionResolvers<ContextType>;
   SectionEdge?: SectionEdgeResolvers<ContextType>;

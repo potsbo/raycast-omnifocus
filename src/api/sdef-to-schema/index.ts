@@ -5,69 +5,41 @@ import fs from "fs";
 import {
   print,
   lexicographicSortSchema,
-  ObjectTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
   printSchema,
   buildASTSchema,
-  ASTNode,
   DocumentNode,
+  DefinitionNode,
 } from "graphql";
 import { join } from "path";
 import { pruneSchema } from "@graphql-tools/utils";
-import { Suite } from "./sdef";
+import { Sdef } from "./sdef";
 import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
 import prettier from "prettier";
 import gql from "graphql-tag";
 import { prune } from "./prune";
 import { parseSuites } from "./suite";
 
-const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
+const getRenderers = async (appPath: string) => {
+  const sdefCmdResult = await promisify(exec)(`sdef ${appPath}`);
+  const sdef = (await parseStringPromise(sdefCmdResult.stdout)) as Sdef;
+  return parseSuites(sdef);
+};
 
 (async (appPath: string, override?: DocumentNode) => {
-  const sdef = await promisify(exec)(`sdef ${appPath}`);
-  const parsed = (await parseStringPromise(sdef.stdout)) as {
-    dictionary: { suite: Suite[] };
-  };
+  const renderers = await getRenderers(appPath);
 
-  const { extensionRenderers, classRenderers, recordTypeRenderers, enumRenderers } = parseSuites(
-    parsed.dictionary.suite
-  );
+  const env = { ...renderers, override };
+  const renderList = [
+    ...renderers.classRenderers,
+    ...renderers.enumRenderers,
+    ...renderers.recordTypeRenderers,
+    ...renderers.extensionRenderers,
+  ];
 
-  const extensions = extensionRenderers.map((e) => e.getType());
-  const inheritedClasses = new Set(
-    classRenderers.map((c) => c.getInherits()).filter((c): c is string => typeof c === "string")
-  );
-
-  const definitions: ObjectTypeDefinitionNode[] = [];
-  classRenderers.forEach((cdef) => {
-    const inherits = cdef.getInherits();
-    const parent = classRenderers.find((t) => t.getClassName() === inherits);
-    if (inherits !== undefined && parent === undefined) {
-      throw new Error("parent not found");
-    }
-    interfaces.push(cdef.getInterfaced());
-    definitions.push(
-      ...cdef.getTypes({
-        inherits: parent,
-        inherited: inheritedClasses.has(cdef.getClassName()),
-        extensions: extensionRenderers.filter((e) => e.extends === cdef.getClassName()),
-        override,
-      })
-    );
-
-    const m = cdef.getMutationExtension("push", parent);
-    if (m === null) {
-      return;
-    }
-    extensions.push(m);
+  const definitions: DefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
+  renderList.forEach((cdef) => {
+    definitions.push(...cdef.build(env));
   });
-
-  const enums = enumRenderers.map((e) => e.getType());
-  const recordTypes = recordTypeRenderers.map((e) => e.getType());
-
-  const render = (ns: ASTNode[]) => {
-    return ns.map(print).join("\n");
-  };
 
   const schema = gql`
     type Query {
@@ -75,11 +47,7 @@ const interfaces: InterfaceTypeDefinitionNode[] = [ConnectionInterface, EdgeInte
     }
     type Mutation
 
-    ${render(definitions)}
-    ${render(extensions)}
-    ${render(interfaces)}
-    ${render(recordTypes)}
-    ${render(enums)}
+    ${definitions.map(print).join("\n")}
 
     # https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
     type PageInfo {

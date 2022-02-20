@@ -1,4 +1,5 @@
 import {
+  DefinitionNode,
   DocumentNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
@@ -8,13 +9,15 @@ import {
 } from "graphql";
 import camelCase from "camelcase";
 import { collectFieldsDefinitions, field } from "./field";
-import { ClassDefinition } from "./sdef";
+import { ClassDefinition, Environment } from "./sdef";
 import { named as named, nonNull, list } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
 import { ExtensionRenderer } from "./extension";
 import { collectMutationArgs } from "./mutation";
 import { name } from "./name";
 import { stringValue } from "./string";
+import { RecordTypeRenderer } from "./recordType";
+import { EnumRenderer } from "./enumeration";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -53,22 +56,19 @@ export class ClassRenderer {
       ],
     };
   };
-  getTypes = ({
-    inherits,
-    inherited,
-    override,
-  }: {
-    inherits: ClassRenderer | undefined;
-    inherited: boolean;
-    extensions: ExtensionRenderer[];
-    override?: DocumentNode;
-  }) => {
+  build = ({ override, classRenderers }: Environment) => {
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
 
     // TODO: if compatible override given, try to merge
     if (override?.definitions.some((d) => "name" in d && d.name?.value === typeName)) {
       return [];
     }
+    const inherits = this.getInherits();
+    const parent = classRenderers.find((t) => t.getClassName() === inherits);
+    if (inherits !== undefined && parent === undefined) {
+      throw new Error("parent not found");
+    }
+    const inherited = classRenderers.map((c) => c.getInherits()).some((c): c is string => c === this.getClassName());
 
     const toObjectDef = (
       typeName: string,
@@ -85,11 +85,11 @@ export class ClassRenderer {
       };
     };
 
-    const fields = [...(this.fields ?? []), ...(inherits?.fields ?? [])];
+    const fields = [...(this.fields ?? []), ...(parent?.fields ?? [])];
 
     const interfaces: string[] = [NodeInterface.name.value];
-    if (inherits) {
-      interfaces.push(inherits.getInterfaceName());
+    if (parent) {
+      interfaces.push(parent.getInterfaceName());
     }
     if (inherited) {
       interfaces.push(this.getInterfaceName());
@@ -121,6 +121,12 @@ export class ClassRenderer {
         field("pageInfo", nonNull("PageInfo")),
       ]
     );
-    return [connectionDef, edgeDef, classDef];
+    const def: DefinitionNode[] = [connectionDef, edgeDef, classDef, this.getInterfaced()];
+
+    const m = this.getMutationExtension("push", parent);
+    if (m !== null) {
+      def.push(m);
+    }
+    return def;
   };
 }

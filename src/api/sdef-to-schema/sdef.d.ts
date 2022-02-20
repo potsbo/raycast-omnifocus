@@ -1,3 +1,17 @@
+import { DocumentNode } from "graphql";
+
+export interface Sdef {
+  dictionary: { suite: Suite[] };
+}
+
+export interface Environment {
+  classRenderers: ClassRenderer[];
+  extensionRenderers: ExtensionRenderer[];
+  recordTypeRenderers: RecordTypeRenderer[];
+  enumRenderers: EnumRenderer[];
+  override?: DocumentNode;
+}
+
 export interface Suite {
   $: {
     code: string;

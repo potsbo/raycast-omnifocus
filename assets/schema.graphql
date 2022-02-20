@@ -134,7 +134,7 @@ type Application {
 """
 Represents an inline text attachment.
 """
-type Attachment implements RichTextInterface {
+type Attachment {
   attachments(whose: Condition): AttachmentConnection!
   attributeRuns(whose: Condition): AttributeRunConnection!
   characters(whose: Condition): CharacterConnection!
@@ -211,7 +211,7 @@ type AttributeEdge {
 """
 This subdivides the text into chunks that all have the same attributes.
 """
-type AttributeRun implements RichTextInterface {
+type AttributeRun {
   attachments(whose: Condition): AttachmentConnection!
   attributeRuns(whose: Condition): AttributeRunConnection!
   characters(whose: Condition): CharacterConnection!
@@ -472,7 +472,7 @@ type BuiltinPerspectiveEdge implements Edge {
 """
 This subdivides the text into characters.
 """
-type Character implements RichTextInterface {
+type Character {
   attachments(whose: Condition): AttachmentConnection!
   attributeRuns(whose: Condition): AttributeRunConnection!
   characters(whose: Condition): CharacterConnection!
@@ -2582,7 +2582,6 @@ type Mutation {
     sequential: Boolean
     shouldUseFloatingTimeZone: Boolean
   ): RemainingTask!
-  pushRichText(font: String, size: Int, text: String): RichText!
   pushSection(name: String): Section!
   pushSelectedTree(
     expanded: Boolean
@@ -2687,7 +2686,7 @@ type PageInfo {
 """
 This subdivides the text into paragraphs.
 """
-type Paragraph implements RichTextInterface {
+type Paragraph {
   attachments(whose: Condition): AttachmentConnection!
   attributeRuns(whose: Condition): AttributeRunConnection!
   characters(whose: Condition): CharacterConnection!
@@ -3632,35 +3631,6 @@ type RepetitionRule @recordType {
 }
 
 scalar RichText
-
-interface RichTextInterface {
-  attachments(whose: Condition): AttachmentConnection!
-  attributeRuns(whose: Condition): AttributeRunConnection!
-  characters(whose: Condition): CharacterConnection!
-  fileAttachments(whose: Condition): FileAttachmentConnection!
-
-  """
-  The name of the font of the first character.
-  """
-  font: String!
-  paragraphs(whose: Condition): ParagraphConnection!
-
-  """
-  The size in points of the first character.
-  """
-  size: Int!
-
-  """
-  The style of the text.
-  """
-  style: Style!
-
-  """
-  The plain text contents of the rich text.
-  """
-  text: String!
-  words(whose: Condition): WordConnection!
-}
 
 """
 A portion of a folder or document; either a project or a folder.
@@ -4707,7 +4677,7 @@ interface WindowInterface {
 """
 This subdivides the text into words.
 """
-type Word implements RichTextInterface {
+type Word {
   attachments(whose: Condition): AttachmentConnection!
   attributeRuns(whose: Condition): AttributeRunConnection!
   characters(whose: Condition): CharacterConnection!
