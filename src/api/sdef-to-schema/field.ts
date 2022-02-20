@@ -31,7 +31,7 @@ export const collectFieldsDefinitions = (c: {
   });
 
   const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode => {
-    return FieldDefinition(ctnt.$.name, nonNull(named(ctnt.$.type)), { description: ctnt.$.description });
+    return FieldDefinition(ctnt.$.name, nonNull(ctnt.$.type), { description: ctnt.$.description });
   });
   // TODO: respond-to
   return properties.concat(elements).concat(contents);

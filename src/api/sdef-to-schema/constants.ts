@@ -1,5 +1,6 @@
 import { InterfaceTypeDefinitionNode, Kind } from "graphql";
 import { FieldDefinition } from "./field";
+import { name } from "./name";
 import { list, named, nonNull } from "./types";
 
 export const CONNECTION_TYPE_NAME = "Connection";
@@ -9,47 +10,32 @@ export const INTERFACE_SUFFIX = "Interface";
 
 export const NodeInterface: InterfaceTypeDefinitionNode = {
   kind: Kind.INTERFACE_TYPE_DEFINITION,
-  name: {
-    kind: Kind.NAME,
-    value: NODE_TYPE_NAME,
-  },
-  fields: [FieldDefinition("id", nonNull(named("String")))],
+  name: name(NODE_TYPE_NAME, { pascalCase: true }),
+  fields: [FieldDefinition("id", nonNull("String"))],
 };
 
 // https://relay.dev/graphql/connections.htm#sec-Edge-Types
 export const EdgeInterface: InterfaceTypeDefinitionNode = {
   kind: Kind.INTERFACE_TYPE_DEFINITION,
-  name: {
-    kind: Kind.NAME,
-    value: EDGE_TYPE_NAME,
-  },
-  fields: [
-    FieldDefinition("node", nonNull(named("Node"))),
-    FieldDefinition("cursor", nonNull(named("String"))),
-  ],
+  name: name(EDGE_TYPE_NAME, { pascalCase: true }),
+  fields: [FieldDefinition("node", nonNull("Node")), FieldDefinition("cursor", nonNull("String"))],
 };
 
 // https://relay.dev/graphql/connections.htm#sec-Connection-Types
 export const ConnectionInterface: InterfaceTypeDefinitionNode = {
   kind: Kind.INTERFACE_TYPE_DEFINITION,
-  name: {
-    kind: Kind.NAME,
-    value: CONNECTION_TYPE_NAME,
-  },
+  name: name(CONNECTION_TYPE_NAME, { pascalCase: true }),
   fields: [
-    FieldDefinition("edges", nonNull(list(nonNull(named(EDGE_TYPE_NAME))))),
-    FieldDefinition("pageInfo", nonNull(named("PageInfo"))),
+    FieldDefinition("edges", nonNull(list(nonNull(EDGE_TYPE_NAME)))),
+    FieldDefinition("pageInfo", nonNull("PageInfo")),
     // https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
     {
       ...FieldDefinition("byId", named("Node")),
       arguments: [
         {
           kind: Kind.INPUT_VALUE_DEFINITION,
-          name: {
-            kind: Kind.NAME,
-            value: "id",
-          },
-          type: nonNull(named("String")),
+          name: name("id"),
+          type: nonNull("String"),
         },
       ],
     },

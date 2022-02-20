@@ -32,7 +32,9 @@ export const list = (type: NonNullTypeNode | NamedTypeNode): ListTypeNode => {
   return { kind: Kind.LIST_TYPE, type };
 };
 
-export const nonNull = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
+export const nonNull = (child: ListTypeNode | NamedTypeNode | string): NonNullTypeNode => {
+  const type = typeof child === "string" ? named(child) : child;
+
   return {
     kind: Kind.NON_NULL_TYPE,
     type,
@@ -58,9 +60,9 @@ export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
       const converted = typeNameMap(type.type);
       if (converted !== null) {
         if (type.list === "yes") {
-          return nonNull(list(nonNull(named(converted))));
+          return nonNull(list(nonNull(converted)));
         }
-        return nonNull(named(converted));
+        return nonNull(converted);
       }
     }
 
@@ -70,9 +72,9 @@ export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
   if ("type" in t.$) {
     const res = typeNameMap(t.$.type);
     if (res) {
-      return nonNull(named(res));
+      return nonNull((res));
     }
-    return nonNull(named(t.$.type));
+    return nonNull((t.$.type));
   }
 
   throw new Error("Type definition not found");

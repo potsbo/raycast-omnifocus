@@ -52,7 +52,7 @@ export class ClassRenderer {
       },
       fields: [
         {
-          ...FieldDefinition(`${verb}${typeName}`, nonNull(named(typeName))),
+          ...FieldDefinition(`${verb}${typeName}`, nonNull(typeName)),
           arguments: mutableFields,
         },
       ],
@@ -70,7 +70,7 @@ export class ClassRenderer {
   }) => {
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
 
-    // TODO: if compatible override given, try to merge 
+    // TODO: if compatible override given, try to merge
     if (override?.definitions.some((d) => "name" in d && d.name?.value === typeName)) {
       return [];
     }
@@ -116,8 +116,8 @@ export class ClassRenderer {
       `${typeName}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],
       [
-        FieldDefinition("cursor", nonNull(named("String"))),
-        FieldDefinition("node", nonNull(named(inherited ? this.getInterfaceName() : typeName))),
+        FieldDefinition("cursor", nonNull("String")),
+        FieldDefinition("node", nonNull(inherited ? this.getInterfaceName() : typeName)),
       ]
     );
     const connectionDef = toObjectDef(
@@ -137,13 +137,13 @@ export class ClassRenderer {
                 kind: Kind.NAME,
                 value: "id",
               },
-              type: nonNull(named("String")),
+              type: nonNull("String"),
             },
           ],
           type: named(inherited ? this.getInterfaceName() : typeName),
         },
-        FieldDefinition("edges", nonNull(list(nonNull(named(`${typeName}${EDGE_TYPE_NAME}`))))),
-        FieldDefinition("pageInfo", nonNull(named("PageInfo"))),
+        FieldDefinition("edges", nonNull(list(nonNull(`${typeName}${EDGE_TYPE_NAME}`)))),
+        FieldDefinition("pageInfo", nonNull("PageInfo")),
       ]
     );
     return [connectionDef, edgeDef, classDef];
