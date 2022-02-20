@@ -7,7 +7,8 @@ import { Sdef } from "./sdef";
 import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
 import gql from "graphql-tag";
 import { prune } from "./prune";
-import { parseSuites } from "./suite";
+import { parseSuites, reduceBuilders } from "./suite";
+import { readFile } from "fs";
 
 const getBuilders = async (appPath: string) => {
   const sdefCmdResult = await promisify(exec)(`sdef ${appPath}`);
@@ -15,8 +16,21 @@ const getBuilders = async (appPath: string) => {
   return parseSuites(sdef);
 };
 
+const getBuildersFromFile = async (filepath: string) => {
+  const content = await promisify(readFile)(filepath);
+  const sdef = (await parseStringPromise(content.toString())) as Sdef;
+  return parseSuites(sdef);
+};
+
 export const build = async (appPath: string, override?: DocumentNode) => {
-  const builders = await getBuilders(appPath);
+  let { builders, includes } = await getBuilders(appPath);
+  while (includes.length > 0) {
+    for (const i of includes) {
+      const { builders: bs, includes: is } = await getBuildersFromFile(i);
+      includes = is;
+      builders = reduceBuilders([builders, bs]);
+    }
+  }
 
   const env = { ...builders, override };
   const builderList = [

@@ -21,14 +21,44 @@ const parseSuite = (
 
 export const parseSuites = (
   sdef: Sdef
-): Readonly<{
-  classBuilders: ClassBuilder[];
-  extensionBuilders: ExtensionBuilder[];
-  recordTypeBuilders: RecordTypeBuilder[];
-  enumBuilders: EnumBuilder[];
-}> => {
+): {
+  includes: string[];
+  builders: {
+    classBuilders: ClassBuilder[];
+    extensionBuilders: ExtensionBuilder[];
+    recordTypeBuilders: RecordTypeBuilder[];
+    enumBuilders: EnumBuilder[];
+  };
+} => {
+  const includes: string[] = [];
   const ss = sdef.dictionary.suite;
-  return ss.map(parseSuite).reduce(
+
+  ss.forEach((s) => {
+    if (s["xi:include"] !== undefined) {
+      s["xi:include"].forEach((i) => {
+        const prefix = "file://";
+        if (!i.$.href.startsWith(prefix)) {
+          throw new Error(`Unsupported include found ${i.$.href}`);
+        }
+        const path = i.$.href.slice(prefix.length);
+        includes.push(path);
+      });
+    }
+  });
+
+  const builders = reduceBuilders(ss.map(parseSuite));
+  return { builders, includes };
+};
+
+export const reduceBuilders = (
+  buldersList: {
+    classBuilders: ClassBuilder[];
+    extensionBuilders: ExtensionBuilder[];
+    recordTypeBuilders: RecordTypeBuilder[];
+    enumBuilders: EnumBuilder[];
+  }[]
+) => {
+  return buldersList.reduce(
     (
       acum: {
         classBuilders: ClassBuilder[];

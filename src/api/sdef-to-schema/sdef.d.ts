@@ -28,6 +28,14 @@ export interface Suite {
   "value-type": unknown[];
   "class-extension": ClassExtensionDefinition[];
   enumeration?: EnumDefinition[];
+  "xi:include"?: Include[];
+}
+
+interface Include {
+  $: {
+    href: string;
+    xpointer: string;
+  };
 }
 
 export interface ClassDefinition {
