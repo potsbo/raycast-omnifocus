@@ -5,15 +5,16 @@ import {
   Kind,
   ObjectTypeDefinitionNode,
   ObjectTypeExtensionNode,
-  StringValueNode,
 } from "graphql";
 import camelCase from "camelcase";
-import { collectFieldsDefinitions, FieldDefinition } from "./field";
+import { collectFieldsDefinitions, field } from "./field";
 import { ClassDefinition } from "./sdef";
 import { named as named, nonNull, list } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
 import { ExtensionRenderer } from "./extension";
 import { collectMutationArgs } from "./mutation";
+import { name } from "./name";
+import { stringValue } from "./string";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -30,29 +31,23 @@ export class ClassRenderer {
     return {
       kind: Kind.INTERFACE_TYPE_DEFINITION,
       fields: this.fields,
-      name: {
-        kind: Kind.NAME,
-        value: this.getInterfaceName(),
-      },
+      name: name(this.getInterfaceName(), { pascalCase: true }),
       interfaces: [named(NodeInterface.name.value)],
     };
   };
   getMutationExtension = (verb: string, inherits: ClassRenderer | undefined): ObjectTypeExtensionNode | null => {
     const mutableFields = collectMutationArgs(this.c).concat(inherits ? collectMutationArgs(inherits.c) : []);
-
     if (mutableFields.length === 0) {
       return null;
     }
+
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
     return {
       kind: Kind.OBJECT_TYPE_EXTENSION,
-      name: {
-        kind: Kind.NAME,
-        value: "Mutation",
-      },
+      name: name("Mutation", { pascalCase: true }),
       fields: [
         {
-          ...FieldDefinition(`${verb}${typeName}`, nonNull(typeName)),
+          ...field(`${verb}${typeName}`, nonNull(typeName)),
           arguments: mutableFields,
         },
       ],
@@ -76,28 +71,17 @@ export class ClassRenderer {
     }
 
     const toObjectDef = (
-      name: string,
+      typeName: string,
       interfaces: string[],
       fields: FieldDefinitionNode[],
       description?: string
     ): ObjectTypeDefinitionNode => {
-      const desc: StringValueNode | undefined = description
-        ? {
-            kind: Kind.STRING,
-            value: description,
-            block: true,
-          }
-        : undefined;
-
       return {
         kind: Kind.OBJECT_TYPE_DEFINITION,
-        name: {
-          kind: Kind.NAME,
-          value: name,
-        },
+        name: name(typeName, { pascalCase: true }),
         interfaces: interfaces.map((n) => named(n)),
         fields,
-        description: desc,
+        description: stringValue(description),
       };
     };
 
@@ -115,10 +99,7 @@ export class ClassRenderer {
     const edgeDef = toObjectDef(
       `${typeName}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],
-      [
-        FieldDefinition("cursor", nonNull("String")),
-        FieldDefinition("node", nonNull(inherited ? this.getInterfaceName() : typeName)),
-      ]
+      [field("cursor", nonNull("String")), field("node", nonNull(inherited ? this.getInterfaceName() : typeName))]
     );
     const connectionDef = toObjectDef(
       `${typeName}${CONNECTION_TYPE_NAME}`,
@@ -126,24 +107,18 @@ export class ClassRenderer {
       [
         {
           kind: Kind.FIELD_DEFINITION,
-          name: {
-            kind: Kind.NAME,
-            value: "byId",
-          },
+          name: name("byId"),
           arguments: [
             {
               kind: Kind.INPUT_VALUE_DEFINITION,
-              name: {
-                kind: Kind.NAME,
-                value: "id",
-              },
+              name: name("id"),
               type: nonNull("String"),
             },
           ],
           type: named(inherited ? this.getInterfaceName() : typeName),
         },
-        FieldDefinition("edges", nonNull(list(nonNull(`${typeName}${EDGE_TYPE_NAME}`)))),
-        FieldDefinition("pageInfo", nonNull("PageInfo")),
+        field("edges", nonNull(list(nonNull(`${typeName}${EDGE_TYPE_NAME}`)))),
+        field("pageInfo", nonNull("PageInfo")),
       ]
     );
     return [connectionDef, edgeDef, classDef];

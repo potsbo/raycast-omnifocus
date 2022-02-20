@@ -2,12 +2,13 @@ import camelCase from "camelcase";
 import { Kind, ListTypeNode, NamedTypeNode, NonNullTypeNode, TypeNode } from "graphql";
 import { PropertyDefinition } from "./sdef";
 
-export const typeNameMap = (sdefName: string): string | null => {
+const typeNameMap = (sdefName: string): string | null => {
   switch (sdefName) {
     case "text":
       return "String";
     case "boolean":
       return "Boolean";
+    // TODO: maybe scalar Date
     case "date":
       return "String";
     case "integer":
@@ -72,9 +73,9 @@ export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
   if ("type" in t.$) {
     const res = typeNameMap(t.$.type);
     if (res) {
-      return nonNull((res));
+      return nonNull(res);
     }
-    return nonNull((t.$.type));
+    return nonNull(t.$.type);
   }
 
   throw new Error("Type definition not found");
