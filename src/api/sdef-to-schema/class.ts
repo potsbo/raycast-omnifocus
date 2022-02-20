@@ -1,6 +1,5 @@
 import {
   DefinitionNode,
-  DocumentNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
   Kind,
@@ -12,12 +11,10 @@ import { collectFieldsDefinitions, field } from "./field";
 import { ClassDefinition, Environment } from "./sdef";
 import { named as named, nonNull, list } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
-import { ExtensionRenderer } from "./extension";
+
 import { collectMutationArgs } from "./mutation";
 import { name } from "./name";
 import { stringValue } from "./string";
-import { RecordTypeRenderer } from "./recordType";
-import { EnumRenderer } from "./enumeration";
 
 export class ClassRenderer {
   private c: ClassDefinition;
@@ -26,11 +23,11 @@ export class ClassRenderer {
     this.c = c;
     this.fields = collectFieldsDefinitions(this.c);
   }
-  getBaseTypeName = () => camelCase(this.c.$.name, { pascalCase: true });
-  getClassName = () => this.c.$.name;
-  getInherits = () => this.c.$.inherits;
-  getInterfaceName = () => `${this.getBaseTypeName()}Interface`;
-  getInterfaced = (): InterfaceTypeDefinitionNode => {
+  private getBaseTypeName = () => camelCase(this.c.$.name, { pascalCase: true });
+  private getClassName = () => this.c.$.name;
+  private getInherits = () => this.c.$.inherits;
+  private getInterfaceName = () => `${this.getBaseTypeName()}Interface`;
+  private getInterfaced = (): InterfaceTypeDefinitionNode => {
     return {
       kind: Kind.INTERFACE_TYPE_DEFINITION,
       fields: this.fields,
@@ -38,7 +35,10 @@ export class ClassRenderer {
       interfaces: [named(NodeInterface.name.value)],
     };
   };
-  getMutationExtension = (verb: string, inherits: ClassRenderer | undefined): ObjectTypeExtensionNode | null => {
+  private getMutationExtension = (
+    verb: string,
+    inherits: ClassRenderer | undefined
+  ): ObjectTypeExtensionNode | null => {
     const mutableFields = collectMutationArgs(this.c).concat(inherits ? collectMutationArgs(inherits.c) : []);
     if (mutableFields.length === 0) {
       return null;
