@@ -8,7 +8,7 @@ import { collectMutationArgs } from "./mutation";
 import { name } from "./name";
 import { objectType } from "./object";
 
-export class ClassRenderer {
+export class ClassBuilder {
   private c: ClassDefinition;
   fields: FieldDefinitionNode[];
   constructor(c: ClassDefinition) {
@@ -27,7 +27,7 @@ export class ClassRenderer {
       interfaces: [named(NodeInterface.name.value)],
     };
   };
-  private getMutationExtension = (verb: string, inherits: ClassRenderer | undefined): ObjectTypeExtensionNode => {
+  private getMutationExtension = (verb: string, inherits: ClassBuilder | undefined): ObjectTypeExtensionNode => {
     const mutableFields = collectMutationArgs(this.c).concat(inherits ? collectMutationArgs(inherits.c) : []);
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
     return {
@@ -36,7 +36,7 @@ export class ClassRenderer {
       fields: [field(`${verb}${typeName}`, nonNull(typeName), { arguments: mutableFields })],
     };
   };
-  build = ({ override, classRenderers }: Environment) => {
+  build = ({ override, classBuilders }: Environment) => {
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
 
     // TODO: if compatible override given, try to merge
@@ -44,11 +44,11 @@ export class ClassRenderer {
       return [];
     }
     const inherits = this.getInherits();
-    const parent = classRenderers.find((t) => t.getClassName() === inherits);
+    const parent = classBuilders.find((t) => t.getClassName() === inherits);
     if (inherits !== undefined && parent === undefined) {
       throw new Error("parent not found");
     }
-    const inherited = classRenderers.map((c) => c.getInherits()).some((c): c is string => c === this.getClassName());
+    const inherited = classBuilders.map((c) => c.getInherits()).some((c): c is string => c === this.getClassName());
 
     const fields = [...(this.fields ?? []), ...(parent?.fields ?? [])];
 

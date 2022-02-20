@@ -1,14 +1,18 @@
 import { DocumentNode } from "graphql";
+import { ClassBuilder } from "./class";
+import { EnumBuilder } from "./enumeration";
+import { ExtensionBuilder } from "./extension";
+import { RecordTypeBuilder } from "./recordType";
 
 export interface Sdef {
   dictionary: { suite: Suite[] };
 }
 
 export interface Environment {
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
+  classBuilders: ClassBuilder[];
+  extensionBuilders: ExtensionBuilder[];
+  recordTypeBuilders: RecordTypeBuilder[];
+  enumBuilders: EnumBuilder[];
   override?: DocumentNode;
 }
 

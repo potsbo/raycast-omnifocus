@@ -1,50 +1,50 @@
-import { ClassRenderer } from "./class";
-import { EnumRenderer } from "./enumeration";
-import { ExtensionRenderer } from "./extension";
-import { RecordTypeRenderer } from "./recordType";
+import { ClassBuilder } from "./class";
+import { EnumBuilder } from "./enumeration";
+import { ExtensionBuilder } from "./extension";
+import { RecordTypeBuilder } from "./recordType";
 import { Sdef, Suite } from "./sdef";
 
 const parseSuite = (
   s: Suite
 ): {
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
+  classBuilders: ClassBuilder[];
+  extensionBuilders: ExtensionBuilder[];
+  recordTypeBuilders: RecordTypeBuilder[];
+  enumBuilders: EnumBuilder[];
 } => {
-  const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
-  const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
-  const enumRenderers = (s.enumeration ?? []).map((e) => new EnumRenderer(e));
-  return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
+  const extensionBuilders = (s["class-extension"] ?? []).map((c) => new ExtensionBuilder(c));
+  const classBuilders = (s.class ?? []).map((c) => new ClassBuilder(c));
+  const recordTypeBuilders = (s["record-type"] ?? []).map((c) => new RecordTypeBuilder(c));
+  const enumBuilders = (s.enumeration ?? []).map((e) => new EnumBuilder(e));
+  return { classBuilders, extensionBuilders, recordTypeBuilders, enumBuilders };
 };
 
 export const parseSuites = (
   sdef: Sdef
 ): Readonly<{
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
+  classBuilders: ClassBuilder[];
+  extensionBuilders: ExtensionBuilder[];
+  recordTypeBuilders: RecordTypeBuilder[];
+  enumBuilders: EnumBuilder[];
 }> => {
   const ss = sdef.dictionary.suite;
   return ss.map(parseSuite).reduce(
     (
       acum: {
-        classRenderers: ClassRenderer[];
-        extensionRenderers: ExtensionRenderer[];
-        recordTypeRenderers: RecordTypeRenderer[];
-        enumRenderers: EnumRenderer[];
+        classBuilders: ClassBuilder[];
+        extensionBuilders: ExtensionBuilder[];
+        recordTypeBuilders: RecordTypeBuilder[];
+        enumBuilders: EnumBuilder[];
       },
       cur
     ) => {
       return {
-        classRenderers: acum.classRenderers.concat(cur.classRenderers),
-        extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
-        recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
-        enumRenderers: acum.enumRenderers.concat(cur.enumRenderers),
+        classBuilders: acum.classBuilders.concat(cur.classBuilders),
+        extensionBuilders: acum.extensionBuilders.concat(cur.extensionBuilders),
+        recordTypeBuilders: acum.recordTypeBuilders.concat(cur.recordTypeBuilders),
+        enumBuilders: acum.enumBuilders.concat(cur.enumBuilders),
       };
     },
-    { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
+    { classBuilders: [], extensionBuilders: [], recordTypeBuilders: [], enumBuilders: [] }
   );
 };

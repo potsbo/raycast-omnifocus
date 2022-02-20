@@ -3,7 +3,7 @@ import { collectFieldsDefinitions } from "./field";
 import { Environment, RecordTypeDefinition } from "./sdef";
 import { objectType } from "./object";
 
-export class RecordTypeRenderer {
+export class RecordTypeBuilder {
   private e: RecordTypeDefinition;
   constructor(e: RecordTypeDefinition) {
     this.e = e;

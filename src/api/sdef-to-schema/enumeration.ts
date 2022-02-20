@@ -2,7 +2,7 @@ import { EnumTypeDefinitionNode, EnumValueDefinitionNode, Kind, StringValueNode 
 import camelCase from "camelcase";
 import { EnumDefinition, Environment } from "./sdef";
 
-export class EnumRenderer {
+export class EnumBuilder {
   private e: EnumDefinition;
   constructor(e: EnumDefinition) {
     this.e = e;

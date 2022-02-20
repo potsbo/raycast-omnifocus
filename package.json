@@ -118,7 +118,7 @@
     "lint": "ray lint",
     "generate": "graphql-codegen --config codegen.yml",
     "playground": "ts-node ./src/playground/index.ts",
-    "generate:schema": "ts-node ./src/api/sdef-to-schema/index.ts",
+    "generate:schema": "ts-node ./src/script/generate-schema.ts",
     "postinstall": "patch-package"
   }
 }

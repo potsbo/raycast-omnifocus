@@ -3,7 +3,7 @@ import camelCase from "camelcase";
 import { collectFieldsDefinitions } from "./field";
 import { ClassExtensionDefinition, Environment } from "./sdef";
 
-export class ExtensionRenderer {
+export class ExtensionBuilder {
   private e: ClassExtensionDefinition;
   readonly fields: FieldDefinitionNode[];
   readonly extends: string;
