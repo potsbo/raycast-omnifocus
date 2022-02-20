@@ -20,10 +20,7 @@ export const collectFieldsDefinitions = (c: {
       arguments: [
         {
           kind: Kind.INPUT_VALUE_DEFINITION,
-          name: {
-            kind: Kind.NAME,
-            value: "whose",
-          },
+          name: name("whose"),
           type: named("Condition"),
         },
       ],

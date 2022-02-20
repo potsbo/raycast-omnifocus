@@ -2178,6 +2178,7 @@ export enum LocationTrigger {
 export type Mutation = {
   __typename?: 'Mutation';
   pushAncestorTree: AncestorTree;
+  pushApplication: Application;
   pushAttachment: Attachment;
   pushAttribute: Attribute;
   pushAttributeRun: AttributeRun;
@@ -2188,7 +2189,9 @@ export type Mutation = {
   pushCustomPerspective: CustomPerspective;
   pushDeprecatedContext: DeprecatedContext;
   pushDescendantTree: DescendantTree;
+  pushDocument: Document;
   pushDocumentWindow: DocumentWindow;
+  pushFileAttachment: FileAttachment;
   pushFlattenedFolder: FlattenedFolder;
   pushFlattenedProject: FlattenedProject;
   pushFlattenedTag: FlattenedTag;
@@ -5597,6 +5600,7 @@ export type LocationInformationResolvers<ContextType = any, ParentType extends R
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   pushAncestorTree?: Resolver<ResolversTypes['AncestorTree'], ParentType, ContextType, Partial<MutationPushAncestorTreeArgs>>;
+  pushApplication?: Resolver<ResolversTypes['Application'], ParentType, ContextType>;
   pushAttachment?: Resolver<ResolversTypes['Attachment'], ParentType, ContextType, Partial<MutationPushAttachmentArgs>>;
   pushAttribute?: Resolver<ResolversTypes['Attribute'], ParentType, ContextType>;
   pushAttributeRun?: Resolver<ResolversTypes['AttributeRun'], ParentType, ContextType, Partial<MutationPushAttributeRunArgs>>;
@@ -5607,7 +5611,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   pushCustomPerspective?: Resolver<ResolversTypes['CustomPerspective'], ParentType, ContextType, Partial<MutationPushCustomPerspectiveArgs>>;
   pushDeprecatedContext?: Resolver<ResolversTypes['DeprecatedContext'], ParentType, ContextType, Partial<MutationPushDeprecatedContextArgs>>;
   pushDescendantTree?: Resolver<ResolversTypes['DescendantTree'], ParentType, ContextType, Partial<MutationPushDescendantTreeArgs>>;
+  pushDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType>;
   pushDocumentWindow?: Resolver<ResolversTypes['DocumentWindow'], ParentType, ContextType, Partial<MutationPushDocumentWindowArgs>>;
+  pushFileAttachment?: Resolver<ResolversTypes['FileAttachment'], ParentType, ContextType>;
   pushFlattenedFolder?: Resolver<ResolversTypes['FlattenedFolder'], ParentType, ContextType, Partial<MutationPushFlattenedFolderArgs>>;
   pushFlattenedProject?: Resolver<ResolversTypes['FlattenedProject'], ParentType, ContextType, Partial<MutationPushFlattenedProjectArgs>>;
   pushFlattenedTag?: Resolver<ResolversTypes['FlattenedTag'], ParentType, ContextType, Partial<MutationPushFlattenedTagArgs>>;

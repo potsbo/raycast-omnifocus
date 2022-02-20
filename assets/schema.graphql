@@ -2408,6 +2408,7 @@ type Mutation {
     noteExpanded: Boolean
     selected: Boolean
   ): AncestorTree!
+  pushApplication: Application!
   pushAttachment(font: String, size: Int, text: String): Attachment!
   pushAttribute: Attribute!
   pushAttributeRun(font: String, size: Int, text: String): AttributeRun!
@@ -2449,6 +2450,7 @@ type Mutation {
     noteExpanded: Boolean
     selected: Boolean
   ): DescendantTree!
+  pushDocument: Document!
   pushDocumentWindow(
     index: Int
     miniaturized: Boolean
@@ -2457,6 +2459,7 @@ type Mutation {
     visible: Boolean
     zoomed: Boolean
   ): DocumentWindow!
+  pushFileAttachment: FileAttachment!
   pushFlattenedFolder(hidden: Boolean, name: String): FlattenedFolder!
   pushFlattenedProject(
     completedByChildren: Boolean
