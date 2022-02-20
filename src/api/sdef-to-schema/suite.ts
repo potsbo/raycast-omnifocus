@@ -2,33 +2,21 @@ import { ClassBuilder } from "./class";
 import { EnumBuilder } from "./enumeration";
 import { ExtensionBuilder } from "./extension";
 import { RecordTypeBuilder } from "./recordType";
-import { Sdef, Suite } from "./sdef";
+import { Builder, Sdef, Suite } from "./sdef";
 
-const parseSuite = (
-  s: Suite
-): {
-  classBuilders: ClassBuilder[];
-  extensionBuilders: ExtensionBuilder[];
-  recordTypeBuilders: RecordTypeBuilder[];
-  enumBuilders: EnumBuilder[];
-} => {
+const parseSuite = (s: Suite): Builder[] => {
   const extensionBuilders = (s["class-extension"] ?? []).map((c) => new ExtensionBuilder(c));
   const classBuilders = (s.class ?? []).map((c) => new ClassBuilder(c));
   const recordTypeBuilders = (s["record-type"] ?? []).map((c) => new RecordTypeBuilder(c));
   const enumBuilders = (s.enumeration ?? []).map((e) => new EnumBuilder(e));
-  return { classBuilders, extensionBuilders, recordTypeBuilders, enumBuilders };
+  return [...classBuilders, ...extensionBuilders, ...recordTypeBuilders, ...enumBuilders];
 };
 
 export const parseSuites = (
   sdef: Sdef
 ): {
   includes: string[];
-  builders: {
-    classBuilders: ClassBuilder[];
-    extensionBuilders: ExtensionBuilder[];
-    recordTypeBuilders: RecordTypeBuilder[];
-    enumBuilders: EnumBuilder[];
-  };
+  builders: Builder[];
 } => {
   const includes: string[] = [];
   const ss = sdef.dictionary.suite;
@@ -46,35 +34,6 @@ export const parseSuites = (
     }
   });
 
-  const builders = reduceBuilders(ss.map(parseSuite));
+  const builders = ss.map(parseSuite).reduce((acum, cur) => [...acum, ...cur], []);
   return { builders, includes };
-};
-
-export const reduceBuilders = (
-  buldersList: {
-    classBuilders: ClassBuilder[];
-    extensionBuilders: ExtensionBuilder[];
-    recordTypeBuilders: RecordTypeBuilder[];
-    enumBuilders: EnumBuilder[];
-  }[]
-) => {
-  return buldersList.reduce(
-    (
-      acum: {
-        classBuilders: ClassBuilder[];
-        extensionBuilders: ExtensionBuilder[];
-        recordTypeBuilders: RecordTypeBuilder[];
-        enumBuilders: EnumBuilder[];
-      },
-      cur
-    ) => {
-      return {
-        classBuilders: acum.classBuilders.concat(cur.classBuilders),
-        extensionBuilders: acum.extensionBuilders.concat(cur.extensionBuilders),
-        recordTypeBuilders: acum.recordTypeBuilders.concat(cur.recordTypeBuilders),
-        enumBuilders: acum.enumBuilders.concat(cur.enumBuilders),
-      };
-    },
-    { classBuilders: [], extensionBuilders: [], recordTypeBuilders: [], enumBuilders: [] }
-  );
 };

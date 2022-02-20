@@ -7,7 +7,7 @@ import { Sdef } from "./sdef";
 import { ConnectionInterface, EdgeInterface, NodeInterface } from "./constants";
 import gql from "graphql-tag";
 import { prune } from "./prune";
-import { parseSuites, reduceBuilders } from "./suite";
+import { parseSuites } from "./suite";
 import { readFile } from "fs";
 
 const getBuilders = async (appPath: string) => {
@@ -28,20 +28,14 @@ export const build = async (appPath: string, override?: DocumentNode) => {
     for (const i of includes) {
       const { builders: bs, includes: is } = await getBuildersFromFile(i);
       includes = is;
-      builders = reduceBuilders([builders, bs]);
+      builders = [...builders, ...bs];
     }
   }
 
-  const env = { ...builders, override };
-  const builderList = [
-    ...builders.classBuilders,
-    ...builders.enumBuilders,
-    ...builders.recordTypeBuilders,
-    ...builders.extensionBuilders,
-  ];
+  const env = { builders, override };
 
   const definitions: DefinitionNode[] = [ConnectionInterface, EdgeInterface, NodeInterface];
-  builderList.forEach((b) => {
+  builders.forEach((b) => {
     definitions.push(...b.build(env));
   });
 

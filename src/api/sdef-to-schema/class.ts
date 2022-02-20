@@ -1,4 +1,10 @@
-import { FieldDefinitionNode, InterfaceTypeDefinitionNode, Kind, ObjectTypeExtensionNode } from "graphql";
+import {
+  DefinitionNode,
+  FieldDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  Kind,
+  ObjectTypeExtensionNode,
+} from "graphql";
 import camelCase from "camelcase";
 import { collectFieldsDefinitions, field } from "./field";
 import { ClassDefinition, Environment } from "./sdef";
@@ -36,7 +42,7 @@ export class ClassBuilder {
       fields: [field(`${verb}${typeName}`, nonNull(typeName), { arguments: mutableFields })],
     };
   };
-  build = ({ override, classBuilders }: Environment) => {
+  build = ({ override, builders }: Environment): DefinitionNode[] => {
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
 
     // TODO: if compatible override given, try to merge
@@ -44,6 +50,7 @@ export class ClassBuilder {
       return [];
     }
     const inherits = this.getInherits();
+    const classBuilders = builders.filter((b): b is ClassBuilder => b instanceof ClassBuilder);
     const parent = classBuilders.find((t) => t.getClassName() === inherits);
     if (inherits !== undefined && parent === undefined) {
       throw new Error("parent not found");

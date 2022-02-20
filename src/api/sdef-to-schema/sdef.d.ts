@@ -1,18 +1,11 @@
-import { DocumentNode } from "graphql";
-import { ClassBuilder } from "./class";
-import { EnumBuilder } from "./enumeration";
-import { ExtensionBuilder } from "./extension";
-import { RecordTypeBuilder } from "./recordType";
+import { DocumentNode, DefinitionNode } from "graphql";
 
 export interface Sdef {
   dictionary: { suite: Suite[] };
 }
 
 export interface Environment {
-  classBuilders: ClassBuilder[];
-  extensionBuilders: ExtensionBuilder[];
-  recordTypeBuilders: RecordTypeBuilder[];
-  enumBuilders: EnumBuilder[];
+  builders: Builder[];
   override?: DocumentNode;
 }
 
@@ -122,3 +115,5 @@ export type ContentDefinition = {
   };
   cocoa: [{ $: unknown[] }];
 };
+
+export type Builder = { build: (_: Environment) => DefinitionNode[] };
