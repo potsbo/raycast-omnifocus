@@ -10,9 +10,8 @@ import {
 import camelCase from "camelcase";
 import { collectFieldsDefinitions, FieldDefinition } from "./field";
 import { ClassDefinition } from "./sdef";
-import { NameType, NonNullType, ListType } from "./types";
+import { named as named, nonNull, list } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
-import { implementsInterface } from "../graphql-utils";
 import { ExtensionRenderer } from "./extension";
 import { collectMutationArgs } from "./mutation";
 
@@ -28,7 +27,6 @@ export class ClassRenderer {
   getInherits = () => this.c.$.inherits;
   getInterfaceName = () => `${this.getBaseTypeName()}Interface`;
   getInterfaced = (): InterfaceTypeDefinitionNode => {
-    const isNode = implementsInterface({ fields: this.fields }, NodeInterface);
     return {
       kind: Kind.INTERFACE_TYPE_DEFINITION,
       fields: this.fields,
@@ -36,7 +34,7 @@ export class ClassRenderer {
         kind: Kind.NAME,
         value: this.getInterfaceName(),
       },
-      interfaces: isNode ? [NameType(NodeInterface.name.value)] : [],
+      interfaces: [named(NodeInterface.name.value)],
     };
   };
   getMutationExtension = (verb: string, inherits: ClassRenderer | undefined): ObjectTypeExtensionNode | null => {
@@ -54,7 +52,7 @@ export class ClassRenderer {
       },
       fields: [
         {
-          ...FieldDefinition(`${verb}${typeName}`, NonNullType(NameType(typeName))),
+          ...FieldDefinition(`${verb}${typeName}`, nonNull(named(typeName))),
           arguments: mutableFields,
         },
       ],
@@ -63,7 +61,6 @@ export class ClassRenderer {
   getTypes = ({
     inherits,
     inherited,
-    extensions,
     override,
   }: {
     inherits: ClassRenderer | undefined;
@@ -71,8 +68,10 @@ export class ClassRenderer {
     extensions: ExtensionRenderer[];
     override?: DocumentNode;
   }) => {
-    const className = camelCase(this.c.$.name, { pascalCase: true });
-    if (override?.definitions.some((d) => "name" in d && d.name?.value === className)) {
+    const typeName = camelCase(this.c.$.name, { pascalCase: true });
+
+    // TODO: if compatible override given, try to merge 
+    if (override?.definitions.some((d) => "name" in d && d.name?.value === typeName)) {
       return [];
     }
 
@@ -96,7 +95,7 @@ export class ClassRenderer {
           kind: Kind.NAME,
           value: name,
         },
-        interfaces: interfaces.map((n) => NameType(n)),
+        interfaces: interfaces.map((n) => named(n)),
         fields,
         description: desc,
       };
@@ -104,34 +103,25 @@ export class ClassRenderer {
 
     const fields = [...(this.fields ?? []), ...(inherits?.fields ?? [])];
 
-    const interfaces: string[] = [];
+    const interfaces: string[] = [NodeInterface.name.value];
     if (inherits) {
       interfaces.push(inherits.getInterfaceName());
     }
     if (inherited) {
       interfaces.push(this.getInterfaceName());
     }
-    const isNode = implementsInterface(
-      {
-        fields: fields.concat(extensions.map((e) => e.fields).reduce((acum, cur) => [...acum, ...cur], [])),
-      },
-      NodeInterface
-    );
-    if (isNode) {
-      interfaces.push(NodeInterface.name.value);
-    }
 
-    const classDef = toObjectDef(className, interfaces, fields, this.c.$.description);
+    const classDef = toObjectDef(typeName, interfaces, fields, this.c.$.description);
     const edgeDef = toObjectDef(
-      `${className}${EDGE_TYPE_NAME}`,
+      `${typeName}${EDGE_TYPE_NAME}`,
       [EDGE_TYPE_NAME],
       [
-        FieldDefinition("cursor", NonNullType(NameType("String"))),
-        FieldDefinition("node", NonNullType(NameType(inherited ? this.getInterfaceName() : className))),
+        FieldDefinition("cursor", nonNull(named("String"))),
+        FieldDefinition("node", nonNull(named(inherited ? this.getInterfaceName() : typeName))),
       ]
     );
     const connectionDef = toObjectDef(
-      `${className}${CONNECTION_TYPE_NAME}`,
+      `${typeName}${CONNECTION_TYPE_NAME}`,
       [CONNECTION_TYPE_NAME],
       [
         {
@@ -147,13 +137,13 @@ export class ClassRenderer {
                 kind: Kind.NAME,
                 value: "id",
               },
-              type: NonNullType(NameType("String")),
+              type: nonNull(named("String")),
             },
           ],
-          type: NameType(inherited ? this.getInterfaceName() : className),
+          type: named(inherited ? this.getInterfaceName() : typeName),
         },
-        FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(`${className}${EDGE_TYPE_NAME}`))))),
-        FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),
+        FieldDefinition("edges", nonNull(list(nonNull(named(`${typeName}${EDGE_TYPE_NAME}`))))),
+        FieldDefinition("pageInfo", nonNull(named("PageInfo"))),
       ]
     );
     return [connectionDef, edgeDef, classDef];

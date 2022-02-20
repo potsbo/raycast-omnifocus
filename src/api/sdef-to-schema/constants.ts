@@ -1,6 +1,6 @@
 import { InterfaceTypeDefinitionNode, Kind } from "graphql";
 import { FieldDefinition } from "./field";
-import { ListType, NameType, NonNullType } from "./types";
+import { list, named, nonNull } from "./types";
 
 export const CONNECTION_TYPE_NAME = "Connection";
 export const EDGE_TYPE_NAME = "Edge";
@@ -13,7 +13,7 @@ export const NodeInterface: InterfaceTypeDefinitionNode = {
     kind: Kind.NAME,
     value: NODE_TYPE_NAME,
   },
-  fields: [FieldDefinition("id", NonNullType(NameType("String")))],
+  fields: [FieldDefinition("id", nonNull(named("String")))],
 };
 
 // https://relay.dev/graphql/connections.htm#sec-Edge-Types
@@ -24,8 +24,8 @@ export const EdgeInterface: InterfaceTypeDefinitionNode = {
     value: EDGE_TYPE_NAME,
   },
   fields: [
-    FieldDefinition("node", NonNullType(NameType("Node"))),
-    FieldDefinition("cursor", NonNullType(NameType("String"))),
+    FieldDefinition("node", nonNull(named("Node"))),
+    FieldDefinition("cursor", nonNull(named("String"))),
   ],
 };
 
@@ -37,11 +37,11 @@ export const ConnectionInterface: InterfaceTypeDefinitionNode = {
     value: CONNECTION_TYPE_NAME,
   },
   fields: [
-    FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(EDGE_TYPE_NAME))))),
-    FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),
+    FieldDefinition("edges", nonNull(list(nonNull(named(EDGE_TYPE_NAME))))),
+    FieldDefinition("pageInfo", nonNull(named("PageInfo"))),
     // https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/OSX10-10.html
     {
-      ...FieldDefinition("byId", NameType("Node")),
+      ...FieldDefinition("byId", named("Node")),
       arguments: [
         {
           kind: Kind.INPUT_VALUE_DEFINITION,
@@ -49,7 +49,7 @@ export const ConnectionInterface: InterfaceTypeDefinitionNode = {
             kind: Kind.NAME,
             value: "id",
           },
-          type: NonNullType(NameType("String")),
+          type: nonNull(named("String")),
         },
       ],
     },

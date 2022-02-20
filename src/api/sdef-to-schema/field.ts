@@ -1,7 +1,7 @@
 import { FieldDefinitionNode, InputValueDefinitionNode, Kind, StringValueNode, TypeNode } from "graphql";
 import camelCase from "camelcase";
 import { ContentDefinition, ElementDefinition, PropertyDefinition } from "./sdef";
-import { getGraphQLType, NameType, NonNullType } from "./types";
+import { getGraphQLType, named, nonNull } from "./types";
 
 const CONNECTION_TYPE_NAME = "Connection";
 
@@ -15,7 +15,7 @@ export const collectFieldsDefinitions = (c: {
   });
 
   const elements: FieldDefinitionNode[] = (c.element ?? []).map((e) => {
-    return FieldDefinition(`${e.$.type}s`, NonNullType(NameType(e.$.type, CONNECTION_TYPE_NAME)), {
+    return FieldDefinition(`${e.$.type}s`, nonNull(named(e.$.type, CONNECTION_TYPE_NAME)), {
       description: e.$.description,
       arguments: [
         {
@@ -24,14 +24,14 @@ export const collectFieldsDefinitions = (c: {
             kind: Kind.NAME,
             value: "whose",
           },
-          type: NameType("Condition"),
+          type: named("Condition"),
         },
       ],
     });
   });
 
   const contents = (c.contents ?? []).map((ctnt): FieldDefinitionNode => {
-    return FieldDefinition(ctnt.$.name, NonNullType(NameType(ctnt.$.type)), { description: ctnt.$.description });
+    return FieldDefinition(ctnt.$.name, nonNull(named(ctnt.$.type)), { description: ctnt.$.description });
   });
   // TODO: respond-to
   return properties.concat(elements).concat(contents);

@@ -18,7 +18,7 @@ export const typeNameMap = (sdefName: string): string | null => {
   return null;
 };
 
-export const NameType = (name: string, suffix = ""): NamedTypeNode => {
+export const named = (name: string, suffix = ""): NamedTypeNode => {
   return {
     kind: Kind.NAMED_TYPE,
     name: {
@@ -28,18 +28,18 @@ export const NameType = (name: string, suffix = ""): NamedTypeNode => {
   };
 };
 
-export const ListType = (type: NonNullTypeNode | NamedTypeNode): ListTypeNode => {
+export const list = (type: NonNullTypeNode | NamedTypeNode): ListTypeNode => {
   return { kind: Kind.LIST_TYPE, type };
 };
 
-export const NonNullType = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
+export const nonNull = (type: ListTypeNode | NamedTypeNode): NonNullTypeNode => {
   return {
     kind: Kind.NON_NULL_TYPE,
     type,
   };
 };
 
-export const Nullable = (type: TypeNode): ListTypeNode | NamedTypeNode => {
+export const nullable = (type: TypeNode): ListTypeNode | NamedTypeNode => {
   if (type.kind === Kind.NON_NULL_TYPE) {
     return type.type;
   }
@@ -50,7 +50,7 @@ export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
   if ("type" in t) {
     const types = t.type.map((t) => t.$);
     if (types.length === 2 && types[1].type === "missing value") {
-      return NameType(types[0].type);
+      return named(types[0].type);
     }
 
     if (types.length === 1) {
@@ -58,21 +58,21 @@ export const getGraphQLType = (t: PropertyDefinition): TypeNode => {
       const converted = typeNameMap(type.type);
       if (converted !== null) {
         if (type.list === "yes") {
-          return NonNullType(ListType(NonNullType(NameType(converted))));
+          return nonNull(list(nonNull(named(converted))));
         }
-        return NonNullType(NameType(converted));
+        return nonNull(named(converted));
       }
     }
 
-    return NameType("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
+    return named("TODO__" + types.map((t) => camelCase(t.type, { pascalCase: true })).join("_OR_"));
   }
 
   if ("type" in t.$) {
     const res = typeNameMap(t.$.type);
     if (res) {
-      return NonNullType(NameType(res));
+      return nonNull(named(res));
     }
-    return NonNullType(NameType(t.$.type));
+    return nonNull(named(t.$.type));
   }
 
   throw new Error("Type definition not found");
