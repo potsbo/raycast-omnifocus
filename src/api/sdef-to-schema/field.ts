@@ -11,6 +11,9 @@ export const collectFieldsDefinitions = (c: {
   contents?: ContentDefinition[];
 }) => {
   const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
+    if (t.$.code === "ID  ") {
+      return field(t.$.name, nonNull("ID"), { description: t.$.description });
+    }
     return field(t.$.name, getGraphQLType(t), { description: t.$.description });
   });
 

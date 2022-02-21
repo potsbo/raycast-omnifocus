@@ -15,6 +15,8 @@ const typeNameMap = (sdefName: string): string | null => {
       return "Int";
     case "real":
       return "Float";
+    case "ID":
+      return "ID";
   }
   return null;
 };

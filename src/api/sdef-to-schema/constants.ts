@@ -11,7 +11,7 @@ export const INTERFACE_SUFFIX = "Interface";
 export const NodeInterface: InterfaceTypeDefinitionNode = {
   kind: Kind.INTERFACE_TYPE_DEFINITION,
   name: name(NODE_TYPE_NAME, { pascalCase: true }),
-  fields: [field("id", nonNull("String"))],
+  fields: [field("id", nonNull("ID"))],
 };
 
 // https://relay.dev/graphql/connections.htm#sec-Edge-Types
@@ -35,7 +35,7 @@ export const ConnectionInterface: InterfaceTypeDefinitionNode = {
         {
           kind: Kind.INPUT_VALUE_DEFINITION,
           name: name("id"),
-          type: nonNull("String"),
+          type: nonNull("ID"),
         },
       ],
     },

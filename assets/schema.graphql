@@ -28,7 +28,7 @@ type AncestorTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -67,7 +67,7 @@ type AncestorTree implements Node & TreeInterface {
 }
 
 type AncestorTreeConnection implements Connection {
-  byId(id: String!): AncestorTree
+  byId(id: ID!): AncestorTree
   edges: [AncestorTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -198,7 +198,7 @@ type Attribute {
 }
 
 type AttributeConnection {
-  byId(id: String!): Attribute
+  byId(id: ID!): Attribute
   edges: [AttributeEdge!]!
   pageInfo: PageInfo!
 }
@@ -241,7 +241,7 @@ type AttributeRun {
 }
 
 type AttributeRunConnection {
-  byId(id: String!): AttributeRun
+  byId(id: ID!): AttributeRun
   edges: [AttributeRunEdge!]!
   pageInfo: PageInfo!
 }
@@ -339,7 +339,7 @@ type AvailableTask implements Node & TaskInterface {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
@@ -433,7 +433,7 @@ type AvailableTask implements Node & TaskInterface {
 }
 
 type AvailableTaskConnection implements Connection {
-  byId(id: String!): AvailableTask
+  byId(id: ID!): AvailableTask
   edges: [AvailableTaskEdge!]!
   pageInfo: PageInfo!
 }
@@ -450,7 +450,7 @@ type BuiltinPerspective implements Node & PerspectiveInterface {
   """
   The identifier of the perspective.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the perspective.
@@ -459,7 +459,7 @@ type BuiltinPerspective implements Node & PerspectiveInterface {
 }
 
 type BuiltinPerspectiveConnection implements Connection {
-  byId(id: String!): BuiltinPerspective
+  byId(id: ID!): BuiltinPerspective
   edges: [BuiltinPerspectiveEdge!]!
   pageInfo: PageInfo!
 }
@@ -502,7 +502,7 @@ type Character {
 }
 
 type CharacterConnection {
-  byId(id: String!): Character
+  byId(id: ID!): Character
   edges: [CharacterEdge!]!
   pageInfo: PageInfo!
 }
@@ -521,7 +521,7 @@ input Condition {
 }
 
 interface Connection {
-  byId(id: String!): Node
+  byId(id: ID!): Node
   edges: [Edge!]!
   pageInfo: PageInfo!
 }
@@ -578,7 +578,7 @@ type ContentTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -642,7 +642,7 @@ type ContentTree implements Node & TreeInterface {
 }
 
 type ContentTreeConnection implements Connection {
-  byId(id: String!): ContentTree
+  byId(id: ID!): ContentTree
   edges: [ContentTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -659,7 +659,7 @@ type CustomPerspective implements Node & PerspectiveInterface {
   """
   The identifier of the perspective.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the perspective.
@@ -668,7 +668,7 @@ type CustomPerspective implements Node & PerspectiveInterface {
 }
 
 type CustomPerspectiveConnection implements Connection {
-  byId(id: String!): CustomPerspective
+  byId(id: ID!): CustomPerspective
   edges: [CustomPerspectiveEdge!]!
   pageInfo: PageInfo!
 }
@@ -717,7 +717,7 @@ type DeprecatedContext implements Node & TagInterface {
   """
   The identifier of the tag.
   """
-  id: String!
+  id: ID!
 
   """
   The physical location associated with the tag.
@@ -752,7 +752,7 @@ type DeprecatedContext implements Node & TagInterface {
 }
 
 type DeprecatedContextConnection implements Connection {
-  byId(id: String!): DeprecatedContext
+  byId(id: ID!): DeprecatedContext
   edges: [DeprecatedContextEdge!]!
   pageInfo: PageInfo!
 }
@@ -789,7 +789,7 @@ type DescendantTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -828,7 +828,7 @@ type DescendantTree implements Node & TreeInterface {
 }
 
 type DescendantTreeConnection implements Connection {
-  byId(id: String!): DescendantTree
+  byId(id: ID!): DescendantTree
   edges: [DescendantTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -884,7 +884,7 @@ type Document {
   """
   The document's unique identifier.
   """
-  id: String!
+  id: ID!
   inboxTasks(whose: Condition): InboxTaskConnection!
 
   """
@@ -957,7 +957,7 @@ type Document {
 }
 
 type DocumentConnection {
-  byId(id: String!): Document
+  byId(id: ID!): Document
   edges: [DocumentEdge!]!
   pageInfo: PageInfo!
 }
@@ -970,7 +970,7 @@ type DocumentEdge {
 """
 A window of an OmniFocus document.
 """
-type DocumentWindow implements WindowInterface {
+type DocumentWindow implements Node & WindowInterface {
   """
   Does the window have a close button?
   """
@@ -989,7 +989,7 @@ type DocumentWindow implements WindowInterface {
   """
   The unique identifier of the window.
   """
-  id: Int!
+  id: ID!
 
   """
   The index of the window, ordered front to back.
@@ -1042,13 +1042,13 @@ type DocumentWindow implements WindowInterface {
   zoomed: Boolean!
 }
 
-type DocumentWindowConnection {
-  byId(id: String!): DocumentWindow
+type DocumentWindowConnection implements Connection {
+  byId(id: ID!): DocumentWindow
   edges: [DocumentWindowEdge!]!
   pageInfo: PageInfo!
 }
 
-type DocumentWindowEdge {
+type DocumentWindowEdge implements Edge {
   cursor: String!
   node: DocumentWindow!
 }
@@ -1069,7 +1069,7 @@ type FileAttachment {
 }
 
 type FileAttachmentConnection {
-  byId(id: String!): FileAttachment
+  byId(id: ID!): FileAttachment
   edges: [FileAttachmentEdge!]!
   pageInfo: PageInfo!
 }
@@ -1108,7 +1108,7 @@ type FlattenedFolder implements FolderInterface & Node {
   """
   The identifier of the folder.
   """
-  id: String!
+  id: ID!
 
   """
   When the folder was last modified.
@@ -1137,7 +1137,7 @@ type FlattenedFolder implements FolderInterface & Node {
 }
 
 type FlattenedFolderConnection implements Connection {
-  byId(id: String!): FlattenedFolder
+  byId(id: ID!): FlattenedFolder
   edges: [FlattenedFolderEdge!]!
   pageInfo: PageInfo!
 }
@@ -1244,7 +1244,7 @@ type FlattenedProject implements Node & ProjectInterface {
   """
   The identifier of the project.
   """
-  id: String!
+  id: ID!
 
   """
   When the project was last reviewed.
@@ -1348,7 +1348,7 @@ type FlattenedProject implements Node & ProjectInterface {
 }
 
 type FlattenedProjectConnection implements Connection {
-  byId(id: String!): FlattenedProject
+  byId(id: ID!): FlattenedProject
   edges: [FlattenedProjectEdge!]!
   pageInfo: PageInfo!
 }
@@ -1397,7 +1397,7 @@ type FlattenedTag implements Node & TagInterface {
   """
   The identifier of the tag.
   """
-  id: String!
+  id: ID!
 
   """
   The physical location associated with the tag.
@@ -1432,7 +1432,7 @@ type FlattenedTag implements Node & TagInterface {
 }
 
 type FlattenedTagConnection implements Connection {
-  byId(id: String!): FlattenedTag
+  byId(id: ID!): FlattenedTag
   edges: [FlattenedTagEdge!]!
   pageInfo: PageInfo!
 }
@@ -1530,7 +1530,7 @@ type FlattenedTask implements Node & TaskInterface {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
@@ -1624,7 +1624,7 @@ type FlattenedTask implements Node & TaskInterface {
 }
 
 type FlattenedTaskConnection implements Connection {
-  byId(id: String!): FlattenedTask
+  byId(id: ID!): FlattenedTask
   edges: [FlattenedTaskEdge!]!
   pageInfo: PageInfo!
 }
@@ -1663,7 +1663,7 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """
   The identifier of the folder.
   """
-  id: String!
+  id: ID!
 
   """
   When the folder was last modified.
@@ -1692,7 +1692,7 @@ type Folder implements FolderInterface & Node & SectionInterface {
 }
 
 type FolderConnection implements Connection {
-  byId(id: String!): FolderInterface
+  byId(id: ID!): FolderInterface
   edges: [FolderEdge!]!
   pageInfo: PageInfo!
 }
@@ -1728,7 +1728,7 @@ interface FolderInterface implements Node {
   """
   The identifier of the folder.
   """
-  id: String!
+  id: ID!
 
   """
   When the folder was last modified.
@@ -1783,7 +1783,7 @@ type FollowingSibling implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -1822,7 +1822,7 @@ type FollowingSibling implements Node & TreeInterface {
 }
 
 type FollowingSiblingConnection implements Connection {
-  byId(id: String!): FollowingSibling
+  byId(id: ID!): FollowingSibling
   edges: [FollowingSiblingEdge!]!
   pageInfo: PageInfo!
 }
@@ -1849,7 +1849,7 @@ type ForecastDay implements Node {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   A display name for the forecast day.
@@ -1858,7 +1858,7 @@ type ForecastDay implements Node {
 }
 
 type ForecastDayConnection implements Connection {
-  byId(id: String!): ForecastDay
+  byId(id: ID!): ForecastDay
   edges: [ForecastDayEdge!]!
   pageInfo: PageInfo!
 }
@@ -1882,7 +1882,7 @@ interface ForecastDayInterface implements Node {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   A display name for the forecast day.
@@ -1994,7 +1994,7 @@ type InboxTask implements Node & TaskInterface {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
@@ -2088,7 +2088,7 @@ type InboxTask implements Node & TaskInterface {
 }
 
 type InboxTaskConnection implements Connection {
-  byId(id: String!): InboxTask
+  byId(id: ID!): InboxTask
   edges: [InboxTaskEdge!]!
   pageInfo: PageInfo!
 }
@@ -2125,7 +2125,7 @@ type InboxTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -2164,7 +2164,7 @@ type InboxTree implements Node & TreeInterface {
 }
 
 type InboxTreeConnection implements Connection {
-  byId(id: String!): InboxTree
+  byId(id: ID!): InboxTree
   edges: [InboxTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -2233,7 +2233,7 @@ type Leaf implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -2272,7 +2272,7 @@ type Leaf implements Node & TreeInterface {
 }
 
 type LeafConnection implements Connection {
-  byId(id: String!): Leaf
+  byId(id: ID!): Leaf
   edges: [LeafEdge!]!
   pageInfo: PageInfo!
 }
@@ -2309,7 +2309,7 @@ type LibraryTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -2348,7 +2348,7 @@ type LibraryTree implements Node & TreeInterface {
 }
 
 type LibraryTreeConnection implements Connection {
-  byId(id: String!): LibraryTree
+  byId(id: ID!): LibraryTree
   edges: [LibraryTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -2643,7 +2643,7 @@ type NamedStyle implements Node & StyleInterface {
   """
   An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the style.  Must be unique within the containing document.
@@ -2653,7 +2653,7 @@ type NamedStyle implements Node & StyleInterface {
 }
 
 type NamedStyleConnection implements Connection {
-  byId(id: String!): NamedStyle
+  byId(id: ID!): NamedStyle
   edges: [NamedStyleEdge!]!
   pageInfo: PageInfo!
 }
@@ -2667,7 +2667,7 @@ interface NamedStyleInterface implements Node {
   """
   An identifier for the named style that is unique within its document.  Currently this identifier is not persistent between two different sessions of editing the document.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the style.  Must be unique within the containing document.
@@ -2676,7 +2676,7 @@ interface NamedStyleInterface implements Node {
 }
 
 interface Node {
-  id: String!
+  id: ID!
 }
 
 type PageInfo {
@@ -2719,7 +2719,7 @@ type Paragraph {
 }
 
 type ParagraphConnection {
-  byId(id: String!): Paragraph
+  byId(id: ID!): Paragraph
   edges: [ParagraphEdge!]!
   pageInfo: PageInfo!
 }
@@ -2736,7 +2736,7 @@ type Perspective implements Node & PerspectiveInterface {
   """
   The identifier of the perspective.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the perspective.
@@ -2745,7 +2745,7 @@ type Perspective implements Node & PerspectiveInterface {
 }
 
 type PerspectiveConnection implements Connection {
-  byId(id: String!): PerspectiveInterface
+  byId(id: ID!): PerspectiveInterface
   edges: [PerspectiveEdge!]!
   pageInfo: PageInfo!
 }
@@ -2759,7 +2759,7 @@ interface PerspectiveInterface implements Node {
   """
   The identifier of the perspective.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the perspective.
@@ -2794,7 +2794,7 @@ type PrecedingSibling implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -2833,7 +2833,7 @@ type PrecedingSibling implements Node & TreeInterface {
 }
 
 type PrecedingSiblingConnection implements Connection {
-  byId(id: String!): PrecedingSibling
+  byId(id: ID!): PrecedingSibling
   edges: [PrecedingSiblingEdge!]!
   pageInfo: PageInfo!
 }
@@ -2850,11 +2850,11 @@ type Preference implements Node {
   """
   The identifier of the preference.
   """
-  id: String!
+  id: ID!
 }
 
 type PreferenceConnection implements Connection {
-  byId(id: String!): Preference
+  byId(id: ID!): Preference
   edges: [PreferenceEdge!]!
   pageInfo: PageInfo!
 }
@@ -2868,7 +2868,7 @@ interface PreferenceInterface implements Node {
   """
   The identifier of the preference.
   """
-  id: String!
+  id: ID!
 }
 
 """
@@ -2968,7 +2968,7 @@ type Project implements Node & ProjectInterface & SectionInterface {
   """
   The identifier of the project.
   """
-  id: String!
+  id: ID!
 
   """
   When the project was last reviewed.
@@ -3072,7 +3072,7 @@ type Project implements Node & ProjectInterface & SectionInterface {
 }
 
 type ProjectConnection implements Connection {
-  byId(id: String!): ProjectInterface
+  byId(id: ID!): ProjectInterface
   edges: [ProjectEdge!]!
   pageInfo: PageInfo!
 }
@@ -3176,7 +3176,7 @@ interface ProjectInterface implements Node {
   """
   The identifier of the project.
   """
-  id: String!
+  id: ID!
 
   """
   When the project was last reviewed.
@@ -3338,7 +3338,7 @@ type QuickEntryTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
   inboxTasks(whose: Condition): InboxTaskConnection!
 
   """
@@ -3385,7 +3385,7 @@ type QuickEntryTree implements Node & TreeInterface {
 }
 
 type QuickEntryTreeConnection implements Connection {
-  byId(id: String!): QuickEntryTree
+  byId(id: ID!): QuickEntryTree
   edges: [QuickEntryTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -3483,7 +3483,7 @@ type RemainingTask implements Node & TaskInterface {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
@@ -3577,7 +3577,7 @@ type RemainingTask implements Node & TaskInterface {
 }
 
 type RemainingTaskConnection implements Connection {
-  byId(id: String!): RemainingTask
+  byId(id: ID!): RemainingTask
   edges: [RemainingTaskEdge!]!
   pageInfo: PageInfo!
 }
@@ -3642,7 +3642,7 @@ type Section implements Node & SectionInterface {
   """
   The identifier of the project or folder.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the project or folder.
@@ -3651,7 +3651,7 @@ type Section implements Node & SectionInterface {
 }
 
 type SectionConnection implements Connection {
-  byId(id: String!): SectionInterface
+  byId(id: ID!): SectionInterface
   edges: [SectionEdge!]!
   pageInfo: PageInfo!
 }
@@ -3665,7 +3665,7 @@ interface SectionInterface implements Node {
   """
   The identifier of the project or folder.
   """
-  id: String!
+  id: ID!
 
   """
   The name of the project or folder.
@@ -3700,7 +3700,7 @@ type SelectedTree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -3739,7 +3739,7 @@ type SelectedTree implements Node & TreeInterface {
 }
 
 type SelectedTreeConnection implements Connection {
-  byId(id: String!): SelectedTree
+  byId(id: ID!): SelectedTree
   edges: [SelectedTreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -3756,11 +3756,11 @@ type Setting implements Node {
   """
   The identifier of the setting.
   """
-  id: String!
+  id: ID!
 }
 
 type SettingConnection implements Connection {
-  byId(id: String!): Setting
+  byId(id: ID!): Setting
   edges: [SettingEdge!]!
   pageInfo: PageInfo!
 }
@@ -3774,7 +3774,7 @@ interface SettingInterface implements Node {
   """
   The identifier of the setting.
   """
-  id: String!
+  id: ID!
 }
 
 """
@@ -3809,7 +3809,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -3926,7 +3926,7 @@ type Tag implements Node & TagInterface {
   """
   The identifier of the tag.
   """
-  id: String!
+  id: ID!
 
   """
   The physical location associated with the tag.
@@ -3961,7 +3961,7 @@ type Tag implements Node & TagInterface {
 }
 
 type TagConnection implements Connection {
-  byId(id: String!): TagInterface
+  byId(id: ID!): TagInterface
   edges: [TagEdge!]!
   pageInfo: PageInfo!
 }
@@ -4007,7 +4007,7 @@ interface TagInterface implements Node {
   """
   The identifier of the tag.
   """
-  id: String!
+  id: ID!
 
   """
   The physical location associated with the tag.
@@ -4129,7 +4129,7 @@ type Task implements Node & TaskInterface {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
@@ -4223,7 +4223,7 @@ type Task implements Node & TaskInterface {
 }
 
 type TaskConnection implements Connection {
-  byId(id: String!): TaskInterface
+  byId(id: ID!): TaskInterface
   edges: [TaskEdge!]!
   pageInfo: PageInfo!
 }
@@ -4318,7 +4318,7 @@ interface TaskInterface implements Node {
   """
   The identifier of the task.
   """
-  id: String!
+  id: ID!
 
   """
   Returns true if the task itself is an inbox task or if the task is contained by an inbox task.
@@ -4438,7 +4438,7 @@ type Tree implements Node & TreeInterface {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -4477,7 +4477,7 @@ type Tree implements Node & TreeInterface {
 }
 
 type TreeConnection implements Connection {
-  byId(id: String!): TreeInterface
+  byId(id: ID!): TreeInterface
   edges: [TreeEdge!]!
   pageInfo: PageInfo!
 }
@@ -4511,7 +4511,7 @@ interface TreeInterface implements Node {
   """
   The identifier of object being represented by this tree.
   """
-  id: String!
+  id: ID!
 
   """
   The descendants of this tree that have no children themselves.
@@ -4552,7 +4552,7 @@ interface TreeInterface implements Node {
 """
 A window.
 """
-type Window implements WindowInterface {
+type Window implements Node & WindowInterface {
   """
   Does the window have a close button?
   """
@@ -4566,7 +4566,7 @@ type Window implements WindowInterface {
   """
   The unique identifier of the window.
   """
-  id: Int!
+  id: ID!
 
   """
   The index of the window, ordered front to back.
@@ -4609,18 +4609,18 @@ type Window implements WindowInterface {
   zoomed: Boolean!
 }
 
-type WindowConnection {
-  byId(id: String!): WindowInterface
+type WindowConnection implements Connection {
+  byId(id: ID!): WindowInterface
   edges: [WindowEdge!]!
   pageInfo: PageInfo!
 }
 
-type WindowEdge {
+type WindowEdge implements Edge {
   cursor: String!
   node: WindowInterface!
 }
 
-interface WindowInterface {
+interface WindowInterface implements Node {
   """
   Does the window have a close button?
   """
@@ -4634,7 +4634,7 @@ interface WindowInterface {
   """
   The unique identifier of the window.
   """
-  id: Int!
+  id: ID!
 
   """
   The index of the window, ordered front to back.
@@ -4710,7 +4710,7 @@ type Word {
 }
 
 type WordConnection {
-  byId(id: String!): Word
+  byId(id: ID!): Word
   edges: [WordEdge!]!
   pageInfo: PageInfo!
 }

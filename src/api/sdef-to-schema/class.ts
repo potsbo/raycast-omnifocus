@@ -81,7 +81,7 @@ export class ClassBuilder {
             {
               kind: Kind.INPUT_VALUE_DEFINITION,
               name: name("id"),
-              type: nonNull("String"),
+              type: nonNull("ID"),
             },
           ],
         }),
