@@ -16,7 +16,7 @@ index 0d47611..1c56e7e 100644
    return (
      printDescription(type) +
      `type ${type.name}` +
-+    printObjectDirectives(type) +
      printImplementedInterfaces(type) +
++    printObjectDirectives(type) +
      printFields(type)
    );
