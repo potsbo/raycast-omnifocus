@@ -10,6 +10,7 @@ import {
   InterfaceTypeDefinitionNode,
 } from "graphql";
 import { unwrapType } from "./graphql-utils";
+import { internalFieldName } from "./internalField";
 import { compileWhoseParam, extractCondition } from "./whose";
 
 type CurrentContext = {
@@ -26,20 +27,6 @@ type RenderableField = {
   definition: FieldDefinitionNode;
 };
 
-const internalFieldName = (fdef: FieldDefinitionNode): string => {
-  const actual = fdef.directives
-    ?.find((d) => d.name.value === "internalField")
-    ?.arguments?.find((a) => a.name.value === "name")?.value;
-  if (actual === undefined) {
-    return fdef.name.value;
-  }
-
-  if (actual.kind !== Kind.STRING) {
-    throw new Error("Field name must be a string");
-  }
-  return actual.value;
-};
-
 const renderField = (
   ctx: CurrentContext,
   f: RenderableField,
@@ -47,14 +34,14 @@ const renderField = (
 ): string => {
   const name = f.field.name.value;
   if (f.field.selectionSet) {
-    // TODO: handle in connection renderer
     if (f.field.name.value === "pageInfo") {
+      // TODO: not to hard code
       return `pageInfo: {
-    hasPreviousPage: false,
-    hasNextPage: false,
-    startCursor: "",
-    endCursor: "",
-  },`;
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: "",
+        endCursor: "",
+      },`;
     }
     if (f.field.name.value === "edges") {
       const renderNodeField = () => {
@@ -68,7 +55,9 @@ const renderField = (
       };
       const renderCursor = () => {
         const cursor = f.field.selectionSet?.selections.find((f) => f.kind === Kind.FIELD && f.name.value === "cursor");
-        if (cursor === undefined) return "";
+        if (cursor === undefined) {
+          return "";
+        }
         const nodeType = mustFindTypeDefinition(ctx, f.definition.type).fields?.find((f) => f.name.value === "node");
         if (nodeType === undefined) {
           throw new Error("an edge type doesn't have node field");
@@ -81,13 +70,13 @@ const renderField = (
         return `cursor: elm.${fieldName}(),`;
       };
       return `
-  edges: nodes.map((elm) => {
-    return {
-      ${renderCursor()}
-      ${renderNodeField()}
-    }
-  }),
-  `;
+        edges: nodes.map((elm) => {
+          return {
+            ${renderCursor()}
+            ${renderNodeField()}
+          }
+        }),
+      `;
     }
 
     const args: string[] = [];
@@ -202,12 +191,12 @@ const renderNonNullObject = (
 
   if (isConnection) {
     return `
-    (() => {
-      const nodes = ${ctx.rootName}${opts.whose ?? ""}();
-      return {
-        ${renderFields(ctx, object)}
-      }
-    })()
+      (() => {
+        const nodes = ${ctx.rootName}${opts.whose ?? ""}();
+        return {
+          ${renderFields(ctx, object)}
+        }
+      })()
     `;
   }
 
