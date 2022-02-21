@@ -239,9 +239,7 @@ JSON.stringify({
             endCursor: \\"\\",
           },
           edges: nodes.map((elm) => {
-            return {
-              cursor: elm.id(),
-            };
+            return {};
           }),
           byId: _parent.defaultDocument().projects.byId(projectId)
             ? {
@@ -381,6 +379,40 @@ JSON.stringify({
 "
 `;
 
+exports[`query internal field directive 1`] = `
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: _parent
+    ? {
+        someConnection: (() => {
+          const nodes = _parent.someConnection();
+          return {
+            pageInfo: {
+              hasPreviousPage: false,
+              hasNextPage: false,
+              startCursor: \\"\\",
+              endCursor: \\"\\",
+            },
+            edges: nodes.map((elm) => {
+              return {
+                cursor: elm.differentName(),
+                node: { id: elm.differentName() },
+              };
+            }),
+          };
+        })(),
+        something: _parent.another(),
+      }
+    : undefined,
+});
+"
+`;
+
 exports[`query with inline fragment 1`] = `
 "function pascalCase(s) {
   return (s.match(/[a-zA-Z0-9]+/g) || [])
@@ -474,9 +506,7 @@ JSON.stringify({
             endCursor: \\"\\",
           },
           edges: nodes.map((elm) => {
-            return {
-              cursor: elm.id(),
-            };
+            return {};
           }),
           byId: _parent.defaultDocument().projects.byId(\\"hZoaSakOnG4\\")
             ? {

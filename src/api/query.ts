@@ -26,6 +26,20 @@ type RenderableField = {
   definition: FieldDefinitionNode;
 };
 
+const internalFieldName = (fdef: FieldDefinitionNode): string => {
+  const actual = fdef.directives
+    ?.find((d) => d.name.value === "internalField")
+    ?.arguments?.find((a) => a.name.value === "name")?.value;
+  if (actual === undefined) {
+    return fdef.name.value;
+  }
+
+  if (actual.kind !== Kind.STRING) {
+    throw new Error("Field name must be a string");
+  }
+  return actual.value;
+};
+
 const renderField = (
   ctx: CurrentContext,
   f: RenderableField,
@@ -73,9 +87,10 @@ const renderField = (
     )},`;
   }
 
+  const fieldName = internalFieldName(f.definition);
   const isEnum = isEnumValue(ctx, f.definition);
   const suffix = isEnum ? `?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
-  return `${name}: ${ctx.rootName}.${name}${suffix},`;
+  return `${name}: ${ctx.rootName}.${fieldName}${suffix},`;
 };
 
 const isEnumValue = (ctx: CurrentContext, f: FieldDefinitionNode): boolean => {
@@ -158,7 +173,21 @@ const renderNonNullObject = (
       if (node === null) {
         return "";
       }
+
       return `node: ${renderObject({ ...ctx, rootName: "elm" }, node)},`;
+    };
+    const renderCursor = () => {
+      const node = dig(ctx, object, "edges", "node");
+      if (node === null) {
+        return "";
+      }
+      const def = mustFindTypeDefinition(ctx, node.typeNode);
+      const fdef = def.fields?.find((f) => f.name.value === "id");
+      if (fdef === undefined) {
+        return "";
+      }
+
+      return `cursor: elm.${internalFieldName(fdef)}(),`;
     };
 
     return `
@@ -173,7 +202,7 @@ const renderNonNullObject = (
         },
         edges: nodes.map((elm) => {
           return {
-            cursor: elm.id(),
+            ${renderCursor()}
             ${renderNodeField()}
           }
         }),

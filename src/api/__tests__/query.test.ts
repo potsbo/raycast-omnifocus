@@ -10,7 +10,7 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
 import { genQuery } from "../query";
 import prettier from "prettier";
-import { GraphQLError } from "graphql";
+import { buildASTSchema, GraphQLError } from "graphql";
 import gql from "graphql-tag";
 
 const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
@@ -169,6 +169,82 @@ test("query with project interface", () => {
   `;
   const exeContext = buildExecutionContext({
     schema: schema,
+    document: document,
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
+
+test("query internal field directive", () => {
+  const schema = gql`
+    directive @internalField(name: String!) on FIELD_DEFINITION
+
+    type Query {
+      application: Application
+    }
+
+    type Application {
+      something: String! @internalField(name: "another")
+      someConnection: SomeConnection!
+    }
+
+    type SomeConnection implements Connection {
+      byId(id: ID!): Node
+      edges: [SomeEdge!]!
+      pageInfo: PageInfo!
+    }
+
+    type SomeEdge implements Edge {
+      cursor: String!
+      node: Some!
+    }
+
+    type Some {
+      id: ID! @internalField(name: "differentName")
+    }
+
+    interface Connection {
+      byId(id: ID!): Node
+      edges: [Edge!]!
+      pageInfo: PageInfo!
+    }
+
+    interface Edge {
+      cursor: String!
+      node: Node!
+    }
+
+    type PageInfo {
+      endCursor: String!
+      hasNextPage: Boolean!
+      hasPreviousPage: Boolean!
+      startCursor: String!
+    }
+    interface Node {
+      id: ID!
+    }
+  `;
+
+  const document = gql`
+    query {
+      application {
+        something
+        someConnection {
+          edges {
+            cursor
+            node {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+  const exeContext = buildExecutionContext({
+    schema: buildASTSchema(schema),
     document: document,
   });
   if (!validateExecontext(exeContext)) {
