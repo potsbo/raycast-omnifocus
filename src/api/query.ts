@@ -45,17 +45,51 @@ const renderField = (
   f: RenderableField,
   opts: Partial<{ isRecordType: boolean; isEnum: boolean }> = {}
 ): string => {
-  // TODO: handle in connection renderer
-  if (f.field.name.value === "pageInfo") {
-    return "";
-  }
-  if (f.field.name.value === "edges") {
-    return "";
-  }
-
   const name = f.field.name.value;
-
   if (f.field.selectionSet) {
+    // TODO: handle in connection renderer
+    if (f.field.name.value === "pageInfo") {
+      return `pageInfo: {
+    hasPreviousPage: false,
+    hasNextPage: false,
+    startCursor: "",
+    endCursor: "",
+  },`;
+    }
+    if (f.field.name.value === "edges") {
+      const renderNodeField = () => {
+        const typeNode = f.definition.type;
+        const node = dig(ctx, { selectedFields: f.field.selectionSet?.selections ?? [], typeNode }, "node");
+        if (node === null) {
+          return "";
+        }
+
+        return `node: ${renderObject({ ...ctx, rootName: "elm" }, node)},`;
+      };
+      const renderCursor = () => {
+        const cursor = f.field.selectionSet?.selections.find((f) => f.kind === Kind.FIELD && f.name.value === "cursor");
+        if (cursor === undefined) return "";
+        const nodeType = mustFindTypeDefinition(ctx, f.definition.type).fields?.find((f) => f.name.value === "node");
+        if (nodeType === undefined) {
+          throw new Error("an edge type doesn't have node field");
+        }
+        const idField = mustFindTypeDefinition(ctx, nodeType.type).fields?.find((f) => f.name.value === "id");
+        if (idField === undefined) {
+          throw new Error("a node type doesn't have id field");
+        }
+        const fieldName = internalFieldName(idField);
+        return `cursor: elm.${fieldName}(),`;
+      };
+      return `
+  edges: nodes.map((elm) => {
+    return {
+      ${renderCursor()}
+      ${renderNodeField()}
+    }
+  }),
+  `;
+    }
+
     const args: string[] = [];
     f.field.arguments?.forEach((a) => {
       // TODO: not to hard code
@@ -167,45 +201,10 @@ const renderNonNullObject = (
   );
 
   if (isConnection) {
-    // TODO: consider cursor
-    const renderNodeField = () => {
-      const node = dig(ctx, object, "edges", "node");
-      if (node === null) {
-        return "";
-      }
-
-      return `node: ${renderObject({ ...ctx, rootName: "elm" }, node)},`;
-    };
-    const renderCursor = () => {
-      const node = dig(ctx, object, "edges", "node");
-      if (node === null) {
-        return "";
-      }
-      const def = mustFindTypeDefinition(ctx, node.typeNode);
-      const fdef = def.fields?.find((f) => f.name.value === "id");
-      if (fdef === undefined) {
-        return "";
-      }
-
-      return `cursor: elm.${internalFieldName(fdef)}(),`;
-    };
-
     return `
     (() => {
       const nodes = ${ctx.rootName}${opts.whose ?? ""}();
       return {
-        pageInfo: {
-          hasPreviousPage: false,
-          hasNextPage: false,
-          startCursor: "",
-          endCursor: "",
-        },
-        edges: nodes.map((elm) => {
-          return {
-            ${renderCursor()}
-            ${renderNodeField()}
-          }
-        }),
         ${renderFields(ctx, object)}
       }
     })()

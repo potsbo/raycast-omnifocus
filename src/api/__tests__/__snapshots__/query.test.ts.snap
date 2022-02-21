@@ -13,12 +13,6 @@ JSON.stringify({
       projects: (() => {
         const nodes = _parent.defaultDocument().projects();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
               cursor: elm.id(),
@@ -28,6 +22,12 @@ JSON.stringify({
               },
             };
           }),
+          pageInfo: {
+            hasPreviousPage: false,
+            hasNextPage: false,
+            startCursor: \\"\\",
+            endCursor: \\"\\",
+          },
         };
       })(),
     },
@@ -61,15 +61,8 @@ JSON.stringify({
             ],
           })();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
               node: {
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
@@ -123,15 +116,8 @@ JSON.stringify({
             ],
           })();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
               node: {
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
@@ -185,15 +171,8 @@ JSON.stringify({
             ],
           })();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
               node: {
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
@@ -232,15 +211,6 @@ JSON.stringify({
       projects: (() => {
         const nodes = _parent.defaultDocument().projects();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
-          edges: nodes.map((elm) => {
-            return {};
-          }),
           byId: _parent.defaultDocument().projects.byId(projectId)
             ? {
                 __typename: pascalCase(
@@ -257,15 +227,8 @@ JSON.stringify({
                       .rootTask()
                       .tasks();
                     return {
-                      pageInfo: {
-                        hasPreviousPage: false,
-                        hasNextPage: false,
-                        startCursor: \\"\\",
-                        endCursor: \\"\\",
-                      },
                       edges: nodes.map((elm) => {
                         return {
-                          cursor: elm.id(),
                           node: {
                             __typename: pascalCase(elm.properties().pcls),
                             completed: elm.completed(),
@@ -309,15 +272,8 @@ JSON.stringify({
       folders: (() => {
         const nodes = _parent.defaultDocument().folders();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
               node: {
                 __typename: pascalCase(elm.properties().pcls),
                 id: elm.id(),
@@ -325,15 +281,8 @@ JSON.stringify({
                 projects: (() => {
                   const nodes = elm.projects();
                   return {
-                    pageInfo: {
-                      hasPreviousPage: false,
-                      hasNextPage: false,
-                      startCursor: \\"\\",
-                      endCursor: \\"\\",
-                    },
                     edges: nodes.map((elm) => {
                       return {
-                        cursor: elm.id(),
                         node: {
                           __typename: pascalCase(elm.properties().pcls),
                           completed: elm.completed(),
@@ -353,15 +302,8 @@ JSON.stringify({
       projects: (() => {
         const nodes = _parent.defaultDocument().projects();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
               node: {
                 __typename: pascalCase(elm.properties().pcls),
                 completed: elm.completed(),
@@ -392,12 +334,6 @@ JSON.stringify({
         someConnection: (() => {
           const nodes = _parent.someConnection();
           return {
-            pageInfo: {
-              hasPreviousPage: false,
-              hasNextPage: false,
-              startCursor: \\"\\",
-              endCursor: \\"\\",
-            },
             edges: nodes.map((elm) => {
               return {
                 cursor: elm.differentName(),
@@ -426,30 +362,16 @@ JSON.stringify({
       folders: (() => {
         const nodes = _parent.defaultDocument().folders();
         return {
-          pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
-            startCursor: \\"\\",
-            endCursor: \\"\\",
-          },
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
               node: {
                 __typename: pascalCase(elm.properties().pcls),
                 name: elm.name(),
                 sections: (() => {
                   const nodes = elm.sections();
                   return {
-                    pageInfo: {
-                      hasPreviousPage: false,
-                      hasNextPage: false,
-                      startCursor: \\"\\",
-                      endCursor: \\"\\",
-                    },
                     edges: nodes.map((elm) => {
                       return {
-                        cursor: elm.id(),
                         node: {
                           ...(() => {
                             return elm.properties().pcls.toLowerCase() ===
@@ -486,7 +408,7 @@ JSON.stringify({
 "
 `;
 
-exports[`query with project interface 1`] = `
+exports[`query with pageInfo 1`] = `
 "function pascalCase(s) {
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
@@ -505,9 +427,27 @@ JSON.stringify({
             startCursor: \\"\\",
             endCursor: \\"\\",
           },
-          edges: nodes.map((elm) => {
-            return {};
-          }),
+        };
+      })(),
+    },
+  },
+});
+"
+`;
+
+exports[`query with project interface 1`] = `
+"function pascalCase(s) {
+  return (s.match(/[a-zA-Z0-9]+/g) || [])
+    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
+    .join(\\"\\");
+}
+const _parent = Application(\\"OmniFocus\\");
+JSON.stringify({
+  result: {
+    defaultDocument: {
+      projects: (() => {
+        const nodes = _parent.defaultDocument().projects();
+        return {
           byId: _parent.defaultDocument().projects.byId(\\"hZoaSakOnG4\\")
             ? {
                 __typename: pascalCase(

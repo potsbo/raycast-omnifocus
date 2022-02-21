@@ -178,6 +178,34 @@ test("query with project interface", () => {
   expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
 });
 
+test("query with pageInfo", () => {
+  const document = gql`
+    query {
+      application {
+        defaultDocument {
+          projects {
+            pageInfo {
+              hasPreviousPage
+              hasNextPage
+              startCursor
+              endCursor
+            }
+          }
+        }
+      }
+    }
+  `;
+  const exeContext = buildExecutionContext({
+    schema: schema,
+    document: document,
+  });
+  if (!validateExecontext(exeContext)) {
+    fail();
+  }
+
+  expect(prettier.format(genQuery("OmniFocus", exeContext), { parser: "babel" })).toMatchSnapshot();
+});
+
 test("query internal field directive", () => {
   const schema = gql`
     directive @internalField(name: String!) on FIELD_DEFINITION
