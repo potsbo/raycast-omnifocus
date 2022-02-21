@@ -1,7 +1,15 @@
-import { FieldDefinitionNode, InputValueDefinitionNode, Kind, StringValueNode, TypeNode } from "graphql";
+import {
+  ConstDirectiveNode,
+  FieldDefinitionNode,
+  InputValueDefinitionNode,
+  Kind,
+  StringValueNode,
+  TypeNode,
+} from "graphql";
 import { ContentDefinition, ElementDefinition, PropertyDefinition } from "./sdef";
 import { getGraphQLType, named, nonNull } from "./types";
 import { name } from "./name";
+import { stringValue } from "./string";
 
 const CONNECTION_TYPE_NAME = "Connection";
 
@@ -12,7 +20,26 @@ export const collectFieldsDefinitions = (c: {
 }) => {
   const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
     if (t.$.code === "ID  ") {
-      return field(t.$.name, nonNull("ID"), { description: t.$.description });
+      const directives: FieldDefinitionNode["directives"] =
+        t.$.name !== "id"
+          ? [
+              {
+                kind: Kind.DIRECTIVE,
+                name: name("internalField"),
+                arguments: [
+                  {
+                    kind: Kind.ARGUMENT,
+                    name: name("name"),
+                    value: stringValue(t.$.name),
+                  },
+                ],
+              },
+            ]
+          : undefined;
+      return field("id", nonNull("ID"), {
+        description: t.$.description,
+        directives,
+      });
     }
     return field(t.$.name, getGraphQLType(t), { description: t.$.description });
   });
@@ -40,7 +67,11 @@ export const collectFieldsDefinitions = (c: {
 export const field = (
   fieldName: string,
   type: TypeNode,
-  opts?: { description?: string; arguments?: InputValueDefinitionNode[] }
+  opts?: {
+    description?: string;
+    arguments?: readonly InputValueDefinitionNode[];
+    directives?: readonly ConstDirectiveNode[];
+  }
 ): FieldDefinitionNode => {
   const desc: StringValueNode | undefined = opts?.description
     ? {
@@ -55,5 +86,6 @@ export const field = (
     type,
     description: desc,
     arguments: opts?.arguments,
+    directives: opts?.directives,
   };
 };

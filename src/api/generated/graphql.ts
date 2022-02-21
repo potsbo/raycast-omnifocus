@@ -4719,6 +4719,12 @@ export type ResolversParentTypes = {
   WordEdge: WordEdge;
 };
 
+export type InternalFieldDirectiveArgs = {
+  name: Scalars['String'];
+};
+
+export type InternalFieldDirectiveResolver<Result, Parent, ContextType = any, Args = InternalFieldDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type RecordTypeDirectiveArgs = { };
 
 export type RecordTypeDirectiveResolver<Result, Parent, ContextType = any, Args = RecordTypeDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
@@ -6532,6 +6538,7 @@ export type Resolvers<ContextType = any> = {
 };
 
 export type DirectiveResolvers<ContextType = any> = {
+  internalField?: InternalFieldDirectiveResolver<any, any, ContextType>;
   recordType?: RecordTypeDirectiveResolver<any, any, ContextType>;
 };
 

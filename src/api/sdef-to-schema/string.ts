@@ -1,6 +1,7 @@
 import { Kind, StringValueNode } from "graphql";
 
-export const stringValue = (value: string | undefined): StringValueNode | undefined => {
+export function stringValue<T extends string | undefined>(value: T): T extends string ? StringValueNode : undefined;
+export function stringValue(value: string | undefined): StringValueNode | undefined {
   if (value === undefined) {
     return undefined;
   }
@@ -9,4 +10,4 @@ export const stringValue = (value: string | undefined): StringValueNode | undefi
     value: value,
     block: true,
   };
-};
+}
