@@ -40,7 +40,7 @@ const renderField = (
         hasPreviousPage: false,
         hasNextPage: false,
         startCursor: extractId(Automation.getDisplayString(nodes[0])),
-        endCursor: "",
+        endCursor: extractId(Automation.getDisplayString(nodes[nodes.length - 1])),
       },`;
     }
     if (f.field.name.value === "edges") {

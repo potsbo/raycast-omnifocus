@@ -35,7 +35,9 @@ JSON.stringify({
             hasPreviousPage: false,
             hasNextPage: false,
             startCursor: extractId(Automation.getDisplayString(nodes[0])),
-            endCursor: \\"\\",
+            endCursor: extractId(
+              Automation.getDisplayString(nodes[nodes.length - 1])
+            ),
           },
         };
       })(),
@@ -385,43 +387,6 @@ JSON.stringify({
 "
 `;
 
-exports[`query internal field directive 1`] = `
-"function pascalCase(s) {
-  return (s.match(/[a-zA-Z0-9]+/g) || [])
-    .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
-    .join(\\"\\");
-}
-function extractId(s) {
-  return (
-    s
-      ?.split(\\"byId\\")
-      .reverse()[0]
-      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
-      ?.reverse()[0] ?? null
-  );
-}
-const _parent = Application(\\"OmniFocus\\");
-JSON.stringify({
-  result: _parent
-    ? {
-        someConnection: (() => {
-          const nodes = _parent.someConnection();
-          return {
-            edges: nodes.map((elm) => {
-              return {
-                cursor: extractId(Automation.getDisplayString(elm)),
-                node: { id: extractId(Automation.getDisplayString(elm)) },
-              };
-            }),
-          };
-        })(),
-        something: _parent.another(),
-      }
-    : undefined,
-});
-"
-`;
-
 exports[`query with inline fragment 1`] = `
 "function pascalCase(s) {
   return (s.match(/[a-zA-Z0-9]+/g) || [])
@@ -516,7 +481,9 @@ JSON.stringify({
             hasPreviousPage: false,
             hasNextPage: false,
             startCursor: extractId(Automation.getDisplayString(nodes[0])),
-            endCursor: \\"\\",
+            endCursor: extractId(
+              Automation.getDisplayString(nodes[nodes.length - 1])
+            ),
           },
         };
       })(),
