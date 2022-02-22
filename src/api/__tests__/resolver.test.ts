@@ -24,6 +24,13 @@ const rootValue = buildRootValue("OmniFocus", (query) => {
       return Object.fromEntries(Object.entries(props).map(([k, v]) => [k, () => v]));
     },
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Automation = {
+    getDisplayString: (obj: { getDisplayString: () => string }) => {
+      console.log(obj.getDisplayString());
+      return obj.getDisplayString();
+    },
+  };
 
   return new Promise((resolve) => resolve(JSON.parse(eval(query)).result));
 });

@@ -6,6 +6,15 @@ exports[`query for Connection 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
@@ -15,7 +24,7 @@ JSON.stringify({
         return {
           edges: nodes.map((elm) => {
             return {
-              cursor: elm.id(),
+              cursor: extractId(Automation.getDisplayString(elm)),
               node: {
                 __typename: pascalCase(elm.properties().pcls),
                 name: elm.name(),
@@ -25,7 +34,7 @@ JSON.stringify({
           pageInfo: {
             hasPreviousPage: false,
             hasNextPage: false,
-            startCursor: \\"\\",
+            startCursor: extractId(Automation.getDisplayString(nodes[0])),
             endCursor: \\"\\",
           },
         };
@@ -41,6 +50,15 @@ exports[`query for GetInboxTasksDocument 1`] = `
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
+}
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
 }
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
@@ -67,14 +85,16 @@ JSON.stringify({
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
                   ? {
-                      id: elm.containingProject().id(),
+                      id: extractId(
+                        Automation.getDisplayString(elm.containingProject())
+                      ),
                       name: elm.containingProject().name(),
                     }
                   : undefined,
                 effectiveDueDate: elm.effectiveDueDate(),
                 effectivelyCompleted: elm.effectivelyCompleted(),
                 flagged: elm.flagged(),
-                id: elm.id(),
+                id: extractId(Automation.getDisplayString(elm)),
                 name: elm.name(),
               },
             };
@@ -92,6 +112,15 @@ exports[`query for GetTasksDocument 1`] = `
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
+}
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
 }
 const onlyFlagged = true;
 const onlyAvailable = true;
@@ -122,14 +151,16 @@ JSON.stringify({
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
                   ? {
-                      id: elm.containingProject().id(),
+                      id: extractId(
+                        Automation.getDisplayString(elm.containingProject())
+                      ),
                       name: elm.containingProject().name(),
                     }
                   : undefined,
                 effectiveDueDate: elm.effectiveDueDate(),
                 effectivelyCompleted: elm.effectivelyCompleted(),
                 flagged: elm.flagged(),
-                id: elm.id(),
+                id: extractId(Automation.getDisplayString(elm)),
                 name: elm.name(),
               },
             };
@@ -147,6 +178,15 @@ exports[`query for GetTasksDocument for forecast 1`] = `
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
+}
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
 }
 const onlyFlagged = false;
 const onlyAvailable = true;
@@ -177,14 +217,16 @@ JSON.stringify({
                 completed: elm.completed(),
                 containingProject: elm.containingProject()
                   ? {
-                      id: elm.containingProject().id(),
+                      id: extractId(
+                        Automation.getDisplayString(elm.containingProject())
+                      ),
                       name: elm.containingProject().name(),
                     }
                   : undefined,
                 effectiveDueDate: elm.effectiveDueDate(),
                 effectivelyCompleted: elm.effectivelyCompleted(),
                 flagged: elm.flagged(),
-                id: elm.id(),
+                id: extractId(Automation.getDisplayString(elm)),
                 name: elm.name(),
               },
             };
@@ -202,6 +244,15 @@ exports[`query for GetTasksInProjectDocument 1`] = `
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
+}
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
 }
 const projectId = \\"foobar\\";
 const _parent = Application(\\"OmniFocus\\");
@@ -234,14 +285,18 @@ JSON.stringify({
                             completed: elm.completed(),
                             containingProject: elm.containingProject()
                               ? {
-                                  id: elm.containingProject().id(),
+                                  id: extractId(
+                                    Automation.getDisplayString(
+                                      elm.containingProject()
+                                    )
+                                  ),
                                   name: elm.containingProject().name(),
                                 }
                               : undefined,
                             effectiveDueDate: elm.effectiveDueDate(),
                             effectivelyCompleted: elm.effectivelyCompleted(),
                             flagged: elm.flagged(),
-                            id: elm.id(),
+                            id: extractId(Automation.getDisplayString(elm)),
                             name: elm.name(),
                           },
                         };
@@ -265,6 +320,15 @@ exports[`query for GetTopLevelProjects 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
@@ -276,7 +340,7 @@ JSON.stringify({
             return {
               node: {
                 __typename: pascalCase(elm.properties().pcls),
-                id: elm.id(),
+                id: extractId(Automation.getDisplayString(elm)),
                 name: elm.name(),
                 projects: (() => {
                   const nodes = elm.projects();
@@ -286,7 +350,7 @@ JSON.stringify({
                         node: {
                           __typename: pascalCase(elm.properties().pcls),
                           completed: elm.completed(),
-                          id: elm.id(),
+                          id: extractId(Automation.getDisplayString(elm)),
                           name: elm.name(),
                           numberOfAvailableTasks: elm.numberOfAvailableTasks(),
                         },
@@ -307,7 +371,7 @@ JSON.stringify({
               node: {
                 __typename: pascalCase(elm.properties().pcls),
                 completed: elm.completed(),
-                id: elm.id(),
+                id: extractId(Automation.getDisplayString(elm)),
                 name: elm.name(),
                 numberOfAvailableTasks: elm.numberOfAvailableTasks(),
               },
@@ -327,6 +391,15 @@ exports[`query internal field directive 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: _parent
@@ -336,8 +409,8 @@ JSON.stringify({
           return {
             edges: nodes.map((elm) => {
               return {
-                cursor: elm.differentName(),
-                node: { id: elm.differentName() },
+                cursor: extractId(Automation.getDisplayString(elm)),
+                node: { id: extractId(Automation.getDisplayString(elm)) },
               };
             }),
           };
@@ -354,6 +427,15 @@ exports[`query with inline fragment 1`] = `
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
+}
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
 }
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
@@ -414,6 +496,15 @@ exports[`query with pageInfo 1`] = `
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
 }
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
@@ -424,7 +515,7 @@ JSON.stringify({
           pageInfo: {
             hasPreviousPage: false,
             hasNextPage: false,
-            startCursor: \\"\\",
+            startCursor: extractId(Automation.getDisplayString(nodes[0])),
             endCursor: \\"\\",
           },
         };
@@ -440,6 +531,15 @@ exports[`query with project interface 1`] = `
   return (s.match(/[a-zA-Z0-9]+/g) || [])
     .map((w) => \`\${w[0].toUpperCase()}\${w.slice(1)}\`)
     .join(\\"\\");
+}
+function extractId(s) {
+  return (
+    s
+      ?.split(\\"byId\\")
+      .reverse()[0]
+      .match(/^\\\\(\\"(.+)\\"\\\\)$/)
+      ?.reverse()[0] ?? null
+  );
 }
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
@@ -457,11 +557,14 @@ JSON.stringify({
                     .properties().pcls
                 ),
                 rootTask: {
-                  id: _parent
-                    .defaultDocument()
-                    .projects.byId(\\"hZoaSakOnG4\\")
-                    .rootTask()
-                    .id(),
+                  id: extractId(
+                    Automation.getDisplayString(
+                      _parent
+                        .defaultDocument()
+                        .projects.byId(\\"hZoaSakOnG4\\")
+                        .rootTask()
+                    )
+                  ),
                 },
               }
             : undefined,

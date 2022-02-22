@@ -5,17 +5,17 @@ const projects = () => {
     return {
       properties: () => ({ pcls: "Project" }),
       name: () => projectName,
-      id: () => projecId,
+      getDisplayString: () => `Application("OmniFocus").defaultDocument.projects.byId("${projecId}")`,
       rootTask: () => {
         return {
           name: () => `rootTask-for-${projectName}`,
-          id: () => `rootTask-for-${projecId}`,
+          getDisplayString: () => `Application("OmniFocus").defaultDocument.tasks.byId("rootTask-for-${projecId}")`,
           effectiveDueDate: () => null,
           completed: () => false,
           effectivelyCompleted: () => false,
           containingProject: () => {
             return {
-              id: () => projecId,
+              getDisplayString: () => `Application("OmniFocus").defaultDocument.projects.byId("${projecId}")`,
               name: () => projectName,
             };
           },
@@ -38,13 +38,13 @@ projects.byId = (pid: string) => {
           {
             properties: () => ({ pcls: "Task" }),
             name: () => "foo",
-            id: () => "bar",
+            getDisplayString: () => `Application("OmniFocus").defaultDocument.tasks.byId("bar")`,
             effectiveDueDate: () => null,
             completed: () => false,
             effectivelyCompleted: () => false,
             containingProject: () => {
               return {
-                id: () => pid,
+                getDisplayString: () => `Application("OmniFocus").defaultDocument.projects.byId("${pid}")`,
                 name: () => "projectName",
                 properties: () => ({
                   pcls: "Project",

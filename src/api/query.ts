@@ -40,7 +40,7 @@ const renderField = (
       return `pageInfo: {
         hasPreviousPage: false,
         hasNextPage: false,
-        startCursor: "",
+        startCursor: extractId(Automation.getDisplayString(nodes[0])),
         endCursor: "",
       },`;
     }
@@ -67,8 +67,7 @@ const renderField = (
         if (idField === undefined) {
           throw new Error("a node type doesn't have id field");
         }
-        const fieldName = internalFieldName(idField);
-        return `cursor: elm.${fieldName}(),`;
+        return `cursor: extractId(Automation.getDisplayString(elm)),`;
       };
       return `
         edges: nodes.map((elm) => {
@@ -111,6 +110,9 @@ const renderField = (
     )},`;
   }
 
+  if (unwrapType(f.definition.type).name.value === "ID") {
+    return `${name}: extractId(Automation.getDisplayString(${ctx.rootName})),`;
+  }
   const fieldName = internalFieldName(f.definition);
   const isEnum = isEnumValue(ctx, f.definition);
   const suffix = isEnum ? `()?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
