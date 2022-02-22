@@ -11,6 +11,7 @@ import {
 } from "graphql";
 import { unwrapType } from "./graphql-utils";
 import { internalFieldName } from "./internalField";
+import { library } from "./jxalib";
 import { compileWhoseParam, extractCondition } from "./whose";
 
 type CurrentContext = {
@@ -112,7 +113,7 @@ const renderField = (
 
   const fieldName = internalFieldName(f.definition);
   const isEnum = isEnumValue(ctx, f.definition);
-  const suffix = isEnum ? `?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
+  const suffix = isEnum ? `()?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
   return `${name}: ${ctx.rootName}.${fieldName}${suffix},`;
 };
 
@@ -251,10 +252,6 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject, withReflect
     .join("");
 };
 
-function pascalCase(s: string) {
-  return (s.match(/[a-zA-Z0-9]+/g) || []).map((w) => `${w[0].toUpperCase()}${w.slice(1)}`).join("");
-}
-
 export const genQuery = (
   appName: string,
   info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">,
@@ -263,7 +260,6 @@ export const genQuery = (
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
     .join("\n");
-  const lib = pascalCase.toString();
 
   const field = info.operation.selectionSet.selections[0];
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
@@ -286,14 +282,14 @@ export const genQuery = (
     const fs = field.selectionSet.selections;
     const parent = `_parent`;
     const convert = `const ${parent} = Application("${appName}");`;
-    return `${lib};${vars};${convert};JSON.stringify({ result: ${renderObject(
+    return `${library};${vars};${convert};JSON.stringify({ result: ${renderObject(
       { ...info, rootName: parent },
       { selectedFields: fs, typeNode: fdef }
     )}})`;
   }
 
   const fs = field.selectionSet.selections;
-  return `${lib};${vars};JSON.stringify({ result: ${renderObject(
+  return `${library};${vars};JSON.stringify({ result: ${renderObject(
     { ...info, rootName: rootObjName },
     { selectedFields: fs, typeNode: fdef }
   )}})`;
