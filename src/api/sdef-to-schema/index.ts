@@ -56,7 +56,7 @@ export const build = async (appPath: string, override?: DocumentNode) => {
     }
 
     directive @recordType on OBJECT
-    directive @internalField(name: String!) on FIELD_DEFINITION
+    directive @extractFromObjectDisplayName on FIELD_DEFINITION
 
     input Condition {
       enabled: Boolean! = true

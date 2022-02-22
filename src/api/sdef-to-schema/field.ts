@@ -9,7 +9,6 @@ import {
 import { ContentDefinition, ElementDefinition, PropertyDefinition } from "./sdef";
 import { getGraphQLType, named, nonNull } from "./types";
 import { name } from "./name";
-import { stringValue } from "./string";
 
 const CONNECTION_TYPE_NAME = "Connection";
 
@@ -20,22 +19,13 @@ export const collectFieldsDefinitions = (c: {
 }) => {
   const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
     if (t.$.code === "ID  ") {
-      const directives: FieldDefinitionNode["directives"] =
-        t.$.name !== "id"
-          ? [
-              {
-                kind: Kind.DIRECTIVE,
-                name: name("internalField"),
-                arguments: [
-                  {
-                    kind: Kind.ARGUMENT,
-                    name: name("name"),
-                    value: stringValue(t.$.name),
-                  },
-                ],
-              },
-            ]
-          : undefined;
+      const directives: FieldDefinitionNode["directives"] = [
+        {
+          kind: Kind.DIRECTIVE,
+          name: name("extractFromObjectDisplayName"),
+        },
+      ];
+
       return field("id", nonNull("ID"), {
         description: t.$.description,
         directives,

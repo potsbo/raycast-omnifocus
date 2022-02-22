@@ -10,7 +10,6 @@ import {
   InterfaceTypeDefinitionNode,
 } from "graphql";
 import { unwrapType } from "./graphql-utils";
-import { internalFieldName } from "./internalField";
 import { library } from "./jxalib";
 import { compileWhoseParam, extractCondition } from "./whose";
 
@@ -110,13 +109,13 @@ const renderField = (
     )},`;
   }
 
-  if (unwrapType(f.definition.type).name.value === "ID") {
+  if (f.definition.directives?.some((d) => d.name.value === "extractFromObjectDisplayName")) {
     return `${name}: extractId(Automation.getDisplayString(${ctx.rootName})),`;
   }
-  const fieldName = internalFieldName(f.definition);
+
   const isEnum = isEnumValue(ctx, f.definition);
   const suffix = isEnum ? `()?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
-  return `${name}: ${ctx.rootName}.${fieldName}${suffix},`;
+  return `${name}: ${ctx.rootName}.${f.field.name.value}${suffix},`;
 };
 
 const isEnumValue = (ctx: CurrentContext, f: FieldDefinitionNode): boolean => {
