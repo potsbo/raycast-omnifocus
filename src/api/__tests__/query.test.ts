@@ -183,7 +183,7 @@ test("query with pageInfo", () => {
     query {
       application {
         defaultDocument {
-          projects {
+          projects(first: 10, after: "SOME-ID") {
             pageInfo {
               hasPreviousPage
               hasNextPage

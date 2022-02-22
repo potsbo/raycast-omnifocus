@@ -8,6 +8,9 @@ import {
   TypeNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
+  ArgumentNode,
+  IntValueNode,
+  StringValueNode,
 } from "graphql";
 import { unwrapType } from "./graphql-utils";
 import { library } from "./jxalib";
@@ -34,11 +37,11 @@ const renderField = (
 ): string => {
   const name = f.field.name.value;
   if (f.field.selectionSet) {
+    // TODO: ensure this is not a field that is coincidentally named `pageInfo`
     if (f.field.name.value === "pageInfo") {
-      // TODO: not to hard code
       return `pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
+        hasPreviousPage: extractId(Automation.getDisplayString(nodes[0])) !== extractId(Automation.getDisplayString(allNodes[0])),
+        hasNextPage: extractId(Automation.getDisplayString(nodes[nodes.length - 1])) !== extractId(Automation.getDisplayString(allNodes[allNodes.length - 1])),
         startCursor: extractId(Automation.getDisplayString(nodes[0])),
         endCursor: extractId(Automation.getDisplayString(nodes[nodes.length - 1])),
       },`;
@@ -84,6 +87,12 @@ const renderField = (
       if (a.name.value === "whose") {
         return;
       }
+      if (a.name.value === "after") {
+        return;
+      }
+      if (a.name.value === "first") {
+        return;
+      }
       if (a.value.kind === Kind.VARIABLE) {
         args.push(a.value.name.value);
         return;
@@ -98,14 +107,34 @@ const renderField = (
     const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
       (i) => i.name.value === "Connection"
     );
+    const extractPagination = (field: FieldNode) => {
+      const firstValue = field.arguments?.find(
+        (a): a is ArgumentNode & { value: IntValueNode } => a.name.value === "first" && a.value.kind === Kind.INT
+      )?.value.value;
+      const afterValue = field.arguments?.find(
+        (a): a is ArgumentNode & { value: StringValueNode } => a.name.value === "after" && a.value.kind === Kind.STRING
+      )?.value.value;
+      if (firstValue === undefined && afterValue === undefined) {
+        return null;
+      }
+      return { first: firstValue !== undefined ? parseInt(firstValue) : undefined, after: afterValue };
+    };
 
+    const param = extractPagination(f.field);
+    const compilePagination = (param: { first?: number; after?: string } | null) => {
+      if (param === null) {
+        return "";
+      }
+      return JSON.stringify(param);
+    };
+    const pageParam = compilePagination(param);
     const whose = compileWhoseParam(extractCondition(ctx, f.field));
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${renderObject(
       { ...ctx, rootName: child },
       { selectedFields: f.field.selectionSet.selections, typeNode: f.definition.type },
-      { whose }
+      { whose, pageParam: pageParam }
     )},`;
   }
 
@@ -164,7 +193,11 @@ const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: strin
   return dig(ctx, { selectedFields, typeNode }, ...fieldNames.slice(1));
 };
 
-const renderObject = (ctx: CurrentContext, object: RenderableObject, opts: Partial<{ whose: string }> = {}): string => {
+const renderObject = (
+  ctx: CurrentContext,
+  object: RenderableObject,
+  opts: Partial<{ pageParam: string; whose: string }> = {}
+): string => {
   if (object.typeNode.kind === Kind.NON_NULL_TYPE) {
     return renderNonNullObject(ctx, { ...object, typeNode: object.typeNode.type }, opts);
   }
@@ -179,7 +212,7 @@ const isField = (n: SelectionNode): n is FieldNode => {
 const renderNonNullObject = (
   ctx: CurrentContext,
   object: RenderableObject<NonNullTypeNode["type"]>,
-  opts: Partial<{ whose: string }> = {}
+  opts: Partial<{ pageParam: string; whose: string }> = {}
 ) => {
   if (object.typeNode.kind === Kind.LIST_TYPE) {
     return `${ctx.rootName}.map((elm) => {
@@ -191,10 +224,20 @@ const renderNonNullObject = (
     (i) => i.name.value === "Connection"
   );
 
+  const allNodes = `${ctx.rootName}${opts.whose ?? ""}()`;
+  let nodes = "allNodes";
+  if (opts.pageParam && opts.pageParam !== "") {
+    nodes = `pagenate(${nodes}, pagenationParam, (n) => {
+      return extractId(Automation.getDisplayString(n))
+    })`;
+  }
+
   if (isConnection) {
     return `
       (() => {
-        const nodes = ${ctx.rootName}${opts.whose ?? ""}();
+        const allNodes = ${allNodes};
+        const pagenationParam = ${opts.pageParam && opts.pageParam !== "" ? opts.pageParam : "{}"};
+        const nodes = ${nodes};
         return {
           ${renderFields(ctx, object)}
         }

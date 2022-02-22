@@ -11,7 +11,7 @@ type AncestorTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -20,7 +20,7 @@ type AncestorTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -34,7 +34,7 @@ type AncestorTree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -47,7 +47,7 @@ type AncestorTree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -63,7 +63,7 @@ type AncestorTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -77,7 +77,7 @@ type AncestorTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -85,7 +85,7 @@ type AncestorTree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type AncestorTreeConnection implements Connection {
@@ -117,7 +117,7 @@ type Application {
   The user's default document.
   """
   defaultDocument: Document!
-  documents(after: Int, first: Int, whose: Condition): DocumentConnection!
+  documents(after: ID, first: Int, whose: Condition): DocumentConnection!
 
   """
   Is this the active application?
@@ -133,8 +133,8 @@ type Application {
   The names of all available perspectives in the default document.
   """
   perspectiveNames: [String!]!
-  perspectives(after: Int, first: Int, whose: Condition): PerspectiveConnection!
-  preferences(after: Int, first: Int, whose: Condition): PreferenceConnection!
+  perspectives(after: ID, first: Int, whose: Condition): PerspectiveConnection!
+  preferences(after: ID, first: Int, whose: Condition): PreferenceConnection!
 
   """
   The Quick Entry panel for the default document.
@@ -150,22 +150,22 @@ type Application {
   The version number of the application.
   """
   version: String!
-  windows(after: Int, first: Int, whose: Condition): WindowConnection!
+  windows(after: ID, first: Int, whose: Condition): WindowConnection!
 }
 
 """
 Represents an inline text attachment.
 """
 type Attachment {
-  attachments(after: Int, first: Int, whose: Condition): AttachmentConnection!
+  attachments(after: ID, first: Int, whose: Condition): AttachmentConnection!
   attributeRuns(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AttributeRunConnection!
-  characters(after: Int, first: Int, whose: Condition): CharacterConnection!
+  characters(after: ID, first: Int, whose: Condition): CharacterConnection!
   fileAttachments(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FileAttachmentConnection!
@@ -174,7 +174,7 @@ type Attachment {
   The name of the font of the first character.
   """
   font: String!
-  paragraphs(after: Int, first: Int, whose: Condition): ParagraphConnection!
+  paragraphs(after: ID, first: Int, whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -190,7 +190,7 @@ type Attachment {
   The plain text contents of the rich text.
   """
   text: String!
-  words(after: Int, first: Int, whose: Condition): WordConnection!
+  words(after: ID, first: Int, whose: Condition): WordConnection!
 }
 
 type AttachmentConnection {
@@ -242,15 +242,15 @@ type AttributeEdge {
 This subdivides the text into chunks that all have the same attributes.
 """
 type AttributeRun {
-  attachments(after: Int, first: Int, whose: Condition): AttachmentConnection!
+  attachments(after: ID, first: Int, whose: Condition): AttachmentConnection!
   attributeRuns(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AttributeRunConnection!
-  characters(after: Int, first: Int, whose: Condition): CharacterConnection!
+  characters(after: ID, first: Int, whose: Condition): CharacterConnection!
   fileAttachments(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FileAttachmentConnection!
@@ -259,7 +259,7 @@ type AttributeRun {
   The name of the font of the first character.
   """
   font: String!
-  paragraphs(after: Int, first: Int, whose: Condition): ParagraphConnection!
+  paragraphs(after: ID, first: Int, whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -275,7 +275,7 @@ type AttributeRun {
   The plain text contents of the rich text.
   """
   text: String!
-  words(after: Int, first: Int, whose: Condition): WordConnection!
+  words(after: ID, first: Int, whose: Condition): WordConnection!
 }
 
 type AttributeRunConnection {
@@ -373,7 +373,7 @@ type AvailableTask implements Node & TaskInterface {
   """
   flagged: Boolean!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -466,12 +466,12 @@ type AvailableTask implements Node & TaskInterface {
   """
   The tags assigned to this task.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this task as their container.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type AvailableTaskConnection implements Connection {
@@ -515,15 +515,15 @@ type BuiltinPerspectiveEdge implements Edge {
 This subdivides the text into characters.
 """
 type Character {
-  attachments(after: Int, first: Int, whose: Condition): AttachmentConnection!
+  attachments(after: ID, first: Int, whose: Condition): AttachmentConnection!
   attributeRuns(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AttributeRunConnection!
-  characters(after: Int, first: Int, whose: Condition): CharacterConnection!
+  characters(after: ID, first: Int, whose: Condition): CharacterConnection!
   fileAttachments(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FileAttachmentConnection!
@@ -532,7 +532,7 @@ type Character {
   The name of the font of the first character.
   """
   font: String!
-  paragraphs(after: Int, first: Int, whose: Condition): ParagraphConnection!
+  paragraphs(after: ID, first: Int, whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -548,7 +548,7 @@ type Character {
   The plain text contents of the rich text.
   """
   text: String!
-  words(after: Int, first: Int, whose: Condition): WordConnection!
+  words(after: ID, first: Int, whose: Condition): WordConnection!
 }
 
 type CharacterConnection {
@@ -584,7 +584,7 @@ type ContentTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -618,7 +618,7 @@ type ContentTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -632,7 +632,7 @@ type ContentTree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -645,7 +645,7 @@ type ContentTree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -661,7 +661,7 @@ type ContentTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -700,7 +700,7 @@ type ContentTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -708,7 +708,7 @@ type ContentTree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type ContentTreeConnection implements Connection {
@@ -762,7 +762,7 @@ type DeprecatedContext implements Node & TagInterface {
   """
   availableTaskCount: Int!
   availableTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AvailableTaskConnection!
@@ -776,7 +776,7 @@ type DeprecatedContext implements Node & TagInterface {
   Deprecated; use tags.
   """
   deprecatedContexts(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DeprecatedContextConnection!
@@ -786,7 +786,7 @@ type DeprecatedContext implements Node & TagInterface {
   """
   effectivelyHidden: Boolean!
   flattenedTags(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTagConnection!
@@ -821,7 +821,7 @@ type DeprecatedContext implements Node & TagInterface {
   """
   remainingTaskCount: Int!
   remainingTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): RemainingTaskConnection!
@@ -829,12 +829,12 @@ type DeprecatedContext implements Node & TagInterface {
   """
   The tags having this tag as their container.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this tag.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type DeprecatedContextConnection implements Connection {
@@ -856,7 +856,7 @@ type DescendantTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -865,7 +865,7 @@ type DescendantTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -879,7 +879,7 @@ type DescendantTree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -892,7 +892,7 @@ type DescendantTree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -908,7 +908,7 @@ type DescendantTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -922,7 +922,7 @@ type DescendantTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -930,7 +930,7 @@ type DescendantTree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type DescendantTreeConnection implements Connection {
@@ -967,7 +967,7 @@ type Document {
   Deprecated; use tags.
   """
   deprecatedContexts(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DeprecatedContextConnection!
@@ -981,27 +981,27 @@ type Document {
   The windows of this document.
   """
   documentWindows(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DocumentWindowConnection!
   flattenedFolders(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedFolderConnection!
   flattenedProjects(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedProjectConnection!
   flattenedTags(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTagConnection!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -1009,13 +1009,13 @@ type Document {
   """
   The subset of the sections that are folders; folders having this folder as their container.
   """
-  folders(after: Int, first: Int, whose: Condition): FolderConnection!
+  folders(after: ID, first: Int, whose: Condition): FolderConnection!
 
   """
   The document's unique identifier.
   """
   id: ID! @extractFromObjectDisplayName
-  inboxTasks(after: Int, first: Int, whose: Condition): InboxTaskConnection!
+  inboxTasks(after: ID, first: Int, whose: Condition): InboxTaskConnection!
 
   """
   Whether the document will write computed summary information when writing transactions.
@@ -1051,12 +1051,12 @@ type Document {
   The names of all available perspectives in this document.
   """
   perspectiveNames: [String!]!
-  perspectives(after: Int, first: Int, whose: Condition): PerspectiveConnection!
+  perspectives(after: ID, first: Int, whose: Condition): PerspectiveConnection!
 
   """
   The subset of the sections that are projects; projects having this folder as their container.
   """
-  projects(after: Int, first: Int, whose: Condition): ProjectConnection!
+  projects(after: ID, first: Int, whose: Condition): ProjectConnection!
 
   """
   The Quick Entry panel for the document.
@@ -1066,8 +1066,8 @@ type Document {
   """
   The projects and folders contained by no folder.
   """
-  sections(after: Int, first: Int, whose: Condition): SectionConnection!
-  settings(after: Int, first: Int, whose: Condition): SettingConnection!
+  sections(after: ID, first: Int, whose: Condition): SectionConnection!
+  settings(after: ID, first: Int, whose: Condition): SettingConnection!
 
   """
   True if the document is currently syncing, false otherwise.
@@ -1077,8 +1077,8 @@ type Document {
   """
   The top-level tags of the document.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 
   """
   Whether the document will autosave.
@@ -1223,12 +1223,12 @@ type FlattenedFolder implements FolderInterface & Node {
   """
   effectivelyHidden: Boolean!
   flattenedFolders(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedFolderConnection!
   flattenedProjects(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedProjectConnection!
@@ -1236,7 +1236,7 @@ type FlattenedFolder implements FolderInterface & Node {
   """
   The subset of the sections that are folders; folders having this folder as their container.
   """
-  folders(after: Int, first: Int, whose: Condition): FolderConnection!
+  folders(after: ID, first: Int, whose: Condition): FolderConnection!
 
   """
   Set if the folder is currently hidden.
@@ -1266,12 +1266,12 @@ type FlattenedFolder implements FolderInterface & Node {
   """
   The subset of the sections that are projects; projects having this folder as their container.
   """
-  projects(after: Int, first: Int, whose: Condition): ProjectConnection!
+  projects(after: ID, first: Int, whose: Condition): ProjectConnection!
 
   """
   The projects and folders having this folder as their container.
   """
-  sections(after: Int, first: Int, whose: Condition): SectionConnection!
+  sections(after: ID, first: Int, whose: Condition): SectionConnection!
 }
 
 type FlattenedFolderConnection implements Connection {
@@ -1510,7 +1510,7 @@ type FlattenedTag implements Node & TagInterface {
   """
   availableTaskCount: Int!
   availableTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AvailableTaskConnection!
@@ -1524,7 +1524,7 @@ type FlattenedTag implements Node & TagInterface {
   Deprecated; use tags.
   """
   deprecatedContexts(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DeprecatedContextConnection!
@@ -1534,7 +1534,7 @@ type FlattenedTag implements Node & TagInterface {
   """
   effectivelyHidden: Boolean!
   flattenedTags(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTagConnection!
@@ -1569,7 +1569,7 @@ type FlattenedTag implements Node & TagInterface {
   """
   remainingTaskCount: Int!
   remainingTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): RemainingTaskConnection!
@@ -1577,12 +1577,12 @@ type FlattenedTag implements Node & TagInterface {
   """
   The tags having this tag as their container.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this tag.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type FlattenedTagConnection implements Connection {
@@ -1680,7 +1680,7 @@ type FlattenedTask implements Node & TaskInterface {
   """
   flagged: Boolean!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -1773,12 +1773,12 @@ type FlattenedTask implements Node & TaskInterface {
   """
   The tags assigned to this task.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this task as their container.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type FlattenedTaskConnection implements Connection {
@@ -1806,12 +1806,12 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """
   effectivelyHidden: Boolean!
   flattenedFolders(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedFolderConnection!
   flattenedProjects(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedProjectConnection!
@@ -1819,7 +1819,7 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """
   The subset of the sections that are folders; folders having this folder as their container.
   """
-  folders(after: Int, first: Int, whose: Condition): FolderConnection!
+  folders(after: ID, first: Int, whose: Condition): FolderConnection!
 
   """
   Set if the folder is currently hidden.
@@ -1849,12 +1849,12 @@ type Folder implements FolderInterface & Node & SectionInterface {
   """
   The subset of the sections that are projects; projects having this folder as their container.
   """
-  projects(after: Int, first: Int, whose: Condition): ProjectConnection!
+  projects(after: ID, first: Int, whose: Condition): ProjectConnection!
 
   """
   The projects and folders having this folder as their container.
   """
-  sections(after: Int, first: Int, whose: Condition): SectionConnection!
+  sections(after: ID, first: Int, whose: Condition): SectionConnection!
 }
 
 type FolderConnection implements Connection {
@@ -1879,12 +1879,12 @@ interface FolderInterface implements Node {
   """
   effectivelyHidden: Boolean!
   flattenedFolders(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedFolderConnection!
   flattenedProjects(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedProjectConnection!
@@ -1892,7 +1892,7 @@ interface FolderInterface implements Node {
   """
   The subset of the sections that are folders; folders having this folder as their container.
   """
-  folders(after: Int, first: Int, whose: Condition): FolderConnection!
+  folders(after: ID, first: Int, whose: Condition): FolderConnection!
 
   """
   Set if the folder is currently hidden.
@@ -1922,12 +1922,12 @@ interface FolderInterface implements Node {
   """
   The subset of the sections that are projects; projects having this folder as their container.
   """
-  projects(after: Int, first: Int, whose: Condition): ProjectConnection!
+  projects(after: ID, first: Int, whose: Condition): ProjectConnection!
 
   """
   The projects and folders having this folder as their container.
   """
-  sections(after: Int, first: Int, whose: Condition): SectionConnection!
+  sections(after: ID, first: Int, whose: Condition): SectionConnection!
 }
 
 """
@@ -1938,7 +1938,7 @@ type FollowingSibling implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -1947,7 +1947,7 @@ type FollowingSibling implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -1961,7 +1961,7 @@ type FollowingSibling implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -1974,7 +1974,7 @@ type FollowingSibling implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -1990,7 +1990,7 @@ type FollowingSibling implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -2004,7 +2004,7 @@ type FollowingSibling implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -2012,7 +2012,7 @@ type FollowingSibling implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type FollowingSiblingConnection implements Connection {
@@ -2092,7 +2092,7 @@ type ForecastSidebarTree implements SidebarTreeInterface {
   The list of possible smart group identifiers that can be set as the selected smart group identifier.
   """
   availableSmartGroupIdentifiers: [String!]!
-  forecastDays(after: Int, first: Int, whose: Condition): ForecastDayConnection!
+  forecastDays(after: ID, first: Int, whose: Condition): ForecastDayConnection!
 
   """
   The currently selected smart group identifier.
@@ -2184,7 +2184,7 @@ type InboxTask implements Node & TaskInterface {
   """
   flagged: Boolean!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -2277,12 +2277,12 @@ type InboxTask implements Node & TaskInterface {
   """
   The tags assigned to this task.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this task as their container.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type InboxTaskConnection implements Connection {
@@ -2304,7 +2304,7 @@ type InboxTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -2313,7 +2313,7 @@ type InboxTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -2327,7 +2327,7 @@ type InboxTree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -2340,7 +2340,7 @@ type InboxTree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -2356,7 +2356,7 @@ type InboxTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -2370,7 +2370,7 @@ type InboxTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -2378,7 +2378,7 @@ type InboxTree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type InboxTreeConnection implements Connection {
@@ -2432,7 +2432,7 @@ type Leaf implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -2441,7 +2441,7 @@ type Leaf implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -2455,7 +2455,7 @@ type Leaf implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -2468,7 +2468,7 @@ type Leaf implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -2484,7 +2484,7 @@ type Leaf implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -2498,7 +2498,7 @@ type Leaf implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -2506,7 +2506,7 @@ type Leaf implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type LeafConnection implements Connection {
@@ -2528,7 +2528,7 @@ type LibraryTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -2537,7 +2537,7 @@ type LibraryTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -2551,7 +2551,7 @@ type LibraryTree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -2564,7 +2564,7 @@ type LibraryTree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -2580,7 +2580,7 @@ type LibraryTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -2594,7 +2594,7 @@ type LibraryTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -2602,7 +2602,7 @@ type LibraryTree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type LibraryTreeConnection implements Connection {
@@ -2891,7 +2891,7 @@ type Mutation {
 A named style object.
 """
 type NamedStyle implements Node & StyleInterface {
-  attributes(after: Int, first: Int, whose: Condition): AttributeConnection!
+  attributes(after: ID, first: Int, whose: Condition): AttributeConnection!
 
   """
   The name of the font of the style.
@@ -2907,7 +2907,7 @@ type NamedStyle implements Node & StyleInterface {
   The name of the style.  Must be unique within the containing document.
   """
   name: String!
-  namedStyles(after: Int, first: Int, whose: Condition): NamedStyleConnection!
+  namedStyles(after: ID, first: Int, whose: Condition): NamedStyleConnection!
 }
 
 type NamedStyleConnection implements Connection {
@@ -2948,15 +2948,15 @@ type PageInfo {
 This subdivides the text into paragraphs.
 """
 type Paragraph {
-  attachments(after: Int, first: Int, whose: Condition): AttachmentConnection!
+  attachments(after: ID, first: Int, whose: Condition): AttachmentConnection!
   attributeRuns(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AttributeRunConnection!
-  characters(after: Int, first: Int, whose: Condition): CharacterConnection!
+  characters(after: ID, first: Int, whose: Condition): CharacterConnection!
   fileAttachments(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FileAttachmentConnection!
@@ -2965,7 +2965,7 @@ type Paragraph {
   The name of the font of the first character.
   """
   font: String!
-  paragraphs(after: Int, first: Int, whose: Condition): ParagraphConnection!
+  paragraphs(after: ID, first: Int, whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -2981,7 +2981,7 @@ type Paragraph {
   The plain text contents of the rich text.
   """
   text: String!
-  words(after: Int, first: Int, whose: Condition): WordConnection!
+  words(after: ID, first: Int, whose: Condition): WordConnection!
 }
 
 type ParagraphConnection {
@@ -3041,7 +3041,7 @@ type PrecedingSibling implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -3050,7 +3050,7 @@ type PrecedingSibling implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -3064,7 +3064,7 @@ type PrecedingSibling implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -3077,7 +3077,7 @@ type PrecedingSibling implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -3093,7 +3093,7 @@ type PrecedingSibling implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -3107,7 +3107,7 @@ type PrecedingSibling implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -3115,7 +3115,7 @@ type PrecedingSibling implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type PrecedingSiblingConnection implements Connection {
@@ -3599,7 +3599,7 @@ type QuickEntryTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -3608,7 +3608,7 @@ type QuickEntryTree implements Node & TreeInterface {
   Deprecated; use tags.
   """
   deprecatedContexts(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DeprecatedContextConnection!
@@ -3617,7 +3617,7 @@ type QuickEntryTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -3626,13 +3626,13 @@ type QuickEntryTree implements Node & TreeInterface {
   This is true if the node is expanded.
   """
   expanded: Boolean!
-  folders(after: Int, first: Int, whose: Condition): FolderConnection!
+  folders(after: ID, first: Int, whose: Condition): FolderConnection!
 
   """
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -3641,12 +3641,12 @@ type QuickEntryTree implements Node & TreeInterface {
   The identifier of object being represented by this tree.
   """
   id: ID! @extractFromObjectDisplayName
-  inboxTasks(after: Int, first: Int, whose: Condition): InboxTaskConnection!
+  inboxTasks(after: ID, first: Int, whose: Condition): InboxTaskConnection!
 
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -3662,11 +3662,11 @@ type QuickEntryTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
-  projects(after: Int, first: Int, whose: Condition): ProjectConnection!
+  projects(after: ID, first: Int, whose: Condition): ProjectConnection!
 
   """
   This is true if the node is selected.  Note that attempts to set this while the node is not visible (collapsed parent, etc.) will silently do nothing.
@@ -3677,16 +3677,16 @@ type QuickEntryTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 
   """
   Whether the quick entry panel is currently visible.
@@ -3789,7 +3789,7 @@ type RemainingTask implements Node & TaskInterface {
   """
   flagged: Boolean!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -3882,12 +3882,12 @@ type RemainingTask implements Node & TaskInterface {
   """
   The tags assigned to this task.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this task as their container.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type RemainingTaskConnection implements Connection {
@@ -3995,7 +3995,7 @@ type SelectedTree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -4004,7 +4004,7 @@ type SelectedTree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -4018,7 +4018,7 @@ type SelectedTree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -4031,7 +4031,7 @@ type SelectedTree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -4047,7 +4047,7 @@ type SelectedTree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -4061,7 +4061,7 @@ type SelectedTree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -4069,7 +4069,7 @@ type SelectedTree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type SelectedTreeConnection implements Connection {
@@ -4119,7 +4119,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -4133,7 +4133,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -4147,7 +4147,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -4160,7 +4160,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -4176,7 +4176,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -4195,7 +4195,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -4203,7 +4203,7 @@ type SidebarTree implements Node & SidebarTreeInterface & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 interface SidebarTreeInterface {
@@ -4222,23 +4222,23 @@ interface SidebarTreeInterface {
 A style object.
 """
 type Style implements StyleInterface {
-  attributes(after: Int, first: Int, whose: Condition): AttributeConnection!
+  attributes(after: ID, first: Int, whose: Condition): AttributeConnection!
 
   """
   The name of the font of the style.
   """
   font: String!
-  namedStyles(after: Int, first: Int, whose: Condition): NamedStyleConnection!
+  namedStyles(after: ID, first: Int, whose: Condition): NamedStyleConnection!
 }
 
 interface StyleInterface {
-  attributes(after: Int, first: Int, whose: Condition): AttributeConnection!
+  attributes(after: ID, first: Int, whose: Condition): AttributeConnection!
 
   """
   The name of the font of the style.
   """
   font: String!
-  namedStyles(after: Int, first: Int, whose: Condition): NamedStyleConnection!
+  namedStyles(after: ID, first: Int, whose: Condition): NamedStyleConnection!
 }
 
 """
@@ -4255,7 +4255,7 @@ type Tag implements Node & TagInterface {
   """
   availableTaskCount: Int!
   availableTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AvailableTaskConnection!
@@ -4269,7 +4269,7 @@ type Tag implements Node & TagInterface {
   Deprecated; use tags.
   """
   deprecatedContexts(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DeprecatedContextConnection!
@@ -4279,7 +4279,7 @@ type Tag implements Node & TagInterface {
   """
   effectivelyHidden: Boolean!
   flattenedTags(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTagConnection!
@@ -4314,7 +4314,7 @@ type Tag implements Node & TagInterface {
   """
   remainingTaskCount: Int!
   remainingTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): RemainingTaskConnection!
@@ -4322,12 +4322,12 @@ type Tag implements Node & TagInterface {
   """
   The tags having this tag as their container.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this tag.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type TagConnection implements Connection {
@@ -4352,7 +4352,7 @@ interface TagInterface implements Node {
   """
   availableTaskCount: Int!
   availableTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AvailableTaskConnection!
@@ -4366,7 +4366,7 @@ interface TagInterface implements Node {
   Deprecated; use tags.
   """
   deprecatedContexts(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DeprecatedContextConnection!
@@ -4376,7 +4376,7 @@ interface TagInterface implements Node {
   """
   effectivelyHidden: Boolean!
   flattenedTags(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTagConnection!
@@ -4411,7 +4411,7 @@ interface TagInterface implements Node {
   """
   remainingTaskCount: Int!
   remainingTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): RemainingTaskConnection!
@@ -4419,12 +4419,12 @@ interface TagInterface implements Node {
   """
   The tags having this tag as their container.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this tag.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 """
@@ -4511,7 +4511,7 @@ type Task implements Node & TaskInterface {
   """
   flagged: Boolean!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -4604,12 +4604,12 @@ type Task implements Node & TaskInterface {
   """
   The tags assigned to this task.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this task as their container.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 type TaskConnection implements Connection {
@@ -4704,7 +4704,7 @@ interface TaskInterface implements Node {
   """
   flagged: Boolean!
   flattenedTasks(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FlattenedTaskConnection!
@@ -4797,12 +4797,12 @@ interface TaskInterface implements Node {
   """
   The tags assigned to this task.
   """
-  tags(after: Int, first: Int, whose: Condition): TagConnection!
+  tags(after: ID, first: Int, whose: Condition): TagConnection!
 
   """
   The tasks having this task as their container.
   """
-  tasks(after: Int, first: Int, whose: Condition): TaskConnection!
+  tasks(after: ID, first: Int, whose: Condition): TaskConnection!
 }
 
 """
@@ -4813,7 +4813,7 @@ type Tree implements Node & TreeInterface {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -4822,7 +4822,7 @@ type Tree implements Node & TreeInterface {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -4836,7 +4836,7 @@ type Tree implements Node & TreeInterface {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -4849,7 +4849,7 @@ type Tree implements Node & TreeInterface {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -4865,7 +4865,7 @@ type Tree implements Node & TreeInterface {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -4879,7 +4879,7 @@ type Tree implements Node & TreeInterface {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -4887,7 +4887,7 @@ type Tree implements Node & TreeInterface {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 type TreeConnection implements Connection {
@@ -4906,7 +4906,7 @@ interface TreeInterface implements Node {
   The ancestor trees of this tree.
   """
   ancestorTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AncestorTreeConnection!
@@ -4915,7 +4915,7 @@ interface TreeInterface implements Node {
   All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth.
   """
   descendantTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): DescendantTreeConnection!
@@ -4929,7 +4929,7 @@ interface TreeInterface implements Node {
   The sibling trees of this tree after it in the user-specified sort ordering.
   """
   followingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FollowingSiblingConnection!
@@ -4942,7 +4942,7 @@ interface TreeInterface implements Node {
   """
   The descendants of this tree that have no children themselves.
   """
-  leafs(after: Int, first: Int, whose: Condition): LeafConnection!
+  leafs(after: ID, first: Int, whose: Condition): LeafConnection!
 
   """
   The name of the object being represented by this tree.
@@ -4958,7 +4958,7 @@ interface TreeInterface implements Node {
   The sibling trees of this tree before it in the user-specified sort ordering.
   """
   precedingSiblings(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): PrecedingSiblingConnection!
@@ -4972,7 +4972,7 @@ interface TreeInterface implements Node {
   The trees of this tree that are selected in the user interface.
   """
   selectedTrees(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): SelectedTreeConnection!
@@ -4980,7 +4980,7 @@ interface TreeInterface implements Node {
   """
   The immediate child trees of this tree in the user-specified sort ordering.
   """
-  trees(after: Int, first: Int, whose: Condition): TreeConnection!
+  trees(after: ID, first: Int, whose: Condition): TreeConnection!
 }
 
 """
@@ -5115,15 +5115,15 @@ interface WindowInterface implements Node {
 This subdivides the text into words.
 """
 type Word {
-  attachments(after: Int, first: Int, whose: Condition): AttachmentConnection!
+  attachments(after: ID, first: Int, whose: Condition): AttachmentConnection!
   attributeRuns(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): AttributeRunConnection!
-  characters(after: Int, first: Int, whose: Condition): CharacterConnection!
+  characters(after: ID, first: Int, whose: Condition): CharacterConnection!
   fileAttachments(
-    after: Int
+    after: ID
     first: Int
     whose: Condition
   ): FileAttachmentConnection!
@@ -5132,7 +5132,7 @@ type Word {
   The name of the font of the first character.
   """
   font: String!
-  paragraphs(after: Int, first: Int, whose: Condition): ParagraphConnection!
+  paragraphs(after: ID, first: Int, whose: Condition): ParagraphConnection!
 
   """
   The size in points of the first character.
@@ -5148,7 +5148,7 @@ type Word {
   The plain text contents of the rich text.
   """
   text: String!
-  words(after: Int, first: Int, whose: Condition): WordConnection!
+  words(after: ID, first: Int, whose: Condition): WordConnection!
 }
 
 type WordConnection {

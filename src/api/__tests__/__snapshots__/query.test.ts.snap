@@ -15,12 +15,26 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       projects: (() => {
-        const nodes = _parent.defaultDocument().projects();
+        const allNodes = _parent.defaultDocument().projects();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -32,8 +46,16 @@ JSON.stringify({
             };
           }),
           pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
+            hasPreviousPage:
+              extractId(Automation.getDisplayString(nodes[0])) !==
+              extractId(Automation.getDisplayString(allNodes[0])),
+            hasNextPage:
+              extractId(
+                Automation.getDisplayString(nodes[nodes.length - 1])
+              ) !==
+              extractId(
+                Automation.getDisplayString(allNodes[allNodes.length - 1])
+              ),
             startCursor: extractId(Automation.getDisplayString(nodes[0])),
             endCursor: extractId(
               Automation.getDisplayString(nodes[nodes.length - 1])
@@ -62,12 +84,24 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       inboxTasks: (() => {
-        const nodes = _parent
+        const allNodes = _parent
           .defaultDocument()
           .inboxTasks.whose({
             _and: [
@@ -80,6 +114,8 @@ JSON.stringify({
               },
             ],
           })();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -124,6 +160,18 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const onlyFlagged = true;
 const onlyAvailable = true;
 const withEffectiveDueDate = false;
@@ -132,7 +180,7 @@ JSON.stringify({
   result: {
     defaultDocument: {
       flattenedTasks: (() => {
-        const nodes = _parent
+        const allNodes = _parent
           .defaultDocument()
           .flattenedTasks.whose({
             _and: [
@@ -146,6 +194,8 @@ JSON.stringify({
               },
             ],
           })();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -190,6 +240,18 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const onlyFlagged = false;
 const onlyAvailable = true;
 const withEffectiveDueDate = true;
@@ -198,7 +260,7 @@ JSON.stringify({
   result: {
     defaultDocument: {
       flattenedTasks: (() => {
-        const nodes = _parent
+        const allNodes = _parent
           .defaultDocument()
           .flattenedTasks.whose({
             _and: [
@@ -212,6 +274,8 @@ JSON.stringify({
               },
             ],
           })();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -256,13 +320,27 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const projectId = \\"foobar\\";
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       projects: (() => {
-        const nodes = _parent.defaultDocument().projects();
+        const allNodes = _parent.defaultDocument().projects();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           byId: _parent.defaultDocument().projects.byId(projectId)
             ? {
@@ -274,11 +352,13 @@ JSON.stringify({
                 ),
                 rootTask: {
                   tasks: (() => {
-                    const nodes = _parent
+                    const allNodes = _parent
                       .defaultDocument()
                       .projects.byId(projectId)
                       .rootTask()
                       .tasks();
+                    const pagenationParam = {};
+                    const nodes = allNodes;
                     return {
                       edges: nodes.map((elm) => {
                         return {
@@ -331,12 +411,26 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       folders: (() => {
-        const nodes = _parent.defaultDocument().folders();
+        const allNodes = _parent.defaultDocument().folders();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -345,7 +439,9 @@ JSON.stringify({
                 id: extractId(Automation.getDisplayString(elm)),
                 name: elm.name(),
                 projects: (() => {
-                  const nodes = elm.projects();
+                  const allNodes = elm.projects();
+                  const pagenationParam = {};
+                  const nodes = allNodes;
                   return {
                     edges: nodes.map((elm) => {
                       return {
@@ -366,7 +462,9 @@ JSON.stringify({
         };
       })(),
       projects: (() => {
-        const nodes = _parent.defaultDocument().projects();
+        const allNodes = _parent.defaultDocument().projects();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -402,12 +500,26 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       folders: (() => {
-        const nodes = _parent.defaultDocument().folders();
+        const allNodes = _parent.defaultDocument().folders();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           edges: nodes.map((elm) => {
             return {
@@ -415,7 +527,9 @@ JSON.stringify({
                 __typename: pascalCase(elm.properties().pcls),
                 name: elm.name(),
                 sections: (() => {
-                  const nodes = elm.sections();
+                  const allNodes = elm.sections();
+                  const pagenationParam = {};
+                  const nodes = allNodes;
                   return {
                     edges: nodes.map((elm) => {
                       return {
@@ -470,16 +584,40 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       projects: (() => {
-        const nodes = _parent.defaultDocument().projects();
+        const allNodes = _parent.defaultDocument().projects();
+        const pagenationParam = { first: 10, after: \\"SOME-ID\\" };
+        const nodes = pagenate(allNodes, pagenationParam, (n) => {
+          return extractId(Automation.getDisplayString(n));
+        });
         return {
           pageInfo: {
-            hasPreviousPage: false,
-            hasNextPage: false,
+            hasPreviousPage:
+              extractId(Automation.getDisplayString(nodes[0])) !==
+              extractId(Automation.getDisplayString(allNodes[0])),
+            hasNextPage:
+              extractId(
+                Automation.getDisplayString(nodes[nodes.length - 1])
+              ) !==
+              extractId(
+                Automation.getDisplayString(allNodes[allNodes.length - 1])
+              ),
             startCursor: extractId(Automation.getDisplayString(nodes[0])),
             endCursor: extractId(
               Automation.getDisplayString(nodes[nodes.length - 1])
@@ -508,12 +646,26 @@ function extractId(s) {
       ?.reverse()[0] ?? null
   );
 }
+function pagenate(nodes, { first, after }, getId) {
+  const afterIndex =
+    after === undefined
+      ? undefined
+      : nodes.findIndex((n) => getId(n) === after);
+  if (afterIndex === -1) {
+    return [];
+  }
+  const start = afterIndex === undefined ? 0 : afterIndex + 1;
+  const end = first !== undefined ? start + first : undefined;
+  return nodes.slice(start, end);
+}
 const _parent = Application(\\"OmniFocus\\");
 JSON.stringify({
   result: {
     defaultDocument: {
       projects: (() => {
-        const nodes = _parent.defaultDocument().projects();
+        const allNodes = _parent.defaultDocument().projects();
+        const pagenationParam = {};
+        const nodes = allNodes;
         return {
           byId: _parent.defaultDocument().projects.byId(\\"hZoaSakOnG4\\")
             ? {

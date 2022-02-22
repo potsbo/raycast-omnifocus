@@ -41,11 +41,54 @@ test("extractId malformed", () => {
 });
 
 test("extractId undefined", () => {
-    const output = eval(`
+  const output = eval(`
+    ${library}
+    extractId(undefined);
+  `);
+
+  expect(output).toEqual(null);
+});
+
+test("paginate no param", () => {
+  const input = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }];
+  const output = eval(`
       ${library}
-      extractId(undefined);
+      const nodes = ${JSON.stringify(input)};
+      pagenate(nodes, {}, (elm) => elm.id);
     `);
-  
-    expect(output).toEqual(null);
-  });
-  
+
+  expect(output).toEqual(input);
+});
+
+test("paginate normal param", () => {
+  const input = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }];
+  const output = eval(`
+    ${library}
+    const nodes = ${JSON.stringify(input)};
+    pagenate(nodes, { after: 3, first: 2 }, (elm) => elm.id);
+  `);
+
+  expect(output).toEqual([{ id: 4 }, { id: 5 }]);
+});
+
+test("paginate no match", () => {
+  const input = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }];
+  const output = eval(`
+    ${library}
+    const nodes = ${JSON.stringify(input)};
+    pagenate(nodes, { after: 100, first: 2 }, (elm) => elm.id);
+  `);
+
+  expect(output).toEqual([]);
+});
+
+test("paginate asks too many", () => {
+  const input = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }];
+  const output = eval(`
+    ${library}
+    const nodes = ${JSON.stringify(input)};
+    pagenate(nodes, { after: 2, first: 100 }, (elm) => elm.id);
+  `);
+
+  expect(output).toEqual([{ id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }]);
+});

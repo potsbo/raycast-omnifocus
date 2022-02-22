@@ -27,7 +27,6 @@ const rootValue = buildRootValue("OmniFocus", (query) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Automation = {
     getDisplayString: (obj: { getDisplayString: () => string }) => {
-      console.log(obj.getDisplayString());
       return obj.getDisplayString();
     },
   };

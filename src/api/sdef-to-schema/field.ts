@@ -44,7 +44,7 @@ export const collectFieldsDefinitions = (c: {
         {
           kind: Kind.INPUT_VALUE_DEFINITION,
           name: name("after"),
-          type: named("Int"),
+          type: named("ID"),
         },
         {
           kind: Kind.INPUT_VALUE_DEFINITION,
