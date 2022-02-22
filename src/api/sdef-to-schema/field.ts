@@ -19,16 +19,14 @@ export const collectFieldsDefinitions = (c: {
 }) => {
   const properties: FieldDefinitionNode[] = (c.property ?? []).map((t) => {
     if (t.$.code === "ID  ") {
-      const directives: FieldDefinitionNode["directives"] = [
-        {
-          kind: Kind.DIRECTIVE,
-          name: name("extractFromObjectDisplayName"),
-        },
-      ];
-
       return field("id", nonNull("ID"), {
         description: t.$.description,
-        directives,
+        directives: [
+          {
+            kind: Kind.DIRECTIVE,
+            name: name("extractFromObjectDisplayName"),
+          },
+        ],
       });
     }
     return field(t.$.name, getGraphQLType(t), { description: t.$.description });
