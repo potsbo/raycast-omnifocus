@@ -41,6 +41,16 @@ export const collectFieldsDefinitions = (c: {
           name: name("whose"),
           type: named("Condition"),
         },
+        {
+          kind: Kind.INPUT_VALUE_DEFINITION,
+          name: name("after"),
+          type: named("Int"),
+        },
+        {
+          kind: Kind.INPUT_VALUE_DEFINITION,
+          name: name("first"),
+          type: named("Int"),
+        },
       ],
     });
   });

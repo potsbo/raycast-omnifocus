@@ -50,42 +50,56 @@ export type AncestorTree = Node & TreeInterface & {
 
 /** The ancestor trees of this tree. */
 export type AncestorTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The ancestor trees of this tree. */
 export type AncestorTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The ancestor trees of this tree. */
 export type AncestorTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The ancestor trees of this tree. */
 export type AncestorTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The ancestor trees of this tree. */
 export type AncestorTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The ancestor trees of this tree. */
 export type AncestorTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The ancestor trees of this tree. */
 export type AncestorTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -137,24 +151,32 @@ export type Application = {
 
 /** The application's top-level scripting object. */
 export type ApplicationDocumentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The application's top-level scripting object. */
 export type ApplicationPerspectivesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The application's top-level scripting object. */
 export type ApplicationPreferencesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The application's top-level scripting object. */
 export type ApplicationWindowsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -180,36 +202,48 @@ export type Attachment = {
 
 /** Represents an inline text attachment. */
 export type AttachmentAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Represents an inline text attachment. */
 export type AttachmentAttributeRunsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Represents an inline text attachment. */
 export type AttachmentCharactersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Represents an inline text attachment. */
 export type AttachmentFileAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Represents an inline text attachment. */
 export type AttachmentParagraphsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Represents an inline text attachment. */
 export type AttachmentWordsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -277,36 +311,48 @@ export type AttributeRun = {
 
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRunAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRunAttributeRunsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRunCharactersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRunFileAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRunParagraphsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into chunks that all have the same attributes. */
 export type AttributeRunWordsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -407,18 +453,24 @@ export type AvailableTask = Node & TaskInterface & {
 
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type AvailableTaskFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type AvailableTaskTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task that is available for action.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type AvailableTaskTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -489,36 +541,48 @@ export type Character = {
 
 /** This subdivides the text into characters. */
 export type CharacterAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into characters. */
 export type CharacterAttributeRunsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into characters. */
 export type CharacterCharactersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into characters. */
 export type CharacterFileAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into characters. */
 export type CharacterParagraphsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into characters. */
 export type CharacterWordsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -611,42 +675,56 @@ export type ContentTree = Node & TreeInterface & {
 
 /** The tree of objects in the main window content. */
 export type ContentTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the main window content. */
 export type ContentTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the main window content. */
 export type ContentTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the main window content. */
 export type ContentTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the main window content. */
 export type ContentTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the main window content. */
 export type ContentTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the main window content. */
 export type ContentTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -732,36 +810,48 @@ export type DeprecatedContext = Node & TagInterface & {
 
 /** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
 export type DeprecatedContextAvailableTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
 export type DeprecatedContextDeprecatedContextsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
 export type DeprecatedContextFlattenedTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
 export type DeprecatedContextRemainingTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
 export type DeprecatedContextTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** Deprecated. Where you would look up a "context" by name, id, or index before, you can now use the term "tag". Where you would get or set the "context" property of a task before, you can now use "primary tag". You may also use the "add", "remove", and "move" commands to manage multiple ordered tags on a task now. */
 export type DeprecatedContextTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -815,42 +905,56 @@ export type DescendantTree = Node & TreeInterface & {
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** All the descendant trees in the user-specified sort ordering, listing each tree, then its children and so forth. */
 export type DescendantTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -930,84 +1034,112 @@ export type Document = {
 
 /** A document. */
 export type DocumentDeprecatedContextsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentDocumentWindowsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentFlattenedFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentFlattenedProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentFlattenedTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentInboxTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentPerspectivesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentSectionsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentSettingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A document. */
 export type DocumentTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1140,30 +1272,40 @@ export type FlattenedFolder = FolderInterface & Node & {
 
 /** A flattened list of folders in a document. */
 export type FlattenedFolderFlattenedFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of folders in a document. */
 export type FlattenedFolderFlattenedProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of folders in a document. */
 export type FlattenedFolderFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of folders in a document. */
 export type FlattenedFolderProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of folders in a document. */
 export type FlattenedFolderSectionsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1323,36 +1465,48 @@ export type FlattenedTag = Node & TagInterface & {
 
 /** A flattened list of tags in a document. */
 export type FlattenedTagAvailableTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tags in a document. */
 export type FlattenedTagDeprecatedContextsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tags in a document. */
 export type FlattenedTagFlattenedTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tags in a document. */
 export type FlattenedTagRemainingTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tags in a document. */
 export type FlattenedTagTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tags in a document. */
 export type FlattenedTagTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1453,18 +1607,24 @@ export type FlattenedTask = Node & TaskInterface & {
 
 /** A flattened list of tasks under a task or document. */
 export type FlattenedTaskFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tasks under a task or document. */
 export type FlattenedTaskTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A flattened list of tasks under a task or document. */
 export type FlattenedTaskTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1516,30 +1676,40 @@ export type Folder = FolderInterface & Node & SectionInterface & {
 
 /** A group of projects and sub-folders representing an area of responsibility. */
 export type FolderFlattenedFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A group of projects and sub-folders representing an area of responsibility. */
 export type FolderFlattenedProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A group of projects and sub-folders representing an area of responsibility. */
 export type FolderFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A group of projects and sub-folders representing an area of responsibility. */
 export type FolderProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A group of projects and sub-folders representing an area of responsibility. */
 export type FolderSectionsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1588,26 +1758,36 @@ export type FolderInterface = {
 
 
 export type FolderInterfaceFlattenedFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type FolderInterfaceFlattenedProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type FolderInterfaceFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type FolderInterfaceProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type FolderInterfaceSectionsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1643,42 +1823,56 @@ export type FollowingSibling = Node & TreeInterface & {
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingPrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree after it in the user-specified sort ordering. */
 export type FollowingSiblingTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1755,6 +1949,8 @@ export type ForecastSidebarTree = SidebarTreeInterface & {
 
 /** The sidebar tree used when the window's sidebar tab property is set to forecast tab. */
 export type ForecastSidebarTreeForecastDaysArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1837,18 +2033,24 @@ export type InboxTask = Node & TaskInterface & {
 
 /** A task that is in the document's inbox */
 export type InboxTaskFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task that is in the document's inbox */
 export type InboxTaskTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task that is in the document's inbox */
 export type InboxTaskTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -1902,42 +2104,56 @@ export type InboxTree = Node & TreeInterface & {
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the Inbox. */
 export type InboxTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -2006,42 +2222,56 @@ export type Leaf = Node & TreeInterface & {
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafPrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The descendants of a tree that have no children themselves. */
 export type LeafTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -2095,42 +2325,56 @@ export type LibraryTree = Node & TreeInterface & {
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree in the sidebar representing the top level library of objects. */
 export type LibraryTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -2586,12 +2830,16 @@ export type NamedStyle = Node & StyleInterface & {
 
 /** A named style object. */
 export type NamedStyleAttributesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A named style object. */
 export type NamedStyleNamedStylesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -2654,36 +2902,48 @@ export type Paragraph = {
 
 /** This subdivides the text into paragraphs. */
 export type ParagraphAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into paragraphs. */
 export type ParagraphAttributeRunsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into paragraphs. */
 export type ParagraphCharactersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into paragraphs. */
 export type ParagraphFileAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into paragraphs. */
 export type ParagraphParagraphsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into paragraphs. */
 export type ParagraphWordsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -2771,42 +3031,56 @@ export type PrecedingSibling = Node & TreeInterface & {
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingPrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The sibling trees of this tree before it in the user-specified sort ordering. */
 export type PrecedingSiblingTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3096,72 +3370,96 @@ export type QuickEntryTree = Node & TreeInterface & {
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeDeprecatedContextsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeFoldersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeInboxTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeProjectsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The Quick Entry panel. */
 export type QuickEntryTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3262,18 +3560,24 @@ export type RemainingTask = Node & TaskInterface & {
 
 /** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type RemainingTaskFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type RemainingTaskTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task that is not complete, though it may be blocked.  This is simply a filter on the existing tasks and should be considred a read-only element.  These cannot be created directly; instead create a normal task. */
 export type RemainingTaskTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3388,42 +3692,56 @@ export type SelectedTree = Node & TreeInterface & {
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The trees of this tree that are selected in the user interface, possibly including this tree. */
 export type SelectedTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3511,42 +3829,56 @@ export type SidebarTree = Node & SidebarTreeInterface & TreeInterface & {
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** The tree of objects in the window sidebar. */
 export type SidebarTreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3569,12 +3901,16 @@ export type Style = StyleInterface & {
 
 /** A style object. */
 export type StyleAttributesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A style object. */
 export type StyleNamedStylesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3587,11 +3923,15 @@ export type StyleInterface = {
 
 
 export type StyleInterfaceAttributesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type StyleInterfaceNamedStylesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3632,36 +3972,48 @@ export type Tag = Node & TagInterface & {
 
 /** A tag. */
 export type TagAvailableTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tag. */
 export type TagDeprecatedContextsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tag. */
 export type TagFlattenedTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tag. */
 export type TagRemainingTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tag. */
 export type TagTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tag. */
 export type TagTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3717,31 +4069,43 @@ export type TagInterface = {
 
 
 export type TagInterfaceAvailableTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TagInterfaceDeprecatedContextsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TagInterfaceFlattenedTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TagInterfaceRemainingTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TagInterfaceTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TagInterfaceTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3824,18 +4188,24 @@ export type Task = Node & TaskInterface & {
 
 /** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
 export type TaskFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
 export type TaskTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A task. This might represent the root of a project, an action within a project or other action or an inbox item. */
 export type TaskTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3933,16 +4303,22 @@ export type TaskInterface = {
 
 
 export type TaskInterfaceFlattenedTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TaskInterfaceTagsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TaskInterfaceTasksArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -3978,42 +4354,56 @@ export type Tree = Node & TreeInterface & {
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreeAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreeDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreeFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreeLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreeSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** A tree representing an object, along with its sub-trees. */
 export type TreeTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -4064,36 +4454,50 @@ export type TreeInterface = {
 
 
 export type TreeInterfaceAncestorTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TreeInterfaceDescendantTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TreeInterfaceFollowingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TreeInterfaceLeafsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TreeInterfacePrecedingSiblingsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TreeInterfaceSelectedTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 export type TreeInterfaceTreesArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
@@ -4189,36 +4593,48 @@ export type Word = {
 
 /** This subdivides the text into words. */
 export type WordAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into words. */
 export type WordAttributeRunsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into words. */
 export type WordCharactersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into words. */
 export type WordFileAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into words. */
 export type WordParagraphsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
 
 /** This subdivides the text into words. */
 export type WordWordsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   whose?: InputMaybe<Condition>;
 };
 
