@@ -6,7 +6,7 @@ import { buildRootValue } from "../api/rootValue";
 import { basename } from "path";
 import { runJXACode } from "@jxa/run";
 
-const [verb, appPath, ..._] = process.argv.slice(2);
+const [verb, appPath] = process.argv.slice(2);
 
 build(appPath).then((schema) => {
   switch (verb) {

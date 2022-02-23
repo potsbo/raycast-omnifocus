@@ -10,7 +10,7 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
 import { genQuery } from "../query";
 import prettier from "prettier";
-import { buildASTSchema, GraphQLError } from "graphql";
+import { GraphQLError } from "graphql";
 import gql from "graphql-tag";
 
 const schema = loadSchemaSync(join(__dirname, "..", "..", "..", "assets", "schema.graphql"), {
