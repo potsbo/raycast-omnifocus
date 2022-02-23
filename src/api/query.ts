@@ -8,8 +8,12 @@ import {
   TypeNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
+  ArgumentNode,
+  IntValueNode,
+  StringValueNode,
 } from "graphql";
 import { unwrapType } from "./graphql-utils";
+import { library } from "./jxalib";
 import { compileWhoseParam, extractCondition } from "./whose";
 
 type CurrentContext = {
@@ -31,21 +35,62 @@ const renderField = (
   f: RenderableField,
   opts: Partial<{ isRecordType: boolean; isEnum: boolean }> = {}
 ): string => {
-  // TODO: handle in connection renderer
-  if (f.field.name.value === "pageInfo") {
-    return "";
-  }
-  if (f.field.name.value === "edges") {
-    return "";
-  }
-
   const name = f.field.name.value;
-
   if (f.field.selectionSet) {
+    // TODO: ensure this is not a field that is coincidentally named `pageInfo`
+    if (f.field.name.value === "pageInfo") {
+      return `pageInfo: {
+        hasPreviousPage: extractId(Automation.getDisplayString(nodes[0])) !== extractId(Automation.getDisplayString(allNodes[0])),
+        hasNextPage: extractId(Automation.getDisplayString(nodes[nodes.length - 1])) !== extractId(Automation.getDisplayString(allNodes[allNodes.length - 1])),
+        startCursor: extractId(Automation.getDisplayString(nodes[0])),
+        endCursor: extractId(Automation.getDisplayString(nodes[nodes.length - 1])),
+      },`;
+    }
+    if (f.field.name.value === "edges") {
+      const renderNodeField = () => {
+        const typeNode = f.definition.type;
+        const node = dig(ctx, { selectedFields: f.field.selectionSet?.selections ?? [], typeNode }, "node");
+        if (node === null) {
+          return "";
+        }
+
+        return `node: ${renderObject({ ...ctx, rootName: "elm" }, node)},`;
+      };
+      const renderCursor = () => {
+        const cursor = f.field.selectionSet?.selections.find((f) => f.kind === Kind.FIELD && f.name.value === "cursor");
+        if (cursor === undefined) {
+          return "";
+        }
+        const nodeType = mustFindTypeDefinition(ctx, f.definition.type).fields?.find((f) => f.name.value === "node");
+        if (nodeType === undefined) {
+          throw new Error("an edge type doesn't have node field");
+        }
+        const idField = mustFindTypeDefinition(ctx, nodeType.type).fields?.find((f) => f.name.value === "id");
+        if (idField === undefined) {
+          throw new Error("a node type doesn't have id field");
+        }
+        return `cursor: extractId(Automation.getDisplayString(elm)),`;
+      };
+      return `
+        edges: nodes.map((elm) => {
+          return {
+            ${renderCursor()}
+            ${renderNodeField()}
+          }
+        }),
+      `;
+    }
+
     const args: string[] = [];
     f.field.arguments?.forEach((a) => {
       // TODO: not to hard code
       if (a.name.value === "whose") {
+        return;
+      }
+      if (a.name.value === "after") {
+        return;
+      }
+      if (a.name.value === "first") {
         return;
       }
       if (a.value.kind === Kind.VARIABLE) {
@@ -62,20 +107,44 @@ const renderField = (
     const noCall = mustFindTypeDefinition(ctx, f.definition.type).interfaces?.some(
       (i) => i.name.value === "Connection"
     );
+    const extractPagination = (field: FieldNode) => {
+      const firstValue = field.arguments?.find(
+        (a): a is ArgumentNode & { value: IntValueNode } => a.name.value === "first" && a.value.kind === Kind.INT
+      )?.value.value;
+      const afterValue = field.arguments?.find(
+        (a): a is ArgumentNode & { value: StringValueNode } => a.name.value === "after" && a.value.kind === Kind.STRING
+      )?.value.value;
+      if (firstValue === undefined && afterValue === undefined) {
+        return null;
+      }
+      return { first: firstValue !== undefined ? parseInt(firstValue) : undefined, after: afterValue };
+    };
 
+    const param = extractPagination(f.field);
+    const compilePagination = (param: { first?: number; after?: string } | null) => {
+      if (param === null) {
+        return "";
+      }
+      return JSON.stringify(param);
+    };
+    const pageParam = compilePagination(param);
     const whose = compileWhoseParam(extractCondition(ctx, f.field));
     const suffix = noCall ? "" : `(${args.join(",")})`;
     const child = `${ctx.rootName}.${name}${suffix}`;
     return `${name}: ${renderObject(
       { ...ctx, rootName: child },
       { selectedFields: f.field.selectionSet.selections, typeNode: f.definition.type },
-      { whose }
+      { whose, pageParam: pageParam }
     )},`;
   }
 
+  if (f.definition.directives?.some((d) => d.name.value === "extractFromObjectDisplayName")) {
+    return `${name}: extractId(Automation.getDisplayString(${ctx.rootName})),`;
+  }
+
   const isEnum = isEnumValue(ctx, f.definition);
-  const suffix = isEnum ? `?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
-  return `${name}: ${ctx.rootName}.${name}${suffix},`;
+  const suffix = isEnum ? `()?.toUpperCase().replaceAll(" ", "_")` : opts.isRecordType ? "" : "()";
+  return `${name}: ${ctx.rootName}.${f.field.name.value}${suffix},`;
 };
 
 const isEnumValue = (ctx: CurrentContext, f: FieldDefinitionNode): boolean => {
@@ -124,7 +193,11 @@ const dig = (ctx: CurrentContext, object: RenderableObject, ...fieldNames: strin
   return dig(ctx, { selectedFields, typeNode }, ...fieldNames.slice(1));
 };
 
-const renderObject = (ctx: CurrentContext, object: RenderableObject, opts: Partial<{ whose: string }> = {}): string => {
+const renderObject = (
+  ctx: CurrentContext,
+  object: RenderableObject,
+  opts: Partial<{ pageParam: string; whose: string }> = {}
+): string => {
   if (object.typeNode.kind === Kind.NON_NULL_TYPE) {
     return renderNonNullObject(ctx, { ...object, typeNode: object.typeNode.type }, opts);
   }
@@ -139,7 +212,7 @@ const isField = (n: SelectionNode): n is FieldNode => {
 const renderNonNullObject = (
   ctx: CurrentContext,
   object: RenderableObject<NonNullTypeNode["type"]>,
-  opts: Partial<{ whose: string }> = {}
+  opts: Partial<{ pageParam: string; whose: string }> = {}
 ) => {
   if (object.typeNode.kind === Kind.LIST_TYPE) {
     return `${ctx.rootName}.map((elm) => {
@@ -151,35 +224,24 @@ const renderNonNullObject = (
     (i) => i.name.value === "Connection"
   );
 
-  if (isConnection) {
-    // TODO: consider cursor
-    const renderNodeField = () => {
-      const node = dig(ctx, object, "edges", "node");
-      if (node === null) {
-        return "";
-      }
-      return `node: ${renderObject({ ...ctx, rootName: "elm" }, node)},`;
-    };
+  const allNodes = `${ctx.rootName}${opts.whose ?? ""}()`;
+  let nodes = "allNodes";
+  if (opts.pageParam && opts.pageParam !== "") {
+    nodes = `pagenate(${nodes}, pagenationParam, (n) => {
+      return extractId(Automation.getDisplayString(n))
+    })`;
+  }
 
+  if (isConnection) {
     return `
-    (() => {
-      const nodes = ${ctx.rootName}${opts.whose ?? ""}();
-      return {
-        pageInfo: {
-          hasPreviousPage: false,
-          hasNextPage: false,
-          startCursor: "",
-          endCursor: "",
-        },
-        edges: nodes.map((elm) => {
-          return {
-            cursor: elm.id(),
-            ${renderNodeField()}
-          }
-        }),
-        ${renderFields(ctx, object)}
-      }
-    })()
+      (() => {
+        const allNodes = ${allNodes};
+        const pagenationParam = ${opts.pageParam && opts.pageParam !== "" ? opts.pageParam : "{}"};
+        const nodes = ${nodes};
+        return {
+          ${renderFields(ctx, object)}
+        }
+      })()
     `;
   }
 
@@ -234,10 +296,6 @@ const renderFields = (ctx: CurrentContext, object: RenderableObject, withReflect
     .join("");
 };
 
-function pascalCase(s: string) {
-  return (s.match(/[a-zA-Z0-9]+/g) || []).map((w) => `${w[0].toUpperCase()}${w.slice(1)}`).join("");
-}
-
 export const genQuery = (
   appName: string,
   info: Pick<GraphQLResolveInfo, "operation" | "fragments" | "variableValues" | "schema">,
@@ -246,7 +304,6 @@ export const genQuery = (
   const vars = Object.entries(info.variableValues)
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`)
     .join("\n");
-  const lib = pascalCase.toString();
 
   const field = info.operation.selectionSet.selections[0];
   if (field.kind !== Kind.FIELD || field.selectionSet === undefined) {
@@ -269,14 +326,14 @@ export const genQuery = (
     const fs = field.selectionSet.selections;
     const parent = `_parent`;
     const convert = `const ${parent} = Application("${appName}");`;
-    return `${lib};${vars};${convert};JSON.stringify({ result: ${renderObject(
+    return `${library};${vars};${convert};JSON.stringify({ result: ${renderObject(
       { ...info, rootName: parent },
       { selectedFields: fs, typeNode: fdef }
     )}})`;
   }
 
   const fs = field.selectionSet.selections;
-  return `${lib};${vars};JSON.stringify({ result: ${renderObject(
+  return `${library};${vars};JSON.stringify({ result: ${renderObject(
     { ...info, rootName: rootObjName },
     { selectedFields: fs, typeNode: fdef }
   )}})`;

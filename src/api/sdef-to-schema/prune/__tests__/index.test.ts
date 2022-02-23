@@ -5,6 +5,7 @@ import { prune } from "../index";
 test("valid schema", () => {
   const input = gql`
     type Something {
+      id: ID!
       string: String
       nonNullString: String!
       someScalar: SomeScalar
@@ -19,6 +20,7 @@ test("valid schema", () => {
 
   const output = gql`
     type Something {
+      id: ID!
       string: String
       nonNullString: String!
       someScalar: SomeScalar
@@ -373,4 +375,3 @@ test("multiple definition or args", () => {
 
   expect(print(prune(input))).toEqual(print(output));
 });
-

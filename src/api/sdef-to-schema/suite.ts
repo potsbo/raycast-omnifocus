@@ -1,49 +1,39 @@
-import { ClassRenderer } from "./class";
-import { EnumRenderer } from "./enumeration";
-import { ExtensionRenderer } from "./extension";
-import { RecordTypeRenderer } from "./recordType";
-import { Suite } from "./sdef";
+import { ClassBuilder } from "./class";
+import { EnumBuilder } from "./enumeration";
+import { ExtensionBuilder } from "./extension";
+import { RecordTypeBuilder } from "./recordType";
+import { Builder, Sdef, Suite } from "./sdef";
 
-const parseSuite = (
-  s: Suite
-): {
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
-} => {
-  const extensionRenderers = (s["class-extension"] ?? []).map((c) => new ExtensionRenderer(c));
-  const classRenderers = (s.class ?? []).map((c) => new ClassRenderer(c));
-  const recordTypeRenderers = (s["record-type"] ?? []).map((c) => new RecordTypeRenderer(c));
-  const enumRenderers = (s.enumeration ?? []).map((e) => new EnumRenderer(e));
-  return { classRenderers, extensionRenderers, recordTypeRenderers, enumRenderers };
+const parseSuite = (s: Suite): Builder[] => {
+  const extensionBuilders = (s["class-extension"] ?? []).map((c) => new ExtensionBuilder(c));
+  const classBuilders = (s.class ?? []).map((c) => new ClassBuilder(c));
+  const recordTypeBuilders = (s["record-type"] ?? []).map((c) => new RecordTypeBuilder(c));
+  const enumBuilders = (s.enumeration ?? []).map((e) => new EnumBuilder(e));
+  return [...classBuilders, ...extensionBuilders, ...recordTypeBuilders, ...enumBuilders];
 };
 
 export const parseSuites = (
-  ss: Suite[]
+  sdef: Sdef
 ): {
-  classRenderers: ClassRenderer[];
-  extensionRenderers: ExtensionRenderer[];
-  recordTypeRenderers: RecordTypeRenderer[];
-  enumRenderers: EnumRenderer[];
+  includes: string[];
+  builders: Builder[];
 } => {
-  return ss.map(parseSuite).reduce(
-    (
-      acum: {
-        classRenderers: ClassRenderer[];
-        extensionRenderers: ExtensionRenderer[];
-        recordTypeRenderers: RecordTypeRenderer[];
-        enumRenderers: EnumRenderer[];
-      },
-      cur
-    ) => {
-      return {
-        classRenderers: acum.classRenderers.concat(cur.classRenderers),
-        extensionRenderers: acum.extensionRenderers.concat(cur.extensionRenderers),
-        recordTypeRenderers: acum.recordTypeRenderers.concat(cur.recordTypeRenderers),
-        enumRenderers: acum.enumRenderers.concat(cur.enumRenderers),
-      };
-    },
-    { classRenderers: [], extensionRenderers: [], recordTypeRenderers: [], enumRenderers: [] }
-  );
+  const includes: string[] = [];
+  const ss = sdef.dictionary.suite;
+
+  ss.forEach((s) => {
+    if (s["xi:include"] !== undefined) {
+      s["xi:include"].forEach((i) => {
+        const prefix = "file://";
+        if (!i.$.href.startsWith(prefix)) {
+          throw new Error(`Unsupported include found ${i.$.href}`);
+        }
+        const path = i.$.href.slice(prefix.length);
+        includes.push(path);
+      });
+    }
+  });
+
+  const builders = ss.map(parseSuite).reduce((acum, cur) => [...acum, ...cur], []);
+  return { builders, includes };
 };

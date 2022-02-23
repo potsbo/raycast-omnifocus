@@ -1,6 +1,6 @@
 import { InputValueDefinitionNode, Kind } from "graphql";
 import { ContentDefinition, ElementDefinition, PropertyDefinition } from "./sdef";
-import { getGraphQLType, Nullable } from "./types";
+import { getGraphQLType, nullable } from "./types";
 import camelCase from "camelcase";
 
 export const collectMutationArgs = (c: {
@@ -17,7 +17,7 @@ export const collectMutationArgs = (c: {
           kind: Kind.NAME,
           value: camelCase(t.$.name),
         },
-        type: Nullable(getGraphQLType(t)),
+        type: nullable(getGraphQLType(t)),
       };
     });
 

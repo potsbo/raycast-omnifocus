@@ -4,7 +4,7 @@ exports[`ConnectionInterface snapshot 1`] = `
 "interface Connection {
   edges: [Edge!]!
   pageInfo: PageInfo!
-  byId(id: String!): Node
+  byId(id: ID!): Node
 }"
 `;
 
@@ -17,6 +17,6 @@ exports[`EdgeInterface snapshot 1`] = `
 
 exports[`NodeInterface snapshot 1`] = `
 "interface Node {
-  id: String!
+  id: ID!
 }"
 `;

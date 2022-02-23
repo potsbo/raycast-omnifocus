@@ -1,3 +1,14 @@
+import { DocumentNode, DefinitionNode } from "graphql";
+
+export interface Sdef {
+  dictionary: { suite: Suite[] };
+}
+
+export interface Environment {
+  builders: Builder[];
+  override?: DocumentNode;
+}
+
 export interface Suite {
   $: {
     code: string;
@@ -10,6 +21,14 @@ export interface Suite {
   "value-type": unknown[];
   "class-extension": ClassExtensionDefinition[];
   enumeration?: EnumDefinition[];
+  "xi:include"?: Include[];
+}
+
+interface Include {
+  $: {
+    href: string;
+    xpointer: string;
+  };
 }
 
 export interface ClassDefinition {
@@ -96,3 +115,5 @@ export type ContentDefinition = {
   };
   cocoa: [{ $: unknown[] }];
 };
+
+export type Builder = { build: (_: Environment) => DefinitionNode[] };

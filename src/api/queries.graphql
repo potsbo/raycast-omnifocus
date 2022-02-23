@@ -158,7 +158,7 @@ query GetInboxTasks {
   }
 }
 
-query GetTasksInProject($projectId: String!) {
+query GetTasksInProject($projectId: ID!) {
   application {
     defaultDocument {
       projects {
@@ -186,7 +186,7 @@ query GetNestedProjects {
   }
 }
 
-query GetTasksWithTag($tagId: String!) {
+query GetTasksWithTag($tagId: ID!) {
   application {
     defaultDocument {
       tags {
@@ -231,7 +231,7 @@ query GetNestedTags {
   }
 }
 
-query GetNestedTagsFrom($tagId: String!) {
+query GetNestedTagsFrom($tagId: ID!) {
   application {
     defaultDocument {
       tags {

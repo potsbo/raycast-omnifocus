@@ -1,19 +1,21 @@
+import { runJXACode } from "@jxa/run";
 import { graphql, ExecutionResult } from "graphql";
 import { GraphQLClient, Variables, RequestDocument } from "graphql-request";
 import { print } from "graphql/language/printer";
-import { resolvers } from ".";
 import { useLoad } from "../utils";
 import { getSdk } from "./generated/graphql";
+import { buildRootValue } from "./rootValue";
 import { schema } from "./schema";
 
+const rootValue = buildRootValue("OmniFocus", runJXACode);
 class MyClient extends GraphQLClient {
   async request<T, V = Variables>(document: RequestDocument, variables?: Readonly<V>): Promise<T> {
-    const query = typeof document === "string" ? document : print(document);
+    const source = typeof document === "string" ? document : print(document);
 
     const { data, errors } = (await graphql({
       schema,
-      source: query,
-      rootValue: resolvers,
+      source,
+      rootValue,
       variableValues: variables,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })) as any as ExecutionResult<T>;

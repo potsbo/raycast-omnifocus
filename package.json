@@ -85,7 +85,6 @@
     "eslint-config-prettier": "^8.3.0",
     "express": "^4.17.2",
     "express-graphql": "^0.12.0",
-    "graphql-playground-middleware-express": "^1.7.23",
     "jest": "^27.5.0",
     "npm-watch": "^0.11.0",
     "patch-package": "^6.4.7",
@@ -117,8 +116,8 @@
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
     "generate": "graphql-codegen --config codegen.yml",
-    "playground": "ts-node ./src/playground/index.ts",
-    "generate:schema": "ts-node ./src/api/sdef-to-schema/index.ts",
+    "playground": "ts-node ./src/playground/index.ts serve /Applications/OmniFocus.app",
+    "generate:schema": "ts-node ./src/script/generate-schema.ts",
     "postinstall": "patch-package"
   }
 }

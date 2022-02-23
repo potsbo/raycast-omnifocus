@@ -1,164 +1,97 @@
 import {
-  DocumentNode,
+  DefinitionNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
   Kind,
-  ObjectTypeDefinitionNode,
   ObjectTypeExtensionNode,
-  StringValueNode,
 } from "graphql";
 import camelCase from "camelcase";
-import { collectFieldsDefinitions, FieldDefinition } from "./field";
-import { ClassDefinition } from "./sdef";
-import { NameType, NonNullType, ListType } from "./types";
+import { collectFieldsDefinitions, field } from "./field";
+import { ClassDefinition, Environment } from "./sdef";
+import { named as named, nonNull, list } from "./types";
 import { EDGE_TYPE_NAME, CONNECTION_TYPE_NAME, NodeInterface } from "./constants";
-import { implementsInterface } from "../graphql-utils";
-import { ExtensionRenderer } from "./extension";
 import { collectMutationArgs } from "./mutation";
+import { name } from "./name";
+import { objectType } from "./object";
 
-export class ClassRenderer {
+export class ClassBuilder {
   private c: ClassDefinition;
   fields: FieldDefinitionNode[];
   constructor(c: ClassDefinition) {
     this.c = c;
     this.fields = collectFieldsDefinitions(this.c);
   }
-  getBaseTypeName = () => camelCase(this.c.$.name, { pascalCase: true });
-  getClassName = () => this.c.$.name;
-  getInherits = () => this.c.$.inherits;
-  getInterfaceName = () => `${this.getBaseTypeName()}Interface`;
-  getInterfaced = (): InterfaceTypeDefinitionNode => {
-    const isNode = implementsInterface({ fields: this.fields }, NodeInterface);
+  private getBaseTypeName = () => camelCase(this.c.$.name, { pascalCase: true });
+  private getClassName = () => this.c.$.name;
+  private getInherits = () => this.c.$.inherits;
+  private getInterfaceName = () => `${this.getBaseTypeName()}Interface`;
+  private getInterfaced = (): InterfaceTypeDefinitionNode => {
     return {
       kind: Kind.INTERFACE_TYPE_DEFINITION,
       fields: this.fields,
-      name: {
-        kind: Kind.NAME,
-        value: this.getInterfaceName(),
-      },
-      interfaces: isNode ? [NameType(NodeInterface.name.value)] : [],
+      name: name(this.getInterfaceName(), { pascalCase: true }),
+      interfaces: [named(NodeInterface.name.value)],
     };
   };
-  getMutationExtension = (verb: string, inherits: ClassRenderer | undefined): ObjectTypeExtensionNode | null => {
+  private getMutationExtension = (verb: string, inherits: ClassBuilder | undefined): ObjectTypeExtensionNode => {
     const mutableFields = collectMutationArgs(this.c).concat(inherits ? collectMutationArgs(inherits.c) : []);
-
-    if (mutableFields.length === 0) {
-      return null;
-    }
     const typeName = camelCase(this.c.$.name, { pascalCase: true });
     return {
       kind: Kind.OBJECT_TYPE_EXTENSION,
-      name: {
-        kind: Kind.NAME,
-        value: "Mutation",
-      },
-      fields: [
-        {
-          ...FieldDefinition(`${verb}${typeName}`, NonNullType(NameType(typeName))),
-          arguments: mutableFields,
-        },
-      ],
+      name: name("Mutation", { pascalCase: true }),
+      fields: [field(`${verb}${typeName}`, nonNull(typeName), { arguments: mutableFields })],
     };
   };
-  getTypes = ({
-    inherits,
-    inherited,
-    extensions,
-    override,
-  }: {
-    inherits: ClassRenderer | undefined;
-    inherited: boolean;
-    extensions: ExtensionRenderer[];
-    override?: DocumentNode;
-  }) => {
-    const className = camelCase(this.c.$.name, { pascalCase: true });
-    if (override?.definitions.some((d) => "name" in d && d.name?.value === className)) {
+  build = ({ override, builders }: Environment): DefinitionNode[] => {
+    const typeName = camelCase(this.c.$.name, { pascalCase: true });
+
+    // TODO: if compatible override given, try to merge
+    if (override?.definitions.some((d) => "name" in d && d.name?.value === typeName)) {
       return [];
     }
+    const inherits = this.getInherits();
+    const classBuilders = builders.filter((b): b is ClassBuilder => b instanceof ClassBuilder);
+    const parent = classBuilders.find((t) => t.getClassName() === inherits);
+    if (inherits !== undefined && parent === undefined) {
+      throw new Error("parent not found");
+    }
+    const inherited = classBuilders.map((c) => c.getInherits()).some((c): c is string => c === this.getClassName());
 
-    const toObjectDef = (
-      name: string,
-      interfaces: string[],
-      fields: FieldDefinitionNode[],
-      description?: string
-    ): ObjectTypeDefinitionNode => {
-      const desc: StringValueNode | undefined = description
-        ? {
-            kind: Kind.STRING,
-            value: description,
-            block: true,
-          }
-        : undefined;
+    const fields = [...(this.fields ?? []), ...(parent?.fields ?? [])];
 
-      return {
-        kind: Kind.OBJECT_TYPE_DEFINITION,
-        name: {
-          kind: Kind.NAME,
-          value: name,
-        },
-        interfaces: interfaces.map((n) => NameType(n)),
-        fields,
-        description: desc,
-      };
-    };
-
-    const fields = [...(this.fields ?? []), ...(inherits?.fields ?? [])];
-
-    const interfaces: string[] = [];
-    if (inherits) {
-      interfaces.push(inherits.getInterfaceName());
+    const interfaces: string[] = [NodeInterface.name.value];
+    if (parent) {
+      interfaces.push(parent.getInterfaceName());
     }
     if (inherited) {
       interfaces.push(this.getInterfaceName());
     }
-    const isNode = implementsInterface(
-      {
-        fields: fields.concat(extensions.map((e) => e.fields).reduce((acum, cur) => [...acum, ...cur], [])),
-      },
-      NodeInterface
-    );
-    if (isNode) {
-      interfaces.push(NodeInterface.name.value);
-    }
 
-    const classDef = toObjectDef(className, interfaces, fields, this.c.$.description);
-    if (!isNode) {
-      return [classDef];
-    }
-    const edgeDef = toObjectDef(
-      `${className}${EDGE_TYPE_NAME}`,
-      [EDGE_TYPE_NAME],
-      [
-        FieldDefinition("cursor", NonNullType(NameType("String"))),
-        FieldDefinition("node", NonNullType(NameType(inherited ? this.getInterfaceName() : className))),
-      ]
+    const classDef = objectType(typeName, fields, { description: this.c.$.description, interfaces });
+    const edgeDef = objectType(
+      `${typeName}${EDGE_TYPE_NAME}`,
+      [field("cursor", nonNull("String")), field("node", nonNull(inherited ? this.getInterfaceName() : typeName))],
+      { interfaces: [EDGE_TYPE_NAME] }
     );
-    const connectionDef = toObjectDef(
-      `${className}${CONNECTION_TYPE_NAME}`,
-      [CONNECTION_TYPE_NAME],
+    const connectionDef = objectType(
+      `${typeName}${CONNECTION_TYPE_NAME}`,
       [
-        {
-          kind: Kind.FIELD_DEFINITION,
-          name: {
-            kind: Kind.NAME,
-            value: "byId",
-          },
+        field("byId", named(inherited ? this.getInterfaceName() : typeName), {
           arguments: [
             {
               kind: Kind.INPUT_VALUE_DEFINITION,
-              name: {
-                kind: Kind.NAME,
-                value: "id",
-              },
-              type: NonNullType(NameType("String")),
+              name: name("id"),
+              type: nonNull("ID"),
             },
           ],
-          type: NameType(inherited ? this.getInterfaceName() : className),
-        },
-        FieldDefinition("edges", NonNullType(ListType(NonNullType(NameType(`${className}${EDGE_TYPE_NAME}`))))),
-        FieldDefinition("pageInfo", NonNullType(NameType("PageInfo"))),
-      ]
+        }),
+        field("edges", nonNull(list(nonNull(`${typeName}${EDGE_TYPE_NAME}`)))),
+        field("pageInfo", nonNull("PageInfo")),
+      ],
+      {
+        interfaces: [CONNECTION_TYPE_NAME],
+      }
     );
-    return [connectionDef, edgeDef, classDef];
+    return [connectionDef, edgeDef, classDef, this.getInterfaced(), this.getMutationExtension("push", parent)];
   };
 }

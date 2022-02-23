@@ -1,14 +1,15 @@
 import { EnumTypeDefinitionNode, EnumValueDefinitionNode, Kind, StringValueNode } from "graphql";
 import camelCase from "camelcase";
-import { EnumDefinition } from "./sdef";
+import { EnumDefinition, Environment } from "./sdef";
 
-export class EnumRenderer {
+export class EnumBuilder {
   private e: EnumDefinition;
   constructor(e: EnumDefinition) {
     this.e = e;
   }
 
-  getType = (): EnumTypeDefinitionNode => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  build = (_: Environment): EnumTypeDefinitionNode[] => {
     const values: EnumValueDefinitionNode[] = this.e.enumerator.map((e) => {
       const desc: StringValueNode | undefined = e.$.description
         ? {
@@ -22,17 +23,19 @@ export class EnumRenderer {
         description: desc,
         name: {
           kind: Kind.NAME,
-          value: e.$.name.replace(/ /g, "_").toUpperCase(),
+          value: e.$.name.replace(/ /g, "_").replace(/&/g, "_AND_").toUpperCase(),
         },
       };
     });
-    return {
-      kind: Kind.ENUM_TYPE_DEFINITION,
-      name: {
-        kind: Kind.NAME,
-        value: camelCase(this.e.$.name, { pascalCase: true }),
+    return [
+      {
+        kind: Kind.ENUM_TYPE_DEFINITION,
+        name: {
+          kind: Kind.NAME,
+          value: camelCase(this.e.$.name, { pascalCase: true }),
+        },
+        values,
       },
-      values,
-    };
+    ];
   };
 }
